@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Telar de Ixchel — Memorias de pueblos perdidos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Memorias de pueblos perdidos · Historia 5</div>
+    <h1>El Telar de Ixchel</h1>
+    <div class="subtitle">Una historia de San Antonio Palopó, Lago Atitlán, Guatemala</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Ixchel vive en San Antonio Palopó, un pueblo maya tzutujil junto al Lago Atitlán, en Guatemala. El lago está entre tres volcanes.</p>
+        <p>Cada mañana, Ixchel toma una lancha para ir a la escuela en otro pueblo del lago.</p>
+        <p>Su abuela teje textiles tradicionales. Ella le enseña a Ixchel los colores y diseños de su pueblo.</p>
+        <p>Una tarde, después de la escuela, empieza el Xocomil. El Xocomil es un viento fuerte de la tarde. Las olas del lago son grandes.</p>
+        <p>Los capitanes de las lanchas dicen: "Hoy no es seguro cruzar. Esperamos."</p>
+        <p>Ixchel espera en el puerto con otros niños. Ella piensa en su abuela.</p>
+        <p>Después de un tiempo, el viento baja un poco. Un capitán dice: "Ahora sí, con cuidado, cerca de la orilla."</p>
+        <p>La lancha cruza despacio. Ixchel llega a casa cuando ya está oscuro.</p>
+        <p>Su abuela la abraza: "Qué bueno que esperaste. Con el Xocomil no se juega."</p>
+        <p>Esa noche, la abuela le enseña a Ixchel un diseño nuevo en el telar.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Ixchel vive en San Antonio Palopó, un pueblo maya tzutujil junto al Lago Atitlán, en las tierras altas de Guatemala, rodeado por tres volcanes: Atitlán, Tolimán y San Pedro.</p>
+        <p>Cada mañana, Ixchel toma una lancha pública para cruzar el lago e ir a la escuela en otro pueblo. Su abuela, mientras tanto, teje textiles tradicionales en un telar de cintura, con colores y diseños que representan a su comunidad — un arte que se transmite de generación en generación.</p>
+        <p>Una tarde de diciembre, después de que terminan las clases, empieza a soplar el Xocomil, un viento fuerte típico de esa época del año que llega por las tardes y agita las aguas del lago con olas grandes.</p>
+        <p>En el puerto, los capitanes de las lanchas deciden esperar: "Hoy no es seguro cruzar todavía," les dicen a los estudiantes que esperan para regresar a casa. Ixchel espera junto a otros niños, un poco preocupada, pensando en su abuela.</p>
+        <p>Después de casi una hora, el viento baja un poco. Un capitán, con años de experiencia en el lago, decide que ya es posible cruzar con cuidado, cerca de la orilla, donde las olas son menos fuertes.</p>
+        <p>La lancha avanza despacio, y cuando Ixchel finalmente llega a San Antonio Palopó, ya está oscureciendo. Su abuela la recibe con un abrazo fuerte: "Qué bueno que esperaron. Con el Xocomil no se juega, hija."</p>
+        <p>Esa noche, como para calmar la espera de ambas, su abuela le enseña un diseño nuevo en el telar — uno que, según le explica, representa las olas del lago.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un jueves de diciembre, Ixchel salió de la escuela como todos los días y caminó hacia el puerto de lanchas para regresar a San Antonio Palopó, su pueblo maya tzutujil a orillas del Lago Atitlán, rodeado por los volcanes Atitlán, Tolimán y San Pedro.</p>
+        <p>Esa tarde, sin embargo, comenzó a soplar el Xocomil — el viento fuerte que suele llegar en esa temporada del año, especialmente por las tardes — y las aguas del lago, normalmente tranquilas, se llenaron de olas grandes y oscuras.</p>
+        <p>En el puerto, los capitanes de las lanchas decidieron esperar antes de zarpar. "Hoy no es seguro cruzar todavía," le explicaron a Ixchel y a los demás estudiantes que esperaban para volver a casa. Ixchel se sentó en el muelle junto a sus compañeros, pensando en su abuela, quien seguramente ya estaba preocupada.</p>
+        <p>Pasó casi una hora antes de que el viento empezara a calmarse. Uno de los capitanes, que llevaba años navegando ese lago y conocía bien sus cambios de humor, decidió que ya era posible cruzar — con cuidado, cerca de la orilla, donde las olas pegaban con menos fuerza.</p>
+        <p>La lancha avanzó despacio durante el trayecto. Cuando Ixchel finalmente llegó a su pueblo, el cielo ya estaba oscureciendo. Su abuela, que la esperaba en el muelle, la abrazó con fuerza: "Qué bueno que esperaron. Con el Xocomil no se juega, hija."</p>
+        <p>Esa noche, mientras cenaban, su abuela sacó el telar de cintura y le enseñó a Ixchel un diseño nuevo — uno que, le explicó, representaba las olas del lago en los días de viento. Ixchel entendió, mientras tejía junto a ella, que ese día había aprendido tanto de la paciencia de los capitanes como de las manos de su abuela.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>En San Antonio Palopó, uno de los pueblos tz'utujiles que bordean el Lago Atitlán —una masa de agua de origen volcánico custodiada por tres volcanes: Atitlán, Tolimán y San Pedro—, la vida cotidiana dependía en gran medida del lago mismo, tanto para el transporte como para el sustento. Para Ixchel, de diez años, eso significaba cruzar el lago en lancha cada mañana para llegar a la escuela, mientras que su abuela, en casa, continuaba una tradición textil transmitida durante generaciones en el telar de cintura.</p>
+        <p>Aquel jueves de diciembre, al salir de clases, Ixchel se dirigió como siempre hacia el puerto. Sin embargo, esa tarde comenzó a soplar el Xocomil, un viento característico de la temporada que agita las aguas del lago con una fuerza considerable, sobre todo al atardecer. Los capitanes de las lanchas, conocedores del comportamiento del lago, optaron por suspender temporalmente las travesías.</p>
+        <p>"Hoy no es seguro cruzar todavía," anunciaron a los estudiantes reunidos en el muelle. Ixchel esperó junto a sus compañeros, consciente de que su abuela, en casa, probablemente ya estaría pendiente de su llegada. La espera se extendió casi una hora, hasta que el viento comenzó a amainar.</p>
+        <p>Fue entonces cuando uno de los capitanes, con décadas de experiencia navegando esas aguas, determinó que era posible cruzar con precaución, siguiendo una ruta más cercana a la orilla, donde el oleaje resultaba menos peligroso. La travesía, más lenta de lo habitual, transcurrió sin contratiempos, y cuando Ixchel finalmente desembarcó, el cielo ya oscurecía sobre el pueblo.</p>
+        <p>Su abuela la recibió en el muelle con un abrazo firme: "Qué bueno que esperaron. Con el Xocomil no se juega, hija" —una frase que resumía una relación de respeto, casi ancestral, entre su comunidad y el lago que las rodeaba.</p>
+        <p>Esa noche, mientras cenaban, su abuela sacó el telar y le enseñó un nuevo diseño: una representación textil de las olas del lago en días de viento fuerte. Para Ixchel, tejer junto a su abuela esa noche se sintió como una forma distinta de entender lo que había vivido esa tarde — que la paciencia de los capitanes y la sabiduría transmitida en cada hilo del telar respondían, en el fondo, a la misma comprensión profunda del lago que las sostenía.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la lancha</span> — small boat, launch</div>
+      <div><span class="term">el puerto / el muelle</span> — port / dock</div>
+      <div><span class="term">el telar</span> — loom</div>
+      <div><span class="term">zarpar</span> — to set sail</div>
+      <div><span class="term">la orilla</span> — shore</div>
+      <div><span class="term">amainar</span> — to die down (wind)</div>
+      <div><span class="term">ancestral</span> — ancestral (cognate)</div>
+      <div><span class="term">tejer</span> — to weave</div>
+      <div><span class="term">la travesía</span> — crossing, voyage</div>
+      <div><span class="term">el textil</span> — textile (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>cada mañana</span>
+      <span>cruza / cruzaba el lago en lancha</span>
+      <span>hoy no es seguro</span>
+      <span>esperar / esperaron un poco</span>
+      <span>cerca de la orilla</span>
+      <span>con el Xocomil no se juega</span>
+      <span>de generación en generación</span>
+      <span>qué bueno que...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué es el Xocomil, y por qué deciden los capitanes esperar antes de cruzar?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué le enseña la abuela a Ixchel esa noche, y qué representa el diseño nuevo?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Telar de Ixchel</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Memorias de pueblos perdidos → Historia 5</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Geografía humana y vida cotidiana — el lago como camino y sustento, tradición textil maya tz'utujil, toma de decisiones prudentes, herencia familiar.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir rutinas diarias y fenómenos climáticos locales; narrar una espera y su resolución; expresar alivio y advertencia; narrar en pasado la rutina de un día específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>cada mañana · cruza/cruzaba el lago en lancha · hoy no es seguro · esperar/esperaron un poco · cerca de la orilla · con el Xocomil no se juega · de generación en generación.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, rutina paso a paso.<br>
+    <strong>A2:</strong> se añade descripción geográfica/cultural y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando un día específico; reflexión de Ixchel.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; contexto cultural tz'utujil; paralelismo entre la prudencia de los capitanes y la sabiduría del tejido.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Viento fuerte/oleaje (el Xocomil, fenómeno real y documentado del Lago Atitlán) → manejado con calma, mostrando la decisión de los capitanes de esperar como modelo positivo de buen juicio, no como peligro extremo. Ixchel siempre llega segura. No se nombra ninguna familia real específica.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — el enfoque de esta historia está en la comunidad tz'utujil local, sin personaje visitante internacional.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>textil</em> — cognado natural con "textile", usado para conectar la tradición de tejido de la abuela de Ixchel con el cierre cálido de la historia.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez tuviste que esperar por seguridad, aunque no querías? ¿Quién tomó esa decisión, y cómo te sentiste después?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Esta es la segunda historia del libro (después de la Historia 2, "El Lago de Wara") donde un adulto decide esperar antes de cruzar agua peligrosa en vez de arriesgarse. Es una repetición intencional del motivo de "prudencia adulta como sabiduría, no debilidad" — parte del hilo temático del libro — y no un descuido de continuidad.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>
