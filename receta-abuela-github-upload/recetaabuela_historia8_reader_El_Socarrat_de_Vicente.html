@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Socarrat de Vicente — La Receta de la Abuela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · La Receta de la Abuela · Historia 8 (final)</div>
+    <h1>El Socarrat de Vicente</h1>
+    <div class="subtitle">Una historia de la Albufera, Valencia, España</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>El chef Vicente Bataller es de Valencia, España. Es famoso por su paella valenciana.</p>
+        <p>Vicente cuenta: "Aprendí a hacer paella con mi abuela. Cada domingo, hacíamos fuego con leña de naranjo."</p>
+        <p>La paella auténtica de Valencia tiene pollo, conejo, verduras, arroz y azafrán. Nunca lleva chorizo. Nunca lleva mariscos.</p>
+        <p>Vicente explica: "Si le pones mariscos, ya no es paella valenciana. Es otra cosa — arroz de marisco."</p>
+        <p>La parte más difícil es el socarrat — el arroz tostado del fondo de la sartén. Tiene que estar dorado, no quemado.</p>
+        <p>Vicente dice: "El socarrat se siente por el olor. Mi abuela sabía el momento exacto, solo con la nariz."</p>
+        <p>De niño, Vicente ayudaba con el fuego. A veces se le quemaba todo el arroz.</p>
+        <p>Con los años, Vicente aprendió el punto exacto de su abuela.</p>
+        <p>Ahora, Vicente tiene su propio restaurante. Sirve la paella valenciana tradicional, pero también ofrece un arroz de marisco para los turistas.</p>
+        <p>Vicente sonríe: "El fuego de naranjo y el socarrat son de mi abuela. Eso nunca cambia. Pero el arroz de marisco, ese es mío — y no se llama paella."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>El chef Vicente Bataller es de Valencia, España, y es reconocido por su paella valenciana, uno de los platos más famosos de la gastronomía española.</p>
+        <p>"Aprendí a hacer paella con mi abuela," cuenta Vicente. "Cada domingo, hacíamos fuego con leña de naranjo — así se cocinaba siempre, desde los campesinos de la Albufera hace siglos."</p>
+        <p>La paella auténtica de Valencia lleva pollo, conejo, verduras locales, arroz y azafrán. Nunca lleva chorizo. Nunca lleva mariscos. "Si le pones mariscos," explica Vicente, riendo, "ya no es paella valenciana. Es otra cosa — arroz de marisco, o 'arroz con cosas,' como decimos con humor aquí."</p>
+        <p>La parte más difícil de dominar es el socarrat — la capa de arroz ligeramente tostada que se forma en el fondo de la sartén. Tiene que quedar dorada, nunca quemada. "El socarrat se siente por el olor," dice Vicente. "Mi abuela sabía el momento exacto solo con la nariz, sin mirar siquiera."</p>
+        <p>De niño, Vicente ayudaba con el fuego de naranjo, y muchas veces se le quemaba todo el arroz. Con los años, finalmente aprendió el punto exacto que su abuela dominaba de memoria.</p>
+        <p>Hoy, en su propio restaurante, Vicente sirve la paella valenciana tradicional cada domingo, tal como lo hacía su abuela. Pero también ofrece un arroz de marisco para los turistas que lo piden.</p>
+        <p>"El fuego de naranjo y el socarrat son de mi abuela. Eso nunca cambia," afirma Vicente. "Pero el arroz de marisco, ese sí es mío — y, ojo, no se llama paella."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un domingo al mediodía, en su restaurante cerca de la Albufera de Valencia, el chef Vicente Bataller encendía el fuego de leña de naranjo, tal como le había enseñado su abuela décadas atrás.</p>
+        <p>"Aprendí a hacer paella con ella," relató Vicente, mientras acomodaba la leña con cuidado. "Cada domingo hacíamos fuego así, exactamente como lo hacían los campesinos de esta zona hace siglos."</p>
+        <p>La paella valenciana auténtica, explicó, llevaba solamente pollo, conejo, verduras locales, arroz y azafrán — nunca chorizo, nunca marisco. "Si le pones marisco," comentó, riendo, "ya no es paella valenciana. Es arroz de marisco, o como decimos aquí con humor, 'arroz con cosas.'"</p>
+        <p>Lo más difícil de dominar, sin embargo, era el socarrat: la fina capa de arroz tostado que se forma en el fondo de la sartén durante los últimos minutos de cocción. Tenía que quedar dorada, nunca quemada. "El socarrat se reconoce por el olor," explicó Vicente. "Mi abuela sabía el momento exacto solo con la nariz, sin necesidad de mirar la sartén."</p>
+        <p>Vicente recordó que, de niño, ayudaba con el fuego de naranjo, y en más de una ocasión se le quemó todo el arroz por completo. Con años de práctica junto a su abuela, finalmente logró dominar el punto exacto que ella conocía de memoria.</p>
+        <p>Hoy, en su propio restaurante, Vicente seguía sirviendo la paella valenciana tradicional cada domingo, respetando fielmente la receta de su abuela. Sin embargo, también había añadido al menú un arroz de marisco, pensado especialmente para los turistas que lo solicitaban con frecuencia.</p>
+        <p>"El fuego de naranjo y el socarrat son de mi abuela. Eso nunca cambia," afirmó con convicción. "Pero el arroz de marisco, ese sí es mío — y, que quede claro, no se llama paella."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un domingo al mediodía, en su restaurante próximo a la Albufera de Valencia, el chef Vicente Bataller encendía el fuego de leña de naranjo, siguiendo exactamente el método que su abuela le había transmitido décadas atrás.</p>
+        <p>"Aprendí a prepararla con ella," relató, disponiendo la leña con esmero. "Cada domingo encendíamos el fuego de este modo, replicando la práctica de los campesinos de esta región desde hace siglos."</p>
+        <p>La paella valenciana auténtica, precisó, se componía exclusivamente de pollo, conejo, verduras locales, arroz y azafrán —nunca chorizo, nunca marisco. "Si se le añade marisco," comentó, entre risas, "deja de ser paella valenciana. Se convierte en arroz de marisco, o, como decimos aquí con cierto humor, 'arroz con cosas.'"</p>
+        <p>Lo más arduo de dominar, sin embargo, era el socarrat: la fina capa de arroz ligeramente tostado que se forma en el fondo de la sartén durante los minutos finales de cocción. Debía quedar dorada, jamás quemada. "El socarrat se reconoce por el aroma," explicó Vicente. "Mi abuela identificaba el momento exacto únicamente por el olfato, sin necesidad de observar la sartén."</p>
+        <p>Vicente evocó que, de niño, colaboraba con el fuego de naranjo, y en numerosas ocasiones el arroz terminaba completamente quemado. Tras años de práctica constante junto a su abuela, finalmente logró dominar el punto preciso que ella conocía instintivamente.</p>
+        <p>Actualmente, en su propio restaurante, Vicente continúa sirviendo la paella valenciana tradicional cada domingo, respetando fielmente la receta heredada. No obstante, también ha incorporado al menú un arroz de marisco, pensado específicamente para los turistas que lo solicitan con frecuencia.</p>
+        <p>"El fuego de naranjo y el socarrat pertenecen a mi abuela. Eso nunca cambia," afirmó con convicción. "Pero el arroz de marisco es enteramente mío —y, que quede claro, eso no se llama paella."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la paella</span> — wide pan / the dish itself</div>
+      <div><span class="term">el socarrat</span> — toasted rice crust at the bottom</div>
+      <div><span class="term">la leña (de naranjo)</span> — orange-wood firewood</div>
+      <div><span class="term">el azafrán</span> — saffron</div>
+      <div><span class="term">el conejo</span> — rabbit</div>
+      <div><span class="term">tostado/a</span> — toasted</div>
+      <div><span class="term">el olfato</span> — sense of smell</div>
+      <div><span class="term">el fuego</span> — fire</div>
+      <div><span class="term">auténtico/a</span> — authentic (cognate)</div>
+      <div><span class="term">tradicional</span> — traditional (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>aprendí a hacer... con mi abuela</span>
+      <span>cada domingo</span>
+      <span>nunca lleva...</span>
+      <span>se siente por el olor</span>
+      <span>eso nunca cambia</span>
+      <span>ese sí es mío</span>
+      <span>que quede claro</span>
+      <span>con los años</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué ingredientes NUNCA lleva la paella valenciana auténtica, según Vicente?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué es el socarrat, y cómo sabía la abuela de Vicente cuándo estaba en su punto?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Socarrat de Vicente</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → La Receta de la Abuela → Historia 8 (última del libro)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Gastronomía y tradición cultural — la paella valenciana, autenticidad culinaria, técnica de precisión (el socarrat), el ritual dominical familiar.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir una técnica culinaria sensorial (reconocer por el olor); expresar reglas estrictas de autenticidad (nunca lleva...); narrar en pasado un evento específico; expresar humor cultural.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>aprendí a hacer... con mi abuela · cada domingo · nunca lleva... · se siente por el olor · eso nunca cambia · ese sí es mío · que quede claro.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, la técnica y las reglas contadas paso a paso.<br>
+    <strong>A2:</strong> se añade contexto histórico de la paella y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando una escena específica del domingo.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario culinario más preciso; cierre reflexivo y humorístico.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Ninguno significativo. Historia ligera con un toque de humor cultural sobre la identidad culinaria valenciana. El origen campesino de la paella en la Albufera de Valencia (siglos XV-XVI), los ingredientes auténticos según la Denominación de Origen (sin chorizo ni marisco), el uso tradicional de leña de naranjo, el socarrat, y la costumbre de comer paella los domingos en familia son datos reales y documentados. Vicente Bataller es un personaje ficticio.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Chef Vicente Bataller</strong> — chef valenciano cerca de la Albufera, aprendió de su abuela el fuego de naranjo y el punto exacto del socarrat. Detalle propio: se niega, con humor pero con firmeza, a llamar "paella" a cualquier versión con marisco, aunque la sirva con gusto a quien la pida.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>tradicional</em> — cognado natural con "traditional", usado para describir la paella que Vicente sirve cada domingo.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Hay alguna regla estricta sobre cómo se hace un plato en tu familia o cultura? ¿Qué pasa si alguien la rompe?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Última historia del libro "La Receta de la Abuela." A lo largo del libro, cada chef mantuvo intacto un elemento heredado de su abuela (una técnica, un objeto, una regla) mientras añadía su propio toque — un repulgue, un pilón, una gelatina, un socarrat. Con esta historia se completa el elenco de 8 países confirmado al inicio del libro.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

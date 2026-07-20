@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Mole de Rosario — La Receta de la Abuela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · La Receta de la Abuela · Historia 4</div>
+    <h1>El Mole de Rosario</h1>
+    <div class="subtitle">Una historia de Puebla, México</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>La chef Rosario Mendoza es de Puebla, México. Es famosa por su mole poblano.</p>
+        <p>Rosario cuenta: "Mi abuela era mayora en un restaurante. Ella sabía sazonar la comida a la perfección."</p>
+        <p>El mole poblano tiene muchos ingredientes: chiles, especias, chocolate, y más de veinte cosas diferentes.</p>
+        <p>Rosario explica: "Mi abuela nunca escribió la receta. Ella cocinaba por instinto — hasta que sabía bien."</p>
+        <p>De niña, Rosario aprendía mirando y probando. Su abuela decía: "Prueba. Si falta algo, tu lengua te lo dice."</p>
+        <p>Rosario recuerda: "Yo quería medir todo con tazas. Mi abuela se reía: 'El mole no se mide así.'"</p>
+        <p>Con los años, Rosario aprendió a cocinar como su abuela — con instinto, no con receta escrita.</p>
+        <p>Ahora, Rosario tiene su propio restaurante. Ella hace algo nuevo: escribe la receta de la familia por primera vez.</p>
+        <p>Rosario dice: "Mi abuela nunca la escribió. Yo sí. Así, la receta no se pierde."</p>
+        <p>Un cliente pregunta: "¿De dónde viene el mole?"</p>
+        <p>Rosario responde: "Viene de Puebla, de los conventos, hace más de trescientos años. La palabra 'mole' viene del náhuatl 'mulli' — significa salsa."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>La chef Rosario Mendoza es de Puebla, México, y es reconocida por su mole poblano, uno de los platillos más complejos de la gastronomía mexicana.</p>
+        <p>"Mi abuela era mayora en un restaurante tradicional," cuenta Rosario. "Una mayora es la persona que sazona la comida a la perfección — un puesto de mucho respeto en las cocinas de Puebla."</p>
+        <p>El mole poblano combina chiles secos, especias, chocolate y hasta veinte o treinta ingredientes distintos, según la familia que lo prepare.</p>
+        <p>"Mi abuela nunca escribió la receta," explica Rosario. "Cocinaba por instinto, hasta que el sabor estaba exactamente como debía estar. 'Prueba,' me decía siempre. 'Si falta algo, tu lengua te lo dice.'"</p>
+        <p>De niña, Rosario aprendía observando y probando, sin medidas exactas. "Yo quería medir todo con tazas y cucharas," recuerda, riendo. "Mi abuela se reía y me decía: 'El mole no se mide así, mija. Se siente.'"</p>
+        <p>Con los años, Rosario finalmente aprendió a cocinar como su abuela — guiándose por el instinto y el sabor, no por una receta escrita.</p>
+        <p>Hoy, en su propio restaurante, Rosario hace algo que ninguna mujer de su familia había hecho antes: escribir la receta completa, con proporciones exactas, por primera vez en la historia familiar.</p>
+        <p>"Mi abuela nunca la escribió," dice Rosario. "Yo sí. Así, la receta no se pierde, aunque yo ya no esté para enseñarla en persona."</p>
+        <p>Cuando un cliente le pregunta por el origen del mole, Rosario responde con orgullo: "Viene de Puebla, de los conventos coloniales, hace más de trescientos años. La palabra 'mole' viene del náhuatl 'mulli,' que significa simplemente 'salsa.'"</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un domingo por la tarde, en su restaurante de Puebla, la chef Rosario Mendoza preparaba mole poblano frente a un grupo de estudiantes de gastronomía, mientras les contaba la larga historia detrás del platillo.</p>
+        <p>"Mi abuela era mayora en un restaurante tradicional de aquí," relató Rosario, moliendo chiles con movimientos que parecían casi automáticos. "Una mayora es la persona encargada de sazonar la comida a la perfección — un puesto de gran respeto en las cocinas poblanas."</p>
+        <p>El mole poblano combinaba chiles secos, especias variadas, chocolate y hasta veinte o treinta ingredientes distintos, dependiendo de la familia que lo preparara. "Mi abuela nunca escribió la receta en toda su vida," explicó Rosario. "Cocinaba completamente por instinto, hasta que el sabor estaba exactamente como debía estar. 'Prueba,' me decía siempre. 'Si le falta algo, tu lengua te lo dice.'"</p>
+        <p>Rosario recordó que, de niña, aprendía únicamente observando y probando, sin ninguna medida exacta. "Yo quería medir todo con tazas y cucharas," admitió, riendo ante el recuerdo. "Mi abuela se reía y me corregía: 'El mole no se mide así, mija. Se siente.'"</p>
+        <p>Con los años, Rosario finalmente logró cocinar como su abuela — guiándose por el instinto y el sabor, sin depender de ninguna receta escrita.</p>
+        <p>Sin embargo, hoy en su propio restaurante, Rosario había decidido hacer algo que ninguna mujer de su familia había hecho antes: escribir la receta completa, con proporciones exactas, por primera vez en la historia familiar. "Mi abuela nunca la escribió," reflexionó. "Yo sí. Así, la receta no se pierde, aunque yo ya no esté para enseñarla en persona."</p>
+        <p>Cuando uno de los estudiantes le preguntó por el origen del mole, Rosario respondió con evidente orgullo: "Viene de Puebla, de los conventos coloniales, hace más de trescientos años. La palabra 'mole' viene del náhuatl 'mulli,' que significa simplemente 'salsa.'"</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un domingo por la tarde, en su restaurante de Puebla, la chef Rosario Mendoza preparaba mole poblano ante un grupo de estudiantes de gastronomía, relatando con detenimiento la extensa historia detrás del platillo.</p>
+        <p>"Mi abuela ejercía como mayora en un restaurante tradicional de esta ciudad," comentó Rosario, moliendo chiles con movimientos que denotaban años de repetición. "Una mayora es la persona encargada de sazonar la comida hasta la perfección —un cargo de considerable prestigio dentro de las cocinas poblanas."</p>
+        <p>El mole poblano combinaba chiles secos, especias diversas, chocolate y hasta veinte o treinta ingredientes distintos, según la tradición particular de cada familia. "Mi abuela jamás escribió la receta a lo largo de toda su vida," explicó Rosario. "Cocinaba enteramente por instinto, hasta que el sabor alcanzaba el punto exacto. 'Prueba,' me repetía constantemente. 'Si le falta algo, tu lengua te lo indica.'"</p>
+        <p>Rosario evocó que, de niña, aprendía exclusivamente mediante la observación y la degustación, sin recurrir jamás a medidas precisas. "Yo insistía en medir todo con tazas y cucharas," reconoció, entre risas nostálgicas. "Mi abuela se reía y me corregía: 'El mole no se mide así, mija. Se siente.'"</p>
+        <p>Con los años, Rosario finalmente logró replicar la cocina de su abuela —guiándose por el instinto y el sabor, sin depender de receta escrita alguna.</p>
+        <p>No obstante, en su propio restaurante, Rosario había tomado una decisión sin precedentes en su familia: documentar la receta completa, con proporciones exactas, por primera vez en la historia familiar. "Mi abuela nunca la escribió," reflexionó. "Yo sí. De este modo, la receta no se perderá, aun cuando yo ya no esté presente para transmitirla personalmente."</p>
+        <p>Cuando uno de los estudiantes indagó sobre el origen del mole, Rosario respondió con manifiesto orgullo: "Proviene de Puebla, de los conventos coloniales, hace más de trescientos años. La palabra 'mole' deriva del náhuatl 'mulli,' que significa sencillamente 'salsa.'"</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la mayora</span> — head seasoner in a traditional kitchen</div>
+      <div><span class="term">sazonar</span> — to season</div>
+      <div><span class="term">el instinto</span> — instinct (cognate)</div>
+      <div><span class="term">probar</span> — to taste</div>
+      <div><span class="term">medir</span> — to measure</div>
+      <div><span class="term">la proporción</span> — proportion (cognate)</div>
+      <div><span class="term">moler</span> — to grind</div>
+      <div><span class="term">el chile (seco)</span> — dried chili</div>
+      <div><span class="term">el náhuatl</span> — Nahuatl language</div>
+      <div><span class="term">documentar</span> — to document (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>mi abuela nunca escribió...</span>
+      <span>prueba</span>
+      <span>tu lengua te lo dice</span>
+      <span>se siente</span>
+      <span>así, la receta no se pierde</span>
+      <span>hace más de trescientos años</span>
+      <span>por primera vez</span>
+      <span>con los años</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué es una "mayora", y qué papel tenía la abuela de Rosario en la cocina?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué hace Rosario por primera vez en la historia de su familia, y por qué?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Mole de Rosario</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → La Receta de la Abuela → Historia 4</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Gastronomía y tradición cultural — el mole poblano, tradición oral vs. registro escrito, oficios culinarios tradicionales (la mayora), herencia lingüística náhuatl.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir un proceso culinario basado en instinto, no en medidas exactas; narrar un cambio significativo (escribir la receta por primera vez); expresar herencia familiar oral; narrar en pasado un evento específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>mi abuela nunca escribió... · prueba · tu lengua te lo dice · se siente · así, la receta no se pierde · hace más de trescientos años · por primera vez.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, el proceso de aprendizaje contado paso a paso.<br>
+    <strong>A2:</strong> se añade contexto histórico del mole y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando una escena específica en el restaurante.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario culinario e histórico más preciso; cierre reflexivo sobre preservar la tradición.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Ninguno significativo. El mole poblano (origen en los conventos de Puebla, la palabra "mulli" en náhuatl, la complejidad de veinte a treinta ingredientes), el oficio de "mayora," y la tradición oral de no escribir las recetas familiares son datos reales y documentados. Rosario Mendoza es un personaje ficticio.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Chef Rosario Mendoza</strong> — chef poblana, nieta de una mayora, aprendió a cocinar por instinto sin ninguna receta escrita. Detalle propio: guarda el primer cuaderno donde finalmente escribió la receta de su abuela, con la letra un poco temblorosa de esa primera vez.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>instinto</em> — cognado natural con "instinct", usado para describir la forma en que la abuela de Rosario cocinaba.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Hay algo que un familiar tuyo sabe hacer "por instinto," sin receta ni instrucciones escritas? ¿Qué es?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

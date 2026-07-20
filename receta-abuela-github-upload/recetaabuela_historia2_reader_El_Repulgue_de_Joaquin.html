@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Repulgue de Joaquín — La Receta de la Abuela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · La Receta de la Abuela · Historia 2</div>
+    <h1>El Repulgue de Joaquín</h1>
+    <div class="subtitle">Una historia de Salta, Argentina</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>El chef Joaquín Torres es de Salta, Argentina. Es famoso por sus empanadas salteñas.</p>
+        <p>Joaquín cuenta: "Aprendí a hacer empanadas con mi abuela. Toda la familia se reunía en la mesa."</p>
+        <p>En la empanada salteña, la carne se corta con cuchillo, no se muele. También lleva papa, huevo duro, cebolla y comino.</p>
+        <p>Joaquín explica: "Mi abuela decía: 'La empanada salteña tiene caldo adentro. Por eso hay que comerla con cuidado.'"</p>
+        <p>La parte más difícil es el repulgue — los dobleces que cierran la empanada. Cada familia tiene su propio estilo de repulgue.</p>
+        <p>Joaquín recuerda: "Practiqué el repulgue de mi abuela muchas veces. Al principio, mis empanadas se abrían en el horno."</p>
+        <p>Con el tiempo, Joaquín aprendió el repulgue perfecto — exactamente como su abuela.</p>
+        <p>Ahora, Joaquín tiene su propio restaurante. Usa el mismo repulgue de su abuela, pero a veces crea rellenos nuevos para ocasiones especiales.</p>
+        <p>Joaquín dice: "El repulgue de mi abuela nunca cambia. Eso es sagrado. Pero el relleno, a veces, sí."</p>
+        <p>Un cliente pregunta: "¿De dónde viene la empanada?"</p>
+        <p>Joaquín responde: "Viene de España, y antes de eso, de los árabes. Pero en Argentina, cada provincia la hizo suya."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>El chef Joaquín Torres es de Salta, Argentina, y es reconocido por sus empanadas salteñas, una de las variedades más famosas del país.</p>
+        <p>"Aprendí a hacer empanadas con mi abuela," cuenta Joaquín. "Toda la familia se reunía alrededor de la mesa — uno estiraba la masa, otro cortaba la carne, y los más pequeños ayudábamos a doblar."</p>
+        <p>La empanada salteña tiene su propia identidad: la carne se corta a cuchillo, nunca se muele, y se combina con papa, huevo duro, cebolla de verdeo, comino y ají molido. Se cocina al horno, y tiene un caldo interior que la distingue de otras variedades.</p>
+        <p>"Mi abuela siempre decía: 'Esta empanada tiene caldo adentro. Hay que comerla con cuidado, o te vas a quemar,'" recuerda Joaquín, riendo.</p>
+        <p>La parte más difícil de aprender fue el repulgue — los dobleces trenzados que cierran la empanada y evitan que se abra en el horno. Cada familia tiene su propio estilo de repulgue, casi como una firma.</p>
+        <p>"Practiqué el repulgue de mi abuela cientos de veces," admite Joaquín. "Al principio, mis empanadas siempre se abrían en el horno y perdían el caldo. Mi abuela me corregía con paciencia, una y otra vez."</p>
+        <p>Con el tiempo, Joaquín dominó el repulgue exacto de su abuela. Hoy, en su propio restaurante, lo usa sin ninguna variación — pero se permite crear rellenos nuevos para ocasiones especiales.</p>
+        <p>"El repulgue de mi abuela nunca cambia. Eso es sagrado," afirma Joaquín. "Pero el relleno, a veces, sí — ahí es donde yo puedo jugar un poco."</p>
+        <p>Cuando un cliente le pregunta por el origen de la empanada, Joaquín responde con gusto: "Viene de España, y antes de eso, de los árabes, durante la Edad Media. Pero cada provincia argentina la hizo completamente suya."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un domingo por la mañana, en su restaurante de Salta, el chef Joaquín Torres preparaba empanadas junto a dos aprendices de cocina, mientras les contaba la historia detrás de la receta que había heredado de su abuela.</p>
+        <p>"Aprendí a hacer empanadas con ella," relató Joaquín, cortando la carne a cuchillo, nunca molida, tal como exige la tradición salteña. "Toda la familia se reunía alrededor de la mesa los domingos — uno estiraba la masa, otro cortaba la carne, y los más pequeños, como yo entonces, ayudábamos a doblar lo que podíamos."</p>
+        <p>La empanada salteña combinaba carne cortada a cuchillo con papa, huevo duro, cebolla de verdeo, comino y ají molido, horneada hasta formar un caldo interior característico. "Mi abuela siempre advertía: 'Esta empanada tiene caldo adentro. Hay que comerla con cuidado, o te vas a quemar,'" recordó Joaquín, sonriendo ante el recuerdo.</p>
+        <p>Lo más difícil de aprender, sin embargo, no fue el relleno, sino el repulgue: los dobleces trenzados que sellaban la empanada e impedían que se abriera durante la cocción. Cada familia tenía su propio estilo de repulgue, casi como una firma personal transmitida de generación en generación.</p>
+        <p>"Practiqué el repulgue de mi abuela cientos de veces," confesó Joaquín. "Al principio, mis empanadas siempre se abrían en el horno y perdían todo el caldo. Ella me corregía con una paciencia infinita, una y otra vez, hasta que mis manos finalmente entendieron el movimiento."</p>
+        <p>Con los años, Joaquín llegó a dominar el repulgue exacto de su abuela, y hoy, en su propio restaurante, lo mantiene sin ninguna variación — aunque se permite experimentar con rellenos nuevos para ocasiones especiales. "El repulgue de mi abuela nunca cambia. Eso es sagrado," explicó. "Pero el relleno, a veces, sí — ahí es donde yo puedo jugar un poco."</p>
+        <p>Cuando uno de los aprendices le preguntó por el origen de la empanada, Joaquín respondió con entusiasmo: "Viene de España, y antes de eso, de los árabes, durante la Edad Media. Pero cada provincia argentina, con el tiempo, la hizo completamente suya."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un domingo por la mañana, en su restaurante de Salta, el chef Joaquín Torres preparaba empanadas junto a dos aprendices de cocina, relatándoles con detalle la historia detrás de la receta heredada de su abuela.</p>
+        <p>"Aprendí a hacerlas con ella," comentó, cortando la carne a cuchillo —nunca molida, como exige rigurosamente la tradición salteña. "Los domingos, toda la familia se reunía alrededor de la mesa: uno estiraba la masa, otro cortaba la carne, y los más pequeños, como yo en aquel entonces, colaborábamos con lo que podíamos."</p>
+        <p>La empanada salteña combinaba carne cortada a cuchillo con papa, huevo duro, cebolla de verdeo, comino y ají molido, horneada hasta desarrollar el característico caldo interior que la distingue de otras variantes regionales. "Mi abuela siempre advertía: 'Esta empanada tiene caldo adentro; hay que comerla con cuidado, o te vas a quemar,'" recordó Joaquín, sonriendo ante la memoria.</p>
+        <p>Sin embargo, lo más arduo de dominar no fue el relleno, sino el repulgue: los dobleces trenzados que sellaban la empanada e impedían que se abriera durante la cocción. Cada familia poseía su propio estilo de repulgue, transmitido de generación en generación casi como una firma personal.</p>
+        <p>"Practiqué el repulgue de mi abuela cientos de veces," reconoció Joaquín. "Al principio, mis empanadas invariablemente se abrían en el horno, perdiendo todo el caldo. Ella me corregía con una paciencia inagotable, repetidamente, hasta que mis manos finalmente interiorizaron el movimiento."</p>
+        <p>Con los años, Joaquín llegó a dominar con precisión el repulgue exacto de su abuela, y hoy, en su propio restaurante, lo conserva sin variación alguna —aunque se permite experimentar con rellenos novedosos para ocasiones especiales. "El repulgue de mi abuela nunca cambia. Eso es sagrado," afirmó. "Pero el relleno, en ocasiones, sí — ahí es donde encuentro espacio para innovar."</p>
+        <p>Cuando uno de los aprendices indagó sobre el origen de la empanada, Joaquín respondió con entusiasmo evidente: "Proviene de España, y antes de eso, de los árabes, durante la Edad Media. Pero cada provincia argentina, con el paso del tiempo, terminó apropiándosela por completo."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el repulgue</span> — pleated seal that closes an empanada</div>
+      <div><span class="term">cortar a cuchillo</span> — to hand-cut (not grind)</div>
+      <div><span class="term">el caldo</span> — broth</div>
+      <div><span class="term">moler</span> — to grind</div>
+      <div><span class="term">doblar</span> — to fold</div>
+      <div><span class="term">sagrado/a</span> — sacred</div>
+      <div><span class="term">innovar</span> — to innovate (cognate)</div>
+      <div><span class="term">la firma</span> — signature</div>
+      <div><span class="term">heredar</span> — to inherit</div>
+      <div><span class="term">la identidad</span> — identity (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>aprendí a hacer... con mi abuela</span>
+      <span>toda la familia se reunía</span>
+      <span>con cuidado</span>
+      <span>nunca cambia</span>
+      <span>eso es sagrado</span>
+      <span>ahí es donde puedo innovar un poco</span>
+      <span>con el tiempo</span>
+      <span>una y otra vez</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué es el repulgue, y por qué es tan importante en la empanada salteña?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué decide mantener siempre igual Joaquín, y qué se permite cambiar?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Repulgue de Joaquín</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → La Receta de la Abuela → Historia 2</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Gastronomía y tradición cultural — la empanada salteña, transmisión de técnicas culinarias, la comida como actividad familiar colectiva.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir una técnica culinaria paso a paso; narrar un proceso de aprendizaje con dificultad inicial; expresar qué se mantiene igual y qué cambia; narrar en pasado un evento específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>aprendí a hacer... con mi abuela · toda la familia se reunía · con cuidado · nunca cambia · eso es sagrado · ahí es donde puedo innovar un poco · con el tiempo.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, la receta y la técnica contadas paso a paso.<br>
+    <strong>A2:</strong> se añade contexto histórico/regional de la empanada y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando una escena específica en la cocina.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario culinario más preciso; cierre reflexivo sobre tradición e innovación.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Ninguno significativo. La empanada salteña (carne cortada a cuchillo, papa, huevo duro, cebolla de verdeo, comino, ají molido, caldo interior), el repulgue como firma familiar/regional, y el origen árabe-español de la empanada son datos reales y documentados. Joaquín Torres es un personaje ficticio.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Chef Joaquín Torres</strong> — chef salteño, aprendió de su abuela el repulgue familiar que nunca ha cambiado. Detalle propio: antes de cada servicio, hace una sola empanada "de práctica" con el repulgue exacto de su abuela, solo para él, sin venderla.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>identidad</em> — cognado natural con "identity", usado para describir el carácter único de la empanada salteña.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez practicaste algo muchas veces antes de lograrlo, como el repulgue de Joaquín? ¿Qué era, y quién te ayudó?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

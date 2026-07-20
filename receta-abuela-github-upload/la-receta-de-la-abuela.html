@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Receta de la Abuela — Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --navy: #26344d; --gold: #c9a24b; --gold-soft: #8a734a; --lamp: #e7b96b;
+    --green: #4c7a5e; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 60px; }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 22px; }
+  header { margin-bottom: 26px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.3rem; }
+  .subtitle { color: var(--parchment-dim); font-size: 0.95rem; margin-top: 8px; font-style: italic; }
+  .list { display: flex; flex-direction: column; gap: 10px; margin-top: 26px; }
+  .story { display: flex; align-items: center; gap: 18px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; text-decoration: none; color: var(--parchment); transition: border-color 0.15s ease; }
+  .story:hover { border-color: var(--gold); }
+  .story-num { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--gold-soft); white-space: nowrap; min-width: 20px; }
+  .story-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.1rem; flex: 1; }
+  .story-desc { font-size: 0.83rem; color: var(--parchment-dim); margin-top: 3px; }
+  .story-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--lamp); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="panorama-cultural.html">← Panorama Cultural</a>
+  <header>
+    <p class="eyebrow">Panorama Cultural · Libro 3 de 4</p>
+    <h1>La Receta de la Abuela</h1>
+    <p class="subtitle">8 chefs, 8 países — la receta familiar que los hizo famosos, contada con su propio toque.</p>
+  </header>
+  <div class="list">
+    <a class="story" href="recetaabuela_historia1_reader_El_Ceviche_de_Fernanda.html">
+      <span class="story-num">01</span>
+      <div>
+        <div class="story-title">El Ceviche de Fernanda</div>
+        <p class="story-desc">Perú — Lima · Chef Fernanda Ríos</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="recetaabuela_historia2_reader_El_Repulgue_de_Joaquin.html">
+      <span class="story-num">02</span>
+      <div>
+        <div class="story-title">El Repulgue de Joaquín</div>
+        <p class="story-desc">Argentina — Salta · Chef Joaquín Torres</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="recetaabuela_historia3_reader_La_Arepa_de_Yolanda.html">
+      <span class="story-num">03</span>
+      <div>
+        <div class="story-title">La Arepa de Yolanda</div>
+        <p class="story-desc">Colombia — Luruaco · Chef Yolanda Pacheco</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="recetaabuela_historia4_reader_El_Mole_de_Rosario.html">
+      <span class="story-num">04</span>
+      <div>
+        <div class="story-title">El Mole de Rosario</div>
+        <p class="story-desc">México — Puebla · Chef Rosario Mendoza</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="recetaabuela_historia5_reader_El_Pilon_de_Ismael.html">
+      <span class="story-num">05</span>
+      <div>
+        <div class="story-title">El Pilón de Ismael</div>
+        <p class="story-desc">Puerto Rico — San Juan · Chef Ismael Rivera</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="recetaabuela_historia6_reader_El_Secreto_de_Veronica.html">
+      <span class="story-num">06</span>
+      <div>
+        <div class="story-title">El Secreto de Verónica</div>
+        <p class="story-desc">Bolivia — La Paz / Potosí · Chef Verónica Salazar</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="recetaabuela_historia7_reader_El_Tueste_de_Cristina.html">
+      <span class="story-num">07</span>
+      <div>
+        <div class="story-title">El Tueste de Cristina</div>
+        <p class="story-desc">Guatemala — Chimaltenango · Chef Cristina Xicay</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="recetaabuela_historia8_reader_El_Socarrat_de_Vicente.html">
+      <span class="story-num">08</span>
+      <div>
+        <div class="story-title">El Socarrat de Vicente</div>
+        <p class="story-desc">España — Albufera, Valencia · Chef Vicente Bataller</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+  </div>
+</div>
+</body>
+</html>
