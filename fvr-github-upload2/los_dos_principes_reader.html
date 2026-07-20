@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los dos príncipes — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c1024; --ink-2:#12172e; --ink-3:#1a2040;
+    --lamp:#e8a94c; --lamp-dim:#c98a34; --coral:#e8735c;
+    --parchment:#f3e9d6; --parchment-dim:#e4d6b8; --page:#faf3e4;
+    --slate:#8891a8; --slate-dim:#5c6480;
+    --line: rgba(232,169,76,0.16);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--parchment);font-family:'Public Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;}
+  button{font-family:'Public Sans',sans-serif;cursor:pointer;}
+
+  /* ---------- TOP BAR ---------- */
+  .toolbar{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;gap:16px;padding:12px 24px;
+    background:rgba(9,12,26,0.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+  }
+  .back-link{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--slate);border:1px solid var(--line);padding:7px 12px;border-radius:20px;background:rgba(255,255,255,0.03);}
+  .back-link:hover{color:var(--parchment);border-color:var(--lamp-dim);}
+  .toolbar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;}
+  .toolbar-level{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:1.5px solid var(--lamp);color:var(--lamp);border-radius:5px;padding:2px 7px;}
+  .toolbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+  .tool-btn{
+    display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);
+    background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;transition:background .15s, border-color .15s;
+  }
+  .tool-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--lamp-dim);}
+  .tool-btn.on{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+  .font-controls{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .font-controls button{background:rgba(255,255,255,0.03);color:var(--parchment);border:none;padding:8px 12px;font-size:13px;}
+  .font-controls button:hover{background:rgba(255,255,255,0.1);}
+  .font-controls .divider{width:1px;background:var(--line);align-self:stretch;}
+
+  .progress-rail{height:3px;background:var(--ink-3);position:sticky;top:57px;z-index:39;}
+  .progress-rail-fill{height:100%;background:linear-gradient(90deg,var(--lamp),var(--coral));width:0%;transition:width .1s linear;}
+
+  /* ---------- LEVEL SWITCH STRIP ---------- */
+  .level-strip{display:flex;align-items:center;gap:10px;justify-content:center;padding:18px 24px 4px;flex-wrap:wrap;}
+  .level-strip-label{font-size:12.5px;color:var(--slate);}
+  .level-pill{
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:6px 13px;border-radius:20px;
+    border:1.5px solid var(--line);color:var(--slate);background:rgba(255,255,255,0.03);
+  }
+  .level-pill:hover{border-color:var(--lamp-dim);color:var(--parchment);}
+  .level-pill.active{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  /* ---------- LAYOUT ---------- */
+  .reader-layout{display:flex;justify-content:center;gap:28px;padding:20px 24px 80px;max-width:1180px;margin:0 auto;}
+  .page-wrap{flex:1 1 680px;max-width:680px;}
+  .page{
+    background:var(--page);color:#2c2412;border-radius:14px;padding:44px 52px;box-shadow:0 30px 60px rgba(0,0,0,0.4);
+    font-family:'Source Serif 4', serif; line-height:1.85; position:relative;
+  }
+  .page::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--lamp),var(--coral));border-radius:14px 14px 0 0;}
+  .story-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lamp-dim);margin-bottom:6px;}
+  .story-heading{font-family:'Fraunces',serif;font-size:30px;margin:0 0 6px;color:#241d0e;}
+  .story-author{font-family:'Public Sans',sans-serif;font-size:13.5px;color:#6b5e42;font-style:italic;margin-bottom:22px;}
+  .story-body p{margin:0 0 20px;}
+  .story-body.verse p{margin:0 0 22px;white-space:pre-line;}
+  .stanza-break{height:6px;}
+  .gloss{border-bottom:2px dotted var(--coral);cursor:help;position:relative;color:#241d0e;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(232,115,92,0.16);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--ink-2);color:var(--parchment);border:1px solid var(--line);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+
+  /* ---------- COMPREHENSION ---------- */
+  .comp-check{margin-top:8px;padding-top:28px;border-top:1px dashed var(--parchment-dim);}
+  .comp-title{font-family:'Fraunces',serif;font-size:19px;margin:0 0 4px;color:#241d0e;}
+  .comp-sub{font-family:'Public Sans',sans-serif;font-size:13px;color:#6b5e42;margin-bottom:18px;}
+  .comp-q{font-family:'Public Sans',sans-serif;font-size:14.5px;font-weight:600;color:#241d0e;margin-bottom:10px;}
+  .comp-options{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
+  .comp-opt{
+    font-family:'Public Sans',sans-serif;text-align:left;padding:10px 14px;border-radius:8px;border:1.5px solid #d8cba3;
+    background:#fffaf0;font-size:13.5px;color:#3a3120;
+  }
+  .comp-opt:hover{border-color:var(--coral);}
+  .comp-opt.correct{background:#dff1e2;border-color:#6fae7a;}
+  .comp-opt.incorrect{background:#f6dcd6;border-color:var(--coral);}
+  .comp-result{display:none;font-family:'Public Sans',sans-serif;font-size:13.5px;color:#4b6b4f;margin-top:-10px;margin-bottom:16px;}
+
+  .finish-bar{display:flex;align-items:center;gap:14px;margin-top:24px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:transform .12s;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--lamp);color:#26160a;}
+  .btn-primary:hover{background:#f0b768;}
+  .btn-outline{background:transparent;border:1.5px solid #c9b98a;color:#4a3f26;}
+
+  /* ---------- SIDE RAIL ---------- */
+  .side-rail{flex:0 0 240px;display:flex;flex-direction:column;gap:16px;}
+  .rail-card{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .rail-title{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:10px;font-weight:600;}
+  .word-chip{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:7px 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .word-chip:last-child{border-bottom:none;}
+  .word-en{color:var(--parchment);font-weight:600;}
+  .word-def{color:var(--slate);font-size:11.5px;}
+  .save-word{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--slate);font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .save-word.saved{background:var(--coral);border-color:var(--coral);color:#2a0f0a;}
+  .rail-meta-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--slate);padding:5px 0;}
+  .rail-meta-row b{color:var(--parchment);font-weight:600;}
+  .listen-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;}
+  .listen-btn:hover{border-color:var(--lamp-dim);}
+  .listen-btn.playing{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  @media(max-width:920px){
+    .reader-layout{flex-direction:column-reverse;align-items:center;}
+    .side-rail{flex:none;width:100%;max-width:680px;flex-direction:row;overflow-x:auto;}
+    .rail-card{min-width:220px;}
+    .page{padding:30px 22px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <a class="back-link" href="#">← Biblioteca</a>
+  <div class="toolbar-title">Los dos príncipes</div>
+  <span class="toolbar-level" id="toolbarLevel">A2</span>
+  <div class="toolbar-right">
+    <div class="font-controls">
+      <button onclick="changeFont(-1)" title="Texto más pequeño">A−</button>
+      <div class="divider"></div>
+      <button onclick="changeFont(1)" title="Texto más grande">A+</button>
+    </div>
+    <button class="tool-btn" id="glossToggle" onclick="toggleGloss()">🔤 Glosario: Activado</button>
+    <button class="tool-btn" id="nightToggle" onclick="toggleNight()">🌙 Luz de lámpara</button>
+  </div>
+</div>
+<div class="progress-rail"><div class="progress-rail-fill" id="progressFill"></div></div>
+
+<!-- LEVEL SWITCHER -->
+<div class="level-strip">
+  <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill active" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
+  <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
+  <div class="level-pill" data-level="B2" onclick="setReaderLevel('B2', this)">B2</div>
+  <div class="level-pill" data-level="ORIG" onclick="setReaderLevel('ORIG', this)">Auténtico</div>
+  <span class="level-strip-label" style="margin-left:6px;">— mismo poema, tu ritmo</span>
+</div>
+
+<!-- LAYOUT -->
+<div class="reader-layout">
+  <div class="page-wrap">
+    <div class="page" id="pageContent">
+      <div class="story-eyebrow">Poesía narrativa · Cuba</div>
+      <h1 class="story-heading">Los dos príncipes</h1>
+      <div class="story-author">José Martí · de <i>La Edad de Oro</i> (1889)</div>
+      <div class="story-body" id="storyBody"><!-- filled by JS --></div>
+
+      <div class="comp-check">
+        <div class="comp-title">Chequeo rápido</div>
+        <div class="comp-sub">Responde para marcar este poema como completado.</div>
+        <div class="comp-q">1. ¿Qué tienen en común la muerte del hijo del rey y la muerte del hijo del pastor?</div>
+        <div class="comp-options" id="q1opts">
+          <button class="comp-opt" onclick="answer(this,false,'q1')">Nada — una familia es rica y la otra es pobre.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q1')">Las dos familias sienten el mismo dolor, sin importar su riqueza.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q1')">Solo la familia del palacio siente tristeza de verdad.</button>
+        </div>
+        <div class="comp-result" id="q1result">Exacto — Martí usa dos familias muy distintas para mostrar que el amor y el dolor son iguales para todos.</div>
+
+        <div class="comp-q">2. ¿Qué hace el pastor con la flor al final del poema?</div>
+        <div class="comp-options" id="q2opts">
+          <button class="comp-opt" onclick="answer(this,false,'q2')">La lleva al entierro del príncipe.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q2')">La pone en la tumba de su propio hijo.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q2')">Se la da a la pastora para consolarla.</button>
+        </div>
+        <div class="comp-result" id="q2result">Así es — un gesto sencillo, pero con el mismo peso que la ceremonia real del palacio.</div>
+
+        <div class="finish-bar">
+          <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
+          <button class="btn btn-outline" onclick="alert('Volviendo a la biblioteca — tu progreso se guarda en Sigue leyendo.')">Guardar y salir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDE RAIL -->
+  <div class="side-rail">
+    <div class="rail-card">
+      <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
+    </div>
+    <div class="rail-card">
+      <div class="rail-title">Datos del poema</div>
+      <div class="rail-meta-row"><span>Nivel</span><b id="railLevel">A2</b></div>
+      <div class="rail-meta-row"><span>Tiempo de lectura</span><b id="railTime">4 min</b></div>
+      <div class="rail-meta-row"><span>Origen</span><b>Cuba</b></div>
+      <div class="rail-meta-row"><span>Tema</span><b>Familia, Igualdad, Duelo</b></div>
+    </div>
+    <div class="rail-card">
+      <div class="rail-title">Banco de palabras — este poema</div>
+      <div id="wordBank"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- CONTENT AT FOUR LEVELS ---------------- */
+const VERSIONS = {
+  A2: {
+    time:'3 min', verse:false,
+    html: `
+      <p>En el palacio hay mucha <span class="gloss" data-word="luto">tristeza</span><span class="gloss-tooltip">dolor muy grande por la muerte de alguien<span class="arrow"></span></span>. El rey está llorando en su trono. La reina también está llorando, pero llora donde nadie la puede ver. Todos los señores del palacio están tristes.</p>
+      <p>Los caballos no comen. Llevan color negro. El árbol de <span class="gloss" data-word="laurel">laurel</span><span class="gloss-tooltip">un árbol con hojas que se usan en coronas de honor<span class="arrow"></span></span> del patio no tiene hojas esta vez. Todo el pueblo va al <span class="gloss" data-word="entierro">entierro</span><span class="gloss-tooltip">la ceremonia cuando alguien muere<span class="arrow"></span></span> con flores de laurel.</p>
+      <p>—¡El hijo del rey se ha muerto! —dicen todos.</p>
+      <p>En las montañas vive un <span class="gloss" data-word="pastor">pastor</span><span class="gloss-tooltip">una persona que cuida las ovejas<span class="arrow"></span></span> sencillo. Su casa está entre los árboles. Su esposa mira el cielo y pregunta: "¿Por qué hay luz si mi hijo no está?"</p>
+      <p>Las ovejas también están tristes. El pastor hace una caja larga para su hijo. Un perro triste entra y sale de la casa. Adentro, alguien canta con mucho dolor: "Pajarito, quiero ir donde fue mi hijo."</p>
+      <p>El pastor llora. Con una pala, abre un hoyo en la tierra y pone una flor.</p>
+      <p>—¡El hijo del pastor también se murió!</p>
+      <p>Un príncipe y un niño pastor. Dos familias muy diferentes. El mismo dolor.</p>`
+  },
+  B1: {
+    time:'4 min', verse:false,
+    html: `
+      <p>El palacio está de <span class="gloss" data-word="luto">luto</span><span class="gloss-tooltip">el estado de tristeza y respeto después de una muerte<span class="arrow"></span></span>. En el trono, el rey llora sin control, y la reina llora también, aunque prefiere esconder sus lágrimas donde nadie pueda verla. Los señores y las damas del palacio, vestidos de negro, comparten el mismo dolor.</p>
+      <p>Hasta los caballos parecen sentir la tristeza: llevan <span class="gloss" data-word="penacho">penachos</span><span class="gloss-tooltip">plumas o adornos que se ponen en la cabeza<span class="arrow"></span></span> negros y no quieren comer. En el patio grande, el laurel se quedó sin una sola hoja, como si él también estuviera de luto. Todo el reino asiste al entierro, cada persona con una corona de laurel en las manos.</p>
+      <p>—¡El hijo del rey ha muerto! —repiten una y otra vez.</p>
+      <p>Muy lejos de allí, entre los álamos del monte, vive un pastor humilde con su familia. Su esposa mira el cielo y se pregunta, casi sin entender, por qué el sol sigue brillando si su hijo ya no está. Las ovejas caminan <span class="gloss" data-word="cabizbajas">cabizbajas</span><span class="gloss-tooltip">con la cabeza baja, tristes<span class="arrow"></span></span> hacia el portón, como si supieran lo que ha pasado.</p>
+      <p>El pastor construye, con sus propias manos, una caja larga y profunda. Un perro entra y sale de la casa sin descanso, y desde adentro se escucha una voz que canta con el corazón roto: "Pajarito, llévame donde él voló."</p>
+      <p>Sin embargo, el pastor no tiene tiempo para quedarse quieto en su dolor: toma la pala y el <span class="gloss" data-word="azadón">azadón</span><span class="gloss-tooltip">una herramienta para cavar la tierra<span class="arrow"></span></span>, abre un hoyo en la tierra y deja caer una flor sobre la tumba.</p>
+      <p>El pastor se quedó sin hijo. El hijo del pastor murió.</p>
+      <p>Un príncipe en un palacio de oro. Un niño pastor en una casa sencilla. Aunque sus vidas fueron completamente diferentes, la muerte les trajo a las dos familias exactamente el mismo dolor.</p>`
+  },
+  B2: {
+    time:'5 min', verse:true,
+    html: `
+      <p>El palacio está de <span class="gloss" data-word="luto">luto</span><span class="gloss-tooltip">tristeza y respeto tras una muerte<span class="arrow"></span></span>
+y en el trono llora el rey,
+y la reina está llorando
+donde nadie pueda ver:</p>
+      <p>En pañuelos finos y blancos
+lloran la reina y el rey:
+los señores del palacio
+están llorando también.</p>
+      <p>Los caballos llevan negro
+en la cabeza y el <span class="gloss" data-word="arnés">arnés</span><span class="gloss-tooltip">el equipo de cuero que lleva un caballo<span class="arrow"></span></span>:
+los caballos no han comido,
+porque no quieren comer:</p>
+      <p>El laurel del patio grande
+se quedó sin hojas esta vez:
+todo el pueblo fue al entierro
+con coronas de laurel:</p>
+      <p>—¡El hijo del rey se ha muerto!
+¡Se ha muerto el hijo del rey!</p>
+      <div class="stanza-break"></div>
+      <p>En los álamos del monte
+tiene su casa el pastor:
+la pastora está diciendo
+"¿por qué tiene luz el sol?"</p>
+      <p>Las ovejas, <span class="gloss" data-word="cabizbajas">cabizbajas</span><span class="gloss-tooltip">con la cabeza baja, tristes<span class="arrow"></span></span>,
+vienen todas al portón:
+¡una caja larga y honda
+está forrando el pastor!</p>
+      <p>Entra y sale un perro triste:
+canta allá adentro una voz—
+"¡Pajarito, yo estoy loca,
+llévame donde él voló!"</p>
+      <p>El pastor coge llorando
+la pala y el <span class="gloss" data-word="azadón">azadón</span><span class="gloss-tooltip">herramienta para cavar la tierra<span class="arrow"></span></span>:
+abre en la tierra una <span class="gloss" data-word="fosa">fosa</span><span class="gloss-tooltip">un hoyo hecho para enterrar a alguien<span class="arrow"></span></span>:
+echa en la fosa una flor:</p>
+      <p>¡Se quedó el pastor sin hijo!
+¡Murió el hijo del pastor!</p>`
+  },
+  ORIG: {
+    time:'5 min', verse:true,
+    html: `
+      <p>El palacio está de luto
+y en el trono llora el rey,
+y la reina está llorando
+donde no la puedan ver:</p>
+      <p>En pañuelos de <span class="gloss" data-word="holán">holán</span><span class="gloss-tooltip">una tela muy fina, de mucha calidad<span class="arrow"></span></span> fino
+lloran la reina y el rey:
+los señores del palacio
+están llorando también.</p>
+      <p>Los caballos llevan negro
+el <span class="gloss" data-word="penacho">penacho</span><span class="gloss-tooltip">adorno de plumas que lleva un caballo en la cabeza<span class="arrow"></span></span> y el <span class="gloss" data-word="arnés">arnés</span><span class="gloss-tooltip">el equipo de cuero de un caballo<span class="arrow"></span></span>:
+los caballos no han comido,
+porque no quieren comer:</p>
+      <p>El laurel del patio grande
+quedó sin hoja esta vez:
+todo el mundo fue al entierro
+con coronas de laurel:</p>
+      <p>—¡El hijo del rey se ha muerto!
+¡Se ha muerto el hijo del rey!</p>
+      <div class="stanza-break"></div>
+      <p>En los álamos del monte
+tiene su casa el pastor:
+la pastora está diciendo
+"¿Por qué tiene luz el sol?"</p>
+      <p>Las ovejas, <span class="gloss" data-word="cabizbajas">cabizbajas</span><span class="gloss-tooltip">con la cabeza baja<span class="arrow"></span></span>,
+vienen todas al portón:
+¡una caja larga y honda
+está forrando el pastor!</p>
+      <p>Entra y sale un perro triste:
+canta allá adentro una voz—
+"¡Pajarito, yo estoy loca,
+llévame donde él voló!"</p>
+      <p>El pastor coge llorando
+la pala y el <span class="gloss" data-word="azadón">azadón</span><span class="gloss-tooltip">herramienta para cavar la tierra<span class="arrow"></span></span>:
+abre en la tierra una <span class="gloss" data-word="fosa">fosa</span><span class="gloss-tooltip">hoyo hecho para enterrar a alguien<span class="arrow"></span></span>:
+echa en la fosa una flor:</p>
+      <p>¡Se quedó el pastor sin hijo!
+¡Murió el hijo del pastor!</p>
+      <p style="font-size:12px;color:#8891a8;margin-top:20px;">Texto auténtico — José Martí, "Los dos príncipes," de <i>La Edad de Oro</i> (1889). Dominio público.</p>`
+  }
+};
+
+let fontSize = 18;
+let glossOn = true;
+let listening = false;
+let currentLevel = 'A2';
+const savedWords = new Set();
+
+function renderStory(level){
+  currentLevel = level;
+  const body = document.getElementById('storyBody');
+  body.innerHTML = VERSIONS[level].html;
+  body.classList.toggle('verse', !!VERSIONS[level].verse);
+  body.style.fontSize = fontSize+'px';
+  document.getElementById('toolbarLevel').textContent = level==='ORIG' ? 'Auténtico' : level;
+  document.getElementById('railLevel').textContent = level==='ORIG' ? 'Auténtico' : level;
+  document.getElementById('railTime').textContent = VERSIONS[level].time;
+  applyGlossState();
+  buildWordBank();
+}
+
+function setReaderLevel(level, el){
+  document.querySelectorAll('.level-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  renderStory(level);
+}
+
+function changeFont(delta){
+  fontSize = Math.min(24, Math.max(14, fontSize+delta*2));
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+}
+
+function toggleGloss(){
+  glossOn = !glossOn;
+  document.getElementById('glossToggle').textContent = glossOn ? '🔤 Glosario: Activado' : '🔤 Glosario: Desactivado';
+  document.getElementById('glossToggle').classList.toggle('on', glossOn);
+  applyGlossState();
+}
+function applyGlossState(){
+  document.querySelectorAll('.gloss').forEach(g=>{
+    g.style.borderBottomColor = glossOn ? 'var(--coral)' : 'transparent';
+    g.style.cursor = glossOn ? 'help' : 'text';
+    g.style.fontWeight = glossOn ? '600' : '400';
+    if(!glossOn) g.classList.remove('tapped');
+  });
+}
+document.addEventListener('click', e=>{
+  if(e.target.closest('.gloss') && glossOn){
+    e.target.closest('.gloss').classList.toggle('tapped');
+  }
+});
+
+function toggleNight(){
+  const btn = document.getElementById('nightToggle');
+  btn.classList.toggle('on');
+  document.getElementById('pageContent').style.filter = btn.classList.contains('on') ? 'invert(1) hue-rotate(180deg)' : 'none';
+  btn.textContent = btn.classList.contains('on') ? '☀ Luz brillante' : '🌙 Luz de lámpara';
+}
+
+function toggleListen(){
+  listening = !listening;
+  const btn = document.getElementById('listenBtn');
+  btn.classList.toggle('playing', listening);
+  btn.textContent = listening ? '⏸ Reproduciendo narración…' : '🔊 Escuchar narración';
+}
+
+function buildWordBank(){
+  const words = [...document.querySelectorAll('.gloss')];
+  const seen = new Set();
+  const bank = document.getElementById('wordBank');
+  bank.innerHTML = '';
+  words.forEach(w=>{
+    const word = w.dataset.word;
+    if(seen.has(word)) return; seen.add(word);
+    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const row = document.createElement('div');
+    row.className='word-chip';
+    row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
+      <button class="save-word ${savedWords.has(word)?'saved':''}" onclick="toggleSaveWord('${word}', this)">${savedWords.has(word)?'✓':'+'}</button>`;
+    bank.appendChild(row);
+  });
+}
+function toggleSaveWord(word, btn){
+  if(savedWords.has(word)){ savedWords.delete(word); btn.classList.remove('saved'); btn.textContent='+'; }
+  else { savedWords.add(word); btn.classList.add('saved'); btn.textContent='✓'; }
+}
+
+/* ---------------- COMPREHENSION ---------------- */
+const answered = {};
+function answer(btn, isCorrect, qid){
+  if(answered[qid]) return;
+  answered[qid]=true;
+  const opts = btn.parentElement.querySelectorAll('.comp-opt');
+  opts.forEach(o=>o.disabled=true);
+  btn.classList.add(isCorrect?'correct':'incorrect');
+  if(!isCorrect){
+    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+  }
+  document.getElementById(qid+'result').style.display='block';
+}
+function finishStory(){
+  if(Object.keys(answered).length < 2){
+    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+    return;
+  }
+  document.getElementById('finishBtn').textContent = '✓ ¡Completado!';
+  document.getElementById('finishBtn').style.background = '#6fae7a';
+  setTimeout(()=> alert('¡Buena lectura! Este poema ahora aparece 100% completo en tu estante, y tu maestra puede ver tus resultados de comprensión.'), 300);
+}
+
+/* ---------------- SCROLL PROGRESS ---------------- */
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('progressFill').style.width = Math.min(100,scrolled)+'%';
+});
+
+/* ---------------- INIT ---------------- */
+renderStory('A2');
+</script>
+</body>
+</html>
