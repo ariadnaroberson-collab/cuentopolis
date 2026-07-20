@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meñique — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Cuento clásico</div>
+    <h1>Meñique</h1>
+    <div class="subtitle">José Martí, de <i>La Edad de Oro</i> (1889) — adaptado del francés de Laboulaye</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>En un país lejano vive un campesino pobre. Tiene tres hijos: Pedro, Pablo y Juanito. Juanito es muy pequeño, y por eso todos lo llaman <span class="gloss" data-word="Meñique">Meñique</span>.</p>
+        <p>Pedro es grande y fuerte. Pablo es flaco y <span class="gloss" data-word="envidioso">envidioso</span>. Meñique es pequeño, pero muy curioso. Él siempre pregunta "¿por qué?"</p>
+        <p>La familia es muy pobre. Un día, el padre dice a sus hijos: "Ustedes ya son grandes. Vayan a buscar fortuna."</p>
+        <p>Los tres hermanos caminan. Cerca de allí vive un rey en un palacio grande. Pero el palacio tiene dos problemas: un árbol mágico cubre las ventanas con sus ramas, y no hay agua en el patio.</p>
+        <p>El rey pone un cartel: "El hombre que corte el árbol y abra un pozo se casa con mi hija, la princesa, y recibe la mitad de mi reino."</p>
+        <p>Pero hay un problema serio: si no puedes hacerlo, el rey ordena cortarte las orejas.</p>
+        <p>En el camino, los hermanos escuchan un ruido en la montaña.</p>
+        <p>"Escucho un hacha," dice Meñique. "Voy a ver qué es."</p>
+        <p>Sus hermanos dicen: "No importa. Sigue caminando, tonto."</p>
+        <p>Pero Meñique sube solo. Encuentra un hacha mágica que corta árboles sola.</p>
+        <p>"¿Quieres trabajar para mí?" pregunta Meñique.</p>
+        <p>"Sí. Hace muchos años que te espero," dice el hacha.</p>
+        <p>Meñique guarda el hacha en su saco de cuero.</p>
+        <p>Más adelante, escucha otro ruido: un pico mágico que rompe piedra solo. Meñique habla con el pico y lo guarda también.</p>
+        <p>Después, encuentra un arroyo muy pequeño. Es una cáscara de nuez mágica, llena de agua. Meñique la guarda con mucho cuidado.</p>
+        <p>Sus hermanos no entienden por qué Meñique hace tantas preguntas. Pero Meñique dice: "Yo he visto lo que quería ver."</p>
+        <p>Por fin, llegan al palacio. Pedro intenta cortar el árbol con un hacha normal. No puede. El rey le corta las orejas.</p>
+        <p>Pablo intenta también. Tampoco puede. El rey le corta las orejas a él también.</p>
+        <p>Meñique dice: "Yo quiero probar."</p>
+        <p>Saca su hacha mágica y dice: "¡Corta, hacha, corta!" El hacha corta todo el árbol en pocos minutos.</p>
+        <p>Después saca el pico mágico: "¡Cava, pico, cava!" El pico abre un pozo muy profundo.</p>
+        <p>Por último, saca la cáscara de nuez: "¡Brota, agua, brota!" El agua llena el pozo hasta arriba.</p>
+        <p>El rey está muy sorprendido. Pero no quiere que su hija se case con un hombre tan pequeño.</p>
+        <p>El rey piensa en un plan. Le dice a Meñique: "Antes de casarte con mi hija, necesito un regalo: en el bosque vive un gigante enorme y peligroso. Tráemelo como sirviente."</p>
+        <p>Meñique camina al bosque y encuentra al gigante.</p>
+        <p>"Te voy a comer," dice el gigante.</p>
+        <p>"Primero, vamos a competir," responde Meñique. "Si tú ganas, yo soy tu sirviente. Si yo gano, tú eres el mío."</p>
+        <p>El gigante acepta. Primero, le pide a Meñique que traiga agua en dos cubos enormes. Meñique dice: "Eso es trabajo de bestias. Tú cargas el agua; yo enciendo el fuego para la comida."</p>
+        <p>Después, comen juntos. El gigante come mucha carne. Meñique, en secreto, esconde su comida en el saco grande, no en la boca.</p>
+        <p>"Ya no puedo comer más," dice el gigante.</p>
+        <p>"Yo sí puedo," dice Meñique, y abre su saco con un cuchillo, como si tuviera más espacio.</p>
+        <p>El gigante tiene mucho miedo. "Tú eres más fuerte que yo. Yo soy tu sirviente," dice.</p>
+        <p>Meñique regresa al palacio con el gigante en el hombro.</p>
+        <p>La princesa dice: "Antes de casarnos, quiero ver si eres inteligente. Vamos a decir mentiras muy grandes. La primera persona que diga '¡Eso es demasiado!' pierde."</p>
+        <p>Meñique gana el juego con una historia muy larga y muy loca.</p>
+        <p>"Todavía tengo tres preguntas difíciles," dice la princesa. Meñique responde las tres correctamente.</p>
+        <p>"Aquí está mi mano, Meñique," dice la princesa.</p>
+        <p>Se casan. El pequeño Meñique se convierte en rey, y gobierna con mucha sabiduría por muchos años.</p>
+        <p>Pablo, el hermano envidioso, no puede alegrarse por Meñique. Se va solo al bosque, y nunca regresa.</p>
+        <p>Pedro, en cambio, está feliz por su hermano pequeño.</p>
+        <p>Esta historia nos enseña algo importante: el saber vale más que la fuerza.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Hace mucho tiempo, en un país muy extraño, vivía un campesino pobre con sus tres hijos: Pedro, Pablo y Juancito. Pedro era grande y fuerte, pero de pocas ideas. Pablo era flaco, y estaba siempre lleno de <span class="gloss" data-word="envidia">envidia</span> y celos. Juancito era pequeño y rápido — tan chiquito que se podía esconder en una bota de su padre. Por eso nadie le decía Juan, sino Meñique.</p>
+        <p>La familia era tan pobre que había fiesta cuando alguien traía un centavo a casa. Cuando los tres hermanos ya eran suficientemente grandes, el padre les pidió que salieran a buscar fortuna por el mundo, aunque a todos les dolía el corazón de dejarlo solo.</p>
+        <p>Cerca de allí, el rey del país tenía un palacio con dos problemas grandes: una noche, un roble encantado había crecido delante de las ventanas, y ninguna hacha normal podía cortarlo — por cada rama que cortaban, salían dos nuevas. Además, no había agua en todo el palacio, porque estaba construido sobre una roca de granito.</p>
+        <p>El rey, desesperado, mandó un cartel a todo el reino: quien cortara el árbol y abriera un pozo con agua se casaría con la princesa y recibiría la mitad del reino. Pero había un aviso más pequeño: al que probara suerte y fracasara, le cortarían las orejas — "para enseñarle a ser modesto."</p>
+        <p>En el camino hacia el palacio, Meñique escuchaba todo con curiosidad, mientras Pedro y Pablo se burlaban de sus preguntas. Al pasar por un bosque, oyeron un ruido de hacha en lo alto de una montaña.</p>
+        <p>"Yo quisiera saber quién anda cortando leña allá arriba," dijo Meñique.</p>
+        <p>"Todo lo quiere saber el que no sabe nada," respondió Pablo.</p>
+        <p>Pero Meñique subió solo, y encontró un hacha encantada que cortaba árboles ella sola. "¿No está cansada de cortar tan solita?" le preguntó Meñique. "Hace muchos años que te espero," respondió el hacha. Sin miedo, Meñique la guardó en su gran saco de cuero.</p>
+        <p>Más adelante, encontraron una piedra que hacía un ruido de golpes. Meñique subió otra vez y encontró un pico encantado que abría rocas solo, "como si fuera mantequilla." También lo guardó en el saco.</p>
+        <p>Por último, junto a un arroyo, Meñique quiso saber de dónde salía tanta agua en un lugar tan plano. Siguió el arroyo hasta que se hizo tan delgado como un hilo, y encontró una cáscara de nuez encantada de donde brotaba el agua. La envolvió en musgo fresco para no perder ni una gota, y la guardó también.</p>
+        <p>Al llegar al palacio, Pedro intentó cortar el árbol con toda su fuerza, pero por cada rama que cortaba salían dos más, y los soldados le cortaron las orejas. Pablo intentó lo mismo con una raíz, y también perdió las orejas.</p>
+        <p>Entonces Meñique se acercó al árbol y dijo: "¡Corta, hacha, corta!" El hacha encantada cortó, taló y arrancó raíces hasta que no quedó ni una hoja del árbol. Después, sacó el pico: "¡Cava, pico, cava!" — y en menos de un cuarto de hora, había un pozo de cien pies. Por último, sacó la cáscara de nuez: "¡Brota, agua, brota!" — y el agua llenó el pozo hasta desbordarse.</p>
+        <p>El rey, sorprendido pero de mal humor por tener un yerno tan pequeño, decidió no cumplir su promesa fácilmente. Le dijo a Meñique que antes de casarse necesitaba un regalo digno de su hija: un gigante del bosque cercano, que se comía un buey entero y bebía un melonar de sed.</p>
+        <p>Meñique fue al bosque solo. Cuando el gigante amenazó con comérselo, Meñique propuso un trato: "Si yo no puedo hacer lo que tú hagas, seré tu criado. Si tú no puedes hacer lo que yo haga, tú serás el mío." El gigante, pensando que ganaría fácil, aceptó.</p>
+        <p>Primero, el gigante le pidió que cargara agua en dos cubos enormes. Meñique respondió: "Eso es trabajo de bestias de carga. Yo encenderé el fuego mientras tú traes el agua." El gigante, con miedo de perder más árboles de su bosque, aceptó cargar el agua él mismo.</p>
+        <p>Después, comieron juntos un guiso enorme. El gigante comía y comía, hasta que no pudo más. Pero Meñique, escondiendo la comida en su gran saco en vez de comerla, parecía no llenarse nunca. Cuando ya no le cabía nada más en el saco, se abrió la chaqueta con un cuchillo "para hacer más espacio." El gigante, asustado, prefirió ser su criado antes que competir con semejante estómago.</p>
+        <p>Meñique regresó al palacio sentado en el hombro del gigante, que rompió la puerta de un golpe. Pero la princesa, antes de aceptar la boda, le puso una última prueba: un concurso de mentiras, donde el primero en decir "¡Eso es demasiado!" perdería. Meñique inventó una historia tan absurda y exagerada que la princesa terminó gritando esas palabras sin poder evitarlo.</p>
+        <p>Después le puso tres enigmas, que Meñique adivinó uno por uno, el último con una respuesta tan hábil que dejó a la princesa sin palabras, salvo para decir: "Aquí está mi mano de esposa, marqués Meñique."</p>
+        <p>Se casaron, y cuando el viejo rey murió, Meñique gobernó el país durante cincuenta y dos años, con tanta bondad y sabiduría que su pueblo nunca quiso otro rey. Pablo, el hermano envidioso, no soportó ver feliz a su hermano pequeño, y se fue solo, lejos de todos, sin volver jamás. Pedro, en cambio, se alegró sinceramente por su hermano.</p>
+        <p>Y como dice el cuento: el que tiene buen corazón, ése es el que tiene talento — porque el saber vale mucho más que la fuerza.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>En un país muy extraño vivió, hace mucho tiempo, un campesino que tenía tres hijos: Pedro, Pablo y Juancito. Pedro era gordo y grande, de cara colorada y pocas entendederas; Pablo era canijo y paliducho, lleno de envidias y celos; Juancito era tan chiquitín que se podía esconder en una bota de su padre. Nadie le decía Juan, sino Meñique.</p>
+        <p>El campesino era tan pobre que había fiesta en la casa cuando traían un centavo. En cuanto los tres hijos fueron bastante crecidos, el padre les rogó, por su propio bien, que salieran a buscar fortuna por el mundo, aunque a todos les dolía dejarlo solo con sus árboles y su casita.</p>
+        <p>Como a una legua de allí tenía el rey del país un palacio magnífico. Pero una noche había salido, sin explicación, un roble enorme delante de las ventanas del palacio, con ramas tan gruesas que no había hacha capaz de tumbarlo: por cada rama que cortaban, salían dos nuevas. Y para colmo, en todo el palacio no había una gota de agua, porque estaba construido sobre pura roca.</p>
+        <p>Desesperado, el rey mandó pregoneros con un cartel que ofrecía casar a su hija, la princesa, y dar la mitad del reino a quien cortara el árbol y abriera un pozo. Pero debajo de ese cartel había otro, más pequeño, que advertía: al que probara suerte y no lo lograra, le cortarían las orejas allí mismo, "para enseñarle a ser modesto."</p>
+        <p>Los tres hermanos oyeron el pregón y se pusieron en camino. Por donde pasaban, Meñique preguntaba por todo — por qué las abejas entraban en las flores, por qué las mariposas no volaban derecho — mientras Pedro se reía y Pablo lo mandaba a callar. Al pasar por un pinar, oyeron un ruido como de un hacha cortando en lo alto.</p>
+        <p>—Yo quisiera saber quién anda allá arriba cortando leña —dijo Meñique.</p>
+        <p>—Todo lo quiere saber el que no sabe nada —respondió Pablo, gruñendo.</p>
+        <p>Meñique subió solo, brincando entre piedras y ramas, y encontró un hacha encantada que cortaba sola un pino muy grueso. "¿No está cansada de cortar tan solita ese árbol tan viejo?", le preguntó. "Hace muchos años, hijo mío, que estoy esperando por ti", respondió el hacha. Sin ponerse a temblar, Meñique la metió en su gran saco de cuero y bajó cantando.</p>
+        <p>Más adelante encontraron un camino de piedra, con un ruido de hierro golpeando roca. Meñique subió otra vez, y encontró un pico encantado que abría la roca "como si fuese mantequilla". Repitió las mismas palabras, y el pico respondió lo mismo que el hacha: había esperado por él muchos años. Lo guardó también.</p>
+        <p>Por último, junto a un arroyo donde se detuvieron a beber por el calor, Meñique quiso saber de dónde salía tanta agua en un valle tan llano. Siguió la orilla, que se iba estrechando hasta ser apenas un hilo, hasta encontrar una cáscara de nuez encantada de donde brotaba el agua chispeando al sol. La envolvió en musgo fresco, para que no se derramara, y siguió su camino frotándose las manos, satisfecho: "Yo he visto lo que quería ver, y sé lo que quería saber."</p>
+        <p>Al llegar al palacio, encontraron el roble más frondoso que nunca y el cartel clavado en la puerta, rodeado de treinta orejas ya cortadas a quince hombres que se habían creído más fuertes de lo que eran. Pedro, confiado en sus músculos, le dio al árbol un hachazo tremendo — pero de la rama cortada salieron dos nuevas, y los soldados le cortaron las orejas sin más ceremonia. Pablo probó con una raíz, con el mismo resultado.</p>
+        <p>Pero a Meñique no se le achicó el corazón. Sacó su hacha del saco y dijo: "¡Corta, hacha, corta!" Y el hacha cortó, taló, arrancó raíces por todos lados, hasta dejar tanta leña que el palacio se calentó con ella todo el invierno. Después sacó el pico: "¡Cava, pico, cava!" — y en menos de un cuarto de hora quedó abierto un pozo de cien pies. Por último, sacó la cáscara de nuez, la puso en una fuente de flores, y dijo: "¡Brota, agua, brota!" — hasta que el agua desbordó el pozo y hubo que abrir un canal para el sobrante.</p>
+        <p>El rey, aunque agradecido, no pudo dormir esa noche de disgusto por tener que casar a su hija con un hombre tan pequeño. Buscó la manera de romper su palabra sin faltar del todo a ella, y a la mañana siguiente le pidió a Meñique un regalo antes de la boda: en un bosque cercano vivía un gigante de veinte pies de alto, que se almorzaba un buey entero. Debía traerlo como criado.</p>
+        <p>Meñique fue solo al bosque, y cuando el gigante amenazó con comérselo de un bocado, le propuso un trato: si uno de los dos no podía hacer lo que el otro hiciera, sería su criado. El gigante, seguro de ganar, aceptó enseguida.</p>
+        <p>Primero le mandó cargar agua en dos cubos tan grandes como tanques. Meñique respondió que ésa era tarea de bestia de carga, y que él, mientras tanto, encendería el fuego para la comida — con lo cual el gigante, temiendo perder también el agua de su bosque, prefirió cargarla él mismo.</p>
+        <p>Después se sentaron a comer un guiso de buey entero. El gigante comía sin parar, hasta tener que soltarse los botones del chaleco; Meñique, sin que se notara, iba escondiendo cada bocado en su gran saco de cuero en vez de comerlo. Cuando el saco ya no le cabía más, se abrió la chaqueta de un tajo con el cuchillo, "para hacerse un poco de lugar." El gigante, aterrado ante tal estómago, prefirió besarle la mano y declararse su criado para siempre.</p>
+        <p>Meñique volvió al palacio montado en el hombro del gigante, que echó abajo el portón de un golpe. Pero la princesa, antes de casarse, quiso probar su ingenio con un juego de mentiras: el primero en decir "¡Eso es demasiado!" perdería. Meñique fue subiendo la exageración de su historia — una vaca lechera, un toro descomunal, una yegua caída en una artesa de queso — hasta llevar a la princesa, sin darse cuenta, a decir esas mismas palabras prohibidas.</p>
+        <p>Le quedaban tres enigmas: qué cosa cae siempre y nunca se rompe (la cascada), quién anda siempre el mismo camino sin volver atrás (el sol), y un último enigma sobre lo que ella pensaba y él no, y lo que ninguno de los dos pensaba. Meñique lo resolvió con tanta delicadeza que la princesa, sonrojada, le dio la mano: "Aquí está mi mano de esposa, marqués Meñique."</p>
+        <p>Se casaron, y cuando murió el viejo rey, Meñique gobernó cincuenta y dos años con tanta bondad que su pueblo nunca quiso a otro rey. Pablo, el envidioso, no pudo soportar la felicidad de su hermano, y se apartó solo de todos, sin volver jamás. Pedro, en cambio, se alegró de corazón por Meñique.</p>
+        <p>Bueno tenía que ser un hombre de tanto ingenio, porque el que es estúpido no es bueno, y el que es bueno no es estúpido: el saber, al final, vale mucho más que la fuerza.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Texto auténtico</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Texto auténtico de José Martí, publicado en <i>La Edad de Oro</i> (1889). Dominio público. Se ofrece completo, con glosario de apoyo para el vocabulario del siglo XIX, en vez de reescribirlo.</p>
+        <p><em>(Del francés, de Laboulaye.) Cuento de magia, donde se relata la historia del sabichoso Meñique, y se ve que el saber vale más que la fuerza.</em></p>
+        <p>En un país muy extraño vivió hace mucho tiempo un campesino que tenía tres hijos: Pedro, Pablo y Juancito. Pedro era gordo y grande, de cara colorada, y de pocas <span class="gloss" data-word="entendederas">entendederas</span>; Pablo era canijo y paliducho, lleno de envidias y de celos; Juancito era lindo como una mujer, y más ligero que un resorte, pero tan chiquitín que se podía esconder en una bota de su padre. Nadie le decía Juan, sino Meñique.</p>
+        <p>El campesino era tan pobre que había fiesta en la casa cuando traía alguno un centavo. El pan costaba mucho, aunque era pan negro; y no tenían cómo ganarse la vida. En cuanto los tres hijos fueron bastante crecidos, el padre les rogó por su bien que salieran de su choza infeliz, a buscar fortuna por el mundo. Como a una legua de allí tenía el rey del país un palacio magnífico, todo de madera, con veinte balcones de roble tallado, y seis ventanitas. Y sucedió que de repente, en una noche de mucho calor, salió de la tierra, delante de las seis ventanas, un roble enorme con ramas tan gruesas y tanto follaje que dejó a oscuras el palacio del rey. Era un árbol encantado, y no había hacha que pudiera echarlo a tierra, porque se le mellaba el filo en lo duro del tronco, y por cada rama que le cortaban salían dos.</p>
+        <p>Y eso no era todo. Por aquel país, hasta de las piedras del camino salían los manantiales; pero en el palacio no había agua. El rey había prometido casar a su hija con el que abriese en el patio del castillo un pozo donde se pudiera guardar agua para todo el año. Pero nadie se llevó el premio, porque el palacio estaba en una roca, y en cuanto se escarbaba la tierra de arriba, salía debajo la capa de granito.</p>
+        <p>Mandó el rey pregoneros que fueran clavando por todos los pueblos y caminos de su reino el cartel sellado con las armas reales, donde ofrecía casar a su hija con el que cortara el árbol y abriese el pozo, y darle además la mitad de sus tierras.</p>
+        <p>Los tres hijos del campesino oyeron el pregón, y tomaron el camino del palacio. A cada paso Meñique tenía algo nuevo que preguntar a sus hermanos: que por qué las abejas metían la cabecita en las flores, que por qué las golondrinas volaban tan cerca del agua. Pedro se echaba a reír, y Pablo se encogía de hombros y lo mandaba callar.</p>
+        <p>Caminando, caminando, llegaron a un pinar muy espeso, y oyeron un ruido grande, como de un hacha.</p>
+        <p>—Yo quisiera saber por qué andan allá arriba cortando leña —dijo Meñique.</p>
+        <p>—Todo lo quiere saber el que no sabe nada —dijo Pablo, medio gruñendo.</p>
+        <p>—Yo voy a ver lo que hacen allá arriba —dijo Meñique.</p>
+        <p>Y de ramas en piedras, gateando y saltando, subió Meñique. Y encontró un hacha encantada, que cortaba sola, y estaba echando abajo un pino muy recio.</p>
+        <p>—Buenos días, señora hacha —dijo Meñique;—¿no está cansada de cortar tan solita ese árbol tan viejo?</p>
+        <p>—Hace muchos años, hijo mío, que estoy esperando por ti —respondió el hacha.</p>
+        <p>—Pues aquí me tiene —dijo Meñique.</p>
+        <p>Y sin ponerse a temblar, metió el hacha en su gran saco de cuero, y bajó el monte, brincando y cantando.</p>
+        <p>A poco andar se oyó un ruido que venía de lejos, como de un hierro que golpease en una roca. Meñique subió otra vez, y encontró un pico encantado, que picaba solo, y estaba abriendo la roca como si fuese mantequilla.</p>
+        <p>—Buenos días, señor pico —dijo Meñique:—¿no está cansado de picar tan solito en esa roca vieja?</p>
+        <p>—Hace muchos años, hijo mío, que estoy esperando por ti —respondió el pico.</p>
+        <p>Y sin pizca de miedo le echó mano al pico, lo metió en su gran saco de cuero, y bajó retozando y cantando.</p>
+        <p>Más adelante encontraron un arroyo, y se detuvieron a beber, porque era mucho el calor.</p>
+        <p>—Yo quisiera saber —dijo Meñique— de dónde sale tanta agua en un valle tan llano como éste.</p>
+        <p>Y siguió andando por la orilla del arroyo, que se iba estrechando, estrechando, hasta que no era más que un hilo. Y encontró una cáscara de nuez encantada, de donde salía a borbotones el agua clara chispeando al sol.</p>
+        <p>—Buenos días, señor arroyo —dijo Meñique;—¿no está cansado de vivir tan solito en su rincón, manando agua?</p>
+        <p>—Hace muchos años, hijo mío, que estoy esperando por ti —respondió el arroyo.</p>
+        <p>Y sin el menor susto tomó la cáscara de nuez, la envolvió bien en musgo fresco para que no se saliera el agua, la puso en su gran saco de cuero, y se volvió por donde vino, saltando y cantando.</p>
+        <p>—Yo he visto lo que quería ver, y sé lo que quería saber —se dijo Meñique a sí mismo. Y siguió su camino, frotándose las manos.</p>
+        <p>Por fin llegaron al palacio del rey. El roble crecía más que nunca, el pozo no lo habían podido abrir, y debajo del cartelón grande había otro cartel más pequeño, que decía con letras coloradas: «Sepan los hombres por este cartel, que el rey y señor, como buen rey que es, se ha dignado mandar que le corten las orejas debajo del mismo roble al que venga a cortar el árbol o abrir el pozo, y no corte, ni abra; para enseñarle a conocerse a sí mismo y a ser modesto, que es la primera lección de la sabiduría.» Y alrededor de este cartel había clavadas treinta orejas sanguinolentas, cortadas a quince hombres que se creyeron más fuertes de lo que eran.</p>
+        <p>Al leer este aviso, Pedro se echó a reír, se retorció los bigotes, le dio al hacha dos vuelos por encima de su cabeza, y de un golpe echó abajo una de las ramas más gruesas. Pero enseguida salieron dos ramas poderosas en el punto mismo del hachazo, y los soldados del rey le cortaron las orejas sin más ceremonia. Pablo probó con una raíz, con el mismo resultado.</p>
+        <p>Pero a Meñique no se le achicó el corazón, y se le echó al roble encima.</p>
+        <p>—¡Quítenme a ese enano de ahí! —dijo el rey—¡y si no se quiere quitar, córtenle las orejas!</p>
+        <p>—Señor rey, tu palabra es sagrada. La palabra de un hombre es ley, señor rey. Yo tengo derecho por tu cartel a probar mi fortuna.</p>
+        <p>Meñique sacó con mucha faena el hacha encantada de su gran saco de cuero. Y le dijo: «¡Corta, hacha, corta!» Y el hacha cortó, tajó, astilló, derribó las ramas, cercenó el tronco, arrancó las raíces, y tanta leña apiló del árbol en trizas, que el palacio se calentó con el roble todo aquel invierno.</p>
+        <p>Meñique, sereno como una rosa, abrió su gran saco de cuero, metió el mango en el pico, lo puso en el lugar que marcó el rey, y le dijo: «¡Cava, pico, cava!» Y el pico empezó a cavar, y el granito a saltar en pedazos, y en menos de un cuarto de hora quedó abierto un pozo de cien pies.</p>
+        <p>—¿Le parece a mi rey que este pozo es bastante hondo?</p>
+        <p>—Es hondo; pero no tiene agua.</p>
+        <p>—Agua tendrá —dijo Meñique. Metió el brazo en el gran saco de cuero, le quitó el musgo a la cáscara de nuez, y puso la cáscara en una fuente que habían llenado de flores. Y cuando ya estaba bien dentro de la tierra, dijo: «¡Brota, agua, brota!» Y el agua empezó a brotar por entre las flores con un suave murmullo, y cayó en cascadas tan abundantes que al cuarto de hora ya el pozo estaba lleno, y fue preciso abrir un canal que llevase afuera el agua sobrante.</p>
+        <p>—Sí, marqués Meñique —respondió el rey,—y te daré la mitad de mi reino; pero con mi hija no te puedo casar, porque ésa es cosa en que yo solo no soy dueño.</p>
+        <p>El rey no pudo dormir aquella noche, no por agradecimiento, sino por el disgusto de casar a su hija con aquel picolín que cabía en una bota de su padre. Mandó a buscar a Pedro y a Pablo, y Pablo, envidioso, le dijo al rey que el marqués era «un pedante aventurero, un trasto con bigotes», e inventó que Meñique se creía capaz de pelear con un gigante que vivía cerca, y que se llevaba las ovejas y las vacas de la gente del campo.</p>
+        <p>—Eso es lo que vamos a ver —dijo el rey satisfecho.</p>
+        <p>En cuanto salió el sol, el rey hizo llamar a Meñique delante de toda su corte.</p>
+        <p>—Yerno querido —dijo el rey,—un hombre de tu honradez no puede casarse con mujer tan rica como la princesa, sin ponerle casa grande, con criados que la sirvan como se debe. En este bosque hay un gigante de veinte pies de alto, que se almuerza un buey entero. Ese es el regalo que te pide mi hija antes de decidirse a casarse contigo.</p>
+        <p>—No es cosa fácil —respondió Meñique,—pero trataré de regalarle el gigante, para que le sirva de criado.</p>
+        <p>Se fue a la cocina; metió en el gran saco de cuero el hacha encantada, un pan fresco, un pedazo de queso y un cuchillo, y salió andando por el bosque.</p>
+        <p>—¡Eh, gigante, gigante! —gritó Meñique—. Aquí está Meñique, que viene a llevarse al gigante muerto o vivo.</p>
+        <p>—Y aquí estoy yo —dijo el gigante, con un vocerrón que hizo encogerse a los árboles de miedo,—aquí estoy yo, que vengo a tragarte de un bocado.</p>
+        <p>—No estés tan de prisa, amigo —dijo Meñique, con una vocecita de flautín,—que yo tengo una hora para hablar contigo.</p>
+        <p>—Con la punta del dedo te voy a echar allá arriba en el nido del cuervo —dijo el gigante.</p>
+        <p>—No estés tan de prisa, amigo, que este bosque es tan mío como tuyo; y si dices una palabra más, te lo echo abajo en un cuarto de hora.</p>
+        <p>Meñique sacó su hacha, y le dijo: «¡Corta, hacha, corta!» Y el hacha cortó, tajó, astilló, derribó ramas, cercenó troncos, y los árboles caían sobre el gigante como cae el granizo sobre los vidrios en el temporal.</p>
+        <p>—Para, para —dijo asustado el gigante,—¿quién eres tú, que puedes echarme abajo mi bosque?</p>
+        <p>—Soy el gran hechicero Meñique, y con una palabra que le diga a mi hacha te corta la cabeza. ¡Quieto donde estás!</p>
+        <p>Y el gigante se quedó quieto, mientras Meñique abría su gran saco de cuero, y se puso a comer su queso y su pan.</p>
+        <p>—¿Qué es eso blanco que comes? —preguntó el gigante, que nunca había visto queso.</p>
+        <p>—Piedras como no más, y por eso soy más fuerte que tú, que comes la carne que engorda. Enséñame tu casa.</p>
+        <p>Y el gigante, manso como un perro, echó a andar por delante, hasta llegar a su casa enorme.</p>
+        <p>—Oye —le dijo Meñique al gigante:—uno de los dos tiene que ser amo del otro. Vamos a hacer un trato. Si yo no puedo hacer lo que tú hagas, yo seré criado tuyo; si tú no puedes hacer lo que haga yo, tú serás mi criado.</p>
+        <p>—Trato hecho —dijo el gigante;—ahí están mis dos cubos: ve a traerme el agua para la comida.</p>
+        <p>Meñique levantó la cabeza y vio los dos cubos, que eran como dos tanques. Más fácil le era a Meñique ahogarse en aquellos cubos que cargarlos.</p>
+        <p>—¿Y para qué la he de cargar? —dijo Meñique.—Carga tú, que eres bestia de carga. Yo enciendo el fuego mientras tú traes el agua.</p>
+        <p>—No, no —dijo el gigante,—que ya me dejaste el bosque sin árboles, y ahora me vas a dejar sin agua. Enciende el fuego, que yo traeré el agua.</p>
+        <p>Meñique encendió el fuego, y en el caldero fue echando el gigante un buey entero, cortado en pedazos, y una carga de nabos, y cuatro cestos de zanahorias, y cincuenta coles.</p>
+        <p>—A la mesa, que ya está la comida —dijo el gigante;—y a ver si haces lo que hago yo, que me voy a comer todo este buey, y te voy a comer a ti de postres.</p>
+        <p>Pero antes de sentarse, Meñique se metió debajo de la chaqueta la boca de su gran saco de cuero, que le llegaba del pescuezo a los pies. Y el gigante comía y comía, y Meñique no se quedaba atrás, sólo que no echaba en la boca las coles, y las zanahorias, y los pedazos del buey, sino en el gran saco de cuero.</p>
+        <p>—¡Uf! ¡ya no puedo comer más! —dijo el gigante;—tengo que sacarme un botón del chaleco.</p>
+        <p>—Pues mírame a mí, gigante infeliz —dijo Meñique, y se echó una col entera en el saco.</p>
+        <p>—¡Paff! —dijo el gigante,—se me saltó el tercer botón: ¿cómo te va a ti, hechicero?</p>
+        <p>—¿A mí? —dijo Meñique;—no hay cosa más fácil que hacer un poco de lugar. —Y se abrió con el cuchillo de arriba abajo la chaqueta y el gran saco de cuero.</p>
+        <p>—Ahora te toca a ti —dijo al gigante;—haz lo que yo hago.</p>
+        <p>—Muchas gracias —dijo el gigante.—Prefiero ser tu criado. Yo no puedo digerir las piedras.</p>
+        <p>Besó el gigante la mano de Meñique en señal de respeto, se lo sentó en el hombro derecho, y salió andando por el camino del palacio.</p>
+        <p>En el palacio estaban de gran fiesta, cuando de repente oyeron un gran ruido, que hizo bailar las paredes. Era el gigante, que no cabía por el portón, y lo había echado abajo de un puntapié. Saltó al balcón Meñique, hincó una rodilla delante de la princesa y le habló así: «Princesa y dueña mía, tú deseabas un criado y aquí están dos a tus pies».</p>
+        <p>Este galante discurso dejó pasmado al rey, que no halló excusa que dar para que no se casara Meñique con su hija.</p>
+        <p>—Veo que eres hombre de talento —dijo la princesa.—Puesto que sabes adivinar tan bien, voy a ponerte una última prueba. Vamos a ver quién es más inteligente, si tú o yo. Empezaremos con una bufonada. Cuentan que las mujeres dicen muchas mentiras. El primero que diga: «¡Eso es demasiado!» pierde.</p>
+        <p>—Por servirte, princesa y dueña mía, mentiré de juego y diré la verdad con toda el alma.</p>
+        <p>—Estoy segura —dijo la princesa—de que tu padre no tiene tantas tierras como el mío.</p>
+        <p>—Eso es una bicoca —dijo Meñique.—Mi padre tiene tantas tierras que una ternerita de dos meses que entra por una punta es ya vaca lechera cuando sale por la otra.</p>
+        <p>—Eso no me asombra —dijo la princesa.—En tu corral no hay un toro tan grande como el de mi corral.</p>
+        <p>—Eso es una bicoca —dijo Meñique.—La cabeza del toro de mi casa es tan grande que un hombre montado en un cuerno no puede ver al que está montado en el otro.</p>
+        <p>—Eso no me asombra —dijo la princesa.—En tu casa no dan las vacas tanta leche como en mi casa.</p>
+        <p>—Eso es una bicoca —dijo Meñique.—En la lechería de mi casa hacen unos quesos tan grandes que un día la yegua se cayó en la artesa, y no la encontramos sino después de una semana. Le puse un pino de la nuca a la cola, que le sirvió de espinazo nuevo. Pero una mañanita le salió un ramo al espinazo por encima de la piel, y el ramo creció tanto que yo me subí en él y toqué el cielo. Y en el cielo vi a una señora vestida de blanco, trenzando un cordón con la espuma del mar. Y yo me así del hilo, y el hilo se me reventó, y caí dentro de una cueva de ratones. Y en la cueva de ratones estaban tu padre y mi madre, hilando cada uno en su rueca. Y tu padre hilaba tan mal que mi madre le tiró de las orejas hasta que se le caían a tu padre los bigotes.</p>
+        <p>—¡Eso es demasiado! —dijo la princesa.—¡A mi padre el rey nadie le ha tirado nunca de las orejas!</p>
+        <p>—Todavía no —dijo la princesa, poniéndose colorada.—Tengo que ponerte tres enigmas. Dime primero: ¿qué es lo que siempre está cayendo y nunca se rompe?</p>
+        <p>—¡Oh! —dijo Meñique;—mi madre me arrullaba con ese cuento: ¡es la cascada!</p>
+        <p>—Dime ahora: ¿quién es el que anda todos los días el mismo camino y nunca se vuelve atrás?</p>
+        <p>—¡Oh! —dijo Meñique;—¡es el sol!</p>
+        <p>—Ya no queda más que un enigma. ¿En qué piensas tú y no pienso yo? ¿qué es lo que yo pienso, y tú no piensas? ¿qué es lo que no pensamos ni tú ni yo?</p>
+        <p>—Princesa y dueña mía —dijo Meñique, después de unos instantes.—Yo pienso en que entiendo lo que me quieres decir, y tú piensas en que yo no lo entiendo. Tú piensas, como noble princesa que eres, en que este criado tuyo no es indigno de ser tu marido, y yo no pienso que haya logrado merecerte. Y en lo que ni yo ni tú pensamos es en que el rey tu padre y este gigante infeliz tienen tan pobres...</p>
+        <p>—Cállate —dijo la princesa;—aquí está mi mano de esposa, marqués Meñique.</p>
+        <p>—¡Meñique, te hago duque! —dijo el rey.</p>
+        <p>En el casamiento de la princesa con Meñique hubo discursos, y poetas que les dijeron versos de bodas, y lucecitas de color en el jardín, y fuegos artificiales, y muchas guirlandas de flores. Pero en un rincón había uno que no hablaba ni cantaba, y era Pablo, el envidioso, el desorejado, que no podía ver a su hermano feliz, y se fue al bosque para no oír ni ver, y en el bosque murió, porque los osos se lo comieron en la noche oscura.</p>
+        <p>Meñique era tan chiquitín que los cortesanos no supieron al principio si debían tratarlo con respeto o verlo como cosa de risa; pero con su bondad y cortesía se ganó el cariño de su mujer y de la corte entera, y cuando murió el rey, entró a mandar, y estuvo de rey cincuenta y dos años. Y dicen que mandó tan bien que sus vasallos nunca quisieron más rey que Meñique.</p>
+        <p>Pero no hay que decir que Meñique era bueno solamente. Bueno tenía que ser un hombre de ingenio tan grande; porque el que es estúpido no es bueno, y el que es bueno no es estúpido. Tener talento es tener buen corazón; el que tiene buen corazón, ése es el que tiene talento. Todos los pícaros son tontos. Los buenos son los que ganan a la larga. Y el que saque de este cuento otra lección mejor, vaya a contarlo en Roma.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">Meñique</span> — literally "pinky (finger)"; nickname for the smallest brother</div>
+      <div><span class="term">envidioso/a</span> — envious (cognate-ish)</div>
+      <div><span class="term">el hacha</span> — the axe</div>
+      <div><span class="term">el pico</span> — the pick(axe)</div>
+      <div><span class="term">brotar</span> — to spring forth (of water)</div>
+      <div><span class="term">el pozo</span> — the well</div>
+      <div><span class="term">el saco de cuero</span> — the leather sack</div>
+      <div><span class="term">las entendederas</span> — "smarts," wits (colloquial)</div>
+      <div><span class="term">el marqués / el duque</span> — marquis / duke</div>
+      <div><span class="term">la bicoca</span> — a trifle, a small thing</div>
+      <div><span class="term">el vasallo</span> — vassal, subject</div>
+      <div><span class="term">el hechicero</span> — the sorcerer</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>nadie le decía Juan, sino Meñique</span>
+      <span>hace muchos años que estoy esperando por ti</span>
+      <span>pues aquí me tiene</span>
+      <span>¡corta, hacha, corta!</span>
+      <span>¡cava, pico, cava!</span>
+      <span>¡brota, agua, brota!</span>
+      <span>eso es una bicoca</span>
+      <span>la palabra de un hombre es ley</span>
+      <span>el saber vale más que la fuerza</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué objeto mágico encuentra Meñique en cada una de sus tres exploraciones, y qué hace cada uno?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cómo logra Meñique vencer al gigante sin usar la fuerza?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Meñique</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — primer título construido bajo la nueva filosofía de narrativa completa.</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Cuentos clásicos / literatura hispanoamericana — el ingenio frente a la fuerza, la curiosidad como motor de aprendizaje, la tradición del cuento de magia europeo adaptado al español por José Martí.</p>
+
+    <h4>Nivel original</h4>
+    <p>El texto fuente de Martí (1889) corresponde aproximadamente a un registro B2/C1. Bajo la filosofía de Biblioteca FVR, este texto NO se reescribe en una rampa CI completa: A1 recibe una simplificación real y sustancial; A2–B2 se mantienen progresivamente más cerca del texto auténtico, hasta llegar en B2 al texto original casi completo, con glosario de apoyo en vez de reescritura.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar una serie de pruebas y su resolución; reconocer el valor narrativo de la fórmula fija y la repetición; identificar el contraste de caracteres entre los tres hermanos; disfrutar de un cuento completo y auténtico, sin fragmentación artificial del argumento.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>Nadie le decía Juan, sino Meñique · Hace muchos años, hijo mío, que estoy esperando por ti · Pues aquí me tiene · ¡Corta, hacha, corta! / ¡Cava, pico, cava! / ¡Brota, agua, brota! · Eso es una bicoca · La palabra de un hombre es ley · el saber vale más que la fuerza.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa)</h4>
+    <p><strong>A1:</strong> simplificación real — oraciones cortas, presente simple, vocabulario de alta frecuencia; se conserva la estructura completa de las tres pruebas, con lenguaje muy accesible.<br>
+    <strong>A2:</strong> se recupera más vocabulario original y se amplían las oraciones; sigue en su mayoría en presente.<br>
+    <strong>B1:</strong> se introduce el pasado narrativo con mayor naturalidad; el texto se acerca a los diálogos y fórmulas fijas del original.<br>
+    <strong>B2:</strong> texto prácticamente idéntico al de Martí, con glosario de apoyo para el vocabulario del siglo XIX en lugar de reescritura.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>El cuento incluye dos elementos que requieren manejo cuidadoso y factual, propio del género de cuento de magia clásico (comparable a los hermanos Grimm): (1) el rey ordena cortarle las orejas a quien fracase — mencionado sin detalle gráfico, como convención narrativa del género; (2) el hermano envidioso, Pablo, muere devorado por osos al final, mencionado en una sola frase, sin descripción. En los niveles A1–A2, el destino de Pablo se suavizó ("se va solo al bosque y nunca regresa") por decisión ya incorporada en esta versión; en B1–B2 aparece la frase original de Martí. Se recomienda presentar ambos elementos dentro del marco de "así son los cuentos de magia antiguos."</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — cuento clásico de la Biblioteca FVR, sin personaje anfitrión ni estructura de serie.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>curioso</em> — cognado natural con "curious", usado para describir el rasgo que distingue a Meñique de sus hermanos y que impulsa toda la trama.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Meñique gana todo lo que gana no por ser fuerte, sino por hacer preguntas y querer saber cómo funcionan las cosas. ¿Alguna vez tu curiosidad te ayudó a resolver un problema que la fuerza no podría resolver?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Primer título de la Biblioteca FVR construido bajo la nueva filosofía de narrativa completa (confirmada por la maestra): el texto se mantiene auténtico y solo A1 recibe una simplificación sustancial — a diferencia de la rampa CI completa usada en las series curriculares. Cuento clásico adaptado por José Martí del francés de Édouard Laboulaye; forma parte de <i>La Edad de Oro</i> (1889), la misma colección de la que ya proviene "Los dos príncipes." Fuente verificada de dominio público: Project Gutenberg, eBook #19898.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
