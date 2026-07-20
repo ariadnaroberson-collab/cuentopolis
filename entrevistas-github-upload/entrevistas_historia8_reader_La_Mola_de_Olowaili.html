@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Mola de Olowaili — Entrevistas callejeras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Entrevistas callejeras · Historia 8</div>
+    <h1>La Mola de Olowaili</h1>
+    <div class="subtitle">Una historia de Guna Yala, Panamá</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Ramón viaja a Guna Yala, un archipiélago de islas en Panamá. Ahí vive el pueblo guna.</p>
+        <p>En una isla pequeña, Ramón conoce a Olowaili, una niña de once años. Ella aprende a hacer molas con su abuela.</p>
+        <p>La mola es un textil tradicional. En la lengua guna, "mola" significa "ropa" o "blusa."</p>
+        <p>La abuela de Olowaili corta capas de tela de diferentes colores. Esto se llama apliqué inverso.</p>
+        <p>Olowaili explica: "Cortamos la tela de arriba. Así aparece el color de abajo. Es un diseño con muchas capas."</p>
+        <p>Ramón pregunta: "¿Qué representan los diseños?"</p>
+        <p>La abuela responde: "Representan la naturaleza — animales, el mar, la Madre Tierra. Cada mola cuenta una historia."</p>
+        <p>Olowaili todavía está aprendiendo. A veces corta mal, pero su abuela la ayuda con paciencia.</p>
+        <p>La abuela dice: "Yo aprendí de mi abuela. Olowaili va a aprender de mí. Así sigue la tradición."</p>
+        <p>Olowaili sonríe: "Un día, voy a hacer molas tan bonitas como las de mi abuela."</p>
+        <p>Ramón graba todo, feliz de ver una tradición que pasa de generación en generación.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Ramón viaja a Guna Yala, un archipiélago de más de trescientas islas en la costa caribeña de Panamá, hogar del pueblo guna.</p>
+        <p>En una isla pequeña, Ramón conoce a Olowaili, una niña de once años que aprende a hacer molas junto a su abuela. La mola es un textil tradicional guna — en la lengua guna, dulegaya, la palabra "mola" significa "ropa" o "blusa."</p>
+        <p>La abuela de Olowaili trabaja con varias capas de tela de diferentes colores, cortando cuidadosamente la tela de arriba para revelar el color de abajo — una técnica conocida como apliqué inverso. "Cortamos, no cosemos encima," explica Olowaili. "Así aparece cada color, capa por capa."</p>
+        <p>"¿Qué representan los diseños de las molas?" pregunta Ramón, observando los colores vivos. "Representan nuestra visión del mundo," responde la abuela. "Animales, el mar, la Madre Tierra — a la que llamamos Abiyala. Cada mola cuenta una historia."</p>
+        <p>Olowaili todavía está aprendiendo la técnica. A veces corta la tela de forma incorrecta, pero su abuela la corrige con mucha paciencia, sin apuro. "Yo aprendí de mi abuela, cuando tenía la edad de Olowaili," cuenta ella. "Ahora Olowaili aprende de mí. Así es como sigue viva la tradición — de abuela a nieta."</p>
+        <p>Olowaili sonríe mientras sostiene su trabajo, todavía imperfecto: "Un día, voy a hacer molas tan bonitas como las de mi abuela."</p>
+        <p>Ramón graba toda la escena, consciente de que está presenciando algo que se transmite, con paciencia y cariño, de generación en generación.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un miércoles por la mañana, Ramón llegó a una pequeña isla de Guna Yala, el archipiélago de más de trescientas islas en la costa caribeña de Panamá, hogar del pueblo guna desde hace generaciones.</p>
+        <p>Allí conoció a Olowaili, una niña de once años sentada junto a su abuela, ambas trabajando en una mola — el textil tradicional guna. En la lengua guna, dulegaya, la palabra "mola" significa simplemente "ropa" o "blusa," aunque el objeto en sí es mucho más que eso.</p>
+        <p>La abuela de Olowaili manejaba con destreza varias capas de tela de colores distintos, cortando con precisión la capa superior para revelar el color debajo — una técnica llamada apliqué inverso. "Cortamos, no cosemos encima," le explicó Olowaili a Ramón, observando de cerca las manos de su abuela. "Así va apareciendo cada color, capa por capa, hasta formar el diseño completo."</p>
+        <p>Cuando Ramón preguntó qué representaban los diseños, la abuela respondió sin apartar la vista de su trabajo: "Representan nuestra visión del mundo. Animales, el mar, la Madre Tierra, a quien llamamos Abiyala. Cada mola cuenta una historia distinta."</p>
+        <p>Olowaili, todavía en proceso de aprender la técnica, cometía pequeños errores de vez en cuando, pero su abuela la corregía con calma, sin ninguna prisa. "Yo aprendí de mi abuela, cuando tenía justo la edad de Olowaili," contó. "Ahora ella aprende de mí. Así es como la tradición sigue viva — de abuela a nieta, generación tras generación."</p>
+        <p>Olowaili, sosteniendo su trabajo todavía imperfecto, sonrió con determinación: "Un día, voy a hacer molas tan bonitas como las de mi abuela."</p>
+        <p>Ramón grabó toda la escena, consciente de estar presenciando algo transmitido con paciencia infinita — no solo una técnica, sino una manera completa de entender el mundo.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un miércoles por la mañana, Ramón llegó a una pequeña isla de Guna Yala, el archipiélago de más de trescientas islas situado en la costa caribeña de Panamá, territorio autónomo y hogar ancestral del pueblo guna.</p>
+        <p>Allí conoció a Olowaili, una niña de once años sentada junto a su abuela, ambas absortas en la confección de una mola —el textil tradicional guna cuyo nombre, en la lengua dulegaya, significa literalmente "ropa" o "blusa", aunque su significado cultural trasciende ampliamente esa definición.</p>
+        <p>La abuela de Olowaili manipulaba con destreza varias capas de tela de colores distintos, cortando con precisión milimétrica la capa superior para revelar el color subyacente —técnica conocida como apliqué inverso. "Cortamos, no cosemos encima," le aclaró Olowaili a Ramón, atenta a cada movimiento de las manos de su abuela. "Así va emergiendo cada color, capa por capa, hasta completar el diseño."</p>
+        <p>Ante la pregunta de Ramón sobre el significado de los diseños, la abuela respondió sin desviar la mirada de su labor: "Representan nuestra cosmovisión. Animales, el mar, la Madre Tierra, a quien llamamos Abiyala. Cada mola narra una historia distinta, heredada de generaciones anteriores."</p>
+        <p>Olowaili, todavía en proceso de dominar la técnica, cometía pequeños errores ocasionales, que su abuela corregía con una paciencia inquebrantable. "Yo aprendí de mi abuela, cuando tenía exactamente la edad de Olowaili," relató. "Ahora ella aprende de mí. Así permanece viva la tradición —de abuela a nieta, generación tras generación."</p>
+        <p>Sosteniendo su trabajo todavía imperfecto, Olowaili sonrió con una determinación serena: "Algún día, voy a hacer molas tan hermosas como las de mi abuela."</p>
+        <p>Ramón registró toda la escena, consciente de estar presenciando algo transmitido con una paciencia excepcional —no simplemente una técnica textil, sino una forma completa de comprender y honrar el mundo.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la mola</span> — traditional Guna textile art</div>
+      <div><span class="term">el apliqué inverso</span> — reverse appliqué technique</div>
+      <div><span class="term">la capa</span> — layer</div>
+      <div><span class="term">coser</span> — to sew</div>
+      <div><span class="term">la cosmovisión</span> — worldview (cognate: "cosmo-vision")</div>
+      <div><span class="term">la Madre Tierra</span> — Mother Earth</div>
+      <div><span class="term">heredar</span> — to inherit</div>
+      <div><span class="term">la destreza</span> — skill, dexterity</div>
+      <div><span class="term">imperfecto/a</span> — imperfect (cognate)</div>
+      <div><span class="term">la técnica</span> — technique (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>capa por capa</span>
+      <span>cortamos, no cosemos encima</span>
+      <span>representan...</span>
+      <span>de abuela a nieta</span>
+      <span>con paciencia</span>
+      <span>todavía está aprendiendo</span>
+      <span>algún día voy a...</span>
+      <span>generación tras generación</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué es el apliqué inverso, y cómo lo describe Olowaili?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué representan los diseños de las molas, según la abuela?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — La Mola de Olowaili</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Entrevistas callejeras → Historia 8</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Arte y tradición cultural — la mola guna, transmisión de saberes de abuela a nieta, cosmovisión indígena, técnica textil.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir un proceso técnico paso a paso; explicar significado simbólico; expresar aprendizaje en progreso (todavía está aprendiendo); narrar en pasado un evento específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>capa por capa · cortamos, no cosemos encima · representan... · de abuela a nieta · con paciencia · todavía está aprendiendo · algún día voy a...</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, la técnica y la entrevista contadas paso a paso.<br>
+    <strong>A2:</strong> se añade contexto histórico/cultural de la mola y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando el encuentro como evento específico.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario técnico más preciso; cierre reflexivo sobre la transmisión intergeneracional.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Ninguno significativo. Se menciona brevemente que la práctica de pintar el cuerpo se trasladó a la tela después del contacto con misioneros españoles — mencionado de forma neutral y factual, sin detalles sobre la colonización. La mola, el apliqué inverso, el significado de "mola" en dulegaya, y la transmisión de la técnica de abuela a nieta son datos reales y documentados. Olowaili y su abuela son personajes ficticios, aunque "Olowaili" es un nombre real usado en la cultura guna.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Olowaili</strong> — niña guna de once años, aprendiz de mola bajo la guía de su abuela. Detalle propio: guarda cada mola imperfecta que hace, en vez de descartarla, porque dice que "cada error también cuenta una historia."</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>técnica</em> — cognado natural con "technique", usado para describir el apliqué inverso.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Qué habilidad o tradición te gustaría aprender de un familiar mayor? ¿Por qué esa en particular?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

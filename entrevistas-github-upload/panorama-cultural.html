@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panorama Cultural — Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --navy: #26344d; --gold: #c9a24b; --gold-soft: #8a734a; --lamp: #e7b96b;
+    --green: #4c7a5e; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 60px; }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 22px; }
+  header { margin-bottom: 26px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.3rem; }
+  .subtitle { color: var(--parchment-dim); font-size: 0.95rem; margin-top: 8px; font-style: italic; }
+  .list { display: flex; flex-direction: column; gap: 10px; margin-top: 26px; }
+  .book { display: flex; align-items: center; gap: 18px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; text-decoration: none; color: var(--parchment); transition: border-color 0.15s ease; }
+  .book.active:hover { border-color: var(--gold); }
+  .book.soon { opacity: 0.5; border-style: dashed; cursor: default; }
+  .book-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.15rem; flex: 1; }
+  .book-desc { font-size: 0.85rem; color: var(--parchment-dim); margin-top: 3px; }
+  .book-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--lamp); white-space: nowrap; }
+  .book.soon .book-tag { color: var(--parchment-dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← Cuentópolis</a>
+  <header>
+    <p class="eyebrow">Apoyo curricular</p>
+    <h1>Panorama Cultural</h1>
+    <p class="subtitle">4 libros, historias independientes conectadas por un tema — para apoyo curricular o FVR.</p>
+  </header>
+  <div class="list">
+    <a class="book active" href="memorias-de-pueblos-perdidos.html">
+      <div>
+        <div class="book-title">Memorias de pueblos perdidos</div>
+        <p class="book-desc">8 historias — niños en lugares hermosos y de difícil acceso</p>
+      </div>
+      <span class="book-tag">Abrir →</span>
+    </a>
+    <a class="book active" href="entrevistas-callejeras.html">
+      <div>
+        <div class="book-title">Entrevistas callejeras</div>
+        <p class="book-desc">9 historias — Ramón Estevez entrevista por Latinoamérica</p>
+      </div>
+      <span class="book-tag">Abrir →</span>
+    </a>
+    <a class="book active" href="la-receta-de-la-abuela.html">
+      <div>
+        <div class="book-title">La Receta de la Abuela</div>
+        <p class="book-desc">8 historias — chefs y la receta familiar que los hizo famosos</p>
+      </div>
+      <span class="book-tag">Abrir →</span>
+    </a>
+    <a class="book soon" tabindex="0" aria-label="Biografía de animales asombrosos — próximamente">
+      <div>
+        <div class="book-title">Biografía de animales asombrosos</div>
+        <p class="book-desc">8 historias — animales narrando su propia biografía</p>
+      </div>
+      <span class="book-tag">✎ Próximamente</span>
+    </a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Primer Micrófono de Ramón — Entrevistas callejeras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Entrevistas callejeras · Historia 1 (introducción)</div>
+    <h1>El Primer Micrófono de Ramón</h1>
+    <div class="subtitle">Una historia de San José, Costa Rica</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Ramón vive en San José, Costa Rica. Tiene veinticuatro años y estudió periodismo en la universidad.</p>
+        <p>Ramón busca trabajo en un periódico o en la televisión. Pero no encuentra trabajo. Manda muchas solicitudes. Nadie responde.</p>
+        <p>Un día, Ramón está aburrido y frustrado. Tiene su teléfono, pero no tiene trabajo.</p>
+        <p>Ramón tiene una idea: "Voy a hacer entrevistas en la calle. Solo necesito mi teléfono."</p>
+        <p>Ramón camina a una plaza. Busca a personas para hacer una pregunta simple: "¿Cuál es el mejor consejo que te dio tu abuela?"</p>
+        <p>La gente responde con historias interesantes. Ramón graba los videos con su teléfono.</p>
+        <p>Ramón sube el primer video a internet. Al principio, pocas personas lo ven.</p>
+        <p>Ramón continúa cada semana. Hace más entrevistas, con preguntas diferentes.</p>
+        <p>Poco a poco, más personas ven sus videos. Los videos son divertidos y también tienen corazón.</p>
+        <p>Después de unos meses, miles de personas siguen a Ramón en internet. Ramón se hace famoso.</p>
+        <p>Una empresa le ofrece ayuda para viajar. Ramón tiene una nueva idea: "Voy a hacer entrevistas callejeras en otros países de Latinoamérica."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Ramón vive en San José, Costa Rica. Tiene veinticuatro años y recién se graduó de periodismo en la universidad, con muchas ganas de trabajar en un periódico o en la televisión.</p>
+        <p>Sin embargo, después de graduarse, Ramón manda decenas de solicitudes de trabajo, pero nadie lo llama. Pasan las semanas, y la frustración crece — parece que no hay lugar para un periodista recién graduado.</p>
+        <p>Un día, aburrido y sin nada mejor que hacer, Ramón mira su teléfono y tiene una idea simple: "No tengo trabajo, pero tengo un teléfono con cámara. Voy a hacer entrevistas en la calle."</p>
+        <p>Ramón camina hasta una plaza del centro de San José y empieza a acercarse a personas desconocidas con una pregunta sencilla pero curiosa: "¿Cuál es el mejor consejo que te dio tu abuela?" Graba las respuestas con su teléfono, sin ningún equipo profesional.</p>
+        <p>Ese primer video, subido a internet esa misma noche, apenas tiene unas pocas vistas. Pero Ramón no se rinde — sigue haciendo entrevistas cada semana, con preguntas nuevas y curiosas sobre la vida cotidiana de la gente.</p>
+        <p>Poco a poco, sus videos empiezan a compartirse más. Las entrevistas callejeras son, de hecho, uno de los formatos más populares en redes sociales — la gente disfruta escuchar respuestas honestas y espontáneas de personas comunes. Después de unos meses, miles de personas siguen el trabajo de Ramón.</p>
+        <p>Una empresa lo contacta y le ofrece apoyo para viajar. Con esa oportunidad, a Ramón se le ocurre una idea todavía más grande: "Voy a llevar mis entrevistas callejeras a otros países de Latinoamérica, para descubrir las costumbres y los intereses de cada lugar."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Hace un año, Ramón se graduó de periodismo en una universidad de San José, Costa Rica, con la ilusión de conseguir trabajo rápido en algún periódico o canal de televisión. La realidad, sin embargo, fue distinta: mandó decenas de solicitudes, hizo varias entrevistas, y nunca recibió una oferta concreta.</p>
+        <p>Una tarde, después de meses de búsqueda sin resultados, Ramón se sintió especialmente frustrado. Estaba sentado en su casa, sin trabajo y sin muchas opciones, cuando miró su teléfono y se le ocurrió una idea simple: si nadie le iba a dar trabajo como periodista, él mismo podía crear el suyo.</p>
+        <p>Sin ningún equipo profesional, solo con su teléfono, Ramón caminó hasta una plaza del centro de la ciudad y empezó a acercarse a desconocidos con una pregunta sencilla: "¿Cuál es el mejor consejo que te dio tu abuela?" Grabó varias respuestas, algunas divertidas, otras conmovedoras, y esa misma noche subió el primer video a internet.</p>
+        <p>Al principio, casi nadie lo vio. Pero Ramón decidió seguir, semana tras semana, con preguntas nuevas que invitaban a la gente a compartir historias genuinas. Poco a poco, sus videos empezaron a circular más — las entrevistas callejeras, después de todo, se habían convertido en uno de los formatos más populares de las redes sociales, precisamente porque mostraban respuestas honestas de personas comunes.</p>
+        <p>Después de varios meses de constancia, miles de personas seguían el trabajo de Ramón. Una empresa lo contactó, interesada en apoyarlo, y le ofreció financiar sus próximos proyectos. Fue entonces cuando a Ramón se le ocurrió la idea que cambiaría su camino: llevar sus entrevistas callejeras a otros países de Latinoamérica, para descubrir, pregunta por pregunta, las costumbres y los intereses de cada lugar.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Hacía apenas un año que Ramón se había graduado de periodismo en una universidad de San José, Costa Rica, con la expectativa —quizás ingenua— de incorporarse rápidamente al mundo laboral en algún medio de comunicación tradicional. La realidad del mercado, sin embargo, resultó mucho más esquiva: decenas de solicitudes enviadas, algunas entrevistas sin seguimiento, y ninguna oferta concreta que validara los años de estudio.</p>
+        <p>Fue una tarde cualquiera, tras meses de búsqueda infructuosa, cuando la frustración de Ramón alcanzó un punto de inflexión. Sentado en su casa, sin perspectivas claras, se preguntó si el problema no era la falta de oportunidades, sino la forma en que estaba esperando que estas llegaran. Con esa reflexión surgió una idea deliberadamente sencilla: si nadie iba a contratarlo como periodista, podía, con las herramientas que ya tenía, crear su propio espacio.</p>
+        <p>Sin más equipo que su teléfono, Ramón se dirigió a una plaza del centro de la ciudad y comenzó a abordar a transeúntes con una pregunta aparentemente trivial: "¿Cuál es el mejor consejo que te dio tu abuela?" Las respuestas, grabadas sin ningún tipo de producción, resultaron sorprendentemente ricas —algunas divertidas, otras profundamente conmovedoras— y esa misma noche subió el primer video a internet.</p>
+        <p>La recepción inicial fue modesta, casi imperceptible. Pero Ramón, en lugar de desanimarse, optó por la constancia: semana tras semana, nuevas preguntas, nuevas plazas, nuevas historias. Con el tiempo, sus videos comenzaron a circular con mayor alcance, en sintonía con un fenómeno más amplio: las entrevistas callejeras se habían consolidado como uno de los formatos más consumidos en redes sociales, precisamente por su capacidad de capturar la espontaneidad y la honestidad de personas comunes ante preguntas cotidianas.</p>
+        <p>Meses después, con miles de seguidores acompañando su trabajo, una empresa se puso en contacto con Ramón para ofrecerle respaldo financiero. Fue en ese momento cuando concibió la idea que definiría el rumbo de su carrera: llevar su formato de entrevistas callejeras más allá de Costa Rica, recorriendo distintos países de Latinoamérica para explorar, una pregunta a la vez, las costumbres e intereses que definen a cada lugar.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la solicitud</span> — job application</div>
+      <div><span class="term">grabar</span> — to record</div>
+      <div><span class="term">subir (un video)</span> — to upload (a video)</div>
+      <div><span class="term">rendirse</span> — to give up</div>
+      <div><span class="term">la constancia</span> — consistency, perseverance</div>
+      <div><span class="term">la vista (de un video)</span> — a view (video count)</div>
+      <div><span class="term">aburrido/a</span> — bored</div>
+      <div><span class="term">la frustración</span> — frustration (cognate)</div>
+      <div><span class="term">seguir (a alguien)</span> — to follow (someone online)</div>
+      <div><span class="term">financiar</span> — to fund (cognate: "finance")</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>manda / mandaba solicitudes</span>
+      <span>se le ocurre / ocurrió una idea</span>
+      <span>sube / subió un video</span>
+      <span>poco a poco</span>
+      <span>cada semana</span>
+      <span>miles de personas</span>
+      <span>seguir sin rendirse</span>
+      <span>al principio...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué está frustrado Ramón al principio de la historia?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué idea se le ocurre, y qué necesita para empezar?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Primer Micrófono de Ramón</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Entrevistas callejeras → Historia 1 (capítulo introductorio)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Emprendimiento y medios de comunicación — la búsqueda de empleo, la creatividad ante la frustración, el fenómeno de las redes sociales, introducción al personaje recurrente del libro.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar una búsqueda sin éxito y un cambio de estrategia; describir un proceso gradual (poco a poco, con el tiempo); expresar una idea repentina (se le ocurrió); narrar en pasado el origen de un proyecto.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>manda/mandaba solicitudes · se le ocurre/ocurrió una idea · sube/subió un video · poco a poco · cada semana · miles de personas · seguir sin rendirse.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, la idea y el proceso contados paso a paso.<br>
+    <strong>A2:</strong> se añade contexto emocional (frustración, constancia) y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando el origen del proyecto; reflexión de Ramón.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; contexto real del fenómeno de entrevistas callejeras en redes sociales.</p>
+
+    <h4>Comprensión (preguntas adicionales para el Reading Passport completo)</h4>
+    <p>1. ¿Por qué está frustrado Ramón al principio de la historia?<br>
+    2. ¿Qué idea se le ocurre, y qué necesita para empezar?<br>
+    3. ¿Cómo cambia la situación de Ramón después de varios meses?<br>
+    4. ¿Qué decide hacer Ramón al final de la historia, y por qué es importante para el resto del libro?</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Desempleo y búsqueda laboral frustrante → manejado con esperanza y sin estigmatizar; la situación se resuelve mediante creatividad y constancia, no por suerte. No se menciona ninguna dificultad económica extrema. El formato de "entrevistas callejeras" es un fenómeno real y verificado de redes sociales — ampliamente documentado como una de las tendencias más consumidas en plataformas como TikTok — usado aquí como base realista para el personaje ficticio de Ramón, sin representar a ningún creador de contenido real.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente en este capítulo — Ramón está en su propia ciudad, no visitando otra comunidad. A partir de la Historia 2, cuando Ramón viaja a cada país, esta sección presentará a la persona que entrevista en cada lugar.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>viral</em> — cognado natural, usado para describir cómo se difunden los videos de Ramón.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez tuviste una idea simple que después se hizo más grande de lo que esperabas? ¿Qué pasó?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Este capítulo establece a Ramón Estevez como el personaje recurrente de todo el libro "Entrevistas callejeras". A partir de la Historia 2, cada capítulo lo sigue a un país distinto de Latinoamérica, entrevistando a una persona local sobre una costumbre o interés particular.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>
