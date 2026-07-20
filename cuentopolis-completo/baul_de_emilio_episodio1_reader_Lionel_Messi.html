@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Baúl de Emilio — Episodio 1: Lionel Messi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #171512;
+    --bg-panel: #1f1c18;
+    --parchment: #f3ecd9;
+    --parchment-dim: #d8cfb4;
+    --navy: #26344d;
+    --gold: #c9a24b;
+    --gold-soft: #8a734a;
+    --lamp: #e7b96b;
+    --green: #4c7a5e;
+    --border: #3a352c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(ellipse at 20% -10%, #2a2620 0%, var(--bg) 55%);
+    color: var(--parchment);
+    font-family: 'Public Sans', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 32px 20px 80px; }
+  header.top {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .eyebrow {
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  h1.title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 42px);
+    margin: 0 0 6px;
+    color: var(--parchment);
+  }
+  .subtitle {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 19px;
+    color: var(--parchment-dim);
+  }
+  .baul-icon { font-size: 34px; margin-bottom: 8px; display:block; }
+
+  .levels {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 22px 0 30px;
+  }
+  .pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--gold-soft);
+    background: transparent;
+    color: var(--parchment-dim);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .pill:hover { border-color: var(--gold); color: var(--parchment); }
+  .pill.active {
+    background: var(--gold);
+    color: #211c12;
+    border-color: var(--gold);
+    font-weight: 700;
+  }
+
+  .card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 30px 34px;
+    position: relative;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    border-radius: 10px 10px 0 0;
+  }
+
+  .story {
+    font-family: 'Source Serif 4', serif;
+    font-size: 19px;
+    color: var(--parchment);
+  }
+  .story p { margin: 0 0 16px; }
+  .story .level-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  section.block { margin-top: 34px; }
+  h2.block-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    color: var(--gold);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px 24px;
+  }
+  .glossary-grid .term { font-weight: 700; color: var(--lamp); }
+  .glossary-grid .def { color: var(--parchment-dim); font-size: 14px; }
+
+  .wordbank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .wordbank span {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    background: rgba(201,162,75,0.12);
+    border: 1px solid var(--gold-soft);
+    color: var(--parchment);
+    padding: 5px 12px;
+    border-radius: 6px;
+  }
+
+  .comp-q {
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.03);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+  }
+  .comp-q .num { font-family:'Space Mono', monospace; color: var(--gold); margin-right: 8px; }
+
+  .figura-card {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: rgba(38,52,77,0.35);
+    border: 1px solid var(--navy);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .figura-card .flag { font-size: 30px; }
+  .figura-card .fname { font-family:'Fraunces', serif; font-size: 18px; font-weight:700; color: var(--parchment); }
+  .figura-card .fmeta { font-size: 14px; color: var(--parchment-dim); margin-top: 4px;}
+
+  .baul-word {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .footer-nav {
+    text-align: center;
+    margin-top: 40px;
+  }
+  .modal-btn {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    background: var(--green);
+    color: #eef5ef;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .modal-btn:hover { filter: brightness(1.1); }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,9,7,0.75);
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--green);
+    border-radius: 10px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 84vh;
+    overflow-y: auto;
+    padding: 28px 30px;
+  }
+  .modal-box h3 { font-family:'Fraunces', serif; color: var(--green); margin-top:0; }
+  .modal-box h4 { color: var(--gold); font-size: 14px; margin: 18px 0 6px; }
+  .modal-box p, .modal-box li { font-size: 14px; color: var(--parchment-dim); }
+  .modal-actions { display:flex; gap:10px; margin-top:20px; }
+  .modal-actions button {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--gold-soft);
+    background: transparent;
+    color: var(--parchment);
+    cursor: pointer;
+  }
+  .modal-actions button:hover { border-color: var(--gold); }
+
+  @media (max-width: 600px) {
+    .card { padding: 22px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <span class="baul-icon">🧳</span>
+    <div class="eyebrow">Cuentópolis · Hispanic Heritage Month</div>
+    <h1 class="title">El Baúl de Emilio</h1>
+    <div class="subtitle">Episodio 1: “Lionel Messi”</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="card">
+    <div class="story" id="story">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <section class="block">
+    <h2 class="block-title">📖 Glosario</h2>
+    <div class="glossary-grid">
+      <div><span class="term">el baúl</span><br><span class="def">caja grande de madera para guardar cosas</span></div>
+      <div><span class="term">bajito/a</span><br><span class="def">de estatura pequeña</span></div>
+      <div><span class="term">el potrero</span><br><span class="def">terreno de tierra donde los niños juegan fútbol</span></div>
+      <div><span class="term">la entrenadora</span><br><span class="def">persona que enseña/dirige a un equipo</span></div>
+      <div><span class="term">el apodo</span><br><span class="def">nombre cariñoso que le ponen a alguien (ej. "la pulga")</span></div>
+      <div><span class="term">la inyección</span><br><span class="def">medicina que se aplica con una aguja</span></div>
+      <div><span class="term">mudarse</span><br><span class="def">cambiar de casa o de país</span></div>
+      <div><span class="term">la determinación</span><br><span class="def">fuerza de voluntad para lograr algo</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🗂️ Banco de palabras</h2>
+    <div class="wordbank">
+      <span>el balón</span><span>el equipo</span><span>Grandoli</span><span>la abuela</span>
+      <span>"la pulga"</span><span>la academia</span><span>el barrio</span><span>España</span>
+      <span>Rosario, Argentina</span><span>el obstáculo</span><span>aunque</span><span>¿sabías que...?</span>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">✅ Comprensión</h2>
+    <div class="comp-q"><span class="num">1.</span>¿Quién fue la primera entrenadora de Leo, y qué le decía siempre?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Por qué le pusieron a Messi el apodo "la pulga"?</div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🌟 Figura Destacada</h2>
+    <div class="figura-card">
+      <span class="flag">🇦🇷</span>
+      <div>
+        <div class="fname">Lionel Messi</div>
+        <div class="fmeta">Rosario, Argentina</div>
+        <div class="fmeta">De niño era el más bajito del equipo — pero ya destacaba con el balón. A los 13 años se mudó a España para perseguir su sueño.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🔑 Palabra del Baúl</h2>
+    <div class="baul-word">Determinación</div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">💭 Pregunta del Baúl</h2>
+    <p style="font-family:'Fraunces',serif; font-style:italic; font-size:17px; color:var(--parchment-dim);">
+      ¿Qué has logrado tú a pesar de un obstáculo, como Messi con su estatura?
+    </p>
+  </section>
+
+  <div class="footer-nav">
+    <button class="modal-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal-box">
+    <h3>🎓 Notas del maestro</h3>
+
+    <h4>Unidad curricular</h4>
+    <p>Hispanic Heritage Month — Figuras destacadas del mundo hispano: el deporte (fútbol)</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <ul>
+      <li>Describir a una persona en el pasado (era, tenía, jugaba)</li>
+      <li>Comparar edades y épocas ("a esa edad, yo... él...")</li>
+      <li>Vocabulario de deporte, logros y superación de obstáculos</li>
+    </ul>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <ul>
+      <li>"A los ___ años..."</li>
+      <li>"Cuando tenía ___ años..."</li>
+      <li>"Igual que tú / igual que ustedes..."</li>
+      <li>"Aunque..., él/ella..."</li>
+    </ul>
+
+    <h4>CEFR pacing notes</h4>
+    <ul>
+      <li><b>A1</b> — Presente, oraciones cortas, vocabulario básico de fútbol, mucha repetición.</li>
+      <li><b>A2</b> — Pasado simple limitado (era, tenía, jugaba); comparaciones sencillas.</li>
+      <li><b>B1</b> — Pasado (pretérito/imperfecto) con más detalle; conectores (aunque, pero, porque).</li>
+      <li><b>B2</b> — Registro más cercano a una biografía real; vocabulario más rico, matices emocionales.</li>
+    </ul>
+
+    <h4>Preguntas de comprensión (banco completo)</h4>
+    <ul>
+      <li>¿Quién fue la primera entrenadora de Leo, y qué le decía siempre?</li>
+      <li>¿Por qué le pusieron a Messi el apodo "la pulga"?</li>
+      <li>¿Qué reto físico tenía Messi de niño y cómo lo enfrentó?</li>
+      <li>¿Cómo se compara la niñez de Messi con la tuya?</li>
+    </ul>
+
+    <h4>Content sensitivity flags</h4>
+    <p>Se menciona que Messi recibió tratamiento hormonal de crecimiento de niño. Se maneja de forma breve, factual y positiva — el enfoque está en la superación y la determinación, no en detalles médicos.</p>
+
+    <h4>Notas de continuidad / serie</h4>
+    <ul>
+      <li>Primera serie con nomenclatura propia: "Figura Destacada" reemplaza a "Huellas del Viajero" (figura real, no personaje ficticio visitante); "Palabra del Baúl" reemplaza a "Palabra del Bosque"; "Pregunta del Baúl" reemplaza a "Pregunta de Don Pico".</li>
+      <li>Formato de narración decidido: estilo podcast "Hispano del día — ¿Sabías que...?" con dirección directa al oyente, en vez de narrativa tradicional en tercera persona; el contenido se enfoca en la niñez de la figura (detalles que los estudiantes no conocen) en vez de repetir su fama adulta ya conocida.</li>
+      <li>Lineup confirmado: Episodio 1 Lionel Messi (fútbol), Episodio 2 Frida Kahlo (arte), Episodio 3 Celia Cruz (música), Episodio 4 José Martí (literatura).</li>
+      <li>Emilio: 9 años, de Colombia, curioso y un poco despistado/soñador; su baúl heredado de su abuela es el disparador de cada episodio.</li>
+    </ul>
+
+    <div class="modal-actions">
+      <button onclick="copyNotes()">📋 Copiar notas</button>
+      <button onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORY = {
+  A1: `
+    <span class="level-tag">NIVEL A1 · 🎙️ HISPANO DEL DÍA</span>
+    <p>¡Hola! Soy Emilio. Hoy abro mi baúl. Encuentro una foto de un balón. ¿Sabes quién es? ¡Es Lionel Messi!</p>
+    <p>¿Sabes qué? Lionel es muy bajito. Todos los niños del equipo son más altos que Lionel. Pero Lionel juega muy bien.</p>
+    <p>Lionel juega en un equipo pequeño. El equipo se llama Grandoli. ¿Sabes quién es la entrenadora? ¡Es su abuela! Se llama Celia. Celia dice: "Tú puedes, Leo."</p>
+    <p>Lionel juega fútbol en la calle con sus hermanos. En Argentina, esto se llama "el potrero."</p>
+    <p>Lionel tiene un problema. Lionel no crece mucho. Los doctores dan una medicina a Lionel. Lionel toma la medicina todas las noches.</p>
+    <p>Pero Lionel no para. Lionel juega y juega. Sus amigos llaman a Lionel "la pulga." ¡Es pequeño y muy rápido!</p>
+    <p>A los 13 años, Lionel va a España. Un equipo grande lo invita: el Barcelona.</p>
+    <p>¿Te imaginas? ¡Ir a otro país a los 13 años!</p>
+    <p>Soy Emilio. Esto es Hispano del día. ¡Hasta mañana!</p>
+  `,
+  A2: `
+    <span class="level-tag">NIVEL A2 · 🎙️ HISPANO DEL DÍA</span>
+    <p>¡Hola! Soy Emilio. Hoy abrí mi baúl y encontré una foto vieja de un balón... ¿Sabías que el futbolista más famoso del mundo, Lionel Messi, era el niño más bajito de su equipo?</p>
+    <p>Sí, como lo oyes. Cuando Leo tenía 8 años, jugaba en un equipo pequeño de su barrio en Rosario, Argentina, que se llamaba Grandoli. Su primera entrenadora fue... ¡su propia abuela, Celia! Ella lo llevaba a los partidos y siempre le decía: "Dale, Leo, tú puedes."</p>
+    <p>¿Sabías que sus amigos y sus hermanos mayores jugaban con él en la calle, en lo que en Argentina llaman "el potrero"? Un potrero es un terreno de tierra donde los niños juegan fútbol todas las tardes.</p>
+    <p>Pero había un problema. Leo no crecía como los otros niños de su edad. Los médicos le dijeron a su familia que necesitaba una medicina especial, todas las noches, para poder crecer.</p>
+    <p>¿Y sabes qué hacía Leo con ese problema? ¡Nada lo detenía! Aunque era bajito, en la cancha nadie podía quitarle el balón. Sus compañeros lo llamaban "la pulga," porque era pequeño, rápido y muy difícil de atrapar.</p>
+    <p>A los 13 años, un equipo de España, el FC Barcelona, lo invitó a unirse a su academia. Su familia empacó todo y se mudó a España.</p>
+    <p>¿Te imaginas dejar tu casa, tu escuela, tus amigos... a los 13 años? Leo lo hizo.</p>
+    <p>Bueno, ya sabes el resto de la historia... pero eso lo dejamos para otro día. Soy Emilio, y esto fue Hispano del día. ¡Nos escuchamos mañana!</p>
+  `,
+  B1: `
+    <span class="level-tag">NIVEL B1 · 🎙️ HISPANO DEL DÍA</span>
+    <p>¡Hola a todos! Soy Emilio, y hoy quiero contarles algo que encontré en mi baúl... ¿Sabían que Lionel Messi, el futbolista más famoso del mundo, era el niño más bajito de todo su equipo?</p>
+    <p>Cuando Leo tenía apenas 8 años, jugaba en un equipo humilde de su barrio en Rosario, Argentina, llamado Grandoli. Y aunque no lo crean, su primera entrenadora fue su propia abuela, Celia, quien lo acompañaba a cada partido y siempre le repetía: "Dale, Leo, tú puedes."</p>
+    <p>¿Sabían que Leo pasaba las tardes jugando fútbol en la calle con sus hermanos mayores y sus amigos, en lo que en Argentina se conoce como "el potrero" — un terreno de tierra donde los niños juegan sin parar?</p>
+    <p>Sin embargo, había un problema: Leo no crecía como los demás niños de su edad. Los médicos descubrieron que necesitaba una hormona especial cada noche para poder crecer con normalidad.</p>
+    <p>¿Y saben qué hacía Leo frente a esto? ¡Absolutamente nada lo detenía! Porque aunque era pequeño, en la cancha nadie podía quitarle el balón — por eso sus compañeros lo apodaron "la pulga."</p>
+    <p>¿Se imaginan dejar su casa, su escuela, sus amigos... a los 13 años? Pues eso hizo Leo cuando el FC Barcelona lo invitó a formar parte de su academia en España.</p>
+    <p>Bueno, ya conocen el resto de la historia... pero eso lo dejamos para otro día. Soy Emilio, y esto fue Hispano del día. ¡Nos escuchamos pronto!</p>
+  `,
+  B2: `
+    <span class="level-tag">NIVEL B2 · 🎙️ HISPANO DEL DÍA</span>
+    <p>¡Hola a todos! Soy Emilio, y hoy quiero compartirles algo verdaderamente fascinante que encontré en el fondo de mi baúl... ¿Sabían que Lionel Messi, considerado por muchos el mejor futbolista de la historia, era, de niño, notablemente más bajo que cualquiera de sus compañeros de equipo?</p>
+    <p>Cuando apenas tenía ocho años, Leo formaba parte de un modesto equipo barrial en Rosario, Argentina, llamado Grandoli. Resulta curioso pensar que su primera entrenadora no fue otra que su propia abuela, Celia, quien lo acompañaba fielmente a cada partido, convencida desde el principio de que ese niño tenía algo especial.</p>
+    <p>¿Sabían que Leo dedicaba las tardes enteras a jugar fútbol en la calle junto a sus hermanos mayores y amigos del barrio, en lo que en Argentina se conoce como "el potrero" — esos terrenos de tierra donde, sin árbitros ni reglas estrictas, se formaron algunos de los mejores futbolistas del país?</p>
+    <p>Sin embargo, detrás de aquel talento se escondía una realidad más difícil: Leo no crecía al mismo ritmo que los demás niños de su edad, y los médicos finalmente diagnosticaron un trastorno hormonal que exigía una inyección diaria para estimular su crecimiento.</p>
+    <p>¿Y qué hizo Leo frente a semejante obstáculo? Absolutamente nada lo detuvo. Porque, aunque físicamente era el más pequeño, resultaba prácticamente imposible quitarle el balón en la cancha — de ahí que sus compañeros le pusieran el apodo que lo acompañaría durante toda su carrera: "la pulga."</p>
+    <p>¿Se imaginan tener que dejar atrás su hogar, su escuela, sus amigos de toda la vida... a los trece años? Pues exactamente eso vivió Leo cuando el FC Barcelona le ofreció integrarse a su prestigiosa academia juvenil en España — una oportunidad que cambiaría el rumbo de su vida para siempre.</p>
+    <p>Bueno, ya conocen el resto de esta extraordinaria historia... pero eso, mis amigos, lo dejaremos para otro día. Soy Emilio, y esto fue Hispano del día. ¡Nos escuchamos muy pronto!</p>
+  `
+};
+
+function renderLevel(level) {
+  document.getElementById('story').innerHTML = STORY[level];
+  document.querySelectorAll('.pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.level === level);
+  });
+}
+document.querySelectorAll('.pill').forEach(p => {
+  p.addEventListener('click', () => renderLevel(p.dataset.level));
+});
+renderLevel('A1');
+
+function copyNotes() {
+  const text = document.querySelector('.modal-box').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Notas copiadas.');
+  });
+}
+</script>
+</body>
+</html>

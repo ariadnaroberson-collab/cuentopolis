@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Baúl de Emilio — Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --navy: #26344d; --gold: #c9a24b; --gold-soft: #8a734a; --lamp: #e7b96b;
+    --green: #4c7a5e; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 60px; }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 22px; }
+  header { margin-bottom: 30px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.6rem; }
+  .subtitle { color: var(--parchment-dim); font-size: 0.95rem; margin-top: 8px; font-style: italic; }
+  .list { display: flex; flex-direction: column; gap: 14px; margin-top: 30px; }
+  .ep { display: flex; align-items: center; gap: 18px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; text-decoration: none; color: var(--parchment); transition: border-color 0.15s ease; }
+  .ep:hover { border-color: var(--gold); }
+  .ep-num { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold-soft); min-width: 70px; }
+  .ep-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.15rem; flex: 1; }
+  .ep-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--lamp); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← Cuentópolis</a>
+  <header>
+    <p class="eyebrow">Unidad selectiva · Hispanic Heritage Month</p>
+    <h1>El Baúl de Emilio</h1>
+    <p class="subtitle">Emilio abre el baúl de su abuela y descubre la niñez de figuras destacadas del mundo hispano.</p>
+  </header>
+  <div class="list">
+    <a class="ep" href="baul_de_emilio_episodio1_reader_Lionel_Messi.html">
+      <span class="ep-num">Episodio 1</span>
+      <span class="ep-title">Lionel Messi</span>
+      <span class="ep-tag">fútbol</span>
+    </a>
+    <a class="ep" href="baul_de_emilio_episodio2_reader_Frida_Kahlo.html">
+      <span class="ep-num">Episodio 2</span>
+      <span class="ep-title">Frida Kahlo</span>
+      <span class="ep-tag">arte</span>
+    </a>
+    <a class="ep" href="baul_de_emilio_episodio3_reader_Celia_Cruz.html">
+      <span class="ep-num">Episodio 3</span>
+      <span class="ep-title">Celia Cruz</span>
+      <span class="ep-tag">música</span>
+    </a>
+    <a class="ep" href="baul_de_emilio_episodio4_reader_Jose_Marti.html">
+      <span class="ep-num">Episodio 4</span>
+      <span class="ep-title">José Martí</span>
+      <span class="ep-tag">literatura</span>
+    </a>
+  </div>
+</div>
+</body>
+</html>

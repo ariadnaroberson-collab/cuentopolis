@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El cumpleaños sorpresa — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c1024; --ink-2:#12172e; --ink-3:#1a2040;
+    --lamp:#e8a94c; --lamp-dim:#c98a34; --coral:#e8735c;
+    --parchment:#f3e9d6; --parchment-dim:#e4d6b8; --page:#faf3e4;
+    --slate:#8891a8; --slate-dim:#5c6480;
+    --leaf:#5fa876; --leaf-dim:#3d7d55;
+    --line: rgba(232,169,76,0.16);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--parchment);font-family:'Public Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;}
+  button{font-family:'Public Sans',sans-serif;cursor:pointer;}
+
+  /* ---------- TOP BAR ---------- */
+  .toolbar{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;gap:16px;padding:12px 24px;
+    background:rgba(9,12,26,0.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .back-link{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--slate);border:1px solid var(--line);padding:7px 12px;border-radius:20px;background:rgba(255,255,255,0.03);}
+  .back-link:hover{color:var(--parchment);border-color:var(--lamp-dim);}
+  .toolbar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;}
+  .toolbar-series{font-size:11px;color:var(--slate);}
+  .toolbar-level{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:1.5px solid var(--lamp);color:var(--lamp);border-radius:5px;padding:2px 7px;}
+  .toolbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .tool-btn{
+    display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);
+    background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;transition:background .15s, border-color .15s;
+  }
+  .tool-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--lamp-dim);}
+  .tool-btn.on{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+  .tool-btn.teacher{border-color:var(--leaf-dim);color:var(--leaf);}
+  .tool-btn.teacher:hover{background:rgba(95,168,118,0.12);}
+  .font-controls{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .font-controls button{background:rgba(255,255,255,0.03);color:var(--parchment);border:none;padding:8px 12px;font-size:13px;}
+  .font-controls button:hover{background:rgba(255,255,255,0.1);}
+  .font-controls .divider{width:1px;background:var(--line);align-self:stretch;}
+
+  .progress-rail{height:3px;background:var(--ink-3);position:sticky;top:57px;z-index:39;}
+  .progress-rail-fill{height:100%;background:linear-gradient(90deg,var(--lamp),var(--coral));width:0%;transition:width .1s linear;}
+
+  /* ---------- LEVEL SWITCH STRIP ---------- */
+  .level-strip{display:flex;align-items:center;gap:10px;justify-content:center;padding:18px 24px 4px;flex-wrap:wrap;}
+  .level-strip-label{font-size:12.5px;color:var(--slate);}
+  .level-pill{
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:6px 13px;border-radius:20px;
+    border:1.5px solid var(--line);color:var(--slate);background:rgba(255,255,255,0.03);
+  }
+  .level-pill:hover{border-color:var(--lamp-dim);color:var(--parchment);}
+  .level-pill.active{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  /* ---------- LAYOUT ---------- */
+  .reader-layout{display:flex;justify-content:center;gap:28px;padding:20px 24px 80px;max-width:1180px;margin:0 auto;}
+  .page-wrap{flex:1 1 680px;max-width:680px;}
+  .page{
+    background:var(--page);color:#2c2412;border-radius:14px;padding:44px 52px;box-shadow:0 30px 60px rgba(0,0,0,0.4);
+    font-family:'Source Serif 4', serif; line-height:1.85; position:relative;
+  }
+  .page::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--lamp),var(--coral));border-radius:14px 14px 0 0;}
+  .story-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lamp-dim);margin-bottom:6px;}
+  .story-heading{font-family:'Fraunces',serif;font-size:30px;margin:0 0 6px;color:#241d0e;}
+  .story-subheading{font-family:'Public Sans',sans-serif;font-size:13.5px;color:#8a7a52;margin-bottom:22px;font-weight:600;}
+  .story-body p{margin:0 0 20px;}
+  .story-body h3{font-size:17px;color:#5c4a1f;margin:26px 0 12px;font-family:'Fraunces',serif;}
+  .gloss{border-bottom:2px dotted var(--coral);cursor:help;position:relative;color:#241d0e;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(232,115,92,0.16);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--ink-2);color:var(--parchment);border:1px solid var(--line);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+
+  /* ---------- COMPREHENSION ---------- */
+  .comp-check{margin-top:8px;padding-top:28px;border-top:1px dashed var(--parchment-dim);}
+  .comp-title{font-family:'Fraunces',serif;font-size:19px;margin:0 0 4px;color:#241d0e;}
+  .comp-sub{font-family:'Public Sans',sans-serif;font-size:13px;color:#6b5e42;margin-bottom:18px;}
+  .comp-q{font-family:'Public Sans',sans-serif;font-size:14.5px;font-weight:600;color:#241d0e;margin-bottom:10px;}
+  .comp-options{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
+  .comp-opt{
+    font-family:'Public Sans',sans-serif;text-align:left;padding:10px 14px;border-radius:8px;border:1.5px solid #d8cba3;
+    background:#fffaf0;font-size:13.5px;color:#3a3120;
+  }
+  .comp-opt:hover{border-color:var(--coral);}
+  .comp-opt.correct{background:#dff1e2;border-color:#6fae7a;}
+  .comp-opt.incorrect{background:#f6dcd6;border-color:var(--coral);}
+  .comp-result{display:none;font-family:'Public Sans',sans-serif;font-size:13.5px;color:#4b6b4f;margin-top:-10px;margin-bottom:16px;}
+
+  .finish-bar{display:flex;align-items:center;gap:14px;margin-top:24px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:transform .12s;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--lamp);color:#26160a;}
+  .btn-primary:hover{background:#f0b768;}
+  .btn-outline{background:transparent;border:1.5px solid #c9b98a;color:#4a3f26;}
+
+  /* ---------- SIDE RAIL ---------- */
+  .side-rail{flex:0 0 250px;display:flex;flex-direction:column;gap:16px;}
+  .rail-card{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .rail-title{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:10px;font-weight:600;display:flex;align-items:center;gap:6px;}
+  .word-chip{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:7px 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .word-chip:last-child{border-bottom:none;}
+  .word-en{color:var(--parchment);font-weight:600;}
+  .word-def{color:var(--slate);font-size:11.5px;}
+  .save-word{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--slate);font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .save-word.saved{background:var(--coral);border-color:var(--coral);color:#2a0f0a;}
+  .rail-meta-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--slate);padding:5px 0;}
+  .rail-meta-row b{color:var(--parchment);font-weight:600;}
+  .listen-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;}
+  .listen-btn:hover{border-color:var(--lamp-dim);}
+  .listen-btn.playing{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  /* Huellas del Viajero card */
+  .traveler-card{background:linear-gradient(160deg, rgba(95,168,118,0.14), rgba(95,168,118,0.03));border-color:rgba(95,168,118,0.3);}
+  .traveler-name{font-family:'Fraunces',serif;font-size:17px;color:var(--parchment);margin-bottom:2px;}
+  .traveler-tag{font-size:11.5px;color:var(--leaf);margin-bottom:10px;font-weight:600;}
+  .traveler-row{display:flex;gap:8px;font-size:12px;color:var(--slate);padding:4px 0;line-height:1.4;}
+  .traveler-row .lbl{flex:0 0 76px;color:var(--leaf);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:1px;}
+  .traveler-note{margin-top:10px;padding-top:10px;border-top:1px solid rgba(95,168,118,0.2);font-size:11px;color:var(--slate-dim);font-style:italic;}
+  /* Empty Huellas del Viajero state (episodes with no visiting character) */
+  .traveler-card.traveler-gap{background:linear-gradient(160deg, rgba(136,145,168,0.10), rgba(136,145,168,0.02));border-color:var(--line);}
+  .traveler-card.traveler-gap .rail-title{color:var(--slate);}
+  .traveler-empty{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:var(--slate);margin-bottom:8px;}
+  .traveler-card.traveler-gap .traveler-note{border-top-color:var(--line);}
+
+  /* Palabra del Bosque / Pregunta de Don Pico */
+  .forest-word{font-family:'Fraunces',serif;font-style:italic;font-size:21px;color:var(--lamp);margin-bottom:4px;}
+  .forest-word-def{font-size:12.5px;color:var(--slate);margin-bottom:14px;}
+  .pico-q{font-size:13px;color:var(--parchment);line-height:1.55;padding:12px;background:rgba(232,169,76,0.06);border-radius:8px;border-left:3px solid var(--lamp);font-style:italic;}
+
+  /* ---------- TEACHER NOTES MODAL ---------- */
+  .modal-overlay{position:fixed;inset:0;background:rgba(6,8,18,0.78);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;max-width:600px;width:100%;max-height:86vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.6);}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--ink-2);}
+  .modal-head h3{margin:0;font-size:16.5px;color:var(--leaf);}
+  .modal-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);color:var(--parchment);font-size:13px;}
+  .modal-head-actions{display:flex;align-items:center;gap:8px;}
+  .copy-notes-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid rgba(95,168,118,0.35);background:rgba(95,168,118,0.08);color:var(--leaf);font-size:12px;font-weight:600;transition:background .15s;}
+  .copy-notes-btn:hover{background:rgba(95,168,118,0.18);}
+  .copy-notes-btn.copied{background:var(--leaf);color:#0f2015;border-color:var(--leaf);}
+  .modal-body{padding:20px 22px 26px;font-size:13.5px;line-height:1.7;color:#c9cfe0;}
+  .modal-body h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--leaf);margin:18px 0 6px;}
+  .modal-body h4:first-child{margin-top:0;}
+  .modal-body ul{margin:4px 0;padding-left:20px;}
+  .flag-box{background:rgba(232,115,92,0.08);border:1px solid rgba(232,115,92,0.25);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#e3b3a6;margin-top:6px;}
+
+  @media(max-width:920px){
+    .reader-layout{flex-direction:column-reverse;align-items:center;}
+    .side-rail{flex:none;width:100%;max-width:680px;flex-direction:row;overflow-x:auto;}
+    .rail-card{min-width:220px;}
+    .page{padding:30px 22px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <a class="back-link" href="#">← Biblioteca</a>
+  <div>
+    <div class="toolbar-title">El cumpleaños sorpresa</div>
+    <div class="toolbar-series">Chica y sus Amigos · Ep. 5</div>
+  </div>
+  <span class="toolbar-level" id="toolbarLevel">A1</span>
+  <div class="toolbar-right">
+    <div class="font-controls">
+      <button onclick="changeFont(-1)" title="Texto más pequeño">A−</button>
+      <div class="divider"></div>
+      <button onclick="changeFont(1)" title="Texto más grande">A+</button>
+    </div>
+    <button class="tool-btn" id="glossToggle" onclick="toggleGloss()">🔤 Glosario: Activado</button>
+    <button class="tool-btn" id="nightToggle" onclick="toggleNight()">🌙 Luz de lámpara</button>
+    <button class="tool-btn teacher" onclick="openTeacherNotes()">🎓 Notas del maestro</button>
+  </div>
+</div>
+<div class="progress-rail"><div class="progress-rail-fill" id="progressFill"></div></div>
+
+<!-- LEVEL SWITCHER -->
+<div class="level-strip">
+  <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
+  <div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
+  <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
+  <div class="level-pill" data-level="B2" onclick="setReaderLevel('B2', this)">B2</div>
+  <span class="level-strip-label" style="margin-left:6px;">— mismo cuento, tu ritmo</span>
+</div>
+
+<!-- LAYOUT -->
+<div class="reader-layout">
+  <div class="page-wrap">
+    <div class="page" id="pageContent">
+      <div class="story-eyebrow">Temporada 1 · Los Guardianes de Chiquibul</div>
+      <h1 class="story-heading">El cumpleaños sorpresa</h1>
+      <div class="story-subheading">Episodio 5 — La familia y las celebraciones</div>
+      <div class="story-body" id="storyBody"><!-- filled by JS --></div>
+
+      <div class="comp-check">
+        <div class="comp-title">Chequeo rápido</div>
+        <div class="comp-sub">Responde para marcar este episodio como completado.</div>
+
+        <div class="comp-q">1. ¿Por qué Bruno se va triste sin hablar con nadie?</div>
+        <div class="comp-options" id="q1opts">
+          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque no le gustan las fiestas.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q1')">Porque escucha solo parte de la conversación y cree que nadie lo invitó.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque Don Pico le pide que se vaya.</button>
+        </div>
+        <div class="comp-result" id="q1result">¡Exacto! Bruno se va con el corazón roto por un malentendido — nunca escuchó toda la conversación.</div>
+
+        <div class="comp-q">2. ¿Qué le dice Chica a Bruno junto al río?</div>
+        <div class="comp-options" id="q2opts">
+          <button class="comp-opt" onclick="answer(this,false,'q2')">Que la próxima fiesta será solo para él.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q2')">Que la sorpresa era para Nico, pero que todos quieren que él esté allí también.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q2')">Que debió preguntar antes de escuchar a escondidas.</button>
+        </div>
+        <div class="comp-result" id="q2result">Así es — el malentendido se resuelve con una conversación honesta, no con un castigo.</div>
+
+        <div class="finish-bar">
+          <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
+          <button class="btn btn-outline" onclick="alert('Volviendo a la biblioteca — tu progreso se guarda en Sigue leyendo.')">Guardar y salir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDE RAIL -->
+  <div class="side-rail">
+    <div class="rail-card">
+      <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">Datos del episodio</div>
+      <div class="rail-meta-row"><span>Nivel</span><b id="railLevel">A1</b></div>
+      <div class="rail-meta-row"><span>Tiempo de lectura</span><b id="railTime">3 min</b></div>
+      <div class="rail-meta-row"><span>Lugar</span><b>Plaza de las Celebraciones, Chiquibul</b></div>
+      <div class="rail-meta-row"><span>Tema</span><b>Familia, celebraciones, malentendidos</b></div>
+    </div>
+
+    <div class="rail-card traveler-card">
+      <div class="rail-title">🐾 Huellas del Viajero</div>
+      <div class="traveler-name">Lucía</div>
+      <div class="traveler-tag">Colibrí · Guatemala</div>
+      <div class="traveler-row"><span class="lbl">Tradición</span><span>Canciones al amanecer; toda la familia ayuda a preparar la comida y decorar</span></div>
+      <div class="traveler-row"><span class="lbl">Motivo de visita</span><span>Feria artesanal en Belice</span></div>
+      <div class="traveler-row"><span class="lbl">Dato curioso</span><span>Su familia vino desde Guatemala para participar en la feria</span></div>
+      <div class="traveler-row"><span class="lbl">Valor</span><span>"El mejor regalo es el tiempo que compartimos" (su abuela)</span></div>
+      <div class="traveler-note">Lucía y su familia están de paso por Belice — no viven aquí, sino que visitan por unos días para la feria.</div>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">🌳 La Palabra del Bosque</div>
+      <div class="forest-word">compartir</div>
+      <div class="forest-word-def">Cuando compartimos nuestro tiempo, nuestra comida o nuestra amistad, todos celebramos.</div>
+      <div class="rail-title" style="margin-top:14px;">🦜 La Pregunta de Don Pico</div>
+      <div class="pico-q">"¿Cuál ha sido el cumpleaños que más recuerdas y por qué?"</div>
+      <div class="pico-q" style="margin-top:8px;">"¿Qué hace que una celebración sea especial: los regalos o las personas con quienes la compartes?"</div>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">Banco de palabras — este episodio</div>
+      <div id="wordBank"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHER NOTES MODAL -->
+<div class="modal-overlay" id="teacherModal" onclick="if(event.target===this) closeTeacherNotes()">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🎓 Notas del maestro — Episodio 5</h3>
+      <div class="modal-head-actions">
+        <button class="copy-notes-btn" id="copyNotesBtn" onclick="copyTeacherNotes()">📋 Copiar notas</button>
+        <button class="modal-close" onclick="closeTeacherNotes()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body" id="teacherNotesBody">
+      <h4>Unidad curricular</h4>
+      <div>La familia · Los cumpleaños · Las celebraciones · Los regalos · Expresar gustos y preferencias · Nivel original: B2</div>
+
+      <h4>Objetivos lingüísticos</h4>
+      <ul>
+        <li>Felicitar a alguien</li>
+        <li>Hablar de su familia</li>
+        <li>Organizar una celebración</li>
+        <li>Expresar gustos</li>
+        <li>Invitar a otras personas</li>
+        <li>Agradecer</li>
+      </ul>
+
+      <h4>Estructuras de alta frecuencia</h4>
+      <div>cumple años · invita · prepara · quiere · le gusta · trae · celebra · ayuda · esconde · sorprende</div>
+
+      <h4>Notas de ritmo CEFR por nivel</h4>
+      <ul>
+        <li><b>A1</b> — Presente únicamente, vocabulario aislado de celebraciones. Oraciones muy cortas.</li>
+        <li><b>A2</b> — Presente con conectores de secuencia; diálogo casi completo.</li>
+        <li><b>B1</b> — Introduce el pretérito/imperfecto del texto fuente (como el Episodio 4), con subordinación moderada.</li>
+        <li><b>B2</b> — Texto fuente completo, narrado en pasado, con el malentendido de Bruno y su resolución en su forma más completa.</li>
+      </ul>
+
+      <h4>Temas de preguntas de comprensión</h4>
+      <ul>
+        <li>El secreto — ¿qué deciden hacer los amigos cuando Nico dice que nunca ha tenido una fiesta grande?</li>
+        <li>El malentendido de Bruno — ¿qué escucha, y qué piensa que significa?</li>
+        <li>La verdad — ¿qué le dice Chica a Bruno junto al río?</li>
+        <li>La tradición de Lucía — ¿de dónde viene, y qué comparte sobre los cumpleaños en su comunidad?</li>
+      </ul>
+
+      <h4>Banderas de sensibilidad de contenido</h4>
+      <div class="flag-box">Leve: Bruno escucha solo parte de una conversación y cree que lo excluyen a propósito, sintiendo dolor genuino — se resuelve con una conversación honesta y cálida, sin castigo. Sin peligro.</div>
+
+      <h4>Nota de campos de Huellas del Viajero</h4>
+      <div class="flag-box">El texto fuente no especifica una comida ni un elemento natural para Lucía, así que dos campos de la tarjeta se adaptaron: "Comida" se reemplazó por "Motivo de visita" (la feria artesanal), y se omitió "Naturaleza".</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- CONTENT AT FOUR LEVELS ---------------- */
+const VERSIONS = {
+  A1: {
+    time:'3 min',
+    html: `
+      <p>Una mañana, los amigos recogen frutas cerca de la Gran Ceiba. Nico dice algo importante.</p>
+      <p>—Mañana cumplo años.</p>
+      <p>—¡¿Mañana?! —dice Chica.</p>
+      <p>—Sí. Nunca tengo una fiesta grande. Mi familia celebra en casa. Mi mamá prepara mi comida favorita. Mi papá cuenta historias. Mis hermanos hacen dibujos para mí.</p>
+      <p>Chica mira a Mora. Mira a Arlo. Mira a Teo. Todos entienden: van a organizar una <span class="gloss" data-word="sorpresa">sorpresa</span><span class="gloss-tooltip">algo secreto y especial<span class="arrow"></span></span>.</p>
+      <h3>Los preparativos</h3>
+      <p>Todos trabajan en secreto. Mora decora la plaza con flores azules. Teo prepara una ensalada de frutas. Arlo construye una mesa. Iggy organiza juegos. Chica escribe una lista.</p>
+      <p>Solo Don Pico conoce el plan completo. —Recuerden: una sorpresa solo funciona si todos guardan el <span class="gloss" data-word="secreto">secreto</span><span class="gloss-tooltip">algo que no dices a otros<span class="arrow"></span></span>.</p>
+      <h3>Bruno escucha... pero no todo</h3>
+      <p>Bruno camina por el bosque. Escucha unas voces. —No le digan nada a Nico. Tiene que ser una sorpresa. Solo los invitados lo saben.</p>
+      <p>Bruno abre mucho los ojos. —¿Una fiesta? ¿Y yo no estoy invitado?</p>
+      <p>No pregunta. Se va muy triste.</p>
+      <h3>Una nueva amiga</h3>
+      <p>Llega una colibrí pequeña. —Hola. Soy Lucía. Mi familia viene de Guatemala. Participamos en una feria.</p>
+      <p>—¡Bienvenida! —dice Chica.</p>
+      <p>—En mi pueblo, cuando alguien cumple años, toda la familia canta desde muy temprano. Cocinamos juntos.</p>
+      <p>Lucía enseña una canción especial. Todos aprenden la canción para Nico.</p>
+      <h3>La fiesta... y el malentendido</h3>
+      <p>Al amanecer, todos cantan para Nico. —¿Todo esto es para mí? —pregunta Nico. —¡Feliz cumpleaños! —dice Chica.</p>
+      <p>Pero Bruno mira desde lejos, en silencio. Cree que nadie lo invitó.</p>
+      <p>Don Pico pregunta: —¿Dónde está Bruno? Chica corre a buscarlo.</p>
+      <p>—¿Por qué no viniste? —pregunta Chica. —Pensé que nadie quería que yo estuviera allí.</p>
+      <p>—Bruno, la sorpresa era para Nico. No para esconderte a ti. Todos queremos que vengas.</p>
+      <p>—¿De verdad? —Claro que sí.</p>
+      <p>Bruno regresa con Chica. Nico le da el primer pedazo de pastel. —Los cumpleaños son mejores cuando nadie se queda afuera.</p>
+      <h3>La pista de la Gran Ceiba</h3>
+      <p>Al terminar la fiesta, una hoja enorme cae de la Gran Ceiba. Tiene la misma espiral con cuatro hojas. Don Pico la guarda con cuidado en un libro antiguo.</p>`
+  },
+  A2: {
+    time:'4 min',
+    html: `
+      <p>Una mañana, mientras recogen frutas cerca de la Gran Ceiba, Nico dice algo que hace que todos guarden silencio.</p>
+      <p>—Mañana cumplo años.</p>
+      <p>—¡¿Mañana?! —exclama Chica.</p>
+      <p>—Sí. Nunca hago una fiesta muy grande. Mi familia siempre celebra en casa. Mi mamá prepara mi comida favorita. Mi papá cuenta historias. Y mis hermanos hacen dibujos para regalarme.</p>
+      <p>Chica sonríe. Mira a Mora. Luego a Arlo. Después a Teo. Sin decir una palabra, todos entienden la idea: hay que organizar una <span class="gloss" data-word="sorpresa">sorpresa</span><span class="gloss-tooltip">algo secreto y especial<span class="arrow"></span></span>.</p>
+      <h3>Los preparativos</h3>
+      <p>Durante todo el día, los amigos trabajan en secreto. Mora decora la plaza con flores azules. Teo prepara una gran ensalada de frutas tropicales. Arlo construye una mesa con troncos caídos. Iggy organiza juegos. Chica escribe una lista para no olvidar nada.</p>
+      <p>Solo Don Pico conoce el plan completo. —Recuerden —dice el tucán—. Una sorpresa solo funciona si todos cuidan el <span class="gloss" data-word="secreto">secreto</span><span class="gloss-tooltip">algo que no dices a otros<span class="arrow"></span></span>.</p>
+      <p>Todos asienten. Bueno... casi todos.</p>
+      <h3>Bruno escucha... pero no todo</h3>
+      <p>Mientras camina por el bosque, Bruno oye unas voces. —No le digan nada a Nico. Tiene que ser una sorpresa. Solo los invitados lo saben.</p>
+      <p>Bruno abre mucho los ojos. —¿Una fiesta? ¿Y yo no estoy invitado? Siente un nudo en el estómago. No pregunta. No quiere escuchar el resto. Simplemente da media vuelta y se va muy triste.</p>
+      <h3>Una nueva amiga</h3>
+      <p>Esa tarde llega una pequeña colibrí. Vuela muy rápido y trae una diminuta cesta tejida. —Hola. Soy Lucía. Mi familia vino desde Guatemala. Estamos participando en una feria artesanal aquí, en Belice.</p>
+      <p>Chica la saluda con entusiasmo. —¡Bienvenida a Chiquibul!</p>
+      <p>—Gracias. En mi pueblo, cuando alguien cumple años, toda la familia se reúne desde muy temprano. Cantamos, cocinamos juntos, y cada persona lleva algo preparado con cariño. Mi abuela siempre dice que el mejor regalo es el tiempo que compartimos.</p>
+      <p>Don Pico sonríe. —Qué hermosa tradición. Tal vez hoy podamos aprender de ella.</p>
+      <p>Lucía les enseña una canción sencilla para despertar al cumpleañero. Los amigos deciden aprenderla para sorprender a Nico al día siguiente.</p>
+      <h3>La fiesta... y el malentendido</h3>
+      <p>Al amanecer, todos esperan escondidos detrás de la Plaza de las Celebraciones. Cuando Nico llega, escucha una voz. Luego otra. Después otra más. Los amigos comienzan a cantar.</p>
+      <p>Nico abre mucho los ojos. —¿Todo esto... es para mí? Chica se acerca. —¡Feliz cumpleaños! Nico sonríe tanto que parece no poder hablar.</p>
+      <p>Pero, desde lejos, Bruno observa en silencio. Cree que realmente nadie había querido invitarlo.</p>
+      <p>Don Pico levanta un ala. —Falta alguien. Todos miran alrededor. —¿Dónde está Bruno?</p>
+      <p>Chica comprende de inmediato y corre a buscarlo. Lo encuentra sentado junto al río. —¿Por qué no viniste? —Porque... pensé que nadie quería que estuviera allí.</p>
+      <p>Chica se sienta a su lado. —Bruno, la sorpresa era para Nico. No para esconderte a ti. Todos queremos que vengas.</p>
+      <p>Bruno permanece callado unos segundos. Después pregunta, casi en un susurro: —¿De verdad? —Claro que sí.</p>
+      <p>Los dos regresan juntos. Cuando Nico ve llegar a Bruno, le ofrece el primer pedazo de pastel de frutas. —Los cumpleaños son mejores cuando nadie se queda afuera.</p>
+      <p>Bruno acepta el plato con una sonrisa tímida. Es la primera vez que se siente parte de la celebración.</p>
+      <h3>La pista de la Gran Ceiba</h3>
+      <p>Al terminar la fiesta, una hoja enorme cae lentamente desde la Gran Ceiba. Tiene la misma espiral rodeada por cuatro hojas que ya han visto antes. Don Pico la recoge con mucho cuidado y la guarda dentro de un antiguo libro de madera.</p>`
+  },
+  B1: {
+    time:'6 min',
+    html: `
+      <p>Una mañana, mientras recogían frutas cerca de la Gran Ceiba, Nico comentó algo que hizo que todos guardaran silencio.</p>
+      <p>—Mañana cumplo años.</p>
+      <p>—¡¿Mañana?! —exclamó Chica.</p>
+      <p>—Sí. Nunca hago una fiesta muy grande. Mi familia siempre celebra en casa. Mi mamá prepara mi comida favorita, mi papá cuenta historias, y mis hermanos hacen dibujos para regalarme.</p>
+      <p>Chica sonrió. Miró a Mora, luego a Arlo, después a Teo. Sin decir una palabra, todos entendieron la idea: había que organizar una <span class="gloss" data-word="sorpresa">sorpresa</span><span class="gloss-tooltip">algo secreto y especial<span class="arrow"></span></span>.</p>
+      <h3>Los preparativos</h3>
+      <p>Durante todo el día, los amigos trabajaron en secreto. Mora decoró la plaza con flores azules. Teo preparó una gran ensalada de frutas tropicales. Arlo construyó una mesa con troncos caídos. Iggy organizó juegos. Chica escribió una lista para no olvidar nada.</p>
+      <p>Solo Don Pico conocía el plan completo. —Recuerden —dijo el tucán—. Una sorpresa solo funciona si todos cuidan el <span class="gloss" data-word="secreto">secreto</span><span class="gloss-tooltip">algo que no se cuenta a otros<span class="arrow"></span></span>.</p>
+      <p>Todos asintieron. Bueno... casi todos.</p>
+      <h3>Bruno escucha... pero no todo</h3>
+      <p>Mientras caminaba por el bosque, Bruno oyó unas voces. —No le digan nada a Nico. Tiene que ser una sorpresa. Solo los invitados lo saben.</p>
+      <p>Bruno abrió mucho los ojos. —¿Una fiesta? ¿Y yo no estoy invitado? Sintió un nudo en el estómago. No preguntó. No quiso escuchar el resto de la conversación. Simplemente dio media vuelta y se marchó muy triste.</p>
+      <h3>Una nueva amiga</h3>
+      <p>Esa tarde llegó una pequeña colibrí. Volaba muy rápido y traía una diminuta cesta tejida con fibras de palma. —Hola. Soy Lucía. Mi familia vino desde Guatemala. Estamos participando en una feria artesanal aquí, en Belice.</p>
+      <p>Chica la saludó con entusiasmo. —¡Bienvenida a Chiquibul!</p>
+      <p>—Gracias. En mi pueblo, cuando alguien cumple años, toda la familia se reúne desde muy temprano. Cantamos, cocinamos juntos, y cada persona lleva algo preparado con cariño. Mi abuela siempre dice que el mejor regalo es el tiempo que compartimos.</p>
+      <p>Don Pico sonrió. —Qué hermosa tradición. Tal vez hoy podamos aprender de ella.</p>
+      <p>Lucía les enseñó una canción sencilla que cantaban en su familia para despertar al cumpleañero. Los amigos decidieron aprenderla para sorprender a Nico al día siguiente.</p>
+      <h3>La fiesta... y el malentendido</h3>
+      <p>Al amanecer, todos esperaban escondidos detrás de la Plaza de las Celebraciones. Cuando Nico llegó, escuchó una voz, luego otra, después otra más. Los amigos comenzaron a cantar.</p>
+      <p>Nico abrió mucho los ojos. —¿Todo esto... es para mí? Chica se acercó. —¡Feliz cumpleaños! Nico sonrió tanto que parecía no poder hablar.</p>
+      <p>Pero, desde lejos, Bruno observaba en silencio. Creía que realmente nadie había querido invitarlo.</p>
+      <p>Don Pico levantó un ala. —Falta alguien. Todos miraron alrededor. —¿Dónde está Bruno?</p>
+      <p>Chica comprendió de inmediato y corrió a buscarlo. Lo encontró sentado junto al río. —¿Por qué no viniste? —Porque... pensé que nadie quería que estuviera allí.</p>
+      <p>Chica se sentó a su lado. —Bruno, la sorpresa era para Nico. No para esconderte a ti. Todos queremos que vengas.</p>
+      <p>Bruno permaneció callado unos segundos. Después preguntó, casi en un susurro: —¿De verdad? —Claro que sí.</p>
+      <p>Los dos regresaron juntos. Cuando Nico vio llegar a Bruno, le ofreció el primer pedazo de pastel de frutas. —Los cumpleaños son mejores cuando nadie se queda afuera.</p>
+      <p>Bruno aceptó el plato con una sonrisa tímida. Fue la primera vez que se sintió parte de la celebración.</p>
+      <h3>La pista de la Gran Ceiba</h3>
+      <p>Al terminar la fiesta, una hoja enorme cayó lentamente desde la Gran Ceiba. Tenía la misma espiral rodeada por cuatro hojas que habían visto antes. Don Pico la recogió con mucho cuidado y la guardó dentro de un antiguo libro de madera que siempre llevaba consigo.</p>`
+  },
+  B2: {
+    time:'8 min',
+    html: `
+      <p>Una mañana, mientras recogían frutas cerca de la Gran Ceiba, Nico comentó algo que hizo que todos guardaran silencio.</p>
+      <p>—Mañana cumplo años.</p>
+      <p>—¡¿Mañana?! —exclamó Chica.</p>
+      <p>—Sí. Nunca hago una fiesta muy grande. Mi familia siempre celebra en casa. Mi mamá prepara mi comida favorita. Mi papá cuenta historias. Y mis hermanos hacen dibujos para regalarme.</p>
+      <p>Chica sonrió. Miró a Mora. Luego a Arlo. Después a Teo. Sin decir una palabra, todos entendieron la idea. Había que organizar una <span class="gloss" data-word="sorpresa">sorpresa</span><span class="gloss-tooltip">algo secreto y especial<span class="arrow"></span></span>.</p>
+      <h3>Los preparativos</h3>
+      <p>Durante todo el día, los amigos trabajaron en secreto. Mora decoró la plaza con flores azules. Teo preparó una gran ensalada de frutas tropicales. Arlo construyó una mesa con troncos caídos. Iggy organizó juegos. Chica escribió una lista para no olvidar nada.</p>
+      <p>Solo Don Pico conocía el plan completo. —Recuerden —dijo el tucán—. Una sorpresa solo funciona si todos cuidan el <span class="gloss" data-word="secreto">secreto</span><span class="gloss-tooltip">algo que no se cuenta a otros<span class="arrow"></span></span>.</p>
+      <p>Todos asintieron. Bueno... casi todos.</p>
+      <h3>Bruno escucha... pero no todo</h3>
+      <p>Mientras caminaba por el bosque, Bruno oyó unas voces. —No le digan nada a Nico. —Tiene que ser una sorpresa. —Solo los invitados lo saben.</p>
+      <p>Bruno abrió mucho los ojos. —¿Una fiesta? ¿Y yo no estoy invitado?</p>
+      <p>Sintió un nudo en el estómago. No preguntó. No quiso escuchar el resto de la conversación. Simplemente dio media vuelta y se marchó muy triste.</p>
+      <h3>Una nueva amiga</h3>
+      <p>Esa tarde llegó una pequeña colibrí. Volaba muy rápido. Traía una diminuta cesta tejida con fibras de palma. —Hola. Soy Lucía. Mi familia vino desde Guatemala. Estamos participando en una feria artesanal aquí, en Belice.</p>
+      <p>Chica la saludó con entusiasmo. —¡Bienvenida a Chiquibul!</p>
+      <p>—Gracias. En mi pueblo, cuando alguien cumple años, toda la familia se reúne desde muy temprano. Cantamos, cocinamos juntos y cada persona lleva algo preparado con cariño. Mi abuela siempre dice que el mejor regalo es el tiempo que compartimos.</p>
+      <p>Don Pico sonrió. —Qué hermosa tradición. Tal vez hoy podamos aprender de ella.</p>
+      <p>Lucía les enseñó una canción sencilla que cantaban en su familia para despertar al cumpleañero. Los amigos decidieron aprenderla para sorprender a Nico al día siguiente.</p>
+      <h3>La fiesta... y el malentendido</h3>
+      <p>Al amanecer, todos esperaban escondidos detrás de la Plaza de las Celebraciones. Cuando Nico llegó, escuchó una voz. Luego otra. Después otra más. Los amigos comenzaron a cantar.</p>
+      <p>Nico abrió mucho los ojos. —¿Todo esto... es para mí?</p>
+      <p>Chica se acercó. —¡Feliz cumpleaños! Nico sonrió tanto que parecía no poder hablar.</p>
+      <p>Pero, desde lejos, Bruno observaba en silencio. Creía que realmente nadie había querido invitarlo. Entonces ocurrió algo inesperado.</p>
+      <p>Don Pico levantó un ala. —Falta alguien. Todos miraron alrededor. —¿Dónde está Bruno?</p>
+      <p>Chica comprendió de inmediato. Corrió a buscarlo. Lo encontró sentado junto al río. —¿Por qué no viniste? —Porque... pensé que nadie quería que estuviera allí.</p>
+      <p>Chica se sentó a su lado. —Bruno, la sorpresa era para Nico. No para esconderte a ti. Todos queremos que vengas.</p>
+      <p>Bruno permaneció callado unos segundos. Después preguntó, casi en un susurro: —¿De verdad? —Claro que sí.</p>
+      <p>Los dos regresaron juntos. Cuando Nico vio llegar a Bruno, le ofreció el primer pedazo de pastel de frutas. —Los cumpleaños son mejores cuando nadie se queda afuera.</p>
+      <p>Bruno aceptó el plato con una sonrisa tímida. Fue la primera vez que se sintió parte de la celebración.</p>
+      <h3>La pista de la Gran Ceiba</h3>
+      <p>Al terminar la fiesta, una hoja enorme cayó lentamente desde la Gran Ceiba. No era una hoja cualquiera. Tenía la misma espiral rodeada por cuatro hojas que habían visto antes.</p>
+      <p>Don Pico la recogió con mucho cuidado. La observó en silencio. Luego la guardó dentro de un antiguo libro de madera que siempre llevaba consigo.</p>
+      <p>Chica lo vio. No dijo nada. Pero ahora estaba segura de una cosa: la Gran Ceiba estaba intentando contarles una historia.</p>`
+  }
+};
+
+let fontSize = 18;
+let glossOn = true;
+let listening = false;
+let currentLevel = 'A1';
+const savedWords = new Set();
+
+function renderStory(level){
+  currentLevel = level;
+  document.getElementById('storyBody').innerHTML = VERSIONS[level].html;
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+  document.getElementById('toolbarLevel').textContent = level;
+  document.getElementById('railLevel').textContent = level;
+  document.getElementById('railTime').textContent = VERSIONS[level].time;
+  applyGlossState();
+  buildWordBank();
+}
+
+function setReaderLevel(level, el){
+  document.querySelectorAll('.level-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  renderStory(level);
+}
+
+function changeFont(delta){
+  fontSize = Math.min(24, Math.max(14, fontSize+delta*2));
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+}
+
+function toggleGloss(){
+  glossOn = !glossOn;
+  document.getElementById('glossToggle').textContent = glossOn ? '🔤 Glosario: Activado' : '🔤 Glosario: Desactivado';
+  document.getElementById('glossToggle').classList.toggle('on', glossOn);
+  applyGlossState();
+}
+function applyGlossState(){
+  document.querySelectorAll('.gloss').forEach(g=>{
+    g.style.borderBottomColor = glossOn ? 'var(--coral)' : 'transparent';
+    g.style.cursor = glossOn ? 'help' : 'text';
+    g.style.fontWeight = glossOn ? '600' : '400';
+    if(!glossOn) g.classList.remove('tapped');
+  });
+}
+document.addEventListener('click', e=>{
+  if(e.target.closest('.gloss') && glossOn){
+    e.target.closest('.gloss').classList.toggle('tapped');
+  }
+});
+
+function toggleNight(){
+  const btn = document.getElementById('nightToggle');
+  btn.classList.toggle('on');
+  document.getElementById('pageContent').style.filter = btn.classList.contains('on') ? 'invert(1) hue-rotate(180deg)' : 'none';
+  btn.textContent = btn.classList.contains('on') ? '☀ Luz brillante' : '🌙 Luz de lámpara';
+}
+
+function toggleListen(){
+  listening = !listening;
+  const btn = document.getElementById('listenBtn');
+  btn.classList.toggle('playing', listening);
+  btn.textContent = listening ? '⏸ Reproduciendo narración…' : '🔊 Escuchar narración';
+}
+
+function openTeacherNotes(){ document.getElementById('teacherModal').classList.add('open'); }
+function closeTeacherNotes(){ document.getElementById('teacherModal').classList.remove('open'); }
+
+function copyTeacherNotes(){
+  const body = document.getElementById('teacherNotesBody');
+  let text = '';
+  body.querySelectorAll('h4, div, ul, li').forEach(el=>{
+    if(el.tagName === 'H4'){ text += '\n' + el.textContent.toUpperCase() + '\n'; }
+    else if(el.tagName === 'LI'){ text += '- ' + el.textContent + '\n'; }
+    else if(el.tagName === 'DIV' && !el.closest('ul')){ text += el.textContent + '\n'; }
+  });
+  navigator.clipboard.writeText(text.trim()).then(()=>{
+    const btn = document.getElementById('copyNotesBtn');
+    const original = btn.textContent;
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent = original; btn.classList.remove('copied'); }, 1800);
+  });
+}
+
+function buildWordBank(){
+  const words = [...document.querySelectorAll('.gloss')];
+  const seen = new Set();
+  const bank = document.getElementById('wordBank');
+  bank.innerHTML = '';
+  words.forEach(w=>{
+    const word = w.dataset.word;
+    if(seen.has(word)) return; seen.add(word);
+    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const row = document.createElement('div');
+    row.className='word-chip';
+    row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
+      <button class="save-word ${savedWords.has(word)?'saved':''}" onclick="toggleSaveWord('${word}', this)">${savedWords.has(word)?'✓':'+'}</button>`;
+    bank.appendChild(row);
+  });
+}
+function toggleSaveWord(word, btn){
+  if(savedWords.has(word)){ savedWords.delete(word); btn.classList.remove('saved'); btn.textContent='+'; }
+  else { savedWords.add(word); btn.classList.add('saved'); btn.textContent='✓'; }
+}
+
+/* ---------------- COMPREHENSION ---------------- */
+const answered = {};
+function answer(btn, isCorrect, qid){
+  if(answered[qid]) return;
+  answered[qid]=true;
+  const opts = btn.parentElement.querySelectorAll('.comp-opt');
+  opts.forEach(o=>o.disabled=true);
+  btn.classList.add(isCorrect?'correct':'incorrect');
+  if(!isCorrect){
+    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+  }
+  document.getElementById(qid+'result').style.display='block';
+}
+function finishStory(){
+  if(Object.keys(answered).length < 2){
+    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+    return;
+  }
+  document.getElementById('finishBtn').textContent = '✓ ¡Completado!';
+  document.getElementById('finishBtn').style.background = '#6fae7a';
+  setTimeout(()=> alert('¡Buena lectura! Este episodio ahora aparece 100% completo en tu estante, y tu maestra puede ver tus resultados de comprensión.'), 300);
+}
+
+/* ---------------- SCROLL PROGRESS ---------------- */
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('progressFill').style.width = Math.min(100,scrolled)+'%';
+});
+
+/* ---------------- INIT ---------------- */
+renderStory('A1');
+</script>
+</body>
+</html>

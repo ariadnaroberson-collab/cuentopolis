@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Mercado de San Ignacio — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c1024; --ink-2:#12172e; --ink-3:#1a2040;
+    --lamp:#e8a94c; --lamp-dim:#c98a34; --coral:#e8735c;
+    --parchment:#f3e9d6; --parchment-dim:#e4d6b8; --page:#faf3e4;
+    --slate:#8891a8; --slate-dim:#5c6480;
+    --leaf:#5fa876; --leaf-dim:#3d7d55;
+    --line: rgba(232,169,76,0.16);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--parchment);font-family:'Public Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;}
+  button{font-family:'Public Sans',sans-serif;cursor:pointer;}
+
+  /* ---------- TOP BAR ---------- */
+  .toolbar{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;gap:16px;padding:12px 24px;
+    background:rgba(9,12,26,0.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .back-link{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--slate);border:1px solid var(--line);padding:7px 12px;border-radius:20px;background:rgba(255,255,255,0.03);}
+  .back-link:hover{color:var(--parchment);border-color:var(--lamp-dim);}
+  .toolbar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;}
+  .toolbar-series{font-size:11px;color:var(--slate);}
+  .toolbar-level{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:1.5px solid var(--lamp);color:var(--lamp);border-radius:5px;padding:2px 7px;}
+  .toolbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .tool-btn{
+    display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);
+    background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;transition:background .15s, border-color .15s;
+  }
+  .tool-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--lamp-dim);}
+  .tool-btn.on{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+  .tool-btn.teacher{border-color:var(--leaf-dim);color:var(--leaf);}
+  .tool-btn.teacher:hover{background:rgba(95,168,118,0.12);}
+  .font-controls{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .font-controls button{background:rgba(255,255,255,0.03);color:var(--parchment);border:none;padding:8px 12px;font-size:13px;}
+  .font-controls button:hover{background:rgba(255,255,255,0.1);}
+  .font-controls .divider{width:1px;background:var(--line);align-self:stretch;}
+
+  .progress-rail{height:3px;background:var(--ink-3);position:sticky;top:57px;z-index:39;}
+  .progress-rail-fill{height:100%;background:linear-gradient(90deg,var(--lamp),var(--coral));width:0%;transition:width .1s linear;}
+
+  /* ---------- LEVEL SWITCH STRIP ---------- */
+  .level-strip{display:flex;align-items:center;gap:10px;justify-content:center;padding:18px 24px 4px;flex-wrap:wrap;}
+  .level-strip-label{font-size:12.5px;color:var(--slate);}
+  .level-pill{
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:6px 13px;border-radius:20px;
+    border:1.5px solid var(--line);color:var(--slate);background:rgba(255,255,255,0.03);
+  }
+  .level-pill:hover{border-color:var(--lamp-dim);color:var(--parchment);}
+  .level-pill.active{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  /* ---------- LAYOUT ---------- */
+  .reader-layout{display:flex;justify-content:center;gap:28px;padding:20px 24px 80px;max-width:1180px;margin:0 auto;}
+  .page-wrap{flex:1 1 680px;max-width:680px;}
+  .page{
+    background:var(--page);color:#2c2412;border-radius:14px;padding:44px 52px;box-shadow:0 30px 60px rgba(0,0,0,0.4);
+    font-family:'Source Serif 4', serif; line-height:1.85; position:relative;
+  }
+  .page::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--lamp),var(--coral));border-radius:14px 14px 0 0;}
+  .story-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lamp-dim);margin-bottom:6px;}
+  .story-heading{font-family:'Fraunces',serif;font-size:30px;margin:0 0 6px;color:#241d0e;}
+  .story-subheading{font-family:'Public Sans',sans-serif;font-size:13.5px;color:#8a7a52;margin-bottom:22px;font-weight:600;}
+  .story-body p{margin:0 0 20px;}
+  .story-body h3{font-size:17px;color:#5c4a1f;margin:26px 0 12px;font-family:'Fraunces',serif;}
+  .gloss{border-bottom:2px dotted var(--coral);cursor:help;position:relative;color:#241d0e;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(232,115,92,0.16);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--ink-2);color:var(--parchment);border:1px solid var(--line);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+
+  /* ---------- COMPREHENSION ---------- */
+  .comp-check{margin-top:8px;padding-top:28px;border-top:1px dashed var(--parchment-dim);}
+  .comp-title{font-family:'Fraunces',serif;font-size:19px;margin:0 0 4px;color:#241d0e;}
+  .comp-sub{font-family:'Public Sans',sans-serif;font-size:13px;color:#6b5e42;margin-bottom:18px;}
+  .comp-q{font-family:'Public Sans',sans-serif;font-size:14.5px;font-weight:600;color:#241d0e;margin-bottom:10px;}
+  .comp-options{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
+  .comp-opt{
+    font-family:'Public Sans',sans-serif;text-align:left;padding:10px 14px;border-radius:8px;border:1.5px solid #d8cba3;
+    background:#fffaf0;font-size:13.5px;color:#3a3120;
+  }
+  .comp-opt:hover{border-color:var(--coral);}
+  .comp-opt.correct{background:#dff1e2;border-color:#6fae7a;}
+  .comp-opt.incorrect{background:#f6dcd6;border-color:var(--coral);}
+  .comp-result{display:none;font-family:'Public Sans',sans-serif;font-size:13.5px;color:#4b6b4f;margin-top:-10px;margin-bottom:16px;}
+
+  .finish-bar{display:flex;align-items:center;gap:14px;margin-top:24px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:transform .12s;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--lamp);color:#26160a;}
+  .btn-primary:hover{background:#f0b768;}
+  .btn-outline{background:transparent;border:1.5px solid #c9b98a;color:#4a3f26;}
+
+  /* ---------- SIDE RAIL ---------- */
+  .side-rail{flex:0 0 250px;display:flex;flex-direction:column;gap:16px;}
+  .rail-card{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .rail-title{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:10px;font-weight:600;display:flex;align-items:center;gap:6px;}
+  .word-chip{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:7px 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .word-chip:last-child{border-bottom:none;}
+  .word-en{color:var(--parchment);font-weight:600;}
+  .word-def{color:var(--slate);font-size:11.5px;}
+  .save-word{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--slate);font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .save-word.saved{background:var(--coral);border-color:var(--coral);color:#2a0f0a;}
+  .rail-meta-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--slate);padding:5px 0;}
+  .rail-meta-row b{color:var(--parchment);font-weight:600;}
+  .listen-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;}
+  .listen-btn:hover{border-color:var(--lamp-dim);}
+  .listen-btn.playing{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  /* Huellas del Viajero card */
+  .traveler-card{background:linear-gradient(160deg, rgba(95,168,118,0.14), rgba(95,168,118,0.03));border-color:rgba(95,168,118,0.3);}
+  .traveler-name{font-family:'Fraunces',serif;font-size:17px;color:var(--parchment);margin-bottom:2px;}
+  .traveler-tag{font-size:11.5px;color:var(--leaf);margin-bottom:10px;font-weight:600;}
+  .traveler-row{display:flex;gap:8px;font-size:12px;color:var(--slate);padding:4px 0;line-height:1.4;}
+  .traveler-row .lbl{flex:0 0 76px;color:var(--leaf);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:1px;}
+  .traveler-note{margin-top:10px;padding-top:10px;border-top:1px solid rgba(95,168,118,0.2);font-size:11px;color:var(--slate-dim);font-style:italic;}
+  /* Empty Huellas del Viajero state (episodes with no visiting character) */
+  .traveler-card.traveler-gap{background:linear-gradient(160deg, rgba(136,145,168,0.10), rgba(136,145,168,0.02));border-color:var(--line);}
+  .traveler-card.traveler-gap .rail-title{color:var(--slate);}
+  .traveler-empty{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:var(--slate);margin-bottom:8px;}
+  .traveler-card.traveler-gap .traveler-note{border-top-color:var(--line);}
+
+  /* Palabra del Bosque / Pregunta de Don Pico */
+  .forest-word{font-family:'Fraunces',serif;font-style:italic;font-size:21px;color:var(--lamp);margin-bottom:4px;}
+  .forest-word-def{font-size:12.5px;color:var(--slate);margin-bottom:14px;}
+  .pico-q{font-size:13px;color:var(--parchment);line-height:1.55;padding:12px;background:rgba(232,169,76,0.06);border-radius:8px;border-left:3px solid var(--lamp);font-style:italic;}
+
+  /* ---------- TEACHER NOTES MODAL ---------- */
+  .modal-overlay{position:fixed;inset:0;background:rgba(6,8,18,0.78);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;max-width:600px;width:100%;max-height:86vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.6);}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--ink-2);}
+  .modal-head h3{margin:0;font-size:16.5px;color:var(--leaf);}
+  .modal-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);color:var(--parchment);font-size:13px;}
+  .modal-head-actions{display:flex;align-items:center;gap:8px;}
+  .copy-notes-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid rgba(95,168,118,0.35);background:rgba(95,168,118,0.08);color:var(--leaf);font-size:12px;font-weight:600;transition:background .15s;}
+  .copy-notes-btn:hover{background:rgba(95,168,118,0.18);}
+  .copy-notes-btn.copied{background:var(--leaf);color:#0f2015;border-color:var(--leaf);}
+  .modal-body{padding:20px 22px 26px;font-size:13.5px;line-height:1.7;color:#c9cfe0;}
+  .modal-body h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--leaf);margin:18px 0 6px;}
+  .modal-body h4:first-child{margin-top:0;}
+  .modal-body ul{margin:4px 0;padding-left:20px;}
+  .flag-box{background:rgba(232,115,92,0.08);border:1px solid rgba(232,115,92,0.25);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#e3b3a6;margin-top:6px;}
+
+  @media(max-width:920px){
+    .reader-layout{flex-direction:column-reverse;align-items:center;}
+    .side-rail{flex:none;width:100%;max-width:680px;flex-direction:row;overflow-x:auto;}
+    .rail-card{min-width:220px;}
+    .page{padding:30px 22px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <a class="back-link" href="#">← Biblioteca</a>
+  <div>
+    <div class="toolbar-title">El Mercado de San Ignacio</div>
+    <div class="toolbar-series">Chica y sus Amigos · Ep. 7</div>
+  </div>
+  <span class="toolbar-level" id="toolbarLevel">A1</span>
+  <div class="toolbar-right">
+    <div class="font-controls">
+      <button onclick="changeFont(-1)" title="Texto más pequeño">A−</button>
+      <div class="divider"></div>
+      <button onclick="changeFont(1)" title="Texto más grande">A+</button>
+    </div>
+    <button class="tool-btn" id="glossToggle" onclick="toggleGloss()">🔤 Glosario: Activado</button>
+    <button class="tool-btn" id="nightToggle" onclick="toggleNight()">🌙 Luz de lámpara</button>
+    <button class="tool-btn teacher" onclick="openTeacherNotes()">🎓 Notas del maestro</button>
+  </div>
+</div>
+<div class="progress-rail"><div class="progress-rail-fill" id="progressFill"></div></div>
+
+<!-- LEVEL SWITCHER -->
+<div class="level-strip">
+  <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
+  <div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
+  <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
+  <div class="level-pill" data-level="B2" onclick="setReaderLevel('B2', this)">B2</div>
+  <span class="level-strip-label" style="margin-left:6px;">— mismo cuento, tu ritmo</span>
+</div>
+
+<!-- LAYOUT -->
+<div class="reader-layout">
+  <div class="page-wrap">
+    <div class="page" id="pageContent">
+      <div class="story-eyebrow">Temporada 1 · Los Guardianes de Chiquibul</div>
+      <h1 class="story-heading">El Mercado de San Ignacio</h1>
+      <div class="story-subheading">Episodio 7 — La comida y el mercado</div>
+      <div class="story-body" id="storyBody"><!-- filled by JS --></div>
+
+      <div class="comp-check">
+        <div class="comp-title">Chequeo rápido</div>
+        <div class="comp-sub">Responde para marcar este episodio como completado.</div>
+
+        <div class="comp-q">1. ¿Por qué Bruno regresa con cocos, chile y calabazas en vez de mangos?</div>
+        <div class="comp-options" id="q1opts">
+          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque el mercado ya no tenía mangos.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q1')">Porque leyó "4 mangos" como "4 cosas grandes" y compró sin pedir ayuda.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque Don Pico cambió la lista a propósito.</button>
+        </div>
+        <div class="comp-result" id="q1result">¡Exacto! Bruno quiso hacerlo todo solo, muy rápido, y leyó mal la lista.</div>
+
+        <div class="comp-q">2. ¿Cómo ayuda Valentina a resolver el problema de las compras?</div>
+        <div class="comp-options" id="q2opts">
+          <button class="comp-opt" onclick="answer(this,false,'q2')">Les da todo lo que necesitan sin pedir nada a cambio.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q2')">Les ayuda a intercambiar productos con otros vendedores, así nadie pierde nada.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q2')">Le dice a Don Pico que castigue a Bruno.</button>
+        </div>
+        <div class="comp-result" id="q2result">Así es — un buen mercado funciona porque las personas confían unas en otras, tal como dice el abuelo de Valentina.</div>
+
+        <div class="finish-bar">
+          <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
+          <button class="btn btn-outline" onclick="alert('Volviendo a la biblioteca — tu progreso se guarda en Sigue leyendo.')">Guardar y salir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDE RAIL -->
+  <div class="side-rail">
+    <div class="rail-card">
+      <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">Datos del episodio</div>
+      <div class="rail-meta-row"><span>Nivel</span><b id="railLevel">A1</b></div>
+      <div class="rail-meta-row"><span>Tiempo de lectura</span><b id="railTime">3 min</b></div>
+      <div class="rail-meta-row"><span>Lugar</span><b>Mercado de San Ignacio</b></div>
+      <div class="rail-meta-row"><span>Tema</span><b>Comprar, vender, confiar</b></div>
+    </div>
+
+    <div class="rail-card traveler-card">
+      <div class="rail-title">🐾 Huellas del Viajero</div>
+      <div class="traveler-name">Valentina</div>
+      <div class="traveler-tag">Coatí (pizote) · Guatemala</div>
+      <div class="traveler-row"><span class="lbl">Tradición</span><span>Pan dulce con cardamomo y cacao, receta de la bisabuela</span></div>
+      <div class="traveler-row"><span class="lbl">Comida</span><span>Cardamomo, cacao, miel, tejidos tradicionales</span></div>
+      <div class="traveler-row"><span class="lbl">Dato curioso</span><span>Su familia cruza la frontera entre Guatemala y Belice para participar en el mercado</span></div>
+      <div class="traveler-row"><span class="lbl">Valor</span><span>Generosidad y cooperación</span></div>
+      <div class="traveler-note">"Los mercados no solo venden comida. También guardan recuerdos de las familias."</div>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">🌳 La Palabra del Bosque</div>
+      <div class="forest-word">intercambiar</div>
+      <div class="forest-word-def">Cuando compartimos lo que tenemos, todos regresamos a casa con algo más valioso.</div>
+      <div class="rail-title" style="margin-top:14px;">🦜 La Pregunta de Don Pico</div>
+      <div class="pico-q">"Si pudieras visitar un mercado en cualquier país, ¿qué te gustaría probar o comprar?"</div>
+      <div class="pico-q" style="margin-top:8px;">"¿Qué alimento representa mejor a tu familia o a tu comunidad?"</div>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">Banco de palabras — este episodio</div>
+      <div id="wordBank"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHER NOTES MODAL -->
+<div class="modal-overlay" id="teacherModal" onclick="if(event.target===this) closeTeacherNotes()">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🎓 Notas del maestro — Episodio 7</h3>
+      <div class="modal-head-actions">
+        <button class="copy-notes-btn" id="copyNotesBtn" onclick="copyTeacherNotes()">📋 Copiar notas</button>
+        <button class="modal-close" onclick="closeTeacherNotes()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body" id="teacherNotesBody">
+      <h4>Unidad curricular</h4>
+      <div>La comida · Las frutas y verduras · Comprar y vender · Los números · Preguntar precios · Expresar preferencias · Nivel original: B2</div>
+
+      <h4>Objetivos lingüísticos</h4>
+      <ul>
+        <li>Comprar en un mercado</li>
+        <li>Preguntar precios</li>
+        <li>Pedir cantidades</li>
+        <li>Expresar gustos</li>
+        <li>Comparar alimentos</li>
+        <li>Interactuar con vendedores</li>
+      </ul>
+
+      <h4>Estructuras de alta frecuencia</h4>
+      <div>cuesta · compra · vende · necesita · prefiere · paga · cambia · busca · elige · recomienda</div>
+
+      <h4>Notas de ritmo CEFR por nivel</h4>
+      <ul>
+        <li><b>A1</b> — Presente únicamente, vocabulario de mercado aislado. Oraciones muy cortas.</li>
+        <li><b>A2</b> — Presente con conectores de secuencia; diálogo casi completo.</li>
+        <li><b>B1</b> — Introduce el pretérito/imperfecto del texto fuente, subordinación moderada.</li>
+        <li><b>B2</b> — Texto fuente completo, narrado en pasado, con el error de compras de Bruno en su forma más completa.</li>
+      </ul>
+
+      <h4>Temas de preguntas de comprensión</h4>
+      <ul>
+        <li>El mercado — ¿qué anuncia Don Pico y adónde van los estudiantes?</li>
+        <li>Valentina comparte — ¿de dónde viene su familia, y qué venden?</li>
+        <li>El error de Bruno — ¿qué compra por error, y por qué?</li>
+        <li>La solución — ¿cómo resuelve Valentina el problema sin que nadie pierda nada?</li>
+      </ul>
+
+      <h4>Banderas de sensibilidad de contenido</h4>
+      <div class="flag-box">Ninguna significativa: un malentendido cómico (Bruno lee mal la lista de compras), resuelto mediante cooperación comunitaria. Sin peligro ni castigo.</div>
+
+      <h4>Nota de contenido</h4>
+      <div class="flag-box">El texto fuente incluye secciones independientes de Diario de los Guardianes (preguntas de reflexión) y Misión del Guardián (actividades diferenciadas por grado: K-2, 3-5, Middle School, Secondary). Ambas quedan fuera de esta edición Foundation, ya que corresponden a funciones aún diferidas.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- CONTENT AT FOUR LEVELS ---------------- */
+const VERSIONS = {
+  A1: {
+    time:'3 min',
+    html: `
+      <p>—Hoy no hay clases en la selva —dice Don Pico. Los estudiantes hablan entre ellos.</p>
+      <p>—Hoy aprendemos en otro lugar. Chica pregunta: —¿Cuál? Don Pico muestra un mapa. —El Mercado de San Ignacio.</p>
+      <p>Todos aplauden. Hasta Teo. —¿También venden comida? —Muchísima —dice Don Pico, riendo.</p>
+      <h3>Un lugar lleno de colores y aromas</h3>
+      <p>Al llegar, todos están sorprendidos. Hay mangos, piñas, papayas y sandías. Otros venden miel, cacao, especias y pan.</p>
+      <p>Un señor toca la marimba. Una señora teje una cesta. —¡Esto huele delicioso! —dice Teo.</p>
+      <h3>Una nueva amiga</h3>
+      <p>En un puesto, una coatí joven organiza bolsas de <span class="gloss" data-word="especias">especias</span><span class="gloss-tooltip">plantas secas que dan sabor a la comida<span class="arrow"></span></span>. —¡Buenos días! Me llamo Valentina. Mi familia vive entre Guatemala y Belice.</p>
+      <p>Nico toma una bolsita pequeña. —¿Qué es esto? —Cardamomo. Mi abuela lo usa para pan dulce.</p>
+      <p>—¡Qué rico huele! —dice Mora. Valentina sonríe. —Los mercados no solo venden comida. También guardan recuerdos de las familias.</p>
+      <h3>La misión de compras</h3>
+      <p>Cada equipo recibe una lista: 4 mangos, 2 piñas, bananos, miel, cacao, tortillas.</p>
+      <p>—No gasten todas las <span class="gloss" data-word="semillas">semillas</span><span class="gloss-tooltip">aquí, el dinero especial del mercado educativo<span class="arrow"></span></span> —dice Don Pico.</p>
+      <h3>Bruno cree saberlo todo</h3>
+      <p>—Esto es facilísimo —dice Bruno. Camina solo. Regresa muy orgulloso. —¡Ya terminé!</p>
+      <p>Todos miran la canasta: dieciocho cocos, chile picante, una calabaza enorme, y una sandía gigante.</p>
+      <p>Chica pregunta: —Bruno... ¿dónde están los mangos? Bruno lee la lista otra vez. Leyó "4 mangos" como "4 cosas grandes."</p>
+      <p>Todos ríen. Hasta Bruno. —Bueno... creo que necesito practicar.</p>
+      <h3>La mejor compra</h3>
+      <p>Valentina observa. —No se preocupen. En los mercados siempre se puede conversar. Ella ayuda a cambiar productos con otros vendedores. Nadie pierde nada. Todos ganan algo.</p>
+      <p>—Mi abuelo dice que un buen mercado funciona porque las personas confían unas en otras —explica.</p>
+      <p>Don Pico asiente. —Y eso también ocurre con la amistad.</p>
+      <h3>La hoja número siete</h3>
+      <p>Antes de volver, Chica ve un mapa viejo en la pared. Hay una ceiba dibujada. Sobre ella, la misma espiral. Debajo hay una frase: "Todos los caminos regresan al árbol."</p>
+      <p>Un viento mueve el mapa. La esquina se dobla.</p>`
+  },
+  A2: {
+    time:'4 min',
+    html: `
+      <p>—Hoy no tendremos clases en la selva —anuncia Don Pico. Los estudiantes comienzan a murmurar.</p>
+      <p>—Hoy aprenderemos en otro salón. Chica sonríe. —¿Cuál? Don Pico extiende un mapa. —El Mercado de San Ignacio.</p>
+      <p>Todos aplauden. Hasta Teo. —¿También venden comida? —Muchísima —responde Don Pico riendo.</p>
+      <h3>Un lugar lleno de colores y aromas</h3>
+      <p>Al llegar, los amigos quedan maravillados. Hay puestos llenos de mangos, piñas, papayas y sandías. Otros ofrecen miel, cacao, especias y pan recién horneado.</p>
+      <p>Un señor toca la marimba. Una señora teje una cesta. Un niño ayuda a su mamá a vender tamales.</p>
+      <p>—¡Esto huele delicioso! —dice Teo. —Y apenas acabamos de entrar —responde Chica.</p>
+      <h3>Una nueva amiga</h3>
+      <p>En uno de los puestos, una joven coatí acomoda pequeñas bolsas de <span class="gloss" data-word="especias">especias</span><span class="gloss-tooltip">plantas secas que dan sabor a la comida<span class="arrow"></span></span>. —¡Buenos días! Mi nombre es Valentina. Mi familia vive entre Guatemala y Belice. Cruzamos la frontera para participar en el mercado.</p>
+      <p>Sobre la mesa hay cacao, cardamomo, miel y tejidos de colores. Nico toma una bolsita pequeña. —¿Qué es esto? —Cardamomo. Mi abuela lo usa para preparar pan dulce y bebidas calientes. Dice que el aroma le recuerda a su infancia.</p>
+      <p>—¡Qué rico huele! —comenta Mora. Valentina sonríe. —Los mercados no solo venden comida. También guardan recuerdos de las familias.</p>
+      <p>Don Pico escucha esa frase con una sonrisa silenciosa.</p>
+      <h3>La misión de compras</h3>
+      <p>Cada equipo recibe una lista: 4 mangos, 2 piñas, un racimo de bananos, miel, cacao, tortillas.</p>
+      <p>—No gasten todas las <span class="gloss" data-word="semillas">semillas</span><span class="gloss-tooltip">aquí, el dinero especial del mercado educativo<span class="arrow"></span></span> que les di —dice Don Pico. Las semillas especiales de la Escuela del Tucán sirven como monedas en el mercado educativo.</p>
+      <h3>Bruno cree saberlo todo</h3>
+      <p>—Esto es facilísimo —dice Bruno. Toma la lista y camina solo. En pocos minutos regresa muy orgulloso. —¡Ya terminé!</p>
+      <p>Todos miran la canasta. Había dieciocho cocos, tres sacos de chile picante, una enorme calabaza, y una sandía gigante.</p>
+      <p>Chica parpadea. —Bruno... ¿dónde están los mangos? Bruno revisa la lista. Había leído "4 mangos" como "4 cosas grandes."</p>
+      <p>Todos comienzan a reír. Hasta Bruno. —Bueno... creo que necesito practicar.</p>
+      <h3>La mejor compra</h3>
+      <p>Valentina observa la situación. —No se preocupen. En los mercados siempre se puede conversar. Les ayuda a intercambiar algunos productos con otros vendedores. Nadie pierde nada. Todos ganan algo.</p>
+      <p>—Mi abuelo siempre dice que un buen mercado funciona porque las personas confían unas en otras —explica. Don Pico asiente. —Y eso también ocurre con la amistad.</p>
+      <h3>La hoja número siete</h3>
+      <p>Antes de regresar a la selva, Chica observa un viejo mapa colgado en una pared del mercado. En una esquina aparece dibujada una enorme ceiba. Sobre ella, la misma espiral.</p>
+      <p>Debajo hay una frase muy antigua: "Todos los caminos regresan al árbol." Cuando quiere leer el resto, una ráfaga de viento mueve el mapa, y la esquina se dobla.</p>`
+  },
+  B1: {
+    time:'6 min',
+    html: `
+      <p>—Hoy no tendremos clases en la selva —anunció Don Pico. Los estudiantes comenzaron a murmurar.</p>
+      <p>—Hoy aprenderemos en otro salón. Chica sonrió. —¿Cuál? Don Pico extendió un mapa. —El Mercado de San Ignacio.</p>
+      <p>Todos aplaudieron. Hasta Teo. —¿También venden comida? —Muchísima —respondió Don Pico riendo.</p>
+      <h3>Un lugar lleno de colores y aromas</h3>
+      <p>Al llegar, los amigos quedaron maravillados. Había puestos llenos de mangos, piñas, papayas y sandías. Otros ofrecían miel, cacao, especias y pan recién horneado.</p>
+      <p>Un señor tocaba la marimba. Una señora tejía una cesta. Un niño ayudaba a su mamá a vender tamales.</p>
+      <p>—¡Esto huele delicioso! —dijo Teo. —Y apenas acabamos de entrar —respondió Chica.</p>
+      <h3>Una nueva amiga</h3>
+      <p>En uno de los puestos, una joven coatí acomodaba pequeñas bolsas de <span class="gloss" data-word="especias">especias</span><span class="gloss-tooltip">plantas secas que dan sabor a la comida<span class="arrow"></span></span>. —¡Buenos días! Mi nombre es Valentina. Mi familia vive entre Guatemala y Belice. Cruzamos la frontera para participar en el mercado porque aquí compartimos muchas tradiciones y muchos clientes ya nos conocen.</p>
+      <p>Sobre la mesa había cacao, cardamomo, miel y tejidos de colores. Nico tomó una pequeña bolsita. —¿Qué es esto? —Cardamomo. Mi abuela lo usa para preparar pan dulce y bebidas calientes. Dice que el aroma le recuerda a su infancia.</p>
+      <p>—¡Qué rico huele! —comentó Mora. Valentina sonrió. —Los mercados no solo venden comida. También guardan recuerdos de las familias.</p>
+      <p>Don Pico escuchó aquella frase con una sonrisa silenciosa.</p>
+      <h3>La misión de compras</h3>
+      <p>Cada equipo recibió una lista: 4 mangos, 2 piñas, un racimo de bananos, miel, cacao, tortillas.</p>
+      <p>—No gasten todas las <span class="gloss" data-word="semillas">semillas</span><span class="gloss-tooltip">aquí, el dinero especial del mercado educativo<span class="arrow"></span></span> que les di —dijo Don Pico. Las semillas especiales de la Escuela del Tucán servían como monedas en el mercado educativo.</p>
+      <h3>Bruno cree saberlo todo</h3>
+      <p>—Esto es facilísimo —dijo Bruno. Tomó la lista y caminó solo. En pocos minutos regresó muy orgulloso. —¡Ya terminé!</p>
+      <p>Todos miraron la canasta. Había dieciocho cocos, tres sacos de chile picante, una enorme calabaza, y una sandía gigante.</p>
+      <p>Chica parpadeó. —Bruno... ¿dónde están los mangos? Bruno revisó la lista. Había leído "4 mangos" como "4 cosas grandes."</p>
+      <p>Todos comenzaron a reír. Hasta Bruno. —Bueno... creo que necesito practicar.</p>
+      <h3>La mejor compra</h3>
+      <p>Valentina observó la situación. —No se preocupen. En los mercados siempre se puede conversar. Les ayudó a intercambiar algunos productos con otros vendedores. Nadie perdió nada. Todos ganaron algo.</p>
+      <p>—Mi abuelo siempre dice que un buen mercado funciona porque las personas confían unas en otras —explicó. Don Pico asintió. —Y eso también ocurre con la amistad.</p>
+      <h3>La hoja número siete</h3>
+      <p>Antes de regresar a la selva, Chica observó un viejo mapa colgado en una pared del mercado. En una esquina aparecía dibujada una enorme ceiba. Sobre ella, la misma espiral.</p>
+      <p>Debajo había una frase muy antigua: "Todos los caminos regresan al árbol." Cuando quiso leer el resto, una ráfaga de viento movió el mapa, y la esquina se dobló.</p>`
+  },
+  B2: {
+    time:'8 min',
+    html: `
+      <p>—Hoy no tendremos clases en la selva —anunció Don Pico. Los estudiantes comenzaron a murmurar.</p>
+      <p>—Hoy aprenderemos en otro salón.</p>
+      <p>Chica sonrió. —¿Cuál? Don Pico extendió un mapa. —El Mercado de San Ignacio.</p>
+      <p>Todos aplaudieron. Hasta Teo. —¿También venden comida? —Muchísima —respondió Don Pico riendo.</p>
+      <h3>Un lugar lleno de colores y aromas</h3>
+      <p>Al llegar, los amigos quedaron maravillados. Había puestos llenos de mangos, piñas, papayas y sandías. Otros ofrecían miel, cacao, especias y pan recién horneado.</p>
+      <p>Un señor tocaba la marimba. Una señora tejía una cesta. Un niño ayudaba a su mamá a vender tamales.</p>
+      <p>—¡Esto huele delicioso! —dijo Teo. —Y apenas acabamos de entrar —respondió Chica.</p>
+      <h3>Una nueva amiga</h3>
+      <p>En uno de los puestos, una joven coatí acomodaba pequeñas bolsas de <span class="gloss" data-word="especias">especias</span><span class="gloss-tooltip">plantas secas que dan sabor a la comida<span class="arrow"></span></span>. —¡Buenos días! Mi nombre es Valentina.</p>
+      <p>Mi familia vive entre Guatemala y Belice. Cruzamos la frontera para participar en el mercado porque aquí compartimos muchas tradiciones y muchos clientes ya nos conocen.</p>
+      <p>Sobre la mesa había cacao, cardamomo, miel y tejidos de colores. Nico tomó una pequeña bolsita. —¿Qué es esto? —Cardamomo. Mi abuela lo usa para preparar pan dulce y bebidas calientes. Dice que el aroma le recuerda a su infancia.</p>
+      <p>—¡Qué rico huele! —comentó Mora. Valentina sonrió. —Los mercados no solo venden comida. También guardan recuerdos de las familias.</p>
+      <p>Don Pico escuchó aquella frase con una sonrisa silenciosa.</p>
+      <h3>La misión de compras</h3>
+      <p>Cada equipo recibió una lista: 4 mangos, 2 piñas, un racimo de bananos, miel, cacao, tortillas.</p>
+      <p>—No gasten todas las <span class="gloss" data-word="semillas">semillas</span><span class="gloss-tooltip">aquí, el dinero especial del mercado educativo<span class="arrow"></span></span> que les di —dijo Don Pico. Las semillas especiales de la Escuela del Tucán servían como monedas en el mercado educativo.</p>
+      <h3>Bruno cree saberlo todo</h3>
+      <p>—Esto es facilísimo —dijo Bruno. Tomó la lista y caminó solo. En pocos minutos regresó muy orgulloso. —¡Ya terminé!</p>
+      <p>Todos miraron la canasta. Había... dieciocho cocos. Tres sacos de chile picante. Una enorme calabaza. Y una sandía gigante.</p>
+      <p>Chica parpadeó. —Bruno... ¿dónde están los mangos?</p>
+      <p>Bruno revisó la lista. Había leído "4 mangos" como "4 cosas grandes."</p>
+      <p>Todos comenzaron a reír. Hasta Bruno. —Bueno... creo que necesito practicar.</p>
+      <h3>La mejor compra</h3>
+      <p>Valentina observó la situación. —No se preocupen. En los mercados siempre se puede conversar.</p>
+      <p>Les ayudó a intercambiar algunos productos con otros vendedores. Nadie perdió nada. Todos ganaron algo.</p>
+      <p>—Mi abuelo siempre dice que un buen mercado funciona porque las personas confían unas en otras —explicó.</p>
+      <p>Don Pico asintió. —Y eso también ocurre con la amistad.</p>
+      <h3>La hoja número siete</h3>
+      <p>Antes de regresar a la selva, Chica observó un viejo mapa colgado en una pared del mercado. En una esquina aparecía dibujada una enorme ceiba. Sobre ella... la misma espiral.</p>
+      <p>Debajo había una frase muy antigua: "Todos los caminos regresan al árbol."</p>
+      <p>Cuando quiso leer el resto... una ráfaga de viento movió el mapa. Y la esquina se dobló.</p>`
+  }
+};
+
+let fontSize = 18;
+let glossOn = true;
+let listening = false;
+let currentLevel = 'A1';
+const savedWords = new Set();
+
+function renderStory(level){
+  currentLevel = level;
+  document.getElementById('storyBody').innerHTML = VERSIONS[level].html;
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+  document.getElementById('toolbarLevel').textContent = level;
+  document.getElementById('railLevel').textContent = level;
+  document.getElementById('railTime').textContent = VERSIONS[level].time;
+  applyGlossState();
+  buildWordBank();
+}
+
+function setReaderLevel(level, el){
+  document.querySelectorAll('.level-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  renderStory(level);
+}
+
+function changeFont(delta){
+  fontSize = Math.min(24, Math.max(14, fontSize+delta*2));
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+}
+
+function toggleGloss(){
+  glossOn = !glossOn;
+  document.getElementById('glossToggle').textContent = glossOn ? '🔤 Glosario: Activado' : '🔤 Glosario: Desactivado';
+  document.getElementById('glossToggle').classList.toggle('on', glossOn);
+  applyGlossState();
+}
+function applyGlossState(){
+  document.querySelectorAll('.gloss').forEach(g=>{
+    g.style.borderBottomColor = glossOn ? 'var(--coral)' : 'transparent';
+    g.style.cursor = glossOn ? 'help' : 'text';
+    g.style.fontWeight = glossOn ? '600' : '400';
+    if(!glossOn) g.classList.remove('tapped');
+  });
+}
+document.addEventListener('click', e=>{
+  if(e.target.closest('.gloss') && glossOn){
+    e.target.closest('.gloss').classList.toggle('tapped');
+  }
+});
+
+function toggleNight(){
+  const btn = document.getElementById('nightToggle');
+  btn.classList.toggle('on');
+  document.getElementById('pageContent').style.filter = btn.classList.contains('on') ? 'invert(1) hue-rotate(180deg)' : 'none';
+  btn.textContent = btn.classList.contains('on') ? '☀ Luz brillante' : '🌙 Luz de lámpara';
+}
+
+function toggleListen(){
+  listening = !listening;
+  const btn = document.getElementById('listenBtn');
+  btn.classList.toggle('playing', listening);
+  btn.textContent = listening ? '⏸ Reproduciendo narración…' : '🔊 Escuchar narración';
+}
+
+function openTeacherNotes(){ document.getElementById('teacherModal').classList.add('open'); }
+function closeTeacherNotes(){ document.getElementById('teacherModal').classList.remove('open'); }
+
+function copyTeacherNotes(){
+  const body = document.getElementById('teacherNotesBody');
+  let text = '';
+  body.querySelectorAll('h4, div, ul, li').forEach(el=>{
+    if(el.tagName === 'H4'){ text += '\n' + el.textContent.toUpperCase() + '\n'; }
+    else if(el.tagName === 'LI'){ text += '- ' + el.textContent + '\n'; }
+    else if(el.tagName === 'DIV' && !el.closest('ul')){ text += el.textContent + '\n'; }
+  });
+  navigator.clipboard.writeText(text.trim()).then(()=>{
+    const btn = document.getElementById('copyNotesBtn');
+    const original = btn.textContent;
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent = original; btn.classList.remove('copied'); }, 1800);
+  });
+}
+
+function buildWordBank(){
+  const words = [...document.querySelectorAll('.gloss')];
+  const seen = new Set();
+  const bank = document.getElementById('wordBank');
+  bank.innerHTML = '';
+  words.forEach(w=>{
+    const word = w.dataset.word;
+    if(seen.has(word)) return; seen.add(word);
+    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const row = document.createElement('div');
+    row.className='word-chip';
+    row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
+      <button class="save-word ${savedWords.has(word)?'saved':''}" onclick="toggleSaveWord('${word}', this)">${savedWords.has(word)?'✓':'+'}</button>`;
+    bank.appendChild(row);
+  });
+}
+function toggleSaveWord(word, btn){
+  if(savedWords.has(word)){ savedWords.delete(word); btn.classList.remove('saved'); btn.textContent='+'; }
+  else { savedWords.add(word); btn.classList.add('saved'); btn.textContent='✓'; }
+}
+
+/* ---------------- COMPREHENSION ---------------- */
+const answered = {};
+function answer(btn, isCorrect, qid){
+  if(answered[qid]) return;
+  answered[qid]=true;
+  const opts = btn.parentElement.querySelectorAll('.comp-opt');
+  opts.forEach(o=>o.disabled=true);
+  btn.classList.add(isCorrect?'correct':'incorrect');
+  if(!isCorrect){
+    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+  }
+  document.getElementById(qid+'result').style.display='block';
+}
+function finishStory(){
+  if(Object.keys(answered).length < 2){
+    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+    return;
+  }
+  document.getElementById('finishBtn').textContent = '✓ ¡Completado!';
+  document.getElementById('finishBtn').style.background = '#6fae7a';
+  setTimeout(()=> alert('¡Buena lectura! Este episodio ahora aparece 100% completo en tu estante, y tu maestra puede ver tus resultados de comprensión.'), 300);
+}
+
+/* ---------------- SCROLL PROGRESS ---------------- */
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('progressFill').style.width = Math.min(100,scrolled)+'%';
+});
+
+/* ---------------- INIT ---------------- */
+renderStory('A1');
+</script>
+</body>
+</html>

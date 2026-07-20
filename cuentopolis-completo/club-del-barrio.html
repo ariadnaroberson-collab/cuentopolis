@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Club del Barrio — Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --navy: #26344d; --gold: #c9a24b; --gold-soft: #8a734a; --lamp: #e7b96b;
+    --green: #4c7a5e; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 60px; }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 22px; }
+  header { margin-bottom: 26px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.3rem; }
+  .subtitle { color: var(--parchment-dim); font-size: 0.95rem; margin-top: 8px; font-style: italic; }
+  .group-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-soft); margin: 26px 0 10px; }
+  .list { display: flex; flex-direction: column; gap: 10px; }
+  .ep { display: flex; align-items: center; gap: 18px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; text-decoration: none; color: var(--parchment); transition: border-color 0.15s ease; }
+  .ep.active:hover { border-color: var(--gold); }
+  .ep.soon { opacity: 0.5; border-style: dashed; cursor: default; }
+  .ep-num { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold-soft); min-width: 78px; }
+  .ep-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.05rem; flex: 1; }
+  .ep-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--lamp); white-space: nowrap; }
+  .ep.soon .ep-tag { color: var(--parchment-dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="series-curriculares.html">← Series curriculares</a>
+  <header>
+    <p class="eyebrow">Middle School · SPANISH_LV_6 / LV_7</p>
+    <h1>El Club del Barrio</h1>
+    <p class="subtitle">San Antonio, Guanacaste Park — Profe Rivera y su grupo de cinco.</p>
+  </header>
+
+  <p class="group-label">MS1 — completo</p>
+  <div class="list">
+    <a class="ep active" href="ecdb_episodio1_reader.html">
+      <span class="ep-num">Episodio 1</span><span class="ep-title">El horario nuevo</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_episodio2_reader.html">
+      <span class="ep-num">Episodio 2</span><span class="ep-title">El partido y la mazmorra</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_episodio3_reader.html">
+      <span class="ep-num">Episodio 3</span><span class="ep-title">La merienda del picnic</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_episodio4_reader.html">
+      <span class="ep-num">Episodio 4</span><span class="ep-title">La celebración de Ana Lucía</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_episodio5_reader.html">
+      <span class="ep-num">Episodio 5</span><span class="ep-title">El paisaje de Guanacaste Park</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_episodio6_reader.html">
+      <span class="ep-num">Episodio 6</span><span class="ep-title">En la tienda (título por confirmar)</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_episodio7_reader.html">
+      <span class="ep-num">Episodio 7</span><span class="ep-title">El día de limpieza</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_episodio8_reader.html">
+      <span class="ep-num">Episodio 8</span><span class="ep-title">El proyecto de personas famosas</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_episodio9_reader.html">
+      <span class="ep-num">Episodio 9</span><span class="ep-title">Una amiga desde Perú</span><span class="ep-tag">Abrir →</span>
+    </a>
+  </div>
+
+  <p class="group-label">MS2 — completo</p>
+  <div class="list">
+    <a class="ep active" href="ecdb_ms2_bienvenida.html" style="border-color: var(--gold-soft);">
+      <span class="ep-num">👋 Bienvenida</span><span class="ep-title">La historia hasta ahora (para estudiantes nuevos)</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_ms2_episodio1_reader.html">
+      <span class="ep-num">Episodio 1</span><span class="ep-title">El horario perfecto</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_ms2_episodio2_reader.html">
+      <span class="ep-num">Episodio 2</span><span class="ep-title">El bienestar del grupo</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_ms2_episodio3_reader.html">
+      <span class="ep-num">Episodio 3</span><span class="ep-title">El día del plato tradicional</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_ms2_episodio4_reader.html">
+      <span class="ep-num">Episodio 4</span><span class="ep-title">El orgullo de San Antonio</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_ms2_episodio5_reader.html">
+      <span class="ep-num">Episodio 5</span><span class="ep-title">El viaje de nuestros sueños</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_ms2_episodio6_reader.html">
+      <span class="ep-num">Episodio 6</span><span class="ep-title">El desfile de Ana Lucía</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_ms2_episodio7_reader.html">
+      <span class="ep-num">Episodio 7</span><span class="ep-title">El debate de la tecnología</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_ms2_episodio8_reader.html">
+      <span class="ep-num">Episodio 8</span><span class="ep-title">La entrevista imaginaria</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="ecdb_ms2_episodio9_reader.html">
+      <span class="ep-num">Episodio 9</span><span class="ep-title">Nuestra huella en Guanacaste Park (final de serie)</span><span class="ep-tag">Abrir →</span>
+    </a>
+  </div>
+</div>
+</body>
+</html>

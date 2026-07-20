@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Cuadrilla — Secundaria 2, Episodio 5: Un visitante de Colombia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #F2E9D8; --parchment-dim: #E6DAC2; --ink: #2B2018;
+    --lamp-dark: #1A1610; --lamp-panel: #241E16; --lamp-panel-2: #2E2619;
+    --gold: #C9A24B; --gold-bright: #E0BE6E; --navy: #35455E;
+    --teacher-green: #4F7A5C; --teacher-green-bright: #6FA07E;
+    --border-soft: rgba(201, 162, 75, 0.25);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--lamp-dark); background-image: radial-gradient(ellipse 800px 500px at 50% -10%, rgba(224, 190, 110, 0.10), transparent 60%); color: var(--parchment); font-family: 'Public Sans', sans-serif; min-height: 100vh; padding: 40px 20px 80px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  header.top { text-align: center; margin-bottom: 36px; }
+  .series-eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  h1.title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 40px; margin: 0 0 6px; color: var(--parchment); }
+  .episode-sub { font-family: 'Fraunces', serif; font-style: italic; font-weight: 400; font-size: 20px; color: var(--gold-bright); margin-bottom: 18px; }
+  .pill-row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .pill { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.05em; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--border-soft); color: var(--parchment-dim); background: rgba(255,255,255,0.03); }
+  .pill.level { color: var(--lamp-dark); background: var(--gold); border-color: var(--gold); font-weight: 700; }
+  .paper { background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-dim) 100%); color: var(--ink); border-radius: 6px; padding: 44px 48px; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,0,0,0.06); position: relative; }
+  .paper::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--gold), var(--navy)); border-radius: 6px 6px 0 0; }
+  .historia { font-family: 'Source Serif 4', serif; font-size: 19px; line-height: 1.85; }
+  .historia p { margin: 0 0 18px; }
+  .historia p.dialog { margin-left: 6px; }
+  .scene-divider { text-align: center; margin: 28px 0; font-family: 'Space Mono', monospace; color: var(--gold); letter-spacing: 0.3em; font-size: 12px; }
+  .glossary-word { color: var(--navy); font-weight: 600; border-bottom: 1px dotted var(--navy); cursor: help; }
+  .legend-block { font-family: 'Source Serif 4', serif; font-style: italic; background: rgba(53,69,94,0.08); border-left: 3px solid var(--navy); padding: 14px 18px; margin: 0 0 18px; }
+  section.panel { margin-top: 30px; }
+  h2.panel-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 22px; color: var(--navy); display: flex; align-items: center; gap: 10px; margin: 0 0 16px; }
+  h2.panel-title .icon { font-size: 20px; }
+  .card { background: var(--lamp-panel); border: 1px solid var(--border-soft); border-radius: 10px; padding: 26px 28px; }
+  .glossary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+  .glossary-item { font-family: 'Public Sans', sans-serif; font-size: 15px; padding: 8px 0; border-bottom: 1px dashed var(--border-soft); display: flex; justify-content: space-between; gap: 10px; }
+  .glossary-item .es { color: var(--gold-bright); font-weight: 600; }
+  .glossary-item .en { color: var(--parchment-dim); font-style: italic; text-align: right; }
+  .word-bank-list { font-family: 'Space Mono', monospace; font-size: 14px; color: var(--parchment); display: flex; flex-direction: column; gap: 10px; }
+  .word-bank-list li { list-style: none; }
+  .word-bank-list li::before { content: "› "; color: var(--gold); }
+  .comp-q { margin-bottom: 20px; }
+  .comp-q:last-child { margin-bottom: 0; }
+  .comp-q .q-text { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 16px; margin-bottom: 10px; color: var(--parchment); }
+  .comp-q textarea { width: 100%; min-height: 60px; background: var(--lamp-panel-2); border: 1px solid var(--border-soft); border-radius: 8px; color: var(--parchment); font-family: 'Public Sans', sans-serif; font-size: 14px; padding: 10px 12px; resize: vertical; }
+  .comp-q textarea:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .comp-q textarea::placeholder { color: var(--parchment-dim); opacity: 0.65; }
+  .traveler-card { background: var(--lamp-panel); border: 2px solid var(--gold); border-radius: 12px; padding: 22px 26px; position: relative; overflow: hidden; }
+  .traveler-card::after { content: "✈"; position: absolute; top: 10px; right: 16px; font-size: 40px; color: rgba(201,162,75,0.15); }
+  .traveler-flag { font-size: 34px; margin-bottom: 8px; }
+  .traveler-name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 24px; color: var(--gold-bright); margin-bottom: 2px; }
+  .traveler-origin { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--parchment-dim); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 14px; }
+  .traveler-detail { font-family: 'Public Sans', sans-serif; font-size: 15px; line-height: 1.6; color: var(--parchment); }
+  .traveler-stamp { display: inline-block; margin-top: 14px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--teacher-green-bright); border: 1px solid var(--teacher-green-bright); border-radius: 999px; padding: 3px 12px; transform: rotate(-3deg); }
+  .teacher-trigger-wrap { display: flex; justify-content: center; margin-top: 40px; }
+  .teacher-trigger { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 15px; color: var(--lamp-dark); background: var(--teacher-green-bright); border: none; border-radius: 999px; padding: 12px 26px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .teacher-trigger:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -6px rgba(111,160,126,0.5); }
+  .teacher-trigger:focus-visible { outline: 2px solid var(--parchment); outline-offset: 2px; }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10, 8, 5, 0.72); z-index: 50; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--lamp-panel); border: 1px solid var(--teacher-green); border-radius: 12px; max-width: 700px; width: 100%; padding: 32px 34px 40px; color: var(--parchment); position: relative; }
+  .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; gap: 12px; }
+  .modal-header h2 { font-family: 'Fraunces', serif; font-size: 24px; color: var(--teacher-green-bright); margin: 0; }
+  .modal-close { background: none; border: 1px solid var(--border-soft); color: var(--parchment); border-radius: 50%; width: 32px; height: 32px; font-size: 16px; cursor: pointer; flex-shrink: 0; }
+  .modal-close:hover { background: rgba(255,255,255,0.06); }
+  .modal h3 { font-family: 'Public Sans', sans-serif; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--gold); margin: 26px 0 8px; }
+  .modal h3:first-of-type { margin-top: 0; }
+  .modal p, .modal li { font-family: 'Public Sans', sans-serif; font-size: 14.5px; line-height: 1.65; color: var(--parchment-dim); }
+  .modal ul { margin: 4px 0; padding-left: 20px; }
+  .modal .note-italic { font-style: italic; opacity: 0.85; }
+  .modal .highlight-box { background: rgba(111,160,126,0.12); border: 1px solid var(--teacher-green); border-radius: 8px; padding: 12px 14px; margin: 8px 0; }
+  .copy-btn { font-family: 'Space Mono', monospace; font-size: 12.5px; background: transparent; border: 1px solid var(--gold); color: var(--gold-bright); border-radius: 8px; padding: 8px 14px; cursor: pointer; margin-top: 24px; }
+  .copy-btn:hover { background: rgba(201,162,75,0.1); }
+  .copy-btn.copied { border-color: var(--teacher-green-bright); color: var(--teacher-green-bright); }
+  .shuffle-btn { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 13.5px; background: var(--teacher-green); color: var(--parchment); border: none; border-radius: 8px; padding: 9px 16px; cursor: pointer; margin: 6px 0 14px; }
+  .shuffle-btn:hover { background: var(--teacher-green-bright); color: var(--lamp-dark); }
+  .activity-card { background: rgba(111,160,126,0.12); border: 1px solid var(--teacher-green); border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
+  .activity-card .cat-tag { font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--teacher-green-bright); margin-bottom: 4px; }
+  .activity-card .act-name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 16px; color: var(--parchment); margin-bottom: 6px; }
+  .activity-card .act-time { font-family: 'Space Mono', monospace; font-size: 11.5px; color: var(--gold-bright); margin-bottom: 6px; }
+  .activity-list-group { margin-bottom: 14px; }
+  .activity-list-group h4 { font-family: 'Public Sans', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gold); margin: 14px 0 6px; }
+  .activity-list-group ul { margin: 0 0 0 4px; padding-left: 18px; }
+  .activity-list-group li { font-size: 13.5px; margin-bottom: 6px; }
+  .activity-list-group li strong { color: var(--parchment); }
+  @media (max-width: 600px) { .paper { padding: 30px 24px; } .glossary-grid { grid-template-columns: 1fr; } h1.title { font-size: 30px; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="series-eyebrow">Cuentopolis · La Cuadrilla · Secundaria 2</div>
+    <h1 class="title">Un visitante de Colombia</h1>
+    <div class="episode-sub">Episodio 5 — Experiencing Other Cultures</div>
+    <div class="pill-row">
+      <span class="pill level">B1</span>
+      <span class="pill">Secundaria 2</span>
+      <span class="pill">Serie original</span>
+    </div>
+  </header>
+
+  <div class="paper">
+    <div class="historia">
+      <p>En la clase de español, hay un estudiante nuevo, pero solo por unas semanas.</p>
+
+      <p class="dialog">—Clase, este es Santiago —dice Profe Rivera—. Es de Colombia. Su papá está trabajando aquí, como consultor para la compañía azucarera.</p>
+
+      <p>Ximena es la primera en saludarlo.</p>
+
+      <p class="dialog">—Hola, soy Ximena. ¿Cómo estás? —dice ella.</p>
+
+      <p class="dialog">—Hola, Ximena. Muy bien, ¿y vos? —responde Santiago, sonriendo.</p>
+
+      <p>Todos se miran, un poco confundidos.</p>
+
+      <p class="dialog">—¿"Vos"? —pregunta Vale.</p>
+
+      <p class="dialog">—Sí, en Colombia, muchos decimos "vos" en vez de "tú" —explica Santiago—. Es normal para nosotros.</p>
+
+      <p class="dialog">—Interesante —dice Profe Rivera—. El español es diferente en cada país. Eso es normal.</p>
+
+      <p class="dialog">—Hoy, en grupos, comparen algo de su cultura con Belice —dice Profe Rivera—. Usen "en mi país... / en Belice...".</p>
+
+      <p>Fernanda habla primero.</p>
+
+      <p class="dialog">—En mi cultura, celebramos el Día de Garífuna con tambores y hudut —dice ella—. ¿Y en Colombia?</p>
+
+      <p class="dialog">—En Colombia, tenemos el Carnaval de Barranquilla —dice Santiago—. Mucha música, mucho baile.</p>
+
+      <p>Andrés también comparte.</p>
+
+      <p class="dialog">—Mi familia es de origen libanés —dice él—. Cocinamos mana'eesh, un pan especial.</p>
+
+      <p class="dialog">—Suena delicioso —dice Santiago—. En mi casa, comemos <span class="glossary-word" title="arepas (Colombian corn cakes)">arepas</span> casi todos los días.</p>
+
+      <p>Ximena escucha con curiosidad.</p>
+
+      <p class="dialog">—Mi familia es maya —dice ella—. Tenemos tradiciones muy antiguas también.</p>
+
+      <p class="dialog">—Colombia también tiene culturas indígenas antiguas —dice Santiago—. De hecho, ¿quieren escuchar una <span class="glossary-word" title="legend">leyenda</span>?</p>
+
+      <p class="dialog">—¡Sí! —dice Renata.</p>
+
+      <div class="scene-divider">◆ ◆ ◆</div>
+
+      <p class="dialog">—Se llama la leyenda de El Dorado —empieza Santiago.</p>
+
+      <div class="legend-block">
+        Hace mucho tiempo, había un pueblo indígena, los muiscas, cerca de una laguna llamada Guatavita. Cuentan que su líder se cubría el cuerpo de oro, y después se bañaba en la laguna como parte de un ritual sagrado. Cuando los españoles escucharon la historia, empezaron a buscar una ciudad entera hecha de oro. Nunca la encontraron, porque no existía así — pero la leyenda de "El Dorado" viajó por todo el mundo.
+      </div>
+
+      <p class="dialog">—Qué historia tan interesante —dice Joaquín—. Es como las leyendas de mi propio país.</p>
+
+      <p class="dialog">—Exacto —dice Santiago—. Cada lugar tiene sus propias historias.</p>
+
+      <div class="scene-divider">◆ ◆ ◆</div>
+
+      <p>Después de clases, en Café Formosa, el grupo sigue hablando con Santiago, aprendiendo palabras nuevas y compartiendo un poco más de sus propias culturas.</p>
+
+      <p class="dialog">—Che, esto está buenísimo —dice Santiago, probando el bubble tea por primera vez.</p>
+
+      <p>Todos se ríen, aprendiendo, poco a poco, a hablar como Santiago.</p>
+    </div>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">🧭</span> Huellas del Viajero</h2>
+      <div class="traveler-card">
+        <div class="traveler-flag">🇨🇴</div>
+        <div class="traveler-name">Santiago</div>
+        <div class="traveler-origin">Colombia (visitante temporal)</div>
+        <div class="traveler-detail">Está en Belice unas semanas mientras su papá trabaja como consultor para la compañía azucarera. Usa "vos" en vez de "tú" — así se habla en su región de Colombia. Conoce la leyenda de El Dorado, basada en un ritual real de los muiscas en la Laguna de Guatavita.</div>
+        <div class="traveler-stamp">✓ Visitante temporal — Episodio 5</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">📖</span> Glosario</h2>
+      <div class="card">
+        <div class="glossary-grid">
+          <div class="glossary-item"><span class="es">la leyenda</span><span class="en">legend</span></div>
+          <div class="glossary-item"><span class="es">el/la consultor(a)</span><span class="en">consultant</span></div>
+          <div class="glossary-item"><span class="es">vos</span><span class="en">"you" (regional form)</span></div>
+          <div class="glossary-item"><span class="es">la arepa</span><span class="en">arepa (corn cake)</span></div>
+          <div class="glossary-item"><span class="es">el ritual</span><span class="en">ritual</span></div>
+          <div class="glossary-item"><span class="es">sagrado/a</span><span class="en">sacred</span></div>
+          <div class="glossary-item"><span class="es">indígena</span><span class="en">indigenous</span></div>
+          <div class="glossary-item"><span class="es">che</span><span class="en">"hey"/"man" (regional filler word)</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">🗂️</span> Banco de palabras</h2>
+      <div class="card">
+        <ul class="word-bank-list">
+          <li>En mi país... / En Belice...</li>
+          <li>¿Cómo se dice "tú" en tu país?</li>
+          <li>Cuenta la leyenda que...</li>
+          <li>Hace mucho tiempo, había...</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">✅</span> Comprensión</h2>
+      <div class="card">
+        <div class="comp-q">
+          <div class="q-text">1. ¿Por qué está Santiago en Belice?</div>
+          <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+        </div>
+        <div class="comp-q">
+          <div class="q-text">2. ¿De qué trata la leyenda de El Dorado?</div>
+          <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="teacher-trigger-wrap">
+    <button class="teacher-trigger" onclick="document.getElementById('teacherModal').classList.add('open')">
+      🎓 Notas del maestro
+    </button>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>🎓 Notas del maestro</h2>
+      <button class="modal-close" onclick="document.getElementById('teacherModal').classList.remove('open')" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div id="teacherNotesContent">
+      <h3>Datos básicos</h3>
+      <ul>
+        <li>Serie: La Cuadrilla — Secundaria 2</li>
+        <li>Unidad curricular: Experiencing Other Cultures</li>
+        <li>Nivel objetivo: B1</li>
+        <li>Elenco: Vale, Emiliano, Fernanda, Ximena, Andrés, Renata, Joaquín + Santiago (visitante temporal)</li>
+        <li>Escenario: clase de español, Café Formosa</li>
+      </ul>
+
+      <h3>Actividad real de clase (idéntica a la Historia)</h3>
+      <div class="highlight-box">
+        <p style="margin:0;">En grupos pequeños, los estudiantes comparan un aspecto cultural (comida, música, tradiciones, forma de hablar) entre su propia cultura/país y Belice, usando "En mi país... / En Belice...".</p>
+      </div>
+
+      <h3>Objetivos lingüísticos</h3>
+      <ul>
+        <li>Comparar aspectos culturales usando "en mi país... / en Belice..."</li>
+        <li>Reconocer variación regional del español (voseo, jerga regional)</li>
+        <li>Narrar una leyenda usando el pasado (había, vivía, decían que...)</li>
+      </ul>
+
+      <h3>La Palabra del Día</h3>
+      <p><strong>la leyenda</strong> — clave del episodio, conecta con la historia de El Dorado.</p>
+
+      <h3>La Reflexión del Mentor (Profe Rivera)</h3>
+      <p>"El español es diferente en cada país. Eso es normal."</p>
+
+      <h3>La Pregunta del Día</h3>
+      <p>¿Conoces alguna leyenda de tu familia o comunidad? Cuéntala brevemente.</p>
+
+      <h3>Mi Conexión (diario del estudiante)</h3>
+      <ul>
+        <li>¿Qué palabra o expresión de Santiago te sorprendió o te pareció interesante?</li>
+        <li>Escribe brevemente una leyenda o historia que hayas escuchado de tu familia o comunidad.</li>
+      </ul>
+
+      <h3>Desafío Conexiones</h3>
+      <p>En grupos, investiguen una leyenda de otro país hispanohablante y compárenla con una leyenda que ya conocen (p. ej. La Llorona).</p>
+      <p class="note-italic">Función deferida: no incluida como actividad interactiva en esta edición Foundation.</p>
+
+      <h3>Conexión Cultural</h3>
+      <p>Nota breve sobre la leyenda de El Dorado y su origen histórico real (el ritual de los muiscas en la Laguna de Guatavita, Colombia), y sobre cómo el español varía en pronombres y vocabulario entre países.</p>
+
+      <h3>Marcadores de sensibilidad de contenido</h3>
+      <p class="note-italic">Ninguno significativo. La leyenda de El Dorado se narra de forma breve y apropiada para la edad, sin detalles violentos de la conquista.</p>
+
+      <h3>Notas de continuidad</h3>
+      <ul>
+        <li>Santiago es un personaje visitante temporal (no forma parte del elenco permanente).</li>
+        <li>Nota de producción: la leyenda de El Dorado narrada aquí podría expandirse en el futuro como título independiente dentro de la sección FVR/leyendas de Cuentopolis (junto a "La Llorona").</li>
+        <li>Todas las escenas de clase con Profe Rivera ocurren únicamente en su clase de español.</li>
+      </ul>
+
+      <h3>Funciones deferidas (fast-follow)</h3>
+      <ul>
+        <li>Reader's Theater</li>
+        <li>Story Asking (script de clase)</li>
+        <li>Sección interactiva de Mi Conexión / Desafío Conexiones dentro del reader</li>
+        <li>Audio narrado</li>
+      </ul>
+
+      <h3>🎲 Actividades de bajo prep (para terminar temprano o llenar tiempo)</h3>
+      <button class="shuffle-btn" onclick="shuffleActivity()">🔀 Sugerir una actividad al azar</button>
+      <div id="activityCard"></div>
+
+      <div class="activity-list-group">
+        <h4>Comunicación Interactiva</h4>
+        <ul>
+          <li><strong>Picture Talk</strong> — muestra una imagen y hazle preguntas simples a la clase, repitiendo el vocabulario objetivo. (5-8 min)</li>
+          <li><strong>PQA</strong> (Preguntas Personalizadas y Respuestas) — haz preguntas personales usando las estructuras de la unidad. (5-10 min)</li>
+          <li><strong>Special Person Interviews</strong> — entrevista a un estudiante frente a la clase; los demás escuchan y preguntan. (10-15 min)</li>
+          <li><strong>Card Talk</strong> — los estudiantes traen/dibujan una tarjeta personal; el maestro compara respuestas. (8-12 min)</li>
+          <li><strong>Weekend Chats</strong> — pregunta qué hicieron el fin de semana, repitiendo estructuras en pasado. (5-10 min)</li>
+          <li><strong>Calendar Talk</strong> — practica fechas y días de la semana con preguntas simples y repetidas. (5 min)</li>
+        </ul>
+        <h4>Narración de Historias</h4>
+        <ul>
+          <li><strong>Story Listening</strong> — narra una historia corta con apoyo visual mientras los estudiantes solo escuchan. (10-15 min)</li>
+          <li><strong>Write and Discuss</strong> — escribe una historia corta en la pizarra con ayuda de la clase, paso a paso. (10-15 min)</li>
+          <li><strong>Movie Talk</strong> — usa un clip corto sin diálogo y narra/pregunta sobre lo que pasa, pausando frecuentemente. (10-20 min)</li>
+        </ul>
+        <h4>Lectura y Escritura</h4>
+        <ul>
+          <li><strong>One Word at a Time</strong> — la clase construye una historia oral entre todos, una palabra a la vez. (5-10 min)</li>
+          <li><strong>Embedded Reading</strong> — usa 2-3 versiones de la Historia en niveles de dificultad creciente. (variable)</li>
+          <li><strong>Volleyball Reading</strong> — los estudiantes turnan leyendo una oración cada uno, "pasando" el texto. (5-10 min)</li>
+          <li><strong>Draw the Sentence</strong> — lee una oración de la Historia; los estudiantes la dibujan rápido y comparan. (5-8 min)</li>
+          <li><strong>Running Dictation</strong> — en parejas, uno lee una oración pegada en la pared y regresa a dictarla al otro. (10-15 min)</li>
+          <li><strong>Dictation with a Twist</strong> — dictado tradicional con un cambio (rápido, en voz baja, con acento) para mantener la atención. (8-10 min)</li>
+        </ul>
+      </div>
+    </div>
+
+    <button class="copy-btn" id="copyBtn" onclick="copyTeacherNotes()">📋 Copiar notas</button>
+  </div>
+</div>
+
+<script>
+  const CI_ACTIVITIES = [
+    { cat: "Comunicación Interactiva", name: "Picture Talk", time: "5-8 min", desc: "Muestra una imagen y hazle preguntas simples a la clase, repitiendo el vocabulario objetivo." },
+    { cat: "Comunicación Interactiva", name: "PQA", time: "5-10 min", desc: "Haz preguntas personales usando las estructuras de la unidad." },
+    { cat: "Comunicación Interactiva", name: "Special Person Interviews", time: "10-15 min", desc: "Entrevista a un estudiante frente a la clase; los demás escuchan y preguntan." },
+    { cat: "Comunicación Interactiva", name: "Card Talk", time: "8-12 min", desc: "Los estudiantes traen/dibujan una tarjeta personal; el maestro compara respuestas." },
+    { cat: "Comunicación Interactiva", name: "Weekend Chats", time: "5-10 min", desc: "Pregunta qué hicieron el fin de semana, repitiendo estructuras en pasado." },
+    { cat: "Comunicación Interactiva", name: "Calendar Talk", time: "5 min", desc: "Practica fechas y días de la semana con preguntas simples y repetidas." },
+    { cat: "Narración de Historias", name: "Story Listening", time: "10-15 min", desc: "Narra una historia corta con apoyo visual mientras los estudiantes solo escuchan." },
+    { cat: "Narración de Historias", name: "Write and Discuss", time: "10-15 min", desc: "Escribe una historia corta en la pizarra con ayuda de la clase, paso a paso." },
+    { cat: "Narración de Historias", name: "Movie Talk", time: "10-20 min", desc: "Usa un clip corto sin diálogo y narra/pregunta sobre lo que pasa, pausando frecuentemente." },
+    { cat: "Lectura y Escritura", name: "One Word at a Time", time: "5-10 min", desc: "La clase construye una historia oral entre todos, una palabra a la vez." },
+    { cat: "Lectura y Escritura", name: "Embedded Reading", time: "variable", desc: "Usa 2-3 versiones de la Historia en niveles de dificultad creciente." },
+    { cat: "Lectura y Escritura", name: "Volleyball Reading", time: "5-10 min", desc: "Los estudiantes turnan leyendo una oración cada uno, \"pasando\" el texto." },
+    { cat: "Lectura y Escritura", name: "Draw the Sentence", time: "5-8 min", desc: "Lee una oración de la Historia; los estudiantes la dibujan rápido y comparan." },
+    { cat: "Lectura y Escritura", name: "Running Dictation", time: "10-15 min", desc: "En parejas, uno lee una oración pegada en la pared y regresa a dictarla al otro." },
+    { cat: "Lectura y Escritura", name: "Dictation with a Twist", time: "8-10 min", desc: "Dictado tradicional con un cambio (rápido, en voz baja, con acento) para mantener la atención." }
+  ];
+
+  function shuffleActivity() {
+    const a = CI_ACTIVITIES[Math.floor(Math.random() * CI_ACTIVITIES.length)];
+    document.getElementById('activityCard').innerHTML = `
+      <div class="activity-card">
+        <div class="cat-tag">${a.cat}</div>
+        <div class="act-name">${a.name}</div>
+        <div class="act-time">⏱ ${a.time}</div>
+        <p style="margin:0;">${a.desc}</p>
+      </div>`;
+  }
+
+  function copyTeacherNotes() {
+    const content = document.getElementById('teacherNotesContent').innerText;
+    navigator.clipboard.writeText(content).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 Copiar notas';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+  document.getElementById('teacherModal').addEventListener('click', (e) => {
+    if (e.target.id === 'teacherModal') { e.target.classList.remove('open'); }
+  });
+</script>
+
+</body>
+</html>

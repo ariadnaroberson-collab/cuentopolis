@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Cuadrilla — Episodio 6: Mi casa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #F2E9D8; --parchment-dim: #E6DAC2; --ink: #2B2018;
+    --lamp-dark: #1A1610; --lamp-panel: #241E16; --lamp-panel-2: #2E2619;
+    --gold: #C9A24B; --gold-bright: #E0BE6E; --navy: #35455E;
+    --teacher-green: #4F7A5C; --teacher-green-bright: #6FA07E;
+    --border-soft: rgba(201, 162, 75, 0.25);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--lamp-dark); background-image: radial-gradient(ellipse 800px 500px at 50% -10%, rgba(224, 190, 110, 0.10), transparent 60%); color: var(--parchment); font-family: 'Public Sans', sans-serif; min-height: 100vh; padding: 40px 20px 80px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  header.top { text-align: center; margin-bottom: 36px; }
+  .series-eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  h1.title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 40px; margin: 0 0 6px; color: var(--parchment); }
+  .episode-sub { font-family: 'Fraunces', serif; font-style: italic; font-weight: 400; font-size: 20px; color: var(--gold-bright); margin-bottom: 18px; }
+  .pill-row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .pill { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.05em; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--border-soft); color: var(--parchment-dim); background: rgba(255,255,255,0.03); }
+  .pill.level { color: var(--lamp-dark); background: var(--gold); border-color: var(--gold); font-weight: 700; }
+  .paper { background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-dim) 100%); color: var(--ink); border-radius: 6px; padding: 44px 48px; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,0,0,0.06); position: relative; }
+  .paper::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--gold), var(--navy)); border-radius: 6px 6px 0 0; }
+  .historia { font-family: 'Source Serif 4', serif; font-size: 19px; line-height: 1.85; }
+  .historia p { margin: 0 0 18px; }
+  .historia p.dialog { margin-left: 6px; }
+  .board-line { font-family: 'Space Mono', monospace; background: var(--lamp-panel); color: var(--gold-bright); border: 1px dashed var(--gold); border-radius: 6px; padding: 14px 18px; margin: 0 0 18px; font-size: 15px; line-height: 1.6; }
+  .scene-divider { text-align: center; margin: 28px 0; font-family: 'Space Mono', monospace; color: var(--gold); letter-spacing: 0.3em; font-size: 12px; }
+  .glossary-word { color: var(--navy); font-weight: 600; border-bottom: 1px dotted var(--navy); cursor: help; }
+  section.panel { margin-top: 30px; }
+  h2.panel-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 22px; color: var(--navy); display: flex; align-items: center; gap: 10px; margin: 0 0 16px; }
+  h2.panel-title .icon { font-size: 20px; }
+  .card { background: var(--lamp-panel); border: 1px solid var(--border-soft); border-radius: 10px; padding: 26px 28px; }
+  .glossary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+  .glossary-item { font-family: 'Public Sans', sans-serif; font-size: 15px; padding: 8px 0; border-bottom: 1px dashed var(--border-soft); display: flex; justify-content: space-between; gap: 10px; }
+  .glossary-item .es { color: var(--gold-bright); font-weight: 600; }
+  .glossary-item .en { color: var(--parchment-dim); font-style: italic; text-align: right; }
+  .word-bank-list { font-family: 'Space Mono', monospace; font-size: 14px; color: var(--parchment); display: flex; flex-direction: column; gap: 10px; }
+  .word-bank-list li { list-style: none; }
+  .word-bank-list li::before { content: "› "; color: var(--gold); }
+  .comp-q { margin-bottom: 20px; }
+  .comp-q:last-child { margin-bottom: 0; }
+  .comp-q .q-text { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 16px; margin-bottom: 10px; color: var(--parchment); }
+  .comp-q textarea { width: 100%; min-height: 60px; background: var(--lamp-panel-2); border: 1px solid var(--border-soft); border-radius: 8px; color: var(--parchment); font-family: 'Public Sans', sans-serif; font-size: 14px; padding: 10px 12px; resize: vertical; }
+  .comp-q textarea:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .comp-q textarea::placeholder { color: var(--parchment-dim); opacity: 0.65; }
+  .teacher-trigger-wrap { display: flex; justify-content: center; margin-top: 40px; }
+  .teacher-trigger { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 15px; color: var(--lamp-dark); background: var(--teacher-green-bright); border: none; border-radius: 999px; padding: 12px 26px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .teacher-trigger:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -6px rgba(111,160,126,0.5); }
+  .teacher-trigger:focus-visible { outline: 2px solid var(--parchment); outline-offset: 2px; }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10, 8, 5, 0.72); z-index: 50; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--lamp-panel); border: 1px solid var(--teacher-green); border-radius: 12px; max-width: 700px; width: 100%; padding: 32px 34px 40px; color: var(--parchment); position: relative; }
+  .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; gap: 12px; }
+  .modal-header h2 { font-family: 'Fraunces', serif; font-size: 24px; color: var(--teacher-green-bright); margin: 0; }
+  .modal-close { background: none; border: 1px solid var(--border-soft); color: var(--parchment); border-radius: 50%; width: 32px; height: 32px; font-size: 16px; cursor: pointer; flex-shrink: 0; }
+  .modal-close:hover { background: rgba(255,255,255,0.06); }
+  .modal h3 { font-family: 'Public Sans', sans-serif; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--gold); margin: 26px 0 8px; }
+  .modal h3:first-of-type { margin-top: 0; }
+  .modal p, .modal li { font-family: 'Public Sans', sans-serif; font-size: 14.5px; line-height: 1.65; color: var(--parchment-dim); }
+  .modal ul { margin: 4px 0; padding-left: 20px; }
+  .modal .note-italic { font-style: italic; opacity: 0.85; }
+  .modal .highlight-box { background: rgba(111,160,126,0.12); border: 1px solid var(--teacher-green); border-radius: 8px; padding: 12px 14px; margin: 8px 0; }
+  .copy-btn { font-family: 'Space Mono', monospace; font-size: 12.5px; background: transparent; border: 1px solid var(--gold); color: var(--gold-bright); border-radius: 8px; padding: 8px 14px; cursor: pointer; margin-top: 24px; }
+  .copy-btn:hover { background: rgba(201,162,75,0.1); }
+  .copy-btn.copied { border-color: var(--teacher-green-bright); color: var(--teacher-green-bright); }
+  .shuffle-btn { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 13.5px; background: var(--teacher-green); color: var(--parchment); border: none; border-radius: 8px; padding: 9px 16px; cursor: pointer; margin: 6px 0 14px; }
+  .shuffle-btn:hover { background: var(--teacher-green-bright); color: var(--lamp-dark); }
+  .activity-card { background: rgba(111,160,126,0.12); border: 1px solid var(--teacher-green); border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
+  .activity-card .cat-tag { font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--teacher-green-bright); margin-bottom: 4px; }
+  .activity-card .act-name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 16px; color: var(--parchment); margin-bottom: 6px; }
+  .activity-card .act-time { font-family: 'Space Mono', monospace; font-size: 11.5px; color: var(--gold-bright); margin-bottom: 6px; }
+  .activity-list-group { margin-bottom: 14px; }
+  .activity-list-group h4 { font-family: 'Public Sans', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gold); margin: 14px 0 6px; }
+  .activity-list-group ul { margin: 0 0 0 4px; padding-left: 18px; }
+  .activity-list-group li { font-size: 13.5px; margin-bottom: 6px; }
+  .activity-list-group li strong { color: var(--parchment); }
+  @media (max-width: 600px) { .paper { padding: 30px 24px; } .glossary-grid { grid-template-columns: 1fr; } h1.title { font-size: 30px; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="series-eyebrow">Cuentopolis · La Cuadrilla</div>
+    <h1 class="title">Mi casa</h1>
+    <div class="episode-sub">Episodio 6 — My House</div>
+    <div class="pill-row">
+      <span class="pill level">A2/B1</span>
+      <span class="pill">Secundaria 1</span>
+      <span class="pill">Serie original</span>
+    </div>
+  </header>
+
+  <div class="paper">
+    <div class="historia">
+      <p>En la clase de español, Profe Rivera escribe en el pizarrón:</p>
+
+      <div class="board-line">Hay... en mi casa. Está encima de / debajo de / al lado de...</div>
+
+      <p class="dialog">—Hoy, dibujen un plano simple de su casa —dice Profe Rivera—. Después, escriban 3 o 4 oraciones sobre las habitaciones.</p>
+
+      <p>Todos dibujan. Vale dibuja su casa con mucho detalle.</p>
+
+      <p class="dialog">—En mi casa, hay tres <span class="glossary-word" title="rooms">habitaciones</span> —dice Vale—. Mi cuarto está al lado de la cocina.</p>
+
+      <div class="scene-divider">◆ ◆ ◆</div>
+
+      <p>Después de clases, el grupo tiene un problema.</p>
+
+      <p class="dialog">—No puedo ir a Café Formosa hoy —dice Ximena—. Tengo que estar en el puesto de mi familia.</p>
+
+      <p class="dialog">—¿Podemos ir contigo? —pregunta Fernanda.</p>
+
+      <p>Ximena piensa un momento.</p>
+
+      <p class="dialog">—Está bien —dice ella—. Pueden venir a mi casa. Está al lado del puesto.</p>
+
+      <p>Todos van a la casa de Ximena. Es una casa pequeña, con un <span class="glossary-word" title="small garden">jardín pequeño</span> también.</p>
+
+      <p class="dialog">—Bienvenidos a mi casa —dice Ximena, un poco nerviosa.</p>
+
+      <p class="dialog">—Es muy bonita —dice Vale.</p>
+
+      <p>La mamá de Ximena sale de la cocina.</p>
+
+      <p class="dialog">—¡Hola! ¿Amigos de Ximena? —dice ella—. Siéntense, siéntense. Voy a traerles algo de comer.</p>
+
+      <p class="dialog">—No es necesario —dice Ximena—. Ellos no...</p>
+
+      <p class="dialog">—¡Claro que sí es necesario! —dice su mamá, riendo.</p>
+
+      <p>La mamá de Ximena trae panes y jugo para todos.</p>
+
+      <p class="dialog">—Gracias, señora —dice Vale, sorprendida—. Es muy amable.</p>
+
+      <p class="dialog">—En esta casa, siempre hay comida para los amigos —dice la mamá de Ximena.</p>
+
+      <p>Vale mira alrededor. La casa es simple, pero hay algo cálido en ella.</p>
+
+      <p class="dialog">—Ximena, tu casa es muy cómoda —dice Vale.</p>
+
+      <p class="dialog">—Gracias —dice Ximena, sonriendo un poco—. No es grande, pero es mi hogar.</p>
+
+      <p class="dialog">—Eso es lo importante —dice Andrés, callado como siempre, pero sincero.</p>
+
+      <p>Todos comen y hablan en el jardín pequeño de Ximena, mientras el sol empieza a bajar.</p>
+    </div>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">📖</span> Glosario</h2>
+      <div class="card">
+        <div class="glossary-grid">
+          <div class="glossary-item"><span class="es">la habitación</span><span class="en">room</span></div>
+          <div class="glossary-item"><span class="es">el jardín</span><span class="en">garden</span></div>
+          <div class="glossary-item"><span class="es">cómodo/a</span><span class="en">comfortable</span></div>
+          <div class="glossary-item"><span class="es">el hogar</span><span class="en">home</span></div>
+          <div class="glossary-item"><span class="es">encima de</span><span class="en">on top of</span></div>
+          <div class="glossary-item"><span class="es">debajo de</span><span class="en">underneath</span></div>
+          <div class="glossary-item"><span class="es">al lado de</span><span class="en">next to</span></div>
+          <div class="glossary-item"><span class="es">amable</span><span class="en">kind</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">🗂️</span> Banco de palabras</h2>
+      <div class="card">
+        <ul class="word-bank-list">
+          <li>Hay... en mi casa</li>
+          <li>Encima de / debajo de / al lado de / entre</li>
+          <li>Mi casa tiene... habitaciones</li>
+          <li>Bienvenidos a mi casa</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">✅</span> Comprensión</h2>
+      <div class="card">
+        <div class="comp-q">
+          <div class="q-text">1. ¿Por qué el grupo se reúne en la casa de Ximena en vez de Café Formosa?</div>
+          <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+        </div>
+        <div class="comp-q">
+          <div class="q-text">2. ¿Qué hace la mamá de Ximena cuando llegan los amigos?</div>
+          <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="teacher-trigger-wrap">
+    <button class="teacher-trigger" onclick="document.getElementById('teacherModal').classList.add('open')">
+      🎓 Notas del maestro
+    </button>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>🎓 Notas del maestro</h2>
+      <button class="modal-close" onclick="document.getElementById('teacherModal').classList.remove('open')" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div id="teacherNotesContent">
+      <h3>Datos básicos</h3>
+      <ul>
+        <li>Serie: La Cuadrilla (Secundaria 1 + Secundaria 2)</li>
+        <li>Unidad curricular: My House</li>
+        <li>Nivel objetivo: A2/B1</li>
+        <li>Elenco: Vale, Emiliano, Fernanda, Ximena, Andrés, Renata, Joaquín</li>
+        <li>Escenario: clase de español, casa de Ximena</li>
+      </ul>
+
+      <h3>Actividad real de clase (idéntica a la Historia)</h3>
+      <div class="highlight-box">
+        <p style="margin:0;">Cada estudiante dibuja un plano simple de su casa (o de una casa imaginaria) y escribe 3-4 oraciones usando "Hay... en mi casa" y preposiciones (encima de, debajo de, al lado de, entre). Comparten con un compañero.</p>
+      </div>
+
+      <h3>Objetivos lingüísticos</h3>
+      <ul>
+        <li>Describir las habitaciones y partes de una casa</li>
+        <li>Usar "hay" para expresar existencia</li>
+        <li>Usar preposiciones de lugar</li>
+      </ul>
+
+      <h3>La Palabra del Día</h3>
+      <p><strong>modesto/a</strong> — cercano al cognado inglés "modest"; conecta con el tema de la casa de Ximena.</p>
+
+      <h3>La Reflexión del Mentor (Profe Rivera)</h3>
+      <p>"Una casa no tiene que ser grande para ser un hogar lleno de amor. A veces las casas más simples son las más cálidas."</p>
+
+      <h3>La Pregunta del Día</h3>
+      <p>¿Cuál es tu lugar favorito en tu casa? ¿Por qué?</p>
+
+      <h3>Huellas del Viajero</h3>
+      <p class="note-italic">Vacío en este episodio (episodio centrado en el hogar de un personaje ya establecido, no en un visitante nuevo).</p>
+
+      <h3>Mi Conexión (diario del estudiante)</h3>
+      <ul>
+        <li>Dibuja un plano simple de tu casa y descríbelo con al menos 3 oraciones.</li>
+        <li>¿Alguna vez una comida o un gesto pequeño en la casa de alguien te hizo sentir bienvenido/a? Descríbelo.</li>
+      </ul>
+
+      <h3>Desafío Conexiones</h3>
+      <p>En parejas, entrevístense sobre "el lugar favorito de tu casa" y presenten la respuesta de su compañero/a a la clase.</p>
+      <p class="note-italic">Función deferida: no incluida como actividad interactiva en esta edición Foundation.</p>
+
+      <h3>Conexión Cultural</h3>
+      <p>Nota breve sobre cómo las tradiciones de hospitalidad varían entre culturas — en muchas comunidades de Belice y Centroamérica, ofrecer comida a un invitado es una muestra fundamental de respeto y bienvenida, sin importar el tamaño de la casa.</p>
+
+      <h3>Marcadores de sensibilidad de contenido</h3>
+      <p class="note-italic">Ninguno significativo. La modestia de la casa de Ximena se presenta con calidez y respeto, nunca con lástima o comparación negativa.</p>
+
+      <h3>Notas de continuidad</h3>
+      <ul>
+        <li>Primera vez que el grupo ve la casa de Ximena — profundiza su personaje más allá de "práctica/escéptica".</li>
+        <li>Refuerza el vínculo de trabajo familiar de Ximena (establecido en el Episodio 2).</li>
+        <li>Todas las escenas de clase con Profe Rivera ocurren únicamente en su clase de español.</li>
+      </ul>
+
+      <h3>Funciones deferidas (fast-follow)</h3>
+      <ul>
+        <li>Reader's Theater</li>
+        <li>Story Asking (script de clase)</li>
+        <li>Sección interactiva de Mi Conexión / Desafío Conexiones dentro del reader</li>
+        <li>Audio narrado</li>
+      </ul>
+
+      <h3>🎲 Actividades de bajo prep (para terminar temprano o llenar tiempo)</h3>
+      <button class="shuffle-btn" onclick="shuffleActivity()">🔀 Sugerir una actividad al azar</button>
+      <div id="activityCard"></div>
+
+      <div class="activity-list-group">
+        <h4>Comunicación Interactiva</h4>
+        <ul>
+          <li><strong>Picture Talk</strong> — muestra una imagen y hazle preguntas simples a la clase, repitiendo el vocabulario objetivo. (5-8 min)</li>
+          <li><strong>PQA</strong> (Preguntas Personalizadas y Respuestas) — haz preguntas personales usando las estructuras de la unidad. (5-10 min)</li>
+          <li><strong>Special Person Interviews</strong> — entrevista a un estudiante frente a la clase; los demás escuchan y preguntan. (10-15 min)</li>
+          <li><strong>Card Talk</strong> — los estudiantes traen/dibujan una tarjeta personal; el maestro compara respuestas. (8-12 min)</li>
+          <li><strong>Weekend Chats</strong> — pregunta qué hicieron el fin de semana, repitiendo estructuras en pasado. (5-10 min)</li>
+          <li><strong>Calendar Talk</strong> — practica fechas y días de la semana con preguntas simples y repetidas. (5 min)</li>
+        </ul>
+        <h4>Narración de Historias</h4>
+        <ul>
+          <li><strong>Story Listening</strong> — narra una historia corta con apoyo visual mientras los estudiantes solo escuchan. (10-15 min)</li>
+          <li><strong>Write and Discuss</strong> — escribe una historia corta en la pizarra con ayuda de la clase, paso a paso. (10-15 min)</li>
+          <li><strong>Movie Talk</strong> — usa un clip corto sin diálogo y narra/pregunta sobre lo que pasa, pausando frecuentemente. (10-20 min)</li>
+        </ul>
+        <h4>Lectura y Escritura</h4>
+        <ul>
+          <li><strong>One Word at a Time</strong> — la clase construye una historia oral entre todos, una palabra a la vez. (5-10 min)</li>
+          <li><strong>Embedded Reading</strong> — usa 2-3 versiones de la Historia en niveles de dificultad creciente. (variable)</li>
+          <li><strong>Volleyball Reading</strong> — los estudiantes turnan leyendo una oración cada uno, "pasando" el texto. (5-10 min)</li>
+          <li><strong>Draw the Sentence</strong> — lee una oración de la Historia; los estudiantes la dibujan rápido y comparan. (5-8 min)</li>
+          <li><strong>Running Dictation</strong> — en parejas, uno lee una oración pegada en la pared y regresa a dictarla al otro. (10-15 min)</li>
+          <li><strong>Dictation with a Twist</strong> — dictado tradicional con un cambio (rápido, en voz baja, con acento) para mantener la atención. (8-10 min)</li>
+        </ul>
+      </div>
+    </div>
+
+    <button class="copy-btn" id="copyBtn" onclick="copyTeacherNotes()">📋 Copiar notas</button>
+  </div>
+</div>
+
+<script>
+  const CI_ACTIVITIES = [
+    { cat: "Comunicación Interactiva", name: "Picture Talk", time: "5-8 min", desc: "Muestra una imagen y hazle preguntas simples a la clase, repitiendo el vocabulario objetivo." },
+    { cat: "Comunicación Interactiva", name: "PQA", time: "5-10 min", desc: "Haz preguntas personales usando las estructuras de la unidad." },
+    { cat: "Comunicación Interactiva", name: "Special Person Interviews", time: "10-15 min", desc: "Entrevista a un estudiante frente a la clase; los demás escuchan y preguntan." },
+    { cat: "Comunicación Interactiva", name: "Card Talk", time: "8-12 min", desc: "Los estudiantes traen/dibujan una tarjeta personal; el maestro compara respuestas." },
+    { cat: "Comunicación Interactiva", name: "Weekend Chats", time: "5-10 min", desc: "Pregunta qué hicieron el fin de semana, repitiendo estructuras en pasado." },
+    { cat: "Comunicación Interactiva", name: "Calendar Talk", time: "5 min", desc: "Practica fechas y días de la semana con preguntas simples y repetidas." },
+    { cat: "Narración de Historias", name: "Story Listening", time: "10-15 min", desc: "Narra una historia corta con apoyo visual mientras los estudiantes solo escuchan." },
+    { cat: "Narración de Historias", name: "Write and Discuss", time: "10-15 min", desc: "Escribe una historia corta en la pizarra con ayuda de la clase, paso a paso." },
+    { cat: "Narración de Historias", name: "Movie Talk", time: "10-20 min", desc: "Usa un clip corto sin diálogo y narra/pregunta sobre lo que pasa, pausando frecuentemente." },
+    { cat: "Lectura y Escritura", name: "One Word at a Time", time: "5-10 min", desc: "La clase construye una historia oral entre todos, una palabra a la vez." },
+    { cat: "Lectura y Escritura", name: "Embedded Reading", time: "variable", desc: "Usa 2-3 versiones de la Historia en niveles de dificultad creciente." },
+    { cat: "Lectura y Escritura", name: "Volleyball Reading", time: "5-10 min", desc: "Los estudiantes turnan leyendo una oración cada uno, \"pasando\" el texto." },
+    { cat: "Lectura y Escritura", name: "Draw the Sentence", time: "5-8 min", desc: "Lee una oración de la Historia; los estudiantes la dibujan rápido y comparan." },
+    { cat: "Lectura y Escritura", name: "Running Dictation", time: "10-15 min", desc: "En parejas, uno lee una oración pegada en la pared y regresa a dictarla al otro." },
+    { cat: "Lectura y Escritura", name: "Dictation with a Twist", time: "8-10 min", desc: "Dictado tradicional con un cambio (rápido, en voz baja, con acento) para mantener la atención." }
+  ];
+
+  function shuffleActivity() {
+    const a = CI_ACTIVITIES[Math.floor(Math.random() * CI_ACTIVITIES.length)];
+    document.getElementById('activityCard').innerHTML = `
+      <div class="activity-card">
+        <div class="cat-tag">${a.cat}</div>
+        <div class="act-name">${a.name}</div>
+        <div class="act-time">⏱ ${a.time}</div>
+        <p style="margin:0;">${a.desc}</p>
+      </div>`;
+  }
+
+  function copyTeacherNotes() {
+    const content = document.getElementById('teacherNotesContent').innerText;
+    navigator.clipboard.writeText(content).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 Copiar notas';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+  document.getElementById('teacherModal').addEventListener('click', (e) => {
+    if (e.target.id === 'teacherModal') { e.target.classList.remove('open'); }
+  });
+</script>
+
+</body>
+</html>

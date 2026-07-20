@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Cuadrilla — Secundaria 2, Episodio 8: Planeando el viaje a Tikal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #F2E9D8; --parchment-dim: #E6DAC2; --ink: #2B2018;
+    --lamp-dark: #1A1610; --lamp-panel: #241E16; --lamp-panel-2: #2E2619;
+    --gold: #C9A24B; --gold-bright: #E0BE6E; --navy: #35455E;
+    --teacher-green: #4F7A5C; --teacher-green-bright: #6FA07E;
+    --border-soft: rgba(201, 162, 75, 0.25);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--lamp-dark); background-image: radial-gradient(ellipse 800px 500px at 50% -10%, rgba(224, 190, 110, 0.10), transparent 60%); color: var(--parchment); font-family: 'Public Sans', sans-serif; min-height: 100vh; padding: 40px 20px 80px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  header.top { text-align: center; margin-bottom: 36px; }
+  .series-eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  h1.title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 40px; margin: 0 0 6px; color: var(--parchment); }
+  .episode-sub { font-family: 'Fraunces', serif; font-style: italic; font-weight: 400; font-size: 20px; color: var(--gold-bright); margin-bottom: 18px; }
+  .pill-row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .pill { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.05em; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--border-soft); color: var(--parchment-dim); background: rgba(255,255,255,0.03); }
+  .pill.level { color: var(--lamp-dark); background: var(--gold); border-color: var(--gold); font-weight: 700; }
+  .paper { background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-dim) 100%); color: var(--ink); border-radius: 6px; padding: 44px 48px; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,0,0,0.06); position: relative; }
+  .paper::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--gold), var(--navy)); border-radius: 6px 6px 0 0; }
+  .historia { font-family: 'Source Serif 4', serif; font-size: 19px; line-height: 1.85; }
+  .historia p { margin: 0 0 18px; }
+  .historia p.dialog { margin-left: 6px; }
+  .board-line { font-family: 'Space Mono', monospace; background: var(--lamp-panel); color: var(--gold-bright); border: 1px dashed var(--gold); border-radius: 6px; padding: 14px 18px; margin: 0 0 18px; font-size: 15px; line-height: 1.6; }
+  .scene-divider { text-align: center; margin: 28px 0; font-family: 'Space Mono', monospace; color: var(--gold); letter-spacing: 0.3em; font-size: 12px; }
+  .glossary-word { color: var(--navy); font-weight: 600; border-bottom: 1px dotted var(--navy); cursor: help; }
+  .future-word { color: var(--navy); font-weight: 600; border-bottom: 2px dotted var(--gold); cursor: help; }
+  section.panel { margin-top: 30px; }
+  h2.panel-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 22px; color: var(--navy); display: flex; align-items: center; gap: 10px; margin: 0 0 16px; }
+  h2.panel-title .icon { font-size: 20px; }
+  .card { background: var(--lamp-panel); border: 1px solid var(--border-soft); border-radius: 10px; padding: 26px 28px; }
+  .glossary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+  .glossary-item { font-family: 'Public Sans', sans-serif; font-size: 15px; padding: 8px 0; border-bottom: 1px dashed var(--border-soft); display: flex; justify-content: space-between; gap: 10px; }
+  .glossary-item .es { color: var(--gold-bright); font-weight: 600; }
+  .glossary-item .en { color: var(--parchment-dim); font-style: italic; text-align: right; }
+  .word-bank-list { font-family: 'Space Mono', monospace; font-size: 14px; color: var(--parchment); display: flex; flex-direction: column; gap: 10px; }
+  .word-bank-list li { list-style: none; }
+  .word-bank-list li::before { content: "› "; color: var(--gold); }
+  .comp-q { margin-bottom: 20px; }
+  .comp-q:last-child { margin-bottom: 0; }
+  .comp-q .q-text { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 16px; margin-bottom: 10px; color: var(--parchment); }
+  .comp-q textarea { width: 100%; min-height: 60px; background: var(--lamp-panel-2); border: 1px solid var(--border-soft); border-radius: 8px; color: var(--parchment); font-family: 'Public Sans', sans-serif; font-size: 14px; padding: 10px 12px; resize: vertical; }
+  .comp-q textarea:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .comp-q textarea::placeholder { color: var(--parchment-dim); opacity: 0.65; }
+  .teacher-trigger-wrap { display: flex; justify-content: center; margin-top: 40px; }
+  .teacher-trigger { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 15px; color: var(--lamp-dark); background: var(--teacher-green-bright); border: none; border-radius: 999px; padding: 12px 26px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .teacher-trigger:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -6px rgba(111,160,126,0.5); }
+  .teacher-trigger:focus-visible { outline: 2px solid var(--parchment); outline-offset: 2px; }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10, 8, 5, 0.72); z-index: 50; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--lamp-panel); border: 1px solid var(--teacher-green); border-radius: 12px; max-width: 700px; width: 100%; padding: 32px 34px 40px; color: var(--parchment); position: relative; }
+  .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; gap: 12px; }
+  .modal-header h2 { font-family: 'Fraunces', serif; font-size: 24px; color: var(--teacher-green-bright); margin: 0; }
+  .modal-close { background: none; border: 1px solid var(--border-soft); color: var(--parchment); border-radius: 50%; width: 32px; height: 32px; font-size: 16px; cursor: pointer; flex-shrink: 0; }
+  .modal-close:hover { background: rgba(255,255,255,0.06); }
+  .modal h3 { font-family: 'Public Sans', sans-serif; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--gold); margin: 26px 0 8px; }
+  .modal h3:first-of-type { margin-top: 0; }
+  .modal p, .modal li { font-family: 'Public Sans', sans-serif; font-size: 14.5px; line-height: 1.65; color: var(--parchment-dim); }
+  .modal ul { margin: 4px 0; padding-left: 20px; }
+  .modal .note-italic { font-style: italic; opacity: 0.85; }
+  .modal .highlight-box { background: rgba(111,160,126,0.12); border: 1px solid var(--teacher-green); border-radius: 8px; padding: 12px 14px; margin: 8px 0; }
+  .modal .warn-box { background: rgba(201,162,75,0.12); border: 1px solid var(--gold); border-radius: 8px; padding: 12px 14px; margin: 8px 0; }
+  .copy-btn { font-family: 'Space Mono', monospace; font-size: 12.5px; background: transparent; border: 1px solid var(--gold); color: var(--gold-bright); border-radius: 8px; padding: 8px 14px; cursor: pointer; margin-top: 24px; }
+  .copy-btn:hover { background: rgba(201,162,75,0.1); }
+  .copy-btn.copied { border-color: var(--teacher-green-bright); color: var(--teacher-green-bright); }
+  .shuffle-btn { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 13.5px; background: var(--teacher-green); color: var(--parchment); border: none; border-radius: 8px; padding: 9px 16px; cursor: pointer; margin: 6px 0 14px; }
+  .shuffle-btn:hover { background: var(--teacher-green-bright); color: var(--lamp-dark); }
+  .activity-card { background: rgba(111,160,126,0.12); border: 1px solid var(--teacher-green); border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
+  .activity-card .cat-tag { font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--teacher-green-bright); margin-bottom: 4px; }
+  .activity-card .act-name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 16px; color: var(--parchment); margin-bottom: 6px; }
+  .activity-card .act-time { font-family: 'Space Mono', monospace; font-size: 11.5px; color: var(--gold-bright); margin-bottom: 6px; }
+  .activity-list-group { margin-bottom: 14px; }
+  .activity-list-group h4 { font-family: 'Public Sans', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gold); margin: 14px 0 6px; }
+  .activity-list-group ul { margin: 0 0 0 4px; padding-left: 18px; }
+  .activity-list-group li { font-size: 13.5px; margin-bottom: 6px; }
+  .activity-list-group li strong { color: var(--parchment); }
+  @media (max-width: 600px) { .paper { padding: 30px 24px; } .glossary-grid { grid-template-columns: 1fr; } h1.title { font-size: 30px; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="series-eyebrow">Cuentopolis · La Cuadrilla · Secundaria 2</div>
+    <h1 class="title">Planeando el viaje a Tikal</h1>
+    <div class="episode-sub">Episodio 8 — Planning a Trip</div>
+    <div class="pill-row">
+      <span class="pill level">B1</span>
+      <span class="pill">Secundaria 2</span>
+      <span class="pill">Serie original</span>
+    </div>
+  </header>
+
+  <div class="paper">
+    <div class="historia">
+      <p>En la clase de español, Profe Rivera tiene noticias emocionantes.</p>
+
+      <p class="dialog">—Clase, este semestre, vamos a viajar a Tikal, en Guatemala —dice ella—. <span class="future-word" title="será = will be (future tense, receptive only)">Será</span> un viaje inolvidable.</p>
+
+      <p>Todos reaccionan con emoción.</p>
+
+      <p class="dialog">—¿Cruzamos al otro lado de la <span class="glossary-word" title="border">frontera</span>? —pregunta Emiliano.</p>
+
+      <p class="dialog">—Sí. <span class="future-word" title="cruzaremos = we will cross (future tense, receptive only)">Cruzaremos</span> la frontera juntos, en autobús —dice Profe Rivera—. Hoy, vamos a planear el viaje.</p>
+
+      <p>Escribe en el pizarrón:</p>
+
+      <div class="board-line">Primero vamos a... Después vamos a... Finalmente vamos a...</div>
+
+      <p class="dialog">—Organicemos el itinerario —dice Profe Rivera—. ¿Qué hacemos primero?</p>
+
+      <p class="dialog">—Primero vamos a cruzar la frontera —dice Vale, ya escribiendo.</p>
+
+      <p class="dialog">—Después vamos a visitar las ruinas —dice Joaquín.</p>
+
+      <p class="dialog">—Finalmente vamos a comer en el pueblo cerca de Tikal —añade Renata—. Espero que tengan algo rico.</p>
+
+      <p class="dialog">—Seguramente sí —dice Profe Rivera, riendo—. <span class="future-word" title="visitaremos = we will visit (future tense, receptive only)">Visitaremos</span> las ruinas por la mañana, cuando hace menos calor.</p>
+
+      <p class="dialog">—Ahora, hablemos de qué vamos a necesitar —dice Profe Rivera—. ¿Qué llevamos?</p>
+
+      <p class="dialog">—Vamos a necesitar el pasaporte —dice Fernanda.</p>
+
+      <p class="dialog">—Vamos a necesitar agua, mucha agua —dice Andrés.</p>
+
+      <p class="dialog">—Y protector solar —añade Renata—. El sol en las ruinas va a ser fuerte.</p>
+
+      <div class="scene-divider">◆ ◆ ◆</div>
+
+      <p>Ximena ha estado callada, escuchando todo con atención especial.</p>
+
+      <p class="dialog">—¿Estás bien, Ximena? —pregunta Fernanda.</p>
+
+      <p class="dialog">—Sí —dice Ximena, despacio—. Es que... mi familia es maya. Nunca he visto un sitio como Tikal en persona. Solo en fotos, en libros.</p>
+
+      <p class="dialog">—Va a ser especial para ti, entonces —dice Vale.</p>
+
+      <p class="dialog">—Sí —dice Ximena, sonriendo un poco—. Muy especial.</p>
+
+      <p class="dialog">—Este viaje va a conectar a muchos de ustedes con historias mucho más antiguas que nosotros —dice Profe Rivera—. Planear con anticipación es la mitad de la emoción.</p>
+
+      <p>El grupo termina la clase con el itinerario completo, y con Ximena pensando, en silencio, en lo que va a sentir al fin al pisar un lugar que siempre fue parte de su historia, pero nunca de su experiencia.</p>
+    </div>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">📖</span> Glosario</h2>
+      <div class="card">
+        <div class="glossary-grid">
+          <div class="glossary-item"><span class="es">la frontera</span><span class="en">border</span></div>
+          <div class="glossary-item"><span class="es">el itinerario</span><span class="en">itinerary</span></div>
+          <div class="glossary-item"><span class="es">las ruinas</span><span class="en">ruins</span></div>
+          <div class="glossary-item"><span class="es">el pasaporte</span><span class="en">passport</span></div>
+          <div class="glossary-item"><span class="es">el protector solar</span><span class="en">sunscreen</span></div>
+          <div class="glossary-item"><span class="es">pisar</span><span class="en">to step on/set foot</span></div>
+          <div class="glossary-item"><span class="es">inolvidable</span><span class="en">unforgettable</span></div>
+          <div class="glossary-item"><span class="es">con anticipación</span><span class="en">in advance</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">🗂️</span> Banco de palabras</h2>
+      <div class="card">
+        <ul class="word-bank-list">
+          <li>Primero vamos a... / Después vamos a... / Finalmente vamos a...</li>
+          <li>Vamos a necesitar...</li>
+          <li>Vamos a cruzar la frontera</li>
+          <li>¿Qué vamos a llevar?</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">✅</span> Comprensión</h2>
+      <div class="card">
+        <div class="comp-q">
+          <div class="q-text">1. ¿Qué necesitan llevar para cruzar la frontera?</div>
+          <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+        </div>
+        <div class="comp-q">
+          <div class="q-text">2. ¿Cómo se siente Ximena sobre el viaje, y por qué?</div>
+          <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="teacher-trigger-wrap">
+    <button class="teacher-trigger" onclick="document.getElementById('teacherModal').classList.add('open')">
+      🎓 Notas del maestro
+    </button>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>🎓 Notas del maestro</h2>
+      <button class="modal-close" onclick="document.getElementById('teacherModal').classList.remove('open')" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div id="teacherNotesContent">
+      <h3>⚠️ Nota de andamiaje (scaffolding) — importante</h3>
+      <div class="warn-box">
+        <p style="margin:0 0 8px;">Esta es la <strong>primera exposición</strong> de los estudiantes al futuro. Para no sobrecargar la clase:</p>
+        <p style="margin:0 0 8px;"><strong>Producción:</strong> solo "vamos a + infinitivo" (ya tienen base desde S1 Ep8).</p>
+        <p style="margin:0;"><strong>Receptiva únicamente:</strong> el futuro verdadero aparece solo en el discurso de Profe Rivera (marcado en el texto con subrayado dorado) — NO se pide a los estudiantes que lo produzcan todavía.</p>
+      </div>
+
+      <h3>Datos básicos</h3>
+      <ul>
+        <li>Serie: La Cuadrilla — Secundaria 2</li>
+        <li>Unidad curricular: Planning a Trip</li>
+        <li>Nivel objetivo: B1</li>
+        <li>Elenco: Vale, Emiliano, Fernanda, Ximena, Andrés, Renata, Joaquín</li>
+        <li>Escenario: clase de español</li>
+      </ul>
+
+      <h3>Actividad real de clase (idéntica a la Historia) — paso a paso</h3>
+      <div class="highlight-box">
+        <p style="margin:0 0 8px;"><strong>Paso 1:</strong> Profe Rivera escribe "Primero vamos a... Después vamos a... Finalmente vamos a..." Los estudiantes construyen un itinerario simple en orden.</p>
+        <p style="margin:0;"><strong>Paso 2:</strong> Ronda separada con "Vamos a necesitar..." para una lista de empaque.</p>
+      </div>
+
+      <h3>Objetivos lingüísticos</h3>
+      <ul>
+        <li>Producir "vamos a + infinitivo" para planear un viaje paso a paso</li>
+        <li>Reconocer (sin producir) el futuro verdadero por exposición oral de Profe Rivera</li>
+        <li>Vocabulario de viajes internacionales</li>
+      </ul>
+
+      <h3>La Palabra del Día</h3>
+      <p><strong>la frontera</strong> — palabra clave del episodio.</p>
+
+      <h3>La Reflexión del Mentor (Profe Rivera)</h3>
+      <p>"A veces, planear algo con anticipación es la mitad de la emoción. Este viaje va a conectar a muchos de ustedes con historias mucho más antiguas que nosotros."</p>
+
+      <h3>La Pregunta del Día</h3>
+      <p>Si pudieras viajar a cualquier lugar, ¿a dónde irías, y qué necesitarías llevar?</p>
+
+      <h3>Huellas del Viajero</h3>
+      <p class="note-italic">Vacío en este episodio (episodio de planeación; el viaje en sí queda para un episodio futuro).</p>
+
+      <h3>Mi Conexión (diario del estudiante)</h3>
+      <ul>
+        <li>Escribe un itinerario simple para un viaje que te gustaría hacer, usando "vamos a + infinitivo".</li>
+        <li>¿Qué esperas sentir al visitar un lugar histórico importante para tu propia cultura o familia?</li>
+      </ul>
+
+      <h3>Desafío Conexiones</h3>
+      <p>En parejas, investiguen un dato interesante sobre Tikal y compártanlo con la clase.</p>
+      <p class="note-italic">Función deferida: no incluida como actividad interactiva en esta edición Foundation.</p>
+
+      <h3>Conexión Cultural</h3>
+      <p>Nota breve sobre Tikal como uno de los sitios arqueológicos mayas más importantes de Centroamérica, ubicado en Guatemala, cerca de la frontera con Belice.</p>
+
+      <h3>Marcadores de sensibilidad de contenido</h3>
+      <p class="note-italic">Ninguno significativo.</p>
+
+      <h3>Notas de continuidad</h3>
+      <ul>
+        <li>Profundiza la herencia maya de Ximena más allá del contexto familiar/comercial ya mostrado.</li>
+        <li>Episodio de planeación únicamente; el viaje real a Tikal queda reservado para un futuro episodio (posible final de temporada).</li>
+        <li>Primera exposición de la serie al futuro verdadero (solo receptiva) — sienta las bases para una introducción formal más adelante.</li>
+        <li>Todas las escenas de clase con Profe Rivera ocurren únicamente en su clase de español.</li>
+      </ul>
+
+      <h3>Funciones deferidas (fast-follow)</h3>
+      <ul>
+        <li>Reader's Theater</li>
+        <li>Story Asking (script de clase)</li>
+        <li>Sección interactiva de Mi Conexión dentro del reader</li>
+        <li>Audio narrado</li>
+      </ul>
+
+      <h3>🎲 Actividades de bajo prep (para terminar temprano o llenar tiempo)</h3>
+      <button class="shuffle-btn" onclick="shuffleActivity()">🔀 Sugerir una actividad al azar</button>
+      <div id="activityCard"></div>
+
+      <div class="activity-list-group">
+        <h4>Comunicación Interactiva</h4>
+        <ul>
+          <li><strong>Picture Talk</strong> — muestra una imagen y hazle preguntas simples a la clase, repitiendo el vocabulario objetivo. (5-8 min)</li>
+          <li><strong>PQA</strong> (Preguntas Personalizadas y Respuestas) — haz preguntas personales usando las estructuras de la unidad. (5-10 min)</li>
+          <li><strong>Special Person Interviews</strong> — entrevista a un estudiante frente a la clase; los demás escuchan y preguntan. (10-15 min)</li>
+          <li><strong>Card Talk</strong> — los estudiantes traen/dibujan una tarjeta personal; el maestro compara respuestas. (8-12 min)</li>
+          <li><strong>Weekend Chats</strong> — pregunta qué hicieron el fin de semana, repitiendo estructuras en pasado. (5-10 min)</li>
+          <li><strong>Calendar Talk</strong> — practica fechas y días de la semana con preguntas simples y repetidas. (5 min)</li>
+        </ul>
+        <h4>Narración de Historias</h4>
+        <ul>
+          <li><strong>Story Listening</strong> — narra una historia corta con apoyo visual mientras los estudiantes solo escuchan. (10-15 min)</li>
+          <li><strong>Write and Discuss</strong> — escribe una historia corta en la pizarra con ayuda de la clase, paso a paso. (10-15 min)</li>
+          <li><strong>Movie Talk</strong> — usa un clip corto sin diálogo y narra/pregunta sobre lo que pasa, pausando frecuentemente. (10-20 min)</li>
+        </ul>
+        <h4>Lectura y Escritura</h4>
+        <ul>
+          <li><strong>One Word at a Time</strong> — la clase construye una historia oral entre todos, una palabra a la vez. (5-10 min)</li>
+          <li><strong>Embedded Reading</strong> — usa 2-3 versiones de la Historia en niveles de dificultad creciente. (variable)</li>
+          <li><strong>Volleyball Reading</strong> — los estudiantes turnan leyendo una oración cada uno, "pasando" el texto. (5-10 min)</li>
+          <li><strong>Draw the Sentence</strong> — lee una oración de la Historia; los estudiantes la dibujan rápido y comparan. (5-8 min)</li>
+          <li><strong>Running Dictation</strong> — en parejas, uno lee una oración pegada en la pared y regresa a dictarla al otro. (10-15 min)</li>
+          <li><strong>Dictation with a Twist</strong> — dictado tradicional con un cambio (rápido, en voz baja, con acento) para mantener la atención. (8-10 min)</li>
+        </ul>
+      </div>
+    </div>
+
+    <button class="copy-btn" id="copyBtn" onclick="copyTeacherNotes()">📋 Copiar notas</button>
+  </div>
+</div>
+
+<script>
+  const CI_ACTIVITIES = [
+    { cat: "Comunicación Interactiva", name: "Picture Talk", time: "5-8 min", desc: "Muestra una imagen y hazle preguntas simples a la clase, repitiendo el vocabulario objetivo." },
+    { cat: "Comunicación Interactiva", name: "PQA", time: "5-10 min", desc: "Haz preguntas personales usando las estructuras de la unidad." },
+    { cat: "Comunicación Interactiva", name: "Special Person Interviews", time: "10-15 min", desc: "Entrevista a un estudiante frente a la clase; los demás escuchan y preguntan." },
+    { cat: "Comunicación Interactiva", name: "Card Talk", time: "8-12 min", desc: "Los estudiantes traen/dibujan una tarjeta personal; el maestro compara respuestas." },
+    { cat: "Comunicación Interactiva", name: "Weekend Chats", time: "5-10 min", desc: "Pregunta qué hicieron el fin de semana, repitiendo estructuras en pasado." },
+    { cat: "Comunicación Interactiva", name: "Calendar Talk", time: "5 min", desc: "Practica fechas y días de la semana con preguntas simples y repetidas." },
+    { cat: "Narración de Historias", name: "Story Listening", time: "10-15 min", desc: "Narra una historia corta con apoyo visual mientras los estudiantes solo escuchan." },
+    { cat: "Narración de Historias", name: "Write and Discuss", time: "10-15 min", desc: "Escribe una historia corta en la pizarra con ayuda de la clase, paso a paso." },
+    { cat: "Narración de Historias", name: "Movie Talk", time: "10-20 min", desc: "Usa un clip corto sin diálogo y narra/pregunta sobre lo que pasa, pausando frecuentemente." },
+    { cat: "Lectura y Escritura", name: "One Word at a Time", time: "5-10 min", desc: "La clase construye una historia oral entre todos, una palabra a la vez." },
+    { cat: "Lectura y Escritura", name: "Embedded Reading", time: "variable", desc: "Usa 2-3 versiones de la Historia en niveles de dificultad creciente." },
+    { cat: "Lectura y Escritura", name: "Volleyball Reading", time: "5-10 min", desc: "Los estudiantes turnan leyendo una oración cada uno, \"pasando\" el texto." },
+    { cat: "Lectura y Escritura", name: "Draw the Sentence", time: "5-8 min", desc: "Lee una oración de la Historia; los estudiantes la dibujan rápido y comparan." },
+    { cat: "Lectura y Escritura", name: "Running Dictation", time: "10-15 min", desc: "En parejas, uno lee una oración pegada en la pared y regresa a dictarla al otro." },
+    { cat: "Lectura y Escritura", name: "Dictation with a Twist", time: "8-10 min", desc: "Dictado tradicional con un cambio (rápido, en voz baja, con acento) para mantener la atención." }
+  ];
+
+  function shuffleActivity() {
+    const a = CI_ACTIVITIES[Math.floor(Math.random() * CI_ACTIVITIES.length)];
+    document.getElementById('activityCard').innerHTML = `
+      <div class="activity-card">
+        <div class="cat-tag">${a.cat}</div>
+        <div class="act-name">${a.name}</div>
+        <div class="act-time">⏱ ${a.time}</div>
+        <p style="margin:0;">${a.desc}</p>
+      </div>`;
+  }
+
+  function copyTeacherNotes() {
+    const content = document.getElementById('teacherNotesContent').innerText;
+    navigator.clipboard.writeText(content).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 Copiar notas';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+  document.getElementById('teacherModal').addEventListener('click', (e) => {
+    if (e.target.id === 'teacherModal') { e.target.classList.remove('open'); }
+  });
+</script>
+
+</body>
+</html>
