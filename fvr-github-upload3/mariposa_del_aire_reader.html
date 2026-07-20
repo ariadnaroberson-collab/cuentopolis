@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mariposa del aire — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c1024; --ink-2:#12172e; --ink-3:#1a2040;
+    --lamp:#e8a94c; --lamp-dim:#c98a34; --coral:#e8735c;
+    --parchment:#f3e9d6; --parchment-dim:#e4d6b8; --page:#faf3e4;
+    --slate:#8891a8; --slate-dim:#5c6480;
+    --line: rgba(232,169,76,0.16);
+    --leaf:#5a9e6e; --gold:#d1a02e;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--parchment);font-family:'Public Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;}
+  button{font-family:'Public Sans',sans-serif;cursor:pointer;}
+
+  /* ---------- TOP BAR ---------- */
+  .toolbar{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;gap:16px;padding:12px 24px;
+    background:rgba(9,12,26,0.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+  }
+  .back-link{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--slate);border:1px solid var(--line);padding:7px 12px;border-radius:20px;background:rgba(255,255,255,0.03);}
+  .back-link:hover{color:var(--parchment);border-color:var(--lamp-dim);}
+  .toolbar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;}
+  .toolbar-level{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:1.5px solid var(--lamp);color:var(--lamp);border-radius:5px;padding:2px 7px;}
+  .toolbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+  .tool-btn{
+    display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);
+    background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;transition:background .15s, border-color .15s;
+  }
+  .tool-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--lamp-dim);}
+  .tool-btn.on{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+  .font-controls{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .font-controls button{background:rgba(255,255,255,0.03);color:var(--parchment);border:none;padding:8px 12px;font-size:13px;}
+  .font-controls button:hover{background:rgba(255,255,255,0.1);}
+  .font-controls .divider{width:1px;background:var(--line);align-self:stretch;}
+
+  .progress-rail{height:3px;background:var(--ink-3);position:sticky;top:57px;z-index:39;}
+  .progress-rail-fill{height:100%;background:linear-gradient(90deg,var(--lamp),var(--coral));width:0%;transition:width .1s linear;}
+
+  /* ---------- AUTÉNTICO STRIP (no switcher — single version) ---------- */
+  .auth-strip{display:flex;align-items:center;gap:10px;justify-content:center;padding:18px 24px 4px;flex-wrap:wrap;}
+  .auth-badge{
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:6px 13px;border-radius:20px;
+    border:1.5px solid var(--lamp);color:#26160a;background:var(--lamp);
+  }
+  .auth-note{font-size:12.5px;color:var(--slate);}
+
+  /* ---------- LAYOUT ---------- */
+  .reader-layout{display:flex;justify-content:center;gap:28px;padding:20px 24px 80px;max-width:1180px;margin:0 auto;}
+  .page-wrap{flex:1 1 680px;max-width:680px;}
+  .page{
+    background:var(--page);color:#2c2412;border-radius:14px;padding:44px 52px;box-shadow:0 30px 60px rgba(0,0,0,0.4);
+    font-family:'Source Serif 4', serif; line-height:1.85; position:relative;
+  }
+  .page::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--lamp),var(--coral));border-radius:14px 14px 0 0;}
+  .story-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lamp-dim);margin-bottom:6px;}
+  .story-heading{font-family:'Fraunces',serif;font-size:30px;margin:0 0 4px;color:#241d0e;}
+  .story-byline{font-family:'Public Sans',sans-serif;font-size:14px;color:#6b5e42;font-style:italic;margin-bottom:26px;}
+
+  /* ---------- POEM BODY ---------- */
+  .poem-body{
+    text-align:center;padding:10px 10px 6px;
+  }
+  .poem-body p{margin:0 0 26px;}
+  .poem-line{display:block;}
+  .gloss{border-bottom:2px dotted var(--coral);cursor:help;position:relative;color:#241d0e;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(232,115,92,0.16);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--ink-2);color:var(--parchment);border:1px solid var(--line);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+
+  /* ---------- CI ACTIVITIES ---------- */
+  .ci-section{margin-top:8px;padding-top:28px;border-top:1px dashed var(--parchment-dim);}
+  .ci-title{font-family:'Fraunces',serif;font-size:19px;margin:0 0 4px;color:#241d0e;}
+  .ci-sub{font-family:'Public Sans',sans-serif;font-size:13px;color:#6b5e42;margin-bottom:18px;}
+  .ci-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
+  .ci-card{
+    font-family:'Public Sans',sans-serif;background:#fffaf0;border:1.5px solid #d8cba3;border-radius:10px;
+    padding:12px 14px;font-size:13px;color:#3a3120;
+  }
+  .ci-card b{display:block;font-size:13.5px;color:#241d0e;margin-bottom:3px;}
+
+  /* ---------- COLOR HUNT CHECK ---------- */
+  .check-q{font-family:'Public Sans',sans-serif;font-size:14.5px;font-weight:600;color:#241d0e;margin-bottom:10px;}
+  .color-opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;}
+  .color-opt{
+    font-family:'Public Sans',sans-serif;padding:10px 16px;border-radius:20px;border:1.5px solid #d8cba3;
+    background:#fffaf0;font-size:13.5px;color:#3a3120;font-weight:600;
+  }
+  .color-opt:hover{border-color:var(--coral);}
+  .color-opt.correct{background:#dff1e2;border-color:#6fae7a;}
+  .color-opt.incorrect{background:#f6dcd6;border-color:var(--coral);}
+  .check-result{display:none;font-family:'Public Sans',sans-serif;font-size:13.5px;color:#4b6b4f;margin-bottom:16px;}
+
+  .finish-bar{display:flex;align-items:center;gap:14px;margin-top:24px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:transform .12s;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--lamp);color:#26160a;}
+  .btn-primary:hover{background:#f0b768;}
+  .btn-outline{background:transparent;border:1.5px solid #c9b98a;color:#4a3f26;}
+
+  /* ---------- SIDE RAIL ---------- */
+  .side-rail{flex:0 0 240px;display:flex;flex-direction:column;gap:16px;}
+  .rail-card{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .rail-title{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:10px;font-weight:600;}
+  .word-chip{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:7px 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .word-chip:last-child{border-bottom:none;}
+  .word-en{color:var(--parchment);font-weight:600;}
+  .word-def{color:var(--slate);font-size:11.5px;}
+  .save-word{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--slate);font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .save-word.saved{background:var(--coral);border-color:var(--coral);color:#2a0f0a;}
+  .rail-meta-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--slate);padding:5px 0;}
+  .rail-meta-row b{color:var(--parchment);font-weight:600;}
+  .listen-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;}
+  .listen-btn:hover{border-color:var(--lamp-dim);}
+  .listen-btn.playing{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+  .strategy-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;}
+  .strategy-list li{font-size:12.5px;color:var(--parchment);padding-left:16px;position:relative;line-height:1.4;}
+  .strategy-list li::before{content:'✦';position:absolute;left:0;color:var(--lamp);font-size:10px;top:2px;}
+
+  @media(max-width:920px){
+    .reader-layout{flex-direction:column-reverse;align-items:center;}
+    .side-rail{flex:none;width:100%;max-width:680px;flex-direction:row;overflow-x:auto;}
+    .rail-card{min-width:220px;}
+    .page{padding:30px 22px;}
+    .ci-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <a class="back-link" href="#">← Biblioteca</a>
+  <div class="toolbar-title">Mariposa del aire</div>
+  <span class="toolbar-level">Auténtico</span>
+  <div class="toolbar-right">
+    <div class="font-controls">
+      <button onclick="changeFont(-1)" title="Texto más pequeño">A−</button>
+      <div class="divider"></div>
+      <button onclick="changeFont(1)" title="Texto más grande">A+</button>
+    </div>
+    <button class="tool-btn" id="glossToggle" onclick="toggleGloss()">🔤 Glosario: Activado</button>
+    <button class="tool-btn" id="nightToggle" onclick="toggleNight()">🌙 Luz de lámpara</button>
+  </div>
+</div>
+<div class="progress-rail"><div class="progress-rail-fill" id="progressFill"></div></div>
+
+<!-- AUTÉNTICO STRIP -->
+<div class="auth-strip">
+  <span class="auth-badge">✦ Texto auténtico</span>
+  <span class="auth-note">— poema original de Lorca, ideal como primera lectura auténtica para nivel A1–A2</span>
+</div>
+
+<!-- LAYOUT -->
+<div class="reader-layout">
+  <div class="page-wrap">
+    <div class="page" id="pageContent">
+      <div class="story-eyebrow">Poema · Federico García Lorca · España</div>
+      <h1 class="story-heading">Mariposa del aire</h1>
+      <div class="story-byline">de Federico García Lorca</div>
+
+      <div class="poem-body" id="poemBody">
+        <p>
+          <span class="poem-line">Mariposa del aire,</span>
+          <span class="poem-line">¡qué <span class="gloss" data-word="hermosa">hermosa</span><span class="gloss-tooltip">muy bonita<span class="arrow"></span></span> eres!</span>
+          <span class="poem-line">Mariposa del <span class="gloss" data-word="aire">aire</span><span class="gloss-tooltip">lo que respiramos; el cielo abierto<span class="arrow"></span></span></span>
+          <span class="poem-line"><span class="gloss" data-word="dorada">dorada</span><span class="gloss-tooltip">de color oro, amarillo brillante<span class="arrow"></span></span> y <span class="gloss" data-word="verde">verde</span><span class="gloss-tooltip">color como las plantas<span class="arrow"></span></span>.</span>
+        </p>
+        <p>
+          <span class="poem-line"><span class="gloss" data-word="luz">Luz</span><span class="gloss-tooltip">claridad; lo contrario de la oscuridad<span class="arrow"></span></span> del <span class="gloss" data-word="candil">candil</span><span class="gloss-tooltip">una lámpara antigua de aceite<span class="arrow"></span></span>,</span>
+          <span class="poem-line">mariposa del aire,</span>
+          <span class="poem-line">¡<span class="gloss" data-word="quédate">quédate</span><span class="gloss-tooltip">no te vayas; permanece aquí<span class="arrow"></span></span> ahí, ahí, ahí!</span>
+        </p>
+        <p>
+          <span class="poem-line">No te quieres <span class="gloss" data-word="parar">parar</span><span class="gloss-tooltip">detenerte, dejar de moverte<span class="arrow"></span></span>,</span>
+          <span class="poem-line">pararte no quieres.</span>
+        </p>
+      </div>
+
+      <div class="ci-section">
+        <div class="ci-title">Actividades para el aula</div>
+        <div class="ci-sub">Estrategias de instrucción comprensible (CI) sugeridas en el Book Passport — pensadas para disfrutar el poema, no para analizarlo.</div>
+        <div class="ci-grid">
+          <div class="ci-card"><b>🖼 Picture Talk</b>Muestra una imagen de una mariposa dorada y verde antes de leer.</div>
+          <div class="ci-card"><b>👋 Gesture Reading</b>Inventen un gesto para "quédate ahí" y "no te quieres parar".</div>
+          <div class="ci-card"><b>🗣 Choral Reading</b>Lean el poema todos juntos, en voz alta, más de una vez.</div>
+          <div class="ci-card"><b>🐢 Slow Motion Reading</b>Repitan la última estrofa muy despacio, como si el tiempo se detuviera.</div>
+          <div class="ci-card"><b>👉 Read & Point</b>Señalen "candil", "mariposa" y los colores mientras leen.</div>
+          <div class="ci-card"><b>🎨 Color Hunt</b>Busquen objetos dorados y verdes en el salón.</div>
+          <div class="ci-card"><b>✏️ Draw What You Hear</b>Dibujen la mariposa mientras escuchan el poema.</div>
+          <div class="ci-card"><b>🔢 Listen & Sequence</b>Ordenen tarjetas con las estrofas mientras escuchan.</div>
+        </div>
+
+        <div class="check-q">¿De qué colores es la mariposa del poema? (elige los dos correctos)</div>
+        <div class="color-opts" id="colorOpts">
+          <button class="color-opt" data-correct="true" onclick="answerColor(this)">Dorada</button>
+          <button class="color-opt" data-correct="true" onclick="answerColor(this)">Verde</button>
+          <button class="color-opt" data-correct="false" onclick="answerColor(this)">Azul</button>
+          <button class="color-opt" data-correct="false" onclick="answerColor(this)">Roja</button>
+        </div>
+        <div class="check-result" id="checkResult">¡Muy bien! Dorada y verde — igual que en el poema.</div>
+
+        <div class="finish-bar">
+          <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como leído</button>
+          <button class="btn btn-outline" onclick="alert('Volviendo a la biblioteca — tu progreso se guarda en Sigue leyendo.')">Guardar y salir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDE RAIL -->
+  <div class="side-rail">
+    <div class="rail-card">
+      <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
+    </div>
+    <div class="rail-card">
+      <div class="rail-title">Datos del poema</div>
+      <div class="rail-meta-row"><span>Nivel</span><b>A1–A2</b></div>
+      <div class="rail-meta-row"><span>Tiempo de lectura</span><b>2 min</b></div>
+      <div class="rail-meta-row"><span>Origen</span><b>España</b></div>
+      <div class="rail-meta-row"><span>Tema</span><b>Naturaleza, Colores</b></div>
+      <div class="rail-meta-row"><span>Estructuras</span><b>Es..., Quiere..., Hay...</b></div>
+    </div>
+    <div class="rail-card">
+      <div class="rail-title">Banco de palabras — este poema</div>
+      <div id="wordBank"></div>
+    </div>
+    <div class="rail-card">
+      <div class="rail-title">Notas para el maestro</div>
+      <ul class="strategy-list">
+        <li>Usa apoyo visual, gestos y repetición — prioriza el disfrute sobre el análisis.</li>
+        <li>Ideal como primer texto literario auténtico para principiantes.</li>
+        <li>Se conecta bien con arte y ciencias naturales.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+let fontSize = 20;
+let glossOn = true;
+let listening = false;
+
+function applyFont(){
+  document.getElementById('poemBody').style.fontSize = fontSize+'px';
+}
+function changeFont(delta){
+  fontSize = Math.min(28, Math.max(16, fontSize+delta*2));
+  applyFont();
+}
+
+function toggleGloss(){
+  glossOn = !glossOn;
+  document.getElementById('glossToggle').textContent = glossOn ? '🔤 Glosario: Activado' : '🔤 Glosario: Desactivado';
+  document.getElementById('glossToggle').classList.toggle('on', glossOn);
+  applyGlossState();
+}
+function applyGlossState(){
+  document.querySelectorAll('.gloss').forEach(g=>{
+    g.style.borderBottomColor = glossOn ? 'var(--coral)' : 'transparent';
+    g.style.cursor = glossOn ? 'help' : 'text';
+    g.style.fontWeight = glossOn ? '600' : '400';
+    if(!glossOn) g.classList.remove('tapped');
+  });
+}
+document.addEventListener('click', e=>{
+  if(e.target.closest('.gloss') && glossOn){
+    e.target.closest('.gloss').classList.toggle('tapped');
+  }
+});
+
+function toggleNight(){
+  const btn = document.getElementById('nightToggle');
+  btn.classList.toggle('on');
+  document.getElementById('pageContent').style.filter = btn.classList.contains('on') ? 'invert(1) hue-rotate(180deg)' : 'none';
+  btn.textContent = btn.classList.contains('on') ? '☀ Luz brillante' : '🌙 Luz de lámpara';
+}
+
+function toggleListen(){
+  listening = !listening;
+  const btn = document.getElementById('listenBtn');
+  btn.classList.toggle('playing', listening);
+  btn.textContent = listening ? '⏸ Reproduciendo narración…' : '🔊 Escuchar narración';
+}
+
+/* ---------------- WORD BANK ---------------- */
+const savedWords = new Set();
+function buildWordBank(){
+  const words = [...document.querySelectorAll('.gloss')];
+  const seen = new Set();
+  const bank = document.getElementById('wordBank');
+  bank.innerHTML = '';
+  words.forEach(w=>{
+    const word = w.dataset.word;
+    if(seen.has(word)) return; seen.add(word);
+    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const row = document.createElement('div');
+    row.className='word-chip';
+    row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
+      <button class="save-word ${savedWords.has(word)?'saved':''}" onclick="toggleSaveWord('${word}', this)">${savedWords.has(word)?'✓':'+'}</button>`;
+    bank.appendChild(row);
+  });
+}
+function toggleSaveWord(word, btn){
+  if(savedWords.has(word)){ savedWords.delete(word); btn.classList.remove('saved'); btn.textContent='+'; }
+  else { savedWords.add(word); btn.classList.add('saved'); btn.textContent='✓'; }
+}
+
+/* ---------------- COLOR HUNT CHECK ---------------- */
+let colorAnswered = false;
+let colorPicks = 0;
+function answerColor(btn){
+  if(colorAnswered || btn.disabled) return;
+  btn.disabled = true;
+  const correct = btn.dataset.correct === 'true';
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+  colorPicks++;
+  if(colorPicks >= 2){
+    colorAnswered = true;
+    document.querySelectorAll('#colorOpts .color-opt').forEach(o=>{
+      o.disabled = true;
+      if(o.dataset.correct==='true') o.classList.add('correct');
+    });
+    document.getElementById('checkResult').style.display='block';
+  }
+}
+
+function finishStory(){
+  if(!colorAnswered){
+    alert('Elige los dos colores del poema primero — solo toma un segundo.');
+    return;
+  }
+  document.getElementById('finishBtn').textContent = '✓ ¡Leído!';
+  document.getElementById('finishBtn').style.background = '#6fae7a';
+  setTimeout(()=> alert('¡Buena lectura! Este poema ahora aparece completo en tu estante.'), 300);
+}
+
+/* ---------------- SCROLL PROGRESS ---------------- */
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('progressFill').style.width = Math.min(100,scrolled)+'%';
+});
+
+/* ---------------- INIT ---------------- */
+applyFont();
+applyGlossState();
+buildWordBank();
+</script>
+</body>
+</html>

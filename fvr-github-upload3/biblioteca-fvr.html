@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca FVR — Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --navy: #26344d; --gold: #c9a24b; --gold-soft: #8a734a; --lamp: #e7b96b;
+    --green: #4c7a5e; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 60px; }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 22px; }
+  header { margin-bottom: 26px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.3rem; }
+  .subtitle { color: var(--parchment-dim); font-size: 0.95rem; margin-top: 8px; font-style: italic; }
+  .list { display: flex; flex-direction: column; gap: 10px; margin-top: 26px; }
+  .story { display: flex; align-items: center; gap: 18px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; text-decoration: none; color: var(--parchment); transition: border-color 0.15s ease; }
+  .story:hover { border-color: var(--gold); }
+  .story-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.1rem; flex: 1; }
+  .story-desc { font-size: 0.83rem; color: var(--parchment-dim); margin-top: 3px; }
+  .story-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--lamp); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← Cuentópolis</a>
+  <header>
+    <p class="eyebrow">Lectura libre · A1–B2</p>
+    <h1>Biblioteca FVR</h1>
+    <p class="subtitle">Lectura de libre elección — busca y elige tu próxima historia.</p>
+  </header>
+  <div class="list">
+    <a class="story" href="el_leon_y_el_raton_reader.html">
+      <div>
+        <div class="story-title">El león y el ratón</div>
+        <p class="story-desc">Fábula clásica</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="elly_la_remora_reader.html">
+      <div>
+        <div class="story-title">Elly, la rémora amigable</div>
+        <p class="story-desc">Historia original</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="tuti_la_oruga_curiosa_reader.html">
+      <div>
+        <div class="story-title">Tuti, la oruga curiosa</div>
+        <p class="story-desc">Historia original</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="los_dos_principes_reader.html">
+      <div>
+        <div class="story-title">Los dos príncipes</div>
+        <p class="story-desc">Cuento clásico</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="cuentos_de_la_selva_reader.html?story=tortuga-gigante">
+      <div>
+        <div class="story-title">La tortuga gigante</div>
+        <p class="story-desc">Horacio Quiroga · Cuentos de la selva</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="cuentos_de_la_selva_reader.html?story=medias-flamencos">
+      <div>
+        <div class="story-title">Las medias de los flamencos</div>
+        <p class="story-desc">Horacio Quiroga · Cuentos de la selva</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="cuentos_de_la_selva_reader.html?story=loro-pelado">
+      <div>
+        <div class="story-title">El loro pelado</div>
+        <p class="story-desc">Horacio Quiroga · Cuentos de la selva</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="cuentos_de_la_selva_reader.html?story=guerra-yacares">
+      <div>
+        <div class="story-title">La guerra de los yacarés</div>
+        <p class="story-desc">Horacio Quiroga · Cuentos de la selva</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="cuentos_de_la_selva_reader.html?story=gama-ciega">
+      <div>
+        <div class="story-title">La gama ciega</div>
+        <p class="story-desc">Horacio Quiroga · Cuentos de la selva</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="cuentos_de_la_selva_reader.html?story=coaties-ninos">
+      <div>
+        <div class="story-title">Historia de dos cachorros de coatí y de dos cachorros de hombre</div>
+        <p class="story-desc">Horacio Quiroga · Cuentos de la selva</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="cuentos_de_la_selva_reader.html?story=paso-yabebiri">
+      <div>
+        <div class="story-title">El paso del Yabebirí</div>
+        <p class="story-desc">Horacio Quiroga · Cuentos de la selva</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="cuentos_de_la_selva_reader.html?story=abeja-haragana">
+      <div>
+        <div class="story-title">La abeja haragana</div>
+        <p class="story-desc">Horacio Quiroga · Cuentos de la selva</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+    <a class="story" href="mariposa_del_aire_reader.html">
+      <div>
+        <div class="story-title">Mariposa del aire</div>
+        <p class="story-desc">Poesía</p>
+      </div>
+      <span class="story-tag">Abrir →</span>
+    </a>
+  </div>
+</div>
+</body>
+</html>
