@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Club del Barrio — Middle School 2, Episodio 2: El bienestar del grupo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #14110f;
+    --bg-dark-2: #1c1815;
+    --parchment: #f3ead9;
+    --parchment-dim: #e8dcc3;
+    --ink: #2a2118;
+    --ink-soft: #55483a;
+    --lamp-glow: rgba(230, 178, 96, 0.16);
+    --gold: #c99a4a;
+    --gold-bright: #e0b463;
+    --green-accent: #4f7d5c;
+    --green-bright: #6fa47e;
+    --rule: rgba(201, 154, 74, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse 900px 600px at 50% -10%, var(--lamp-glow), transparent 60%),
+      linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-dark-2) 100%);
+    font-family: 'Public Sans', sans-serif;
+    color: var(--parchment);
+    padding: 48px 20px 100px;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  h1.title {
+    font-family: 'Fraunces', serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-size: clamp(28px, 5vw, 42px);
+    text-align: center;
+    margin: 0 0 6px;
+    color: var(--parchment);
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--parchment-dim);
+    margin-bottom: 22px;
+  }
+
+  .pill-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 44px;
+  }
+
+  .pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    padding: 5px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    color: var(--gold-bright);
+    background: rgba(201, 154, 74, 0.08);
+  }
+
+  .page {
+    background: var(--parchment);
+    color: var(--ink);
+    border-radius: 4px;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.06);
+    padding: 48px 44px 40px;
+    position: relative;
+  }
+
+  .page::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-bright), var(--gold));
+    border-radius: 4px 4px 0 0;
+  }
+
+  .historia p {
+    font-family: 'Source Serif 4', serif;
+    font-size: 19px;
+    line-height: 1.75;
+    margin: 0 0 20px;
+    color: var(--ink);
+  }
+
+  .historia p:first-of-type::first-letter {
+    font-family: 'Fraunces', serif;
+    font-size: 56px;
+    font-weight: 600;
+    float: left;
+    line-height: 0.8;
+    margin: 8px 8px 0 0;
+    color: var(--gold);
+  }
+
+  .vocab-hl {
+    background: rgba(201, 154, 74, 0.22);
+    border-bottom: 2px solid var(--gold);
+    padding: 0 2px;
+    border-radius: 2px;
+    font-weight: 600;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px dashed var(--ink-soft);
+    opacity: 0.3;
+    margin: 32px 0;
+  }
+
+  .pregunta-box {
+    background: rgba(79, 125, 92, 0.08);
+    border-left: 4px solid var(--green-accent);
+    padding: 18px 22px;
+    border-radius: 0 6px 6px 0;
+    margin-top: 8px;
+  }
+
+  .pregunta-box .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .pregunta-box p {
+    font-family: 'Source Serif 4', serif;
+    font-size: 18px;
+    font-style: italic;
+    margin: 0;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  section.card {
+    background: var(--parchment);
+    color: var(--ink);
+    border-radius: 4px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.06);
+    padding: 32px 36px;
+    margin-top: 28px;
+  }
+
+  section.card h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin: 0 0 18px;
+    color: var(--ink);
+  }
+
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .word-chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    background: rgba(79, 125, 92, 0.1);
+    border: 1px solid rgba(79, 125, 92, 0.35);
+    color: var(--green-accent);
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+
+  .glossary dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    row-gap: 12px;
+    column-gap: 18px;
+    margin: 0;
+  }
+
+  .glossary dt {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .glossary dd {
+    font-family: 'Source Serif 4', serif;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .comp-check ol {
+    padding-left: 22px;
+    margin: 0;
+  }
+
+  .comp-check li {
+    font-family: 'Source Serif 4', serif;
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+
+  .comp-check textarea {
+    width: 100%;
+    margin-top: 6px;
+    border: 1px solid rgba(42,33,24,0.2);
+    border-radius: 6px;
+    padding: 10px;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 44px;
+    background: rgba(255,255,255,0.5);
+    color: var(--ink);
+  }
+
+  .tier-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+
+  .tier-tab {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(42,33,24,0.18);
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .tier-tab:hover { border-color: var(--gold); color: var(--ink); }
+
+  .tier-tab.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--parchment);
+  }
+
+  .tier-tab:focus-visible { outline: 3px solid var(--gold-bright); outline-offset: 2px; }
+
+  .tier-panel { display: none; }
+  .tier-panel.active { display: block; }
+
+  .tier-label-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    padding: 2px 10px;
+    margin-bottom: 14px;
+  }
+
+  .journal-prompt {
+    background: rgba(79, 125, 92, 0.06);
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+
+  .journal-prompt p { margin: 0 0 8px; }
+
+  .desafio-box {
+    background: rgba(201, 154, 74, 0.08);
+    border-radius: 6px;
+    padding: 18px 20px;
+  }
+
+  .desafio-box p { margin: 0 0 8px; }
+  .desafio-box p:last-child { margin-bottom: 0; }
+
+  .paper-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(42, 33, 24, 0.05);
+    border: 1px dashed rgba(42, 33, 24, 0.35);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-top: 4px;
+  }
+
+  .paper-callout .icon { font-size: 22px; line-height: 1; }
+
+  .paper-callout p {
+    margin: 0;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+
+
+  /* Teacher modal trigger */
+  .teacher-btn {
+    position: fixed;
+    bottom: 26px;
+    right: 26px;
+    background: var(--green-accent);
+    color: #fff;
+    border: none;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 14px 20px;
+    border-radius: 999px;
+    box-shadow: 0 10px 30px rgba(79,125,92,0.45);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+
+  .teacher-btn:hover { background: var(--green-bright); transform: translateY(-1px); }
+  .teacher-btn:focus-visible { outline: 3px solid var(--gold-bright); outline-offset: 2px; }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 8, 6, 0.72);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 50;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--parchment);
+    color: var(--ink);
+    max-width: 640px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    padding: 32px 34px;
+    position: relative;
+    box-shadow: 0 40px 90px rgba(0,0,0,0.55);
+  }
+
+  .modal h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 24px;
+    margin: 0 0 4px;
+    color: var(--green-accent);
+  }
+
+  .modal .modal-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+  }
+
+  .modal h3 {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    margin: 22px 0 8px;
+  }
+
+  .modal p, .modal li {
+    font-family: 'Source Serif 4', serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin: 0 0 8px;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 18px; right: 18px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+
+  .modal-copy {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--green-accent);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+
+  .modal-copy:hover { background: var(--green-bright); }
+
+  .modal-copy.copied::after {
+    content: " ✓ Copiado";
+  }
+
+  .activity-shuffle {
+    background: rgba(79, 125, 92, 0.07);
+    border: 1px solid rgba(79, 125, 92, 0.25);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-top: 8px;
+  }
+
+  .activity-mode-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .mode-btn {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(79, 125, 92, 0.4);
+    background: transparent;
+    color: var(--green-accent);
+    cursor: pointer;
+  }
+
+  .mode-btn.active {
+    background: var(--green-accent);
+    border-color: var(--green-accent);
+    color: #fff;
+  }
+
+  .activity-display {
+    font-family: 'Source Serif 4', serif;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink);
+    min-height: 48px;
+    margin-bottom: 12px;
+  }
+
+  .activity-display .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .activity-display .act-name {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .activity-display .act-time {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green-accent);
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+
+  .activity-display .act-tip {
+    font-family: 'Public Sans', sans-serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-soft);
+    display: block;
+    margin-top: 6px;
+  }
+
+  .shuffle-btn {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    background: var(--ink);
+    color: var(--parchment);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .shuffle-btn:hover { background: #3a2f22; }
+
+  #teacher-note-text { display: none; }
+
+  footer.meta {
+    text-align: center;
+    margin-top: 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--parchment-dim);
+    opacity: 0.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+
+  @media (max-width: 600px) {
+    .page, section.card, .modal { padding: 26px 20px; }
+    .historia p { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">El Club del Barrio · Middle School 2</div>
+  <h1 class="title">El bienestar del grupo</h1>
+  <div class="subtitle">MS2 — Episodio 2 — Healthy Lifestyle</div>
+  <div class="pill-row">
+    <span class="pill">A2/B1 · nivel intermedio</span>
+  </div>
+
+  <article class="page">
+    <div class="historia">
+      <p>Es lunes por la tarde. El grupo está en Guanacaste Park, cada quien haciendo algo diferente.</p>
+
+      <p>Sofía corre alrededor del parque. —¡Correr me ayuda a sentirme bien! —dice Sofía—. Hago <span class="vocab-hl">deporte</span> casi todos los días.</p>
+
+      <p>Ana Lucía se pone crema en las manos. —Yo tengo mi <span class="vocab-hl">rutina de cuidado personal</span> —dice Ana Lucía—. Me ayuda a relajarme después de un día largo.</p>
+
+      <p>Diego está sentado bajo un árbol, mirando el cielo. —Yo necesito tiempo al aire libre —dice Diego—. Estar afuera me ayuda a pensar con calma.</p>
+
+      <p>Camila mira su teléfono, jugando un videojuego. —Yo juego videojuegos —dice Camila—. Pero también camino un poco cada hora. Es importante <span class="vocab-hl">moverse</span>.</p>
+
+      <p>Mateo llega con su cuaderno, pero esta vez no está tan organizado como antes. —Estoy tratando de encontrar <span class="vocab-hl">balance</span> —dice Mateo—. Un poco de estudio, un poco de descanso, un poco de tiempo con ustedes.</p>
+
+      <p>—¡Qué bien, Mateo! —dice Sofía—. Se nota el cambio.</p>
+
+      <p>En ese momento, llega Profe Rivera.</p>
+
+      <p>—¡Hola, chicos! ¿Qué hacen?</p>
+
+      <p>—Cada persona tiene una manera diferente de sentirse bien —dice Ana Lucía—. Sofía corre, yo tengo mi rutina, Diego pasa tiempo afuera, Camila camina un poco, y Mateo busca balance.</p>
+
+      <p>—Me encanta eso —dice Profe Rivera—. Todos ustedes cuidan su... eh... ¿cómo se dice esto en inglés? —Profe Rivera piensa un momento—. Es como... sentirte bien, por dentro y por fuera, en tu cuerpo y en tu mente...</p>
+
+      <p>—¿"Well-being"? —pregunta Diego.</p>
+
+      <p>—¡Eso es, Diego! "Well-being" —dice Profe Rivera—. En español decimos "<span class="vocab-hl">bienestar</span>".</p>
+
+      <p>—¿Bienestar es solo el cuerpo? —pregunta Mateo.</p>
+
+      <p>—No —dice Profe Rivera—. El bienestar incluye el cuerpo Y la <span class="vocab-hl">mente</span>. ¿Recuerdan cuando hablamos de la dieta balanceada el año pasado?</p>
+
+      <p>—¡Sí! —dice Camila—. Con las meriendas en el picnic.</p>
+
+      <p>—Bueno, el bienestar es parecido —dice Profe Rivera—. Necesitas balance: ejercicio, descanso, tiempo para relajarte, y tiempo para tu mente también.</p>
+
+      <p>—Entonces, ¿cuidar tu mente es tan importante como cuidar tu cuerpo? —pregunta Mateo.</p>
+
+      <p>—Exactamente —dice Profe Rivera—. Los dos son parte del bienestar.</p>
+
+      <p>El grupo sigue disfrutando la tarde, cada quien a su manera, en Guanacaste Park.</p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="pregunta-box">
+      <span class="label">La Pregunta del Día</span>
+      <p>¿Qué haces tú para sentirte bien, física y mentalmente?</p>
+    </div>
+  </article>
+
+  <section class="card">
+    <h2>📖 Banco de palabras</h2>
+    <div class="word-bank">
+      <span class="word-chip">deporte</span>
+      <span class="word-chip">rutina</span>
+      <span class="word-chip">moverse</span>
+      <span class="word-chip">balance</span>
+      <span class="word-chip">bienestar</span>
+      <span class="word-chip">mente</span>
+      <span class="word-chip">relajarse</span>
+      <span class="word-chip">descanso</span>
+    </div>
+  </section>
+
+  <section class="card glossary">
+    <h2>🔤 Glosario</h2>
+    <dl>
+      <dt>deporte</dt><dd>sport</dd>
+      <dt>rutina</dt><dd>routine</dd>
+      <dt>moverse</dt><dd>to move (oneself)</dd>
+      <dt>balance</dt><dd>balance</dd>
+      <dt>bienestar</dt><dd>well-being</dd>
+      <dt>mente</dt><dd>mind</dd>
+      <dt>relajarse</dt><dd>to relax</dd>
+      <dt>descanso</dt><dd>rest</dd>
+    </dl>
+  </section>
+
+  <section class="card">
+    <h2>🎚️ Elige tu nivel</h2>
+    <div class="tier-tabs" role="tablist" aria-label="Selector de nivel">
+      <button class="tier-tab active" data-tier="1" onclick="setTier(1)">Nivel 1 · Emergente</button>
+      <button class="tier-tab" data-tier="2" onclick="setTier(2)">Nivel 2 · A2</button>
+      <button class="tier-tab" data-tier="3" onclick="setTier(3)">Nivel 3 · Reto B1</button>
+    </div>
+
+    <h2>✅ Comprensión</h2>
+
+    <div class="tier-panel active" data-tierpanel="1">
+      <span class="tier-label-badge">Nivel 1</span>
+      <ol>
+        <li>¿Quién corre en el parque? <em>(Sofía / Ana Lucía / Diego)</em>
+          <textarea rows="1" placeholder="Escribe el nombre..."></textarea>
+        </li>
+        <li>¿Cómo se dice "bienestar" en inglés? <em>(well-being / balance / rest)</em>
+          <textarea rows="1" placeholder="Escribe la palabra..."></textarea>
+        </li>
+      </ol>
+    </div>
+
+    <div class="tier-panel" data-tierpanel="2">
+      <span class="tier-label-badge">Nivel 2</span>
+      <ol>
+        <li>¿Qué hace cada personaje para sentirse bien?
+          <textarea rows="2" placeholder="Escribe tu respuesta aquí..."></textarea>
+        </li>
+        <li>¿Cómo conecta esta conversación con la "dieta balanceada" de Middle School 1?
+          <textarea rows="2" placeholder="Escribe tu respuesta aquí..."></textarea>
+        </li>
+      </ol>
+    </div>
+
+    <div class="tier-panel" data-tierpanel="3">
+      <span class="tier-label-badge">Nivel 3</span>
+      <ol>
+        <li>Profe Rivera dice que el bienestar incluye el cuerpo Y la mente. ¿Por qué crees que a veces solo pensamos en el cuerpo cuando hablamos de estar sanos?
+          <textarea rows="3" placeholder="Escribe tu respuesta aquí..."></textarea>
+        </li>
+        <li>Mateo cambió su manera de estudiar desde el episodio pasado. ¿Cómo se relaciona ese cambio con el tema del bienestar en este episodio?
+          <textarea rows="3" placeholder="Escribe tu respuesta aquí..."></textarea>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>📓 Mi Conexión</h2>
+    <div class="paper-callout" style="margin-bottom: 20px;">
+      <span class="icon">✏️</span>
+      <p>Escribe tu respuesta en tu Cuaderno de El Club del Barrio — no aquí en la pantalla.</p>
+    </div>
+
+    <div class="tier-panel active" data-tierpanel="1">
+      <span class="tier-label-badge">Nivel 1</span>
+      <div class="journal-prompt">
+        <p>Completa las oraciones en tu cuaderno:</p>
+        <p><em>Yo me siento bien cuando ______.</em></p>
+        <p><em>Para relajarme, yo ______.</em></p>
+      </div>
+    </div>
+
+    <div class="tier-panel" data-tierpanel="2">
+      <span class="tier-label-badge">Nivel 2</span>
+      <div class="journal-prompt">
+        <p>En tu cuaderno, escribe 3-5 oraciones sobre tu propia rutina de bienestar. ¿Te pareces más a Sofía, Ana Lucía, Diego, Camila o Mateo?</p>
+      </div>
+    </div>
+
+    <div class="tier-panel" data-tierpanel="3">
+      <span class="tier-label-badge">Nivel 3</span>
+      <div class="journal-prompt">
+        <p>En tu cuaderno, escribe un párrafo (6-8 oraciones) explicando qué significa el bienestar para ti. Incluye ejemplos de cómo cuidas tu cuerpo y tu mente.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🎯 Desafío Conexiones</h2>
+
+    <div class="tier-panel active" data-tierpanel="1">
+      <span class="tier-label-badge">Nivel 1</span>
+      <div class="desafio-box">
+        <p>Dibuja tres cosas que haces para sentirte bien y etiqueta cada una en español.</p>
+      </div>
+    </div>
+
+    <div class="tier-panel" data-tierpanel="2">
+      <span class="tier-label-badge">Nivel 2</span>
+      <div class="desafio-box">
+        <p>Crea un cartel (Canva o papel) con tus 3 mejores consejos de bienestar, incluyendo cuerpo y mente.</p>
+      </div>
+    </div>
+
+    <div class="tier-panel" data-tierpanel="3">
+      <span class="tier-label-badge">Nivel 3</span>
+      <div class="desafio-box">
+        <p>Crea una campaña de concientización sobre el bienestar (cartel, video, o presentación) para tu escuela, incluyendo consejos prácticos para el cuerpo y la mente.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="meta">EL CLUB DEL BARRIO · MIDDLE SCHOOL 2 · EPISODIO 2 · A2/B1</footer>
+</div>
+
+<button class="teacher-btn" onclick="document.getElementById('teacher-modal').classList.add('open')">
+  🎓 Notas del maestro
+</button>
+
+<div class="modal-overlay" id="teacher-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('teacher-modal').classList.remove('open')" aria-label="Cerrar">✕</button>
+    <h2>Notas del maestro</h2>
+    <div class="modal-sub">El Club del Barrio · Middle School 2 · Episodio 2</div>
+
+    <div id="teacher-note-content">
+      <h3>Unidad curricular</h3>
+      <p>Middle School 2 (SPANISH_LV_7) — E02: Healthy Lifestyle.</p>
+
+      <h3>Nivel original</h3>
+      <p>A2/B1, según la designación curricular propia de MS2 — el input comprensible sigue siendo la prioridad guía, el techo no se baja artificialmente como se hizo en MS1.</p>
+
+      <h3>Objetivos lingüísticos</h3>
+      <p><strong>Listening:</strong> comprender material oral sobre estilo de vida saludable y bienestar.</p>
+      <p><strong>Speaking:</strong> preguntar y responder sobre estilo de vida saludable y cuidado personal; explicar qué se hace para sentirse bien.</p>
+      <p><strong>Reading:</strong> leer/comprender textos informativos sobre bienestar físico y mental; extraer información relevante de textos auténticos.</p>
+      <p><strong>Writing:</strong> describir una rutina diaria enfocada en comer, dormir y actividades de ocio; escribir dos a tres párrafos persuasivos comparando hábitos de estilo de vida saludable.</p>
+
+      <h3>Estructuras de alta frecuencia</h3>
+      <p>Para sentirme bien, yo... · Es importante + infinitivo (es importante descansar, es importante moverse) · Comparaciones (X es tan importante como Y) · Vocabulario de bienestar/rutina en presente simple.</p>
+
+      <h3>Notas de ritmo (CEFR / CI)</h3>
+      <p>A2/B1 según la designación propia de MS2 — ritmo distribuido en el ciclo semanal de 5 días: Día 1 lectura en voz alta/primer contacto, Día 2 circling/relectura, Día 3 día de adivinanzas ¿Cómo se dice?, Día 4 Story Asking/Reader's Theater, Día 5 recuento + cierre, luego evaluación sumativa.</p>
+      <p>El principio de input comprensible continúa: repetición alta, estructuras de alta frecuencia, apoyo visual/gestual, calibrado al piso ligeramente más alto de MS2 comparado con MS1.</p>
+
+      <h3>Content sensitivity flags</h3>
+      <p>El contenido de salud/bienestar se mantiene general y no clínico — sin números específicos de dieta, descripciones corporales, o contenido relacionado con el peso; la salud mental se enmarca solo como autocuidado cotidiano (descanso, pausas, balance), no como ningún diagnóstico o trastorno. Ninguna rutina de ningún personaje se juzga como más "correcta" que otra; todas las formas de autocuidado presentadas son igualmente válidas.</p>
+
+      <h3>Huellas del Viajero</h3>
+      <p>No se introduce un personaje visitante en este episodio — espacio reservado para un episodio futuro de MS2 donde un visitante encaje naturalmente.</p>
+
+      <h3>Notas de continuidad</h3>
+      <p>Segundo episodio de Middle School 2 — el mundo ya está establecido, comienza directamente en la escena del día, sin introducción narrativa.</p>
+      <p>Trama: el grupo comparte diferentes rutinas para sentirse bien — Sofía con deportes, Ana Lucía con una rutina de cuidado personal, Diego con tiempo al aire libre, Camila balanceando videojuegos con pausas de movimiento, y Mateo aplicando la lección de balance del Episodio 1 de MS2. Profe Rivera introduce "bienestar" como concepto que cubre cuerpo y mente, y el grupo hace un callback a la "dieta balanceada" de MS1 Episodio 3.</p>
+
+      <h3>Pendiente (deferred)</h3>
+      <p>Contenido de Conexión Cultural — señalado como dentro del alcance para la construcción completa del episodio, pero no detallado en este lector Foundation.</p>
+
+      <h3>💡 Sugerencia de actividad rápida</h3>
+      <p style="font-size: 13px; color: var(--ink-soft); margin-bottom: 10px;">Para terminadores tempranos o dinámicas de relleno — no se implementa fuera de este lector.</p>
+      <div class="activity-shuffle">
+        <div class="activity-mode-toggle">
+          <button class="mode-btn active" data-mode="interactiva" onclick="setActivityMode('interactiva')">🗣️ Comunicación Interactiva</button>
+          <button class="mode-btn" data-mode="narracion" onclick="setActivityMode('narracion')">📚 Narración de Historias</button>
+          <button class="mode-btn" data-mode="lectura" onclick="setActivityMode('lectura')">✍️ Lectura y Escritura</button>
+        </div>
+        <div class="activity-display" id="activity-display">
+          <span class="tag" id="activity-tag">Comunicación Interactiva</span>
+          <span id="activity-text">Presiona "Otra sugerencia" para empezar.</span>
+        </div>
+        <button class="shuffle-btn" onclick="shuffleActivity()">🔀 Otra sugerencia</button>
+      </div>
+    </div>
+
+    <button class="modal-copy" id="copy-btn" onclick="copyNotes()">📋 Copiar notas</button>
+  </div>
+</div>
+
+<script>
+    const ACTIVITIES = {
+    interactiva: [
+      { name: "Picture Talk", time: "10-15 min", desc: "Muestra una imagen y dirige una discusión en el idioma meta, haciendo preguntas y narrando la escena.", tip: "Usa imágenes culturalmente relevantes o conectadas a los intereses de los estudiantes. Mantén las preguntas simples y aumenta la complejidad gradualmente." },
+      { name: "PQA (Preguntas y Respuestas Personalizadas)", time: "10-12 min", desc: "Haz preguntas personalizadas a los estudiantes sobre un tema, animándolos a responder en el idioma meta.", tip: "Adapta las preguntas a la vida de los estudiantes para que la conversación sea relevante. Usa apoyos visuales o gestos." },
+      { name: "Special Person Interviews", time: "10-15 min", desc: "Entrevista a un estudiante a la vez, enfocándote en sus gustos, disgustos y experiencias personales.", tip: "Prepara las preguntas de antemano y anima a los estudiantes a responder con detalle. Úsalo regularmente para construir comunidad." },
+      { name: "Card Talk", time: "15-20 min", desc: "Los estudiantes dibujan o traen imágenes relacionadas con un tema (pasatiempos, comidas favoritas) y las discuten en el idioma meta.", tip: "Permite que los estudiantes preparen sus imágenes con anticipación. Úsalo para introducir o reforzar vocabulario." },
+      { name: "Weekend Chats", time: "10-15 min", desc: "Discute lo que los estudiantes hicieron el fin de semana, usando el tiempo pasado y fomentando respuestas detalladas.", tip: "Modela las respuestas antes de pedir que los estudiantes compartan. Usa apoyos visuales como imágenes o líneas de tiempo." },
+      { name: "Calendar Talk", time: "5-7 min", desc: "Discute el día, la fecha, el clima y eventos especiales, usando el idioma meta para construir rutina y familiaridad.", tip: "Incorpora preguntas y participación estudiantil. Usa visuales como calendarios e íconos del clima." }
+    ],
+    narracion: [
+      { name: "Story Listening", time: "15-20 min", desc: "Cuenta una historia en el idioma meta, usando gestos, dibujos y objetos para mejorar la comprensión.", tip: "Elige historias simples y atractivas. Usa repetición y variación para reforzar vocabulario y estructuras clave." },
+      { name: "Write and Discuss", time: "10-15 min", desc: "Después de una discusión o actividad de narración, escriban juntos un resumen como clase, reforzando el lenguaje usado.", tip: "Anima la participación estudiantil durante la escritura. Usa el resumen escrito como actividad de lectura en una lección posterior." },
+      { name: "Movie Talk", time: "15-20 min", desc: "Reproduce un video corto y pausa para describir escenas, hacer preguntas y discutir lo que sucede en el idioma meta.", tip: "Elige clips con imágenes claras y diálogo mínimo. Mira el clip antes para planear las pausas y puntos de discusión." }
+    ],
+    lectura: [
+      { name: "One Word at a Time", time: "10-12 min", desc: "Crea una historia con la clase, añadiendo una palabra a la vez, fomentando la creatividad y el uso del idioma.", tip: "Comienza con una idea o tema guía. Permite que los estudiantes sugieran palabras y frases, apoyando según sea necesario." },
+      { name: "Embedded Reading", time: "15-25 min", desc: "Presenta un texto en el idioma meta en varios niveles de complejidad, revelando más detalles a medida que crece la comprensión.", tip: "Comienza con una versión simplificada y haz preguntas de comprensión antes de pasar al siguiente nivel. Anima predicciones y conexiones." },
+      { name: "Volleyball Reading", time: "15-20 min", desc: "En parejas, un estudiante lee una oración o párrafo en el idioma meta y el otro traduce. Luego cambian de turno.", tip: "Elige textos al nivel de los estudiantes y que ya conozcan, para que se enfoquen en las estructuras y el vocabulario." },
+      { name: "Draw the Sentence", time: "15-20 min", desc: "En parejas, cada estudiante elige una oración del texto y hace un dibujo simple que la represente. Luego intercambian y buscan la oración correspondiente.", tip: "Elige textos al nivel de los estudiantes y que ya conozcan, para que puedan ubicar la oración rápidamente." },
+      { name: "Running Dictation", time: "15-20 min", desc: "Coloca oraciones alrededor del salón. En parejas, un estudiante corre a leer la oración y el otro la escribe.", tip: "Asegúrate de que las oraciones sean cortas y relacionadas con los temas actuales. Enfatiza la precisión al leer y escribir." },
+      { name: "Dictation with a Twist", time: "10-15 min", desc: "Lee una oración en voz alta; los estudiantes la escriben y luego la modifican según una indicación (cambiar el tiempo verbal, añadir un detalle).", tip: "Comienza con oraciones simples y aumenta la complejidad gradualmente. Da indicaciones que fomenten la creatividad." }
+    ]
+  };
+
+  const MODE_LABELS = {
+    interactiva: "Comunicación Interactiva",
+    narracion: "Narración de Historias",
+    lectura: "Lectura y Escritura"
+  };
+
+  let currentActivityMode = 'interactiva';
+
+  function setActivityMode(mode) {
+    currentActivityMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+    document.getElementById('activity-tag').textContent = MODE_LABELS[mode];
+    document.getElementById('activity-text').innerHTML = 'Presiona "Otra sugerencia" para empezar.';
+  }
+
+  function shuffleActivity() {
+    const list = ACTIVITIES[currentActivityMode];
+    const pick = list[Math.floor(Math.random() * list.length)];
+    document.getElementById('activity-text').innerHTML =
+      '<span class="act-name">' + pick.name + '</span>' +
+      '<span class="act-time">⏱ ' + pick.time + '</span><br>' +
+      pick.desc +
+      '<span class="act-tip">💡 ' + pick.tip + '</span>';
+  }
+
+  function setTier(n) {
+    document.querySelectorAll('.tier-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tier == n);
+    });
+    document.querySelectorAll('.tier-panel').forEach(panel => {
+      panel.classList.toggle('active', panel.dataset.tierpanel == n);
+    });
+  }
+
+  function copyNotes() {
+    const text = document.getElementById('teacher-note-content').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.classList.add('copied');
+      setTimeout(() => btn.classList.remove('copied'), 2000);
+    });
+  }
+
+  document.getElementById('teacher-modal').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+</script>
+
+</body>
+</html>

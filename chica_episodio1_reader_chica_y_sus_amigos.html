@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Hola, Chica! — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c1024; --ink-2:#12172e; --ink-3:#1a2040;
+    --lamp:#e8a94c; --lamp-dim:#c98a34; --coral:#e8735c;
+    --parchment:#f3e9d6; --parchment-dim:#e4d6b8; --page:#faf3e4;
+    --slate:#8891a8; --slate-dim:#5c6480;
+    --leaf:#5fa876; --leaf-dim:#3d7d55;
+    --line: rgba(232,169,76,0.16);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--parchment);font-family:'Public Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;}
+  button{font-family:'Public Sans',sans-serif;cursor:pointer;}
+
+  /* ---------- TOP BAR ---------- */
+  .toolbar{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;gap:16px;padding:12px 24px;
+    background:rgba(9,12,26,0.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .back-link{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--slate);border:1px solid var(--line);padding:7px 12px;border-radius:20px;background:rgba(255,255,255,0.03);}
+  .back-link:hover{color:var(--parchment);border-color:var(--lamp-dim);}
+  .toolbar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;}
+  .toolbar-series{font-size:11px;color:var(--slate);}
+  .toolbar-level{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:1.5px solid var(--lamp);color:var(--lamp);border-radius:5px;padding:2px 7px;}
+  .toolbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .tool-btn{
+    display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);
+    background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;transition:background .15s, border-color .15s;
+  }
+  .tool-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--lamp-dim);}
+  .tool-btn.on{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+  .tool-btn.teacher{border-color:var(--leaf-dim);color:var(--leaf);}
+  .tool-btn.teacher:hover{background:rgba(95,168,118,0.12);}
+  .font-controls{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .font-controls button{background:rgba(255,255,255,0.03);color:var(--parchment);border:none;padding:8px 12px;font-size:13px;}
+  .font-controls button:hover{background:rgba(255,255,255,0.1);}
+  .font-controls .divider{width:1px;background:var(--line);align-self:stretch;}
+
+  .progress-rail{height:3px;background:var(--ink-3);position:sticky;top:57px;z-index:39;}
+  .progress-rail-fill{height:100%;background:linear-gradient(90deg,var(--lamp),var(--coral));width:0%;transition:width .1s linear;}
+
+  /* ---------- LEVEL SWITCH STRIP ---------- */
+  .level-strip{display:flex;align-items:center;gap:10px;justify-content:center;padding:18px 24px 4px;flex-wrap:wrap;}
+  .level-strip-label{font-size:12.5px;color:var(--slate);}
+  .level-pill{
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:6px 13px;border-radius:20px;
+    border:1.5px solid var(--line);color:var(--slate);background:rgba(255,255,255,0.03);
+  }
+  .level-pill:hover{border-color:var(--lamp-dim);color:var(--parchment);}
+  .level-pill.active{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  /* ---------- LAYOUT ---------- */
+  .reader-layout{display:flex;justify-content:center;gap:28px;padding:20px 24px 80px;max-width:1180px;margin:0 auto;}
+  .page-wrap{flex:1 1 680px;max-width:680px;}
+  .page{
+    background:var(--page);color:#2c2412;border-radius:14px;padding:44px 52px;box-shadow:0 30px 60px rgba(0,0,0,0.4);
+    font-family:'Source Serif 4', serif; line-height:1.85; position:relative;
+  }
+  .page::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--lamp),var(--coral));border-radius:14px 14px 0 0;}
+  .story-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lamp-dim);margin-bottom:6px;}
+  .story-heading{font-family:'Fraunces',serif;font-size:30px;margin:0 0 6px;color:#241d0e;}
+  .story-subheading{font-family:'Public Sans',sans-serif;font-size:13.5px;color:#8a7a52;margin-bottom:22px;font-weight:600;}
+  .story-body p{margin:0 0 20px;}
+  .story-body h3{font-size:17px;color:#5c4a1f;margin:26px 0 12px;font-family:'Fraunces',serif;}
+  .gloss{border-bottom:2px dotted var(--coral);cursor:help;position:relative;color:#241d0e;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(232,115,92,0.16);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--ink-2);color:var(--parchment);border:1px solid var(--line);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+
+  /* ---------- COMPREHENSION ---------- */
+  .comp-check{margin-top:8px;padding-top:28px;border-top:1px dashed var(--parchment-dim);}
+  .comp-title{font-family:'Fraunces',serif;font-size:19px;margin:0 0 4px;color:#241d0e;}
+  .comp-sub{font-family:'Public Sans',sans-serif;font-size:13px;color:#6b5e42;margin-bottom:18px;}
+  .comp-q{font-family:'Public Sans',sans-serif;font-size:14.5px;font-weight:600;color:#241d0e;margin-bottom:10px;}
+  .comp-options{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
+  .comp-opt{
+    font-family:'Public Sans',sans-serif;text-align:left;padding:10px 14px;border-radius:8px;border:1.5px solid #d8cba3;
+    background:#fffaf0;font-size:13.5px;color:#3a3120;
+  }
+  .comp-opt:hover{border-color:var(--coral);}
+  .comp-opt.correct{background:#dff1e2;border-color:#6fae7a;}
+  .comp-opt.incorrect{background:#f6dcd6;border-color:var(--coral);}
+  .comp-result{display:none;font-family:'Public Sans',sans-serif;font-size:13.5px;color:#4b6b4f;margin-top:-10px;margin-bottom:16px;}
+
+  .finish-bar{display:flex;align-items:center;gap:14px;margin-top:24px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:transform .12s;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--lamp);color:#26160a;}
+  .btn-primary:hover{background:#f0b768;}
+  .btn-outline{background:transparent;border:1.5px solid #c9b98a;color:#4a3f26;}
+
+  /* ---------- SIDE RAIL ---------- */
+  .side-rail{flex:0 0 250px;display:flex;flex-direction:column;gap:16px;}
+  .rail-card{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .rail-title{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:10px;font-weight:600;display:flex;align-items:center;gap:6px;}
+  .word-chip{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:7px 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .word-chip:last-child{border-bottom:none;}
+  .word-en{color:var(--parchment);font-weight:600;}
+  .word-def{color:var(--slate);font-size:11.5px;}
+  .save-word{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--slate);font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .save-word.saved{background:var(--coral);border-color:var(--coral);color:#2a0f0a;}
+  .rail-meta-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--slate);padding:5px 0;}
+  .rail-meta-row b{color:var(--parchment);font-weight:600;}
+  .listen-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;}
+  .listen-btn:hover{border-color:var(--lamp-dim);}
+  .listen-btn.playing{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  /* Huellas del Viajero card */
+  .traveler-card{background:linear-gradient(160deg, rgba(95,168,118,0.14), rgba(95,168,118,0.03));border-color:rgba(95,168,118,0.3);}
+  .traveler-name{font-family:'Fraunces',serif;font-size:17px;color:var(--parchment);margin-bottom:2px;}
+  .traveler-tag{font-size:11.5px;color:var(--leaf);margin-bottom:10px;font-weight:600;}
+  .traveler-row{display:flex;gap:8px;font-size:12px;color:var(--slate);padding:4px 0;line-height:1.4;}
+  .traveler-row .lbl{flex:0 0 76px;color:var(--leaf);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:1px;}
+  .traveler-note{margin-top:10px;padding-top:10px;border-top:1px solid rgba(95,168,118,0.2);font-size:11px;color:var(--slate-dim);font-style:italic;}
+
+  /* Palabra del Bosque / Pregunta de Don Pico */
+  .forest-word{font-family:'Fraunces',serif;font-style:italic;font-size:21px;color:var(--lamp);margin-bottom:4px;}
+  .forest-word-def{font-size:12.5px;color:var(--slate);margin-bottom:14px;}
+  .pico-q{font-size:13px;color:var(--parchment);line-height:1.55;padding:12px;background:rgba(232,169,76,0.06);border-radius:8px;border-left:3px solid var(--lamp);font-style:italic;}
+
+  /* ---------- TEACHER NOTES MODAL ---------- */
+  .modal-overlay{position:fixed;inset:0;background:rgba(6,8,18,0.78);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;max-width:600px;width:100%;max-height:86vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.6);}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--ink-2);}
+  .modal-head h3{margin:0;font-size:16.5px;color:var(--leaf);}
+  .modal-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);color:var(--parchment);font-size:13px;}
+  .modal-body{padding:20px 22px 26px;font-size:13.5px;line-height:1.7;color:#c9cfe0;}
+  .modal-body h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--leaf);margin:18px 0 6px;}
+  .modal-body h4:first-child{margin-top:0;}
+  .modal-body ul{margin:4px 0;padding-left:20px;}
+  .flag-box{background:rgba(232,115,92,0.08);border:1px solid rgba(232,115,92,0.25);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#e3b3a6;margin-top:6px;}
+
+  @media(max-width:920px){
+    .reader-layout{flex-direction:column-reverse;align-items:center;}
+    .side-rail{flex:none;width:100%;max-width:680px;flex-direction:row;overflow-x:auto;}
+    .rail-card{min-width:220px;}
+    .page{padding:30px 22px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <a class="back-link" href="#">← Biblioteca</a>
+  <div>
+    <div class="toolbar-title">¡Hola, Chica!</div>
+    <div class="toolbar-series">Chica y sus Amigos · Ep. 1</div>
+  </div>
+  <span class="toolbar-level" id="toolbarLevel">A1</span>
+  <div class="toolbar-right">
+    <div class="font-controls">
+      <button onclick="changeFont(-1)" title="Texto más pequeño">A−</button>
+      <div class="divider"></div>
+      <button onclick="changeFont(1)" title="Texto más grande">A+</button>
+    </div>
+    <button class="tool-btn" id="glossToggle" onclick="toggleGloss()">🔤 Glosario: Activado</button>
+    <button class="tool-btn" id="nightToggle" onclick="toggleNight()">🌙 Luz de lámpara</button>
+    <button class="tool-btn teacher" onclick="openTeacherNotes()">🎓 Notas del maestro</button>
+  </div>
+</div>
+<div class="progress-rail"><div class="progress-rail-fill" id="progressFill"></div></div>
+
+<!-- LEVEL SWITCHER -->
+<div class="level-strip">
+  <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
+  <div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
+  <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
+  <div class="level-pill" data-level="B2" onclick="setReaderLevel('B2', this)">B2</div>
+  <span class="level-strip-label" style="margin-left:6px;">— mismo cuento, tu ritmo</span>
+</div>
+
+<!-- LAYOUT -->
+<div class="reader-layout">
+  <div class="page-wrap">
+    <div class="page" id="pageContent">
+      <div class="story-eyebrow">Temporada 1 · Los Guardianes de Chiquibul</div>
+      <h1 class="story-heading">¡Hola, Chica!</h1>
+      <div class="story-subheading">Episodio 1 — Saludos y presentaciones</div>
+      <div class="story-body" id="storyBody"><!-- filled by JS --></div>
+
+      <div class="comp-check">
+        <div class="comp-title">Chequeo rápido</div>
+        <div class="comp-sub">Responde para marcar este episodio como completado.</div>
+
+        <div class="comp-q">1. ¿Por qué Don Pico elige a Chica para dar la bienvenida a Nico?</div>
+        <div class="comp-options" id="q1opts">
+          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque es la más rápida de la selva.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q1')">Porque tiene el don de hacer sentir bienvenidos a los demás.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque es la más fuerte de la escuela.</button>
+        </div>
+        <div class="comp-result" id="q1result">¡Exacto! Ese es el don especial de Chica.</div>
+
+        <div class="comp-q">2. ¿Cómo se siente Bruno al final del episodio?</div>
+        <div class="comp-options" id="q2opts">
+          <button class="comp-opt" onclick="answer(this,false,'q2')">Muy contento por Nico.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q2')">Un poco triste porque nadie lo recibió así a él.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q2')">No siente nada en particular.</button>
+        </div>
+        <div class="comp-result" id="q2result">Así es — Bruno siente celos, pero también tristeza. Su historia apenas empieza.</div>
+
+        <div class="finish-bar">
+          <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
+          <button class="btn btn-outline" onclick="alert('Volviendo a la biblioteca — tu progreso se guarda en Sigue leyendo.')">Guardar y salir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDE RAIL -->
+  <div class="side-rail">
+    <div class="rail-card">
+      <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">Datos del episodio</div>
+      <div class="rail-meta-row"><span>Nivel</span><b id="railLevel">A1</b></div>
+      <div class="rail-meta-row"><span>Tiempo de lectura</span><b id="railTime">3 min</b></div>
+      <div class="rail-meta-row"><span>Lugar</span><b>Selva de Chiquibul</b></div>
+      <div class="rail-meta-row"><span>Tema</span><b>Bienvenida, amistad</b></div>
+    </div>
+
+    <div class="rail-card traveler-card">
+      <div class="rail-title">🐾 Huellas del Viajero</div>
+      <div class="traveler-name">Nico</div>
+      <div class="traveler-tag">Coatí · Distrito de Toledo, Belice</div>
+      <div class="traveler-row"><span class="lbl">Tradición</span><span>Comunidades maya q'eqchi' y mopan</span></div>
+      <div class="traveler-row"><span class="lbl">Comida</span><span>Cacao — el chocolate tiene raíces aquí</span></div>
+      <div class="traveler-row"><span class="lbl">Naturaleza</span><span>Ríos y cuevas de piedra caliza</span></div>
+      <div class="traveler-row"><span class="lbl">Dato curioso</span><span>Toledo es la región más lluviosa de Belice</span></div>
+      <div class="traveler-row"><span class="lbl">Valor</span><span>La valentía de empezar de nuevo</span></div>
+      <div class="traveler-note">Nico se mudó dentro de Belice, no desde otro país — este episodio conecta con una región del propio país antes de que la temporada se abra al mundo hispano.</div>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">🌳 La Palabra del Bosque</div>
+      <div class="forest-word">bienvenida</div>
+      <div class="forest-word-def">Lo que le das a alguien nuevo cuando lo aceptas con calidez.</div>
+      <div class="rail-title" style="margin-top:14px;">🦜 La Pregunta de Don Pico</div>
+      <div class="pico-q">"¿Qué hace que un lugar nuevo se sienta como un hogar?"</div>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">Banco de palabras — este episodio</div>
+      <div id="wordBank"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHER NOTES MODAL -->
+<div class="modal-overlay" id="teacherModal" onclick="if(event.target===this) closeTeacherNotes()">
+  <div class="modal">
+    <div class="modal-head"><h3>🎓 Notas del maestro — Episodio 1</h3><button class="modal-close" onclick="closeTeacherNotes()">✕</button></div>
+    <div class="modal-body">
+      <h4>Unidad curricular</h4>
+      <div>Saludos y presentaciones · Nivel original: B2</div>
+
+      <h4>Objetivos lingüísticos</h4>
+      <ul>
+        <li>Saludar</li>
+        <li>Presentarse</li>
+        <li>Preguntar el nombre</li>
+        <li>Decir de dónde eres</li>
+        <li>Expresar emociones básicas</li>
+        <li>Conocer a alguien por primera vez</li>
+      </ul>
+
+      <h4>Estructuras de alta frecuencia</h4>
+      <div>se llama · vive · quiere · busca · encuentra · conoce · pregunta · responde · dice · mira · hay · necesita</div>
+
+      <h4>Temas de preguntas de comprensión</h4>
+      <ul>
+        <li>¿Por qué Don Pico elige a Chica? (rasgo de carácter)</li>
+        <li>¿Cómo se siente Nico al llegar? (vocabulario emocional)</li>
+        <li>¿Por qué Bruno se aleja triste? (inferencia/empatía)</li>
+        <li>¿Qué pista misteriosa aparece al final? (trama de temporada)</li>
+      </ul>
+
+      <h4>Banderas de sensibilidad de contenido</h4>
+      <div class="flag-box">Celos/exclusión leve (Bruno) — sin resolución, es arco de temporada. Nerviosismo de mudanza (Nico) — modelado con calma, no trauma. Sin contenido violento ni maduro.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- CONTENT AT FOUR LEVELS ---------------- */
+const VERSIONS = {
+  A1: {
+    time:'3 min',
+    html: `
+      <p>El sol sale. La selva de Chiquibul despierta. Las hojas están mojadas. Los monos saludan el día. Los tucanes vuelan. Las mariposas azules abren las alas.</p>
+      <p>En un árbol grande vive una mona. Se llama <span class="gloss" data-word="se llama">Chica</span><span class="gloss-tooltip">su nombre es<span class="arrow"></span></span>. Chica salta mucho. Chica mira todo. Chica pregunta mucho.</p>
+      <p>—¡Buenos días, selva! —grita Chica.</p>
+      <p>Los pájaros cantan. Los monos gritan. Chica sonríe. Le gusta saludar cada mañana. Todos son importantes para ella.</p>
+      <p>Chica come fruta. Chica baja a la escuela. Allí está <span class="gloss" data-word="Don Pico">Don Pico</span><span class="gloss-tooltip">un tucán viejo y sabio<span class="arrow"></span></span>.</p>
+      <p>—Buenos días, Chica. ¿Cómo estás?</p>
+      <p>—¡Muy bien! Hoy es un buen día.</p>
+      <p>Don Pico sonríe. —Sí. Aprender algo nuevo es bueno.</p>
+      <h3>Una misión especial</h3>
+      <p>Los animales llegan. Don Pico toca una campana.</p>
+      <p>—¡Atención! Tengo una <span class="gloss" data-word="misión">misión</span><span class="gloss-tooltip">un trabajo importante<span class="arrow"></span></span>.</p>
+      <p>A Chica le gustan las misiones.</p>
+      <p>—Hoy llega un animal nuevo.</p>
+      <p>Los animales preguntan: —¿Un jaguar? ¿Un loro? ¿Un tapir?</p>
+      <p>—No sabemos —dice Don Pico—. Viene de otra parte de Belice. Está <span class="gloss" data-word="nervioso">nervioso</span><span class="gloss-tooltip">tiene un poco de miedo<span class="arrow"></span></span>. —Mira a Chica—. Tú vas a saludarlo primero.</p>
+      <p>—¿Yo? —pregunta Chica.</p>
+      <p>—Sí. Tú tienes algo especial. Tú haces sentir bien a los demás.</p>
+      <h3>Un encuentro inesperado</h3>
+      <p>Chica camina en el bosque. Escucha un ruido.</p>
+      <p>—¿Hola?</p>
+      <p>Nadie responde. Las hojas se mueven. Aparece un coatí pequeño. Tiene una mochila. Está preocupado.</p>
+      <p>—¡Hola! —dice Chica.</p>
+      <p>El coatí salta. —¡Hola!</p>
+      <p>—Me llamo Chica. ¿Y tú?</p>
+      <p>—Me llamo Nico.</p>
+      <p>—¿Eres nuevo?</p>
+      <p>—Sí. No conozco a nadie.</p>
+      <p>—Yo conozco a todos —dice Chica—. ¡Vamos!</p>
+      <p>Nico sonríe.</p>
+      <h3>Una sombra entre los árboles</h3>
+      <p>Detrás de un árbol, Bruno mira. Bruno es un jabalí. Cruza los brazos.</p>
+      <p>—Todos están felices con el animal nuevo... ¿Y yo?</p>
+      <p>Bruno se va. Nadie lo ve. El viento mueve las hojas de la Gran Ceiba. Una marca antigua brilla un momento.</p>
+      <p>Nadie la ve. Todavía.</p>`
+  },
+  A2: {
+    time:'4 min',
+    html: `
+      <p>El sol sale detrás de las montañas. La selva de Chiquibul despierta poco a poco. Las hojas están mojadas de la lluvia de anoche. Los monos aulladores saludan el día desde los árboles. Los tucanes vuelan sobre el río. Las mariposas azules abren sus alas grandes.</p>
+      <p>Arriba, en una ceiba muy grande, vive una monita araña. Se llama <span class="gloss" data-word="se llama">Chica</span><span class="gloss-tooltip">tiene por nombre<span class="arrow"></span></span>. Chica nunca está quieta. Salta de rama en rama. Mira todo. Hace muchas preguntas.</p>
+      <p>—¡Buenos días, selva! —grita, mientras se balancea con la cola.</p>
+      <p>Los pájaros cantan. Los monos gritan. ¡Hasta el viento dice "buenos días"! A Chica le encanta saludar a todos cada mañana. No importa si son grandes o pequeños. Para ella, todos son importantes.</p>
+      <p>Chica come frutas y baja rápido a la Escuela del Tucán. Allí está <span class="gloss" data-word="Don Pico">Don Pico</span><span class="gloss-tooltip">el maestro más sabio de la selva<span class="arrow"></span></span>, el maestro más sabio de Chiquibul.</p>
+      <p>—Buenos días, Chica. ¿Cómo estás?</p>
+      <p>—¡Muy bien! Hoy va a ser un buen día.</p>
+      <p>Don Pico sonríe. —Sí. Es un buen día cuando aprendes algo nuevo.</p>
+      <h3>Una misión especial</h3>
+      <p>Todos los animales llegan. Don Pico toca una campana pequeña.</p>
+      <p>—¡Atención! Hoy tengo una <span class="gloss" data-word="misión">misión</span><span class="gloss-tooltip">una tarea especial<span class="arrow"></span></span> importante.</p>
+      <p>A Chica le encantan las misiones. Sus ojos brillan.</p>
+      <p>—Hoy llega un animal nuevo a la selva.</p>
+      <p>Los animales hablan entre ellos: —¿Es un jaguar? ¿Un loro? ¿Un tapir?</p>
+      <p>—No sabemos —dice Don Pico—. Solo sabemos que viene de otra parte de Belice. Y probablemente está <span class="gloss" data-word="nervioso">nervioso</span><span class="gloss-tooltip">un poco asustado<span class="arrow"></span></span>. —Mira a Chica—. Quiero que tú lo saludes primero.</p>
+      <p>—¿Yo? —pregunta Chica.</p>
+      <p>—Sí. No porque eres rápida o fuerte. Tienes algo especial: tú haces sentir bienvenidos a los demás.</p>
+      <h3>Un encuentro inesperado</h3>
+      <p>Chica camina por el Sendero de las Flores. Escucha un ruido en los arbustos.</p>
+      <p>—¿Hola? —pregunta.</p>
+      <p>Nadie responde. Chica camina un poco más. Las hojas se mueven otra vez. Aparece un coatí pequeño. Tiene una mochila de hojas y cara de preocupación.</p>
+      <p>—¡Hola! —dice Chica.</p>
+      <p>El coatí salta, un poco asustado. —¡Hola!</p>
+      <p>—Me llamo Chica. ¿Cómo te llamas?</p>
+      <p>—Me llamo Nico.</p>
+      <p>—¿Eres nuevo?</p>
+      <p>—Sí. Mi familia llega hoy. No conozco a nadie. Todo es diferente.</p>
+      <p>—¡Perfecto! —dice Chica—. Yo conozco a todos. Vamos a conocerlos juntos.</p>
+      <p>Nico sonríe por primera vez.</p>
+      <h3>Una sombra entre los árboles</h3>
+      <p>Cerca de allí, detrás de un árbol grande, alguien mira. Es Bruno, el jabalí. Cruza los brazos.</p>
+      <p>—Siempre hay una fiesta cuando llega alguien nuevo... ¿Y para mí? Nadie.</p>
+      <p>Bruno se va en silencio. Nadie sabe que empieza una historia muy grande. El viento mueve las hojas de la Gran Ceiba. Una marca antigua en el árbol brilla un momento.</p>
+      <p>Nadie la ve. Todavía.</p>`
+  },
+  B1: {
+    time:'6 min',
+    html: `
+      <p>Cuando el sol sale detrás de las montañas, la selva de Chiquibul empieza a despertar. Las hojas todavía brillan por la lluvia de la noche anterior. Los monos aulladores saludan el nuevo día desde las copas de los árboles, y un grupo de tucanes vuela sobre el río mientras las mariposas morfo abren sus grandes alas azules.</p>
+      <p>Muy arriba, entre las ramas de una ceiba enorme, vive una monita araña llamada <span class="gloss" data-word="se llama">Chica</span><span class="gloss-tooltip">lleva por nombre<span class="arrow"></span></span>. Chica nunca está quieta: salta de rama en rama, observa todo y hace preguntas sobre el mundo que la rodea.</p>
+      <p>—¡Buenos días, selva! —grita mientras se balancea con la cola.</p>
+      <p>Los pájaros responden con sus cantos. Los monos contestan con gritos fuertes. Hasta el viento parece decir "¡Buenos días!" Chica sonríe: le encanta empezar así cada mañana, saludando a todos, grandes o pequeños. Para ella, todos son importantes.</p>
+      <p>Después de comer unas frutas maduras, baja rápido hacia la Escuela del Tucán, donde la espera <span class="gloss" data-word="Don Pico">Don Pico</span><span class="gloss-tooltip">el maestro más sabio de toda Chiquibul<span class="arrow"></span></span>, el maestro más sabio de Chiquibul.</p>
+      <p>—Buenos días, Chica. ¿Cómo estás hoy?</p>
+      <p>—¡Muy bien! Creo que hoy va a ser un gran día.</p>
+      <p>Don Pico sonríe. —Eso espero. Siempre es un gran día cuando decides aprender algo nuevo.</p>
+      <h3>Una misión especial</h3>
+      <p>Cuando todos los animales llegan, Don Pico toca una campanita hecha de una semilla seca.</p>
+      <p>—¡Atención! Hoy tengo una <span class="gloss" data-word="misión">misión</span><span class="gloss-tooltip">un encargo especial<span class="arrow"></span></span> importante.</p>
+      <p>Los ojos de Chica brillan: le encantan las misiones.</p>
+      <p>—Esta mañana va a llegar un nuevo vecino a la selva.</p>
+      <p>Los animales empiezan a murmurar: —¿Un jaguar? ¿Un loro? ¿Un tapir?</p>
+      <p>—Todavía no sabemos quién es —dice Don Pico—. Solo sabemos que viene de otra parte de Belice y que probablemente está un poco <span class="gloss" data-word="nervioso">nervioso</span><span class="gloss-tooltip">inquieto, con algo de miedo<span class="arrow"></span></span>. —Después mira a Chica—. Quiero que tú seas la primera en darle la bienvenida.</p>
+      <p>—¿Yo? —pregunta Chica, sorprendida.</p>
+      <p>—Sí. No porque seas la más rápida ni la más fuerte, sino porque tienes un don especial: haces que los demás se sientan bienvenidos.</p>
+      <h3>Un encuentro inesperado</h3>
+      <p>Poco después, caminando por el Sendero de las Flores, Chica escucha un ruido entre los arbustos.</p>
+      <p>—¿Hola? —pregunta.</p>
+      <p>Nadie responde. Da un paso más y las hojas se mueven otra vez. De repente aparece un pequeño coatí con una mochila de hojas y cara de preocupación.</p>
+      <p>—¡Hola! —dice Chica, sonriendo.</p>
+      <p>El coatí da un pequeño salto del susto. —¡Hola!</p>
+      <p>—Me llamo Chica. ¿Y tú?</p>
+      <p>—Me llamo Nico.</p>
+      <p>—¿Eres nuevo aquí?</p>
+      <p>—Sí. Mi familia acaba de llegar. No conozco a nadie y todo es diferente.</p>
+      <p>—Entonces llegaste al lugar correcto —responde Chica—, porque yo conozco a todos. Y si tú todavía no los conoces... ¡vamos a conocerlos juntos!</p>
+      <p>Por primera vez desde que llegó, Nico sonríe.</p>
+      <h3>Una sombra entre los árboles</h3>
+      <p>Cerca de allí, escondido detrás de un tronco enorme, alguien observa la escena: es Bruno, el jabalí. Cruza los brazos y frunce el ceño.</p>
+      <p>—Todos siempre están felices cuando llega alguien nuevo... ¿y quién se alegra cuando llego yo?</p>
+      <p>Se aleja en silencio, entre la vegetación. Nadie nota que acaba de empezar una historia mucho más grande de lo que imaginan. Y mientras el viento mueve las hojas de la Gran Ceiba, una antigua marca grabada en su corteza parece brillar por un instante.</p>
+      <p>Nadie la ve. Todavía.</p>`
+  },
+  B2: {
+    time:'8 min',
+    html: `
+      <p>Cuando el sol aparece detrás de las montañas, la selva de Chiquibul despierta lentamente.</p>
+      <p>Las hojas brillan por la lluvia de la noche anterior. Los monos aulladores saludan al nuevo día desde las copas de los árboles. Un grupo de tucanes vuela sobre el río mientras cientos de mariposas morfo abren sus enormes alas azules.</p>
+      <p>Muy arriba, entre las ramas de una inmensa ceiba, vive una pequeña monita araña llamada <span class="gloss" data-word="se llama">Chica</span><span class="gloss-tooltip">tiene el nombre de<span class="arrow"></span></span>.</p>
+      <p>Chica nunca permanece quieta. Siempre salta de una rama a otra, observa todo lo que ocurre y hace preguntas sobre el mundo que la rodea.</p>
+      <p>—¡Buenos días, selva! —grita mientras se balancea con su larga cola.</p>
+      <p>Los pájaros responden con sus cantos. Los monos contestan con fuertes gritos. Hasta el viento parece decir: —¡Buenos días!</p>
+      <p>Chica sonríe. Le encanta comenzar cada mañana saludando a todos. No importa si son grandes o pequeños. Para ella, todos son importantes.</p>
+      <p>Después de desayunar unas frutas maduras, baja rápidamente hacia la Escuela del Tucán. Allí la espera <span class="gloss" data-word="Don Pico">Don Pico</span><span class="gloss-tooltip">el maestro más sabio de toda Chiquibul<span class="arrow"></span></span>, el maestro más sabio de toda Chiquibul. El viejo tucán limpia cuidadosamente sus plumas mientras observa cómo llegan los animales.</p>
+      <p>—Buenos días, Chica. —¿Cómo estás hoy? —¡Muy bien! Estoy feliz porque hoy será un gran día.</p>
+      <p>Don Pico sonríe. —Eso espero. Siempre es un gran día cuando decides aprender algo nuevo.</p>
+      <h3>Una misión especial</h3>
+      <p>Cuando todos los animales terminan de llegar, Don Pico toca una pequeña campana hecha con una semilla seca. —¡Atención! Todos guardan silencio. —Hoy tengo una <span class="gloss" data-word="misión">misión</span><span class="gloss-tooltip">un encargo, una tarea importante<span class="arrow"></span></span> muy importante.</p>
+      <p>Los ojos de Chica brillan inmediatamente. Le encantan las misiones.</p>
+      <p>—Esta mañana llegará un nuevo vecino a nuestra selva. Los animales comienzan a murmurar. —¿Quién será? —¿Será un jaguar? —¿Será un loro? —¿Será un tapir?</p>
+      <p>Don Pico levanta un ala. —Todavía no lo sabemos. Solo sabemos que viene desde otra parte de Belice y que probablemente se sienta un poco <span class="gloss" data-word="nervioso">nervioso</span><span class="gloss-tooltip">con inquietud, con algo de temor<span class="arrow"></span></span>.</p>
+      <p>Después mira directamente a Chica. —Quiero que seas la primera en darle la bienvenida.</p>
+      <p>La monita abre mucho los ojos. —¿Yo? —Sí. No porque seas la más rápida. No porque seas la más fuerte. Sino porque tienes un don muy especial.</p>
+      <p>Chica inclina la cabeza. —¿Cuál? —Haces que los demás se sientan bienvenidos.</p>
+      <h3>Un encuentro inesperado</h3>
+      <p>Poco después, mientras Chica camina por el Sendero de las Flores, escucha un ruido entre los arbustos. —¿Hola? No obtiene respuesta. Da un paso más. Las hojas vuelven a moverse.</p>
+      <p>Entonces aparece un pequeño coatí con una mochila de hojas y una expresión de preocupación. Chica sonríe inmediatamente. —¡Hola! El coatí da un pequeño salto del susto. —¡Hola!</p>
+      <p>—Me llamo Chica. ¿Y tú? El coatí respira profundamente. —Me llamo Nico. —Mucho gusto, Nico. —Mucho gusto. —¿Eres nuevo? —Sí. Mi familia acaba de llegar. No conozco a nadie. Todo es diferente aquí.</p>
+      <p>Chica sonríe otra vez. —Entonces llegaste al lugar correcto. Porque yo conozco a todos. Y si todavía no los conoces... ¡vamos a conocerlos juntos!</p>
+      <p>Por primera vez desde que llegó a la selva, Nico sonríe.</p>
+      <h3>Una sombra entre los árboles</h3>
+      <p>Muy cerca de allí, oculto detrás de un tronco enorme, alguien observa la escena. Es Bruno, el jabalí. Cruza los brazos y frunce el ceño.</p>
+      <p>—Todos siempre están felices cuando llega alguien nuevo... ¿Y quién se alegra cuando llego yo?</p>
+      <p>Sin hacer ruido, se aleja caminando entre la vegetación. Nadie nota que acaba de comenzar una historia mucho más grande de lo que imaginan.</p>
+      <p>Y, mientras el viento mueve las hojas de la Gran Ceiba, una antigua marca grabada en su corteza parece brillar por un instante...</p>
+      <p>Nadie la ve. Todavía.</p>`
+  }
+};
+
+let fontSize = 18;
+let glossOn = true;
+let listening = false;
+let currentLevel = 'A1';
+const savedWords = new Set();
+
+function renderStory(level){
+  currentLevel = level;
+  document.getElementById('storyBody').innerHTML = VERSIONS[level].html;
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+  document.getElementById('toolbarLevel').textContent = level;
+  document.getElementById('railLevel').textContent = level;
+  document.getElementById('railTime').textContent = VERSIONS[level].time;
+  applyGlossState();
+  buildWordBank();
+}
+
+function setReaderLevel(level, el){
+  document.querySelectorAll('.level-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  renderStory(level);
+}
+
+function changeFont(delta){
+  fontSize = Math.min(24, Math.max(14, fontSize+delta*2));
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+}
+
+function toggleGloss(){
+  glossOn = !glossOn;
+  document.getElementById('glossToggle').textContent = glossOn ? '🔤 Glosario: Activado' : '🔤 Glosario: Desactivado';
+  document.getElementById('glossToggle').classList.toggle('on', glossOn);
+  applyGlossState();
+}
+function applyGlossState(){
+  document.querySelectorAll('.gloss').forEach(g=>{
+    g.style.borderBottomColor = glossOn ? 'var(--coral)' : 'transparent';
+    g.style.cursor = glossOn ? 'help' : 'text';
+    g.style.fontWeight = glossOn ? '600' : '400';
+    if(!glossOn) g.classList.remove('tapped');
+  });
+}
+document.addEventListener('click', e=>{
+  if(e.target.closest('.gloss') && glossOn){
+    e.target.closest('.gloss').classList.toggle('tapped');
+  }
+});
+
+function toggleNight(){
+  const btn = document.getElementById('nightToggle');
+  btn.classList.toggle('on');
+  document.getElementById('pageContent').style.filter = btn.classList.contains('on') ? 'invert(1) hue-rotate(180deg)' : 'none';
+  btn.textContent = btn.classList.contains('on') ? '☀ Luz brillante' : '🌙 Luz de lámpara';
+}
+
+function toggleListen(){
+  listening = !listening;
+  const btn = document.getElementById('listenBtn');
+  btn.classList.toggle('playing', listening);
+  btn.textContent = listening ? '⏸ Reproduciendo narración…' : '🔊 Escuchar narración';
+}
+
+function openTeacherNotes(){ document.getElementById('teacherModal').classList.add('open'); }
+function closeTeacherNotes(){ document.getElementById('teacherModal').classList.remove('open'); }
+
+function buildWordBank(){
+  const words = [...document.querySelectorAll('.gloss')];
+  const seen = new Set();
+  const bank = document.getElementById('wordBank');
+  bank.innerHTML = '';
+  words.forEach(w=>{
+    const word = w.dataset.word;
+    if(seen.has(word)) return; seen.add(word);
+    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const row = document.createElement('div');
+    row.className='word-chip';
+    row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
+      <button class="save-word ${savedWords.has(word)?'saved':''}" onclick="toggleSaveWord('${word}', this)">${savedWords.has(word)?'✓':'+'}</button>`;
+    bank.appendChild(row);
+  });
+}
+function toggleSaveWord(word, btn){
+  if(savedWords.has(word)){ savedWords.delete(word); btn.classList.remove('saved'); btn.textContent='+'; }
+  else { savedWords.add(word); btn.classList.add('saved'); btn.textContent='✓'; }
+}
+
+/* ---------------- COMPREHENSION ---------------- */
+const answered = {};
+function answer(btn, isCorrect, qid){
+  if(answered[qid]) return;
+  answered[qid]=true;
+  const opts = btn.parentElement.querySelectorAll('.comp-opt');
+  opts.forEach(o=>o.disabled=true);
+  btn.classList.add(isCorrect?'correct':'incorrect');
+  if(!isCorrect){
+    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+  }
+  document.getElementById(qid+'result').style.display='block';
+}
+function finishStory(){
+  if(Object.keys(answered).length < 2){
+    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+    return;
+  }
+  document.getElementById('finishBtn').textContent = '✓ ¡Completado!';
+  document.getElementById('finishBtn').style.background = '#6fae7a';
+  setTimeout(()=> alert('¡Buena lectura! Este episodio ahora aparece 100% completo en tu estante, y tu maestra puede ver tus resultados de comprensión.'), 300);
+}
+
+/* ---------------- SCROLL PROGRESS ---------------- */
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('progressFill').style.width = Math.min(100,scrolled)+'%';
+});
+
+/* ---------------- INIT ---------------- */
+renderStory('A1');
+</script>
+</body>
+</html>

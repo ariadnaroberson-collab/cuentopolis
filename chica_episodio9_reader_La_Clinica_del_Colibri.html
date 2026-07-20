@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Clínica del Colibrí — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c1024; --ink-2:#12172e; --ink-3:#1a2040;
+    --lamp:#e8a94c; --lamp-dim:#c98a34; --coral:#e8735c;
+    --parchment:#f3e9d6; --parchment-dim:#e4d6b8; --page:#faf3e4;
+    --slate:#8891a8; --slate-dim:#5c6480;
+    --leaf:#5fa876; --leaf-dim:#3d7d55;
+    --line: rgba(232,169,76,0.16);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--parchment);font-family:'Public Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;}
+  button{font-family:'Public Sans',sans-serif;cursor:pointer;}
+
+  /* ---------- TOP BAR ---------- */
+  .toolbar{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;gap:16px;padding:12px 24px;
+    background:rgba(9,12,26,0.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .back-link{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--slate);border:1px solid var(--line);padding:7px 12px;border-radius:20px;background:rgba(255,255,255,0.03);}
+  .back-link:hover{color:var(--parchment);border-color:var(--lamp-dim);}
+  .toolbar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;}
+  .toolbar-series{font-size:11px;color:var(--slate);}
+  .toolbar-level{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:1.5px solid var(--lamp);color:var(--lamp);border-radius:5px;padding:2px 7px;}
+  .toolbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .tool-btn{
+    display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);
+    background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;transition:background .15s, border-color .15s;
+  }
+  .tool-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--lamp-dim);}
+  .tool-btn.on{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+  .tool-btn.teacher{border-color:var(--leaf-dim);color:var(--leaf);}
+  .tool-btn.teacher:hover{background:rgba(95,168,118,0.12);}
+  .font-controls{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .font-controls button{background:rgba(255,255,255,0.03);color:var(--parchment);border:none;padding:8px 12px;font-size:13px;}
+  .font-controls button:hover{background:rgba(255,255,255,0.1);}
+  .font-controls .divider{width:1px;background:var(--line);align-self:stretch;}
+
+  .progress-rail{height:3px;background:var(--ink-3);position:sticky;top:57px;z-index:39;}
+  .progress-rail-fill{height:100%;background:linear-gradient(90deg,var(--lamp),var(--coral));width:0%;transition:width .1s linear;}
+
+  /* ---------- LEVEL SWITCH STRIP ---------- */
+  .level-strip{display:flex;align-items:center;gap:10px;justify-content:center;padding:18px 24px 4px;flex-wrap:wrap;}
+  .level-strip-label{font-size:12.5px;color:var(--slate);}
+  .level-pill{
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:6px 13px;border-radius:20px;
+    border:1.5px solid var(--line);color:var(--slate);background:rgba(255,255,255,0.03);
+  }
+  .level-pill:hover{border-color:var(--lamp-dim);color:var(--parchment);}
+  .level-pill.active{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  /* ---------- LAYOUT ---------- */
+  .reader-layout{display:flex;justify-content:center;gap:28px;padding:20px 24px 80px;max-width:1180px;margin:0 auto;}
+  .page-wrap{flex:1 1 680px;max-width:680px;}
+  .page{
+    background:var(--page);color:#2c2412;border-radius:14px;padding:44px 52px;box-shadow:0 30px 60px rgba(0,0,0,0.4);
+    font-family:'Source Serif 4', serif; line-height:1.85; position:relative;
+  }
+  .page::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--lamp),var(--coral));border-radius:14px 14px 0 0;}
+  .story-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lamp-dim);margin-bottom:6px;}
+  .story-heading{font-family:'Fraunces',serif;font-size:30px;margin:0 0 6px;color:#241d0e;}
+  .story-subheading{font-family:'Public Sans',sans-serif;font-size:13.5px;color:#8a7a52;margin-bottom:22px;font-weight:600;}
+  .story-body p{margin:0 0 20px;}
+  .story-body h3{font-size:17px;color:#5c4a1f;margin:26px 0 12px;font-family:'Fraunces',serif;}
+  .gloss{border-bottom:2px dotted var(--coral);cursor:help;position:relative;color:#241d0e;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(232,115,92,0.16);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--ink-2);color:var(--parchment);border:1px solid var(--line);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+
+  /* ---------- COMPREHENSION ---------- */
+  .comp-check{margin-top:8px;padding-top:28px;border-top:1px dashed var(--parchment-dim);}
+  .comp-title{font-family:'Fraunces',serif;font-size:19px;margin:0 0 4px;color:#241d0e;}
+  .comp-sub{font-family:'Public Sans',sans-serif;font-size:13px;color:#6b5e42;margin-bottom:18px;}
+  .comp-q{font-family:'Public Sans',sans-serif;font-size:14.5px;font-weight:600;color:#241d0e;margin-bottom:10px;}
+  .comp-options{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
+  .comp-opt{
+    font-family:'Public Sans',sans-serif;text-align:left;padding:10px 14px;border-radius:8px;border:1.5px solid #d8cba3;
+    background:#fffaf0;font-size:13.5px;color:#3a3120;
+  }
+  .comp-opt:hover{border-color:var(--coral);}
+  .comp-opt.correct{background:#dff1e2;border-color:#6fae7a;}
+  .comp-opt.incorrect{background:#f6dcd6;border-color:var(--coral);}
+  .comp-result{display:none;font-family:'Public Sans',sans-serif;font-size:13.5px;color:#4b6b4f;margin-top:-10px;margin-bottom:16px;}
+
+  .finish-bar{display:flex;align-items:center;gap:14px;margin-top:24px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:transform .12s;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--lamp);color:#26160a;}
+  .btn-primary:hover{background:#f0b768;}
+  .btn-outline{background:transparent;border:1.5px solid #c9b98a;color:#4a3f26;}
+
+  /* ---------- SIDE RAIL ---------- */
+  .side-rail{flex:0 0 250px;display:flex;flex-direction:column;gap:16px;}
+  .rail-card{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .rail-title{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:10px;font-weight:600;display:flex;align-items:center;gap:6px;}
+  .word-chip{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:7px 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .word-chip:last-child{border-bottom:none;}
+  .word-en{color:var(--parchment);font-weight:600;}
+  .word-def{color:var(--slate);font-size:11.5px;}
+  .save-word{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--slate);font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .save-word.saved{background:var(--coral);border-color:var(--coral);color:#2a0f0a;}
+  .rail-meta-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--slate);padding:5px 0;}
+  .rail-meta-row b{color:var(--parchment);font-weight:600;}
+  .listen-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;}
+  .listen-btn:hover{border-color:var(--lamp-dim);}
+  .listen-btn.playing{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  /* Huellas del Viajero card */
+  .traveler-card{background:linear-gradient(160deg, rgba(95,168,118,0.14), rgba(95,168,118,0.03));border-color:rgba(95,168,118,0.3);}
+  .traveler-name{font-family:'Fraunces',serif;font-size:17px;color:var(--parchment);margin-bottom:2px;}
+  .traveler-tag{font-size:11.5px;color:var(--leaf);margin-bottom:10px;font-weight:600;}
+  .traveler-row{display:flex;gap:8px;font-size:12px;color:var(--slate);padding:4px 0;line-height:1.4;}
+  .traveler-row .lbl{flex:0 0 76px;color:var(--leaf);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:1px;}
+  .traveler-note{margin-top:10px;padding-top:10px;border-top:1px solid rgba(95,168,118,0.2);font-size:11px;color:var(--slate-dim);font-style:italic;}
+  /* Empty Huellas del Viajero state (episodes with no visiting character) */
+  .traveler-card.traveler-gap{background:linear-gradient(160deg, rgba(136,145,168,0.10), rgba(136,145,168,0.02));border-color:var(--line);}
+  .traveler-card.traveler-gap .rail-title{color:var(--slate);}
+  .traveler-empty{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:var(--slate);margin-bottom:8px;}
+  .traveler-card.traveler-gap .traveler-note{border-top-color:var(--line);}
+
+  /* Palabra del Bosque / Pregunta de Don Pico */
+  .forest-word{font-family:'Fraunces',serif;font-style:italic;font-size:21px;color:var(--lamp);margin-bottom:4px;}
+  .forest-word-def{font-size:12.5px;color:var(--slate);margin-bottom:14px;}
+  .pico-q{font-size:13px;color:var(--parchment);line-height:1.55;padding:12px;background:rgba(232,169,76,0.06);border-radius:8px;border-left:3px solid var(--lamp);font-style:italic;}
+
+  /* ---------- TEACHER NOTES MODAL ---------- */
+  .modal-overlay{position:fixed;inset:0;background:rgba(6,8,18,0.78);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;max-width:600px;width:100%;max-height:86vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.6);}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--ink-2);}
+  .modal-head h3{margin:0;font-size:16.5px;color:var(--leaf);}
+  .modal-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);color:var(--parchment);font-size:13px;}
+  .modal-head-actions{display:flex;align-items:center;gap:8px;}
+  .copy-notes-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid rgba(95,168,118,0.35);background:rgba(95,168,118,0.08);color:var(--leaf);font-size:12px;font-weight:600;transition:background .15s;}
+  .copy-notes-btn:hover{background:rgba(95,168,118,0.18);}
+  .copy-notes-btn.copied{background:var(--leaf);color:#0f2015;border-color:var(--leaf);}
+  .modal-body{padding:20px 22px 26px;font-size:13.5px;line-height:1.7;color:#c9cfe0;}
+  .modal-body h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--leaf);margin:18px 0 6px;}
+  .modal-body h4:first-child{margin-top:0;}
+  .modal-body ul{margin:4px 0;padding-left:20px;}
+  .flag-box{background:rgba(232,115,92,0.08);border:1px solid rgba(232,115,92,0.25);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#e3b3a6;margin-top:6px;}
+
+  @media(max-width:920px){
+    .reader-layout{flex-direction:column-reverse;align-items:center;}
+    .side-rail{flex:none;width:100%;max-width:680px;flex-direction:row;overflow-x:auto;}
+    .rail-card{min-width:220px;}
+    .page{padding:30px 22px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <a class="back-link" href="#">← Biblioteca</a>
+  <div>
+    <div class="toolbar-title">La Clínica del Colibrí</div>
+    <div class="toolbar-series">Chica y sus Amigos · Ep. 9</div>
+  </div>
+  <span class="toolbar-level" id="toolbarLevel">A1</span>
+  <div class="toolbar-right">
+    <div class="font-controls">
+      <button onclick="changeFont(-1)" title="Texto más pequeño">A−</button>
+      <div class="divider"></div>
+      <button onclick="changeFont(1)" title="Texto más grande">A+</button>
+    </div>
+    <button class="tool-btn" id="glossToggle" onclick="toggleGloss()">🔤 Glosario: Activado</button>
+    <button class="tool-btn" id="nightToggle" onclick="toggleNight()">🌙 Luz de lámpara</button>
+    <button class="tool-btn teacher" onclick="openTeacherNotes()">🎓 Notas del maestro</button>
+  </div>
+</div>
+<div class="progress-rail"><div class="progress-rail-fill" id="progressFill"></div></div>
+
+<!-- LEVEL SWITCHER -->
+<div class="level-strip">
+  <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
+  <div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
+  <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
+  <div class="level-pill" data-level="B2" onclick="setReaderLevel('B2', this)">B2</div>
+  <span class="level-strip-label" style="margin-left:6px;">— mismo cuento, tu ritmo</span>
+</div>
+
+<!-- LAYOUT -->
+<div class="reader-layout">
+  <div class="page-wrap">
+    <div class="page" id="pageContent">
+      <div class="story-eyebrow">Temporada 1 · Los Guardianes de Chiquibul</div>
+      <h1 class="story-heading">La Clínica del Colibrí</h1>
+      <div class="story-subheading">Episodio 9 — La salud y el cuidado</div>
+      <div class="story-body" id="storyBody"><!-- filled by JS --></div>
+
+      <div class="comp-check">
+        <div class="comp-title">Chequeo rápido</div>
+        <div class="comp-sub">Responde para marcar este episodio como completado.</div>
+
+        <div class="comp-q">1. ¿Por qué Teo se enferma durante la caminata?</div>
+        <div class="comp-options" id="q1opts">
+          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque camina demasiado rápido.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q1')">Porque prueba un fruto desconocido sin preguntar primero.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque no lleva suficiente agua.</button>
+        </div>
+        <div class="comp-result" id="q1result">¡Exacto! Teo aprende que hay que preguntar antes de comer algo que no conoce.</div>
+
+        <div class="comp-q">2. ¿Qué siente Bruno mientras Teo está en la clínica, aunque no quiere admitirlo?</div>
+        <div class="comp-options" id="q2opts">
+          <button class="comp-opt" onclick="answer(this,false,'q2')">Está aburrido y quiere irse.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q2')">Está preocupado por Teo, porque le importa como amigo.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q2')">Está enojado con Teo por interrumpir la caminata.</button>
+        </div>
+        <div class="comp-result" id="q2result">Así es — Chica le hace notar que preocuparse por un amigo es, en sí, una muestra de buena amistad.</div>
+
+        <div class="finish-bar">
+          <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
+          <button class="btn btn-outline" onclick="alert('Volviendo a la biblioteca — tu progreso se guarda en Sigue leyendo.')">Guardar y salir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDE RAIL -->
+  <div class="side-rail">
+    <div class="rail-card">
+      <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">Datos del episodio</div>
+      <div class="rail-meta-row"><span>Nivel</span><b id="railLevel">A1</b></div>
+      <div class="rail-meta-row"><span>Tiempo de lectura</span><b id="railTime">3 min</b></div>
+      <div class="rail-meta-row"><span>Lugar</span><b>La Clínica del Colibrí</b></div>
+      <div class="rail-meta-row"><span>Tema</span><b>La salud, el cuidado, pedir ayuda</b></div>
+    </div>
+
+    <div class="rail-card traveler-card">
+      <div class="rail-title">🐾 Huellas del Viajero</div>
+      <div class="traveler-name">Doctora Alma</div>
+      <div class="traveler-tag">Colibrí veterinaria · Colombia</div>
+      <div class="traveler-row"><span class="lbl">Tradición</span><span>Los conocimientos sobre plantas medicinales se transmiten de generación en generación y conviven con la medicina moderna</span></div>
+      <div class="traveler-row"><span class="lbl">Enseñanza</span><span>Su abuelo, médico rural, le enseñó a escuchar primero al paciente y a respetar el conocimiento de las comunidades indígenas</span></div>
+      <div class="traveler-row"><span class="lbl">Dato curioso</span><span>Vino a Belice para ayudar a proteger la fauna, y sigue aprendiendo cada día</span></div>
+      <div class="traveler-row"><span class="lbl">Valor</span><span>Cuidar a los demás comienza con escuchar</span></div>
+      <div class="traveler-note">"Los buenos maestros nunca dejan de ser estudiantes" — Don Pico, sobre ella.</div>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">🌳 La Palabra del Bosque</div>
+      <div class="forest-word">cuidar</div>
+      <div class="forest-word-def">Cuidar significa prestar atención a los demás, a nosotros mismos y al lugar donde vivimos.</div>
+      <div class="rail-title" style="margin-top:14px;">🦜 La Pregunta de Don Pico</div>
+      <div class="pico-q">"¿Qué haces tú para cuidar tu cuerpo y tu mente?"</div>
+      <div class="pico-q" style="margin-top:8px;">"¿Quién cuida de ti cuando no te sientes bien?"</div>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">Banco de palabras — este episodio</div>
+      <div id="wordBank"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHER NOTES MODAL -->
+<div class="modal-overlay" id="teacherModal" onclick="if(event.target===this) closeTeacherNotes()">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🎓 Notas del maestro — Episodio 9</h3>
+      <div class="modal-head-actions">
+        <button class="copy-notes-btn" id="copyNotesBtn" onclick="copyTeacherNotes()">📋 Copiar notas</button>
+        <button class="modal-close" onclick="closeTeacherNotes()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body" id="teacherNotesBody">
+      <h4>Unidad curricular</h4>
+      <div>El doctor · La salud · Las partes del cuerpo · Los síntomas · Dar consejos · Expresar cómo se siente alguien · Nivel original: B2</div>
+
+      <h4>Objetivos lingüísticos</h4>
+      <ul>
+        <li>Describir síntomas</li>
+        <li>Expresar dolor o malestar</li>
+        <li>Pedir ayuda médica</li>
+        <li>Comprender recomendaciones</li>
+        <li>Hablar de hábitos saludables</li>
+      </ul>
+
+      <h4>Estructuras de alta frecuencia</h4>
+      <div>le duele... · se siente... · necesita... · debe... · tiene... · descansa... · bebe... · mejora... · ayuda... · cuida...</div>
+
+      <h4>Notas de ritmo CEFR por nivel</h4>
+      <ul>
+        <li><b>A1</b> — Presente únicamente, vocabulario de salud aislado. Oraciones muy cortas.</li>
+        <li><b>A2</b> — Presente con conectores de secuencia; diálogo casi completo.</li>
+        <li><b>B1</b> — Introduce el pretérito/imperfecto del texto fuente, subordinación moderada.</li>
+        <li><b>B2</b> — Texto fuente completo, narrado en pasado, con la historia de la doctora Alma en su forma más completa.</li>
+      </ul>
+
+      <h4>Temas de preguntas de comprensión</h4>
+      <ul>
+        <li>El desayuno aventurero — ¿qué hace Teo, y qué le pasa después?</li>
+        <li>La doctora Alma — ¿de dónde viene, y qué le enseñó su abuelo?</li>
+        <li>Bruno preocupado — ¿qué siente por Teo, aunque no quiere admitirlo?</li>
+        <li>El mejor remedio — ¿qué tres consejos da la doctora Alma al final?</li>
+      </ul>
+
+      <h4>Banderas de sensibilidad de contenido</h4>
+      <div class="flag-box">Enfermedad leve: Teo come un fruto desconocido y siente dolor de estómago y mareo, resuelto con descanso, líquidos y cuidado profesional. Modelado con calma, sin dramatismo. El fruto y el remedio son ficticios/genéricos, no corresponden a ninguna planta real — el mensaje central es preguntar antes de comer algo desconocido y que pedir ayuda es sabiduría, no debilidad.</div>
+
+      <h4>Nota de campos de Huellas del Viajero</h4>
+      <div class="flag-box">El texto fuente no especifica una comida para la doctora Alma, así que ese campo de la tarjeta se reemplazó por "Enseñanza", usando la lección de su abuelo sobre escuchar primero al paciente.</div>
+
+      <h4>Nota de contenido</h4>
+      <div class="flag-box">El texto fuente incluye secciones independientes de Diario de los Guardianes y Misión del Guardián ("Guardianes de la Salud," actividades diferenciadas por grado). Ambas quedan fuera de esta edición Foundation, ya que corresponden a funciones aún diferidas.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- CONTENT AT FOUR LEVELS ---------------- */
+const VERSIONS = {
+  A1: {
+    time:'3 min',
+    html: `
+      <p>Es una mañana perfecta para explorar. Los Guardianes preparan sus mochilas.</p>
+      <p>—¿Todos trajeron agua? —pregunta Don Pico. —¡Sí! —¿Frutas? —¡Sí! —¿Protector contra mosquitos? Todos dicen que sí. Excepto Teo.</p>
+      <p>Teo mira un árbol. —¿Qué haces? —pregunta Chica. —Creo que encontré el desayuno.</p>
+      <p>Hay frutos redondos y anaranjados en la rama. —Nunca los vi. Deben ser deliciosos.</p>
+      <p>Don Pico abre el pico para hablar... pero Teo ya come la fruta.</p>
+      <h3>Algo no anda bien</h3>
+      <p>Al principio todo parece normal. Pero unos minutos después... —Creo que... me siento raro.</p>
+      <p>Teo camina despacio. Se toca el estómago. —Me duele mucho. También estoy mareado.</p>
+      <p>Iggy se acerca rápido. —Debemos llevarlo a la clínica. Don Pico asiente. —Ahora.</p>
+      <h3>La Clínica del Colibrí</h3>
+      <p>La clínica es pequeña. Hay plantas medicinales alrededor. Una colibrí pequeña sale sonriendo. —Buenos días. Soy la doctora Alma. ¿Qué ocurrió?</p>
+      <p>Chica explica todo. La doctora mira el fruto. —Entiendo. No es venenoso. Pero causa dolor de estómago si no está maduro.</p>
+      <p>Teo suspira. —Creo que debí preguntar antes de comer.</p>
+      <h3>Una médica con historia</h3>
+      <p>Mientras Teo descansa, la doctora prepara una <span class="gloss" data-word="infusión">infusión</span><span class="gloss-tooltip">una bebida hecha con hierbas y agua caliente<span class="arrow"></span></span> de hierbas.</p>
+      <p>Nico ve fotos en la pared. —¿Dónde es eso? —En Colombia. Allí crecí. Mi abuelo era médico. Me enseñó a escuchar al paciente primero.</p>
+      <p>Don Pico asiente. —Los buenos maestros nunca dejan de ser estudiantes.</p>
+      <h3>El paciente más difícil</h3>
+      <p>Bruno está sentado afuera, en silencio. Chica sale. —¿Estás bien?</p>
+      <p>Bruno responde después de un momento. —Pensé que Teo iba a estar muy grave. Me asusté. Pero no quería que nadie lo notara.</p>
+      <p>Chica sonríe. —Eso también significa que eres un buen amigo. Bruno baja la mirada.</p>
+      <h3>El mejor remedio</h3>
+      <p>Teo descansa, bebe agua, y sigue las indicaciones. Se siente mejor. —Doctora... ¿cuál es la mejor medicina?</p>
+      <p>Alma sonríe. —La curiosidad es maravillosa. Pero necesita <span class="gloss" data-word="prudencia">prudencia</span><span class="gloss-tooltip">pensar con cuidado antes de actuar<span class="arrow"></span></span> también. Dormir bien. Comer sano. Y pedir ayuda cuando la necesites.</p>
+      <p>Don Pico agrega: —Los Guardianes cuidan la selva... pero también aprenden a cuidarse a sí mismos.</p>
+      <h3>Una receta muy antigua</h3>
+      <p>Chica ve una caja de madera antigua. Tiene una espiral con cuatro hojas: la misma marca.</p>
+      <p>Adentro hay un papel: "Quien protege la vida, protege también la memoria del bosque."</p>
+      <p>La doctora cierra la caja con cuidado. —Eso era de mi abuelo.</p>`
+  },
+  A2: {
+    time:'4 min',
+    html: `
+      <p>Es una mañana perfecta para explorar. El aire huele a lluvia. Los Guardianes preparan sus mochilas.</p>
+      <p>—¿Todos trajeron agua? —pregunta Don Pico. —¡Sí! —respondieron. —¿Frutas? —¡Sí! —¿Protector contra mosquitos? Todos responden que sí. Excepto Teo.</p>
+      <p>Teo está mirando un árbol. —¿Qué haces? —pregunta Chica. —Creo que encontré el desayuno.</p>
+      <p>Sobre una rama cuelgan unos frutos redondos de color naranja. —Nunca los había visto. Eso significa que deben ser deliciosos.</p>
+      <p>Don Pico abre el pico para decir algo... pero Teo ya había dado el primer mordisco.</p>
+      <h3>Algo no anda bien</h3>
+      <p>Al principio todo parece normal. Pero unos minutos después... —Creo que... me siento raro.</p>
+      <p>Teo camina más despacio. Luego se toca el estómago. —Me duele mucho. También me siento mareado.</p>
+      <p>Iggy se acerca rápidamente. —Creo que debemos llevarlo a la clínica. Don Pico asiente. —Ahora.</p>
+      <h3>La Clínica del Colibrí</h3>
+      <p>La clínica es pequeña. Las ventanas están abiertas para dejar entrar el aire fresco. Hay plantas medicinales creciendo alrededor del edificio.</p>
+      <p>Una pequeña colibrí sale sonriendo. —Buenos días. Soy la doctora Alma. ¿Qué ocurrió?</p>
+      <p>Chica explica lo sucedido. La doctora observa el fruto que aún queda en la mochila. —Entiendo. No es venenoso. Pero sí puede causar un fuerte dolor de estómago si no está maduro.</p>
+      <p>Teo suspira. —Creo que debí preguntar antes de comer.</p>
+      <h3>Una médica con historia</h3>
+      <p>Mientras Teo descansa, la doctora Alma prepara una <span class="gloss" data-word="infusión">infusión</span><span class="gloss-tooltip">una bebida hecha con hierbas y agua caliente<span class="arrow"></span></span> de hierbas. Nico observa unas fotografías colgadas en la pared. En una aparece la doctora junto a un bosque lleno de montañas.</p>
+      <p>—¿Dónde es eso? Alma sonríe. —En Colombia. Allí crecí. Mi abuelo era médico rural. Me enseñó que primero hay que escuchar al paciente y después buscar la medicina. También me enseñó a respetar los conocimientos de las comunidades indígenas sobre muchas plantas.</p>
+      <p>Cuando vine a Belice descubrí que aquí también existían personas que cuidaban el bosque con muchísimo conocimiento. Desde entonces sigo aprendiendo todos los días.</p>
+      <p>Don Pico asiente con admiración. —Los buenos maestros nunca dejan de ser estudiantes.</p>
+      <h3>El paciente más difícil</h3>
+      <p>Mientras todos están pendientes de Teo, Bruno permanece sentado afuera. Mira hacia la ventana. No dice nada.</p>
+      <p>Chica sale. —¿Estás bien? Bruno tarda unos segundos en responder. —Pensé que... Teo iba a ponerse muy grave. Me asusté. Pero no quería que nadie lo notara.</p>
+      <p>Chica sonríe. —Eso también significa que eres un buen amigo. Bruno baja la mirada. Es la primera vez que alguien le dice algo así.</p>
+      <h3>El mejor remedio</h3>
+      <p>Después de descansar, beber mucha agua y seguir las indicaciones de la doctora, Teo comienza a sentirse mejor. Antes de irse pregunta: —Doctora... ¿cuál es la mejor medicina?</p>
+      <p>Alma responde sonriendo. —La curiosidad es maravillosa. Pero siempre debe ir acompañada de <span class="gloss" data-word="prudencia">prudencia</span><span class="gloss-tooltip">pensar con cuidado antes de actuar<span class="arrow"></span></span>. Y nunca olvides estas tres cosas: dormir bien, comer alimentos saludables, y pedir ayuda cuando la necesites.</p>
+      <p>Don Pico agrega: —Los Guardianes cuidan la selva... pero también aprenden a cuidar de sí mismos.</p>
+      <h3>Una receta muy antigua</h3>
+      <p>Cuando todos salen de la clínica, Chica observa un antiguo botiquín de madera. En la tapa hay tallada una espiral rodeada por cuatro hojas. La misma marca.</p>
+      <p>Dentro hay un papel amarillento que dice: "Quien protege la vida, protege también la memoria del bosque." Antes de que pueda leer más, la doctora cierra cuidadosamente el botiquín. —Ese perteneció a mi abuelo. Siempre decía que algunas historias sanan tanto como las medicinas.</p>
+      <p>Don Pico no dice una palabra. Solo sonríe. Como si conociera esa frase desde hace mucho tiempo.</p>`
+  },
+  B1: {
+    time:'6 min',
+    html: `
+      <p>Era una mañana perfecta para explorar. El aire olía a lluvia. Los Guardianes preparaban sus mochilas.</p>
+      <p>—¿Todos trajeron agua? —preguntó Don Pico. —¡Sí! —respondieron. —¿Frutas? —¡Sí! —¿Protector contra mosquitos? Todos respondieron que sí. Excepto Teo.</p>
+      <p>Teo estaba mirando un árbol. —¿Qué haces? —preguntó Chica. —Creo que encontré el desayuno.</p>
+      <p>Sobre una rama colgaban unos frutos redondos de color naranja. —Nunca los había visto. Eso significa que deben ser deliciosos.</p>
+      <p>Don Pico abrió el pico para decir algo... pero Teo ya había dado el primer mordisco.</p>
+      <h3>Algo no anda bien</h3>
+      <p>Al principio todo parecía normal. Pero unos minutos después... —Creo que... me siento raro.</p>
+      <p>Teo caminaba más despacio. Luego se tocó el estómago. —Me duele mucho. También me siento mareado.</p>
+      <p>Iggy se acercó rápidamente. —Creo que debemos llevarlo a la clínica. Don Pico asintió. —Ahora.</p>
+      <h3>La Clínica del Colibrí</h3>
+      <p>La clínica era pequeña. Las ventanas estaban abiertas para dejar entrar el aire fresco. Había plantas medicinales creciendo alrededor del edificio.</p>
+      <p>Una pequeña colibrí salió sonriendo. —Buenos días. Soy la doctora Alma. ¿Qué ocurrió?</p>
+      <p>Chica explicó lo sucedido. La doctora observó el fruto que aún quedaba en la mochila. —Entiendo. No es venenoso. Pero sí puede causar un fuerte dolor de estómago si no está maduro.</p>
+      <p>Teo suspiró. —Creo que debí preguntar antes de comer.</p>
+      <h3>Una médica con historia</h3>
+      <p>Mientras Teo descansaba, la doctora Alma preparó una <span class="gloss" data-word="infusión">infusión</span><span class="gloss-tooltip">una bebida hecha con hierbas y agua caliente<span class="arrow"></span></span> de hierbas. Nico observó unas fotografías colgadas en la pared. En una aparecía la doctora junto a un bosque lleno de montañas.</p>
+      <p>—¿Dónde es eso? Alma sonrió. —En Colombia. Allí crecí. Mi abuelo era médico rural. Me enseñó que primero hay que escuchar al paciente y después buscar la medicina. También me enseñó a respetar los conocimientos de las comunidades indígenas sobre muchas plantas.</p>
+      <p>Cuando vine a Belice descubrí que aquí también existían personas que cuidaban el bosque con muchísimo conocimiento. Desde entonces sigo aprendiendo todos los días.</p>
+      <p>Don Pico asintió con admiración. —Los buenos maestros nunca dejan de ser estudiantes.</p>
+      <h3>El paciente más difícil</h3>
+      <p>Mientras todos estaban pendientes de Teo, Bruno permanecía sentado afuera. Miraba hacia la ventana. No decía nada.</p>
+      <p>Chica salió. —¿Estás bien? Bruno tardó unos segundos en responder. —Pensé que... Teo iba a ponerse muy grave. Me asusté. Pero no quería que nadie lo notara.</p>
+      <p>Chica sonrió. —Eso también significa que eres un buen amigo. Bruno bajó la mirada. Era la primera vez que alguien le decía algo así.</p>
+      <h3>El mejor remedio</h3>
+      <p>Después de descansar, beber mucha agua y seguir las indicaciones de la doctora, Teo comenzó a sentirse mejor. Antes de irse preguntó: —Doctora... ¿cuál es la mejor medicina?</p>
+      <p>Alma respondió sonriendo. —La curiosidad es maravillosa. Pero siempre debe ir acompañada de <span class="gloss" data-word="prudencia">prudencia</span><span class="gloss-tooltip">pensar con cuidado antes de actuar<span class="arrow"></span></span>. Y nunca olvides estas tres cosas: dormir bien, comer alimentos saludables, y pedir ayuda cuando la necesites.</p>
+      <p>Don Pico agregó: —Los Guardianes cuidan la selva... pero también aprenden a cuidar de sí mismos.</p>
+      <h3>Una receta muy antigua</h3>
+      <p>Cuando todos salían de la clínica, Chica observó un antiguo botiquín de madera. En la tapa había tallada una espiral rodeada por cuatro hojas. La misma marca.</p>
+      <p>Dentro había un papel amarillento que decía: "Quien protege la vida, protege también la memoria del bosque." Antes de que pudiera leer más, la doctora cerró cuidadosamente el botiquín. —Ese perteneció a mi abuelo. Siempre decía que algunas historias sanan tanto como las medicinas.</p>
+      <p>Don Pico no dijo una palabra. Solo sonrió. Como si conociera esa frase desde hacía mucho tiempo.</p>`
+  },
+  B2: {
+    time:'8 min',
+    html: `
+      <p>Era una mañana perfecta para explorar. El aire olía a lluvia. Los Guardianes preparaban sus mochilas.</p>
+      <p>—¿Todos trajeron agua? —preguntó Don Pico. —¡Sí! —respondieron. —¿Frutas? —¡Sí! —¿Protector contra mosquitos? Todos respondieron que sí. Excepto Teo.</p>
+      <p>Teo estaba mirando un árbol. —¿Qué haces? —preguntó Chica. —Creo que encontré el desayuno.</p>
+      <p>Sobre una rama colgaban unos frutos redondos de color naranja. —Nunca los había visto. Eso significa que deben ser deliciosos.</p>
+      <p>Don Pico abrió el pico para decir algo... pero Teo ya había dado el primer mordisco.</p>
+      <h3>Algo no anda bien</h3>
+      <p>Al principio todo parecía normal. Pero unos minutos después...</p>
+      <p>—Creo que... me siento raro.</p>
+      <p>Teo caminaba más despacio. Luego se tocó el estómago. —Me duele mucho. También me siento mareado.</p>
+      <p>Iggy se acercó rápidamente. —Creo que debemos llevarlo a la clínica. Don Pico asintió. —Ahora.</p>
+      <h3>La Clínica del Colibrí</h3>
+      <p>La clínica era pequeña. Las ventanas estaban abiertas para dejar entrar el aire fresco. Había plantas medicinales creciendo alrededor del edificio.</p>
+      <p>Una pequeña colibrí salió sonriendo. —Buenos días. Soy la doctora Alma. ¿Qué ocurrió?</p>
+      <p>Chica explicó lo sucedido. La doctora observó el fruto que aún quedaba en la mochila. —Entiendo. No es venenoso. Pero sí puede causar un fuerte dolor de estómago si no está maduro.</p>
+      <p>Teo suspiró. —Creo que debí preguntar antes de comer.</p>
+      <h3>Una médica con historia</h3>
+      <p>Mientras Teo descansaba, la doctora Alma preparó una <span class="gloss" data-word="infusión">infusión</span><span class="gloss-tooltip">una bebida hecha con hierbas y agua caliente<span class="arrow"></span></span> de hierbas. Nico observó unas fotografías colgadas en la pared. En una aparecía la doctora junto a un bosque lleno de montañas.</p>
+      <p>—¿Dónde es eso?</p>
+      <p>Alma sonrió. —En Colombia. Allí crecí. Mi abuelo era médico rural. Me enseñó que primero hay que escuchar al paciente y después buscar la medicina. También me enseñó a respetar los conocimientos de las comunidades indígenas sobre muchas plantas.</p>
+      <p>Cuando vine a Belice descubrí que aquí también existían personas que cuidaban el bosque con muchísimo conocimiento. Desde entonces sigo aprendiendo todos los días.</p>
+      <p>Don Pico asintió con admiración. —Los buenos maestros nunca dejan de ser estudiantes.</p>
+      <h3>El paciente más difícil</h3>
+      <p>Mientras todos estaban pendientes de Teo, Bruno permanecía sentado afuera. Miraba hacia la ventana. No decía nada.</p>
+      <p>Chica salió. —¿Estás bien?</p>
+      <p>Bruno tardó unos segundos en responder. —Pensé que... Teo iba a ponerse muy grave. Me asusté. Pero no quería que nadie lo notara.</p>
+      <p>Chica sonrió. —Eso también significa que eres un buen amigo.</p>
+      <p>Bruno bajó la mirada. Era la primera vez que alguien le decía algo así.</p>
+      <h3>El mejor remedio</h3>
+      <p>Después de descansar, beber mucha agua y seguir las indicaciones de la doctora, Teo comenzó a sentirse mejor. Antes de irse preguntó: —Doctora... ¿cuál es la mejor medicina?</p>
+      <p>Alma respondió sonriendo. —La curiosidad es maravillosa. Pero siempre debe ir acompañada de <span class="gloss" data-word="prudencia">prudencia</span><span class="gloss-tooltip">pensar con cuidado antes de actuar<span class="arrow"></span></span>. Y nunca olvides estas tres cosas: dormir bien. Comer alimentos saludables. Y pedir ayuda cuando la necesites.</p>
+      <p>Don Pico agregó: —Los Guardianes cuidan la selva... pero también aprenden a cuidar de sí mismos.</p>
+      <h3>Una receta muy antigua</h3>
+      <p>Cuando todos salían de la clínica, Chica observó un antiguo botiquín de madera. En la tapa había tallada una espiral rodeada por cuatro hojas. La misma marca.</p>
+      <p>Dentro había un papel amarillento que decía: "Quien protege la vida, protege también la memoria del bosque."</p>
+      <p>Antes de que pudiera leer más, la doctora cerró cuidadosamente el botiquín. —Ese perteneció a mi abuelo. Siempre decía que algunas historias sanan tanto como las medicinas.</p>
+      <p>Don Pico no dijo una palabra. Solo sonrió. Como si conociera esa frase desde hacía mucho tiempo.</p>`
+  }
+};
+
+let fontSize = 18;
+let glossOn = true;
+let listening = false;
+let currentLevel = 'A1';
+const savedWords = new Set();
+
+function renderStory(level){
+  currentLevel = level;
+  document.getElementById('storyBody').innerHTML = VERSIONS[level].html;
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+  document.getElementById('toolbarLevel').textContent = level;
+  document.getElementById('railLevel').textContent = level;
+  document.getElementById('railTime').textContent = VERSIONS[level].time;
+  applyGlossState();
+  buildWordBank();
+}
+
+function setReaderLevel(level, el){
+  document.querySelectorAll('.level-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  renderStory(level);
+}
+
+function changeFont(delta){
+  fontSize = Math.min(24, Math.max(14, fontSize+delta*2));
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+}
+
+function toggleGloss(){
+  glossOn = !glossOn;
+  document.getElementById('glossToggle').textContent = glossOn ? '🔤 Glosario: Activado' : '🔤 Glosario: Desactivado';
+  document.getElementById('glossToggle').classList.toggle('on', glossOn);
+  applyGlossState();
+}
+function applyGlossState(){
+  document.querySelectorAll('.gloss').forEach(g=>{
+    g.style.borderBottomColor = glossOn ? 'var(--coral)' : 'transparent';
+    g.style.cursor = glossOn ? 'help' : 'text';
+    g.style.fontWeight = glossOn ? '600' : '400';
+    if(!glossOn) g.classList.remove('tapped');
+  });
+}
+document.addEventListener('click', e=>{
+  if(e.target.closest('.gloss') && glossOn){
+    e.target.closest('.gloss').classList.toggle('tapped');
+  }
+});
+
+function toggleNight(){
+  const btn = document.getElementById('nightToggle');
+  btn.classList.toggle('on');
+  document.getElementById('pageContent').style.filter = btn.classList.contains('on') ? 'invert(1) hue-rotate(180deg)' : 'none';
+  btn.textContent = btn.classList.contains('on') ? '☀ Luz brillante' : '🌙 Luz de lámpara';
+}
+
+function toggleListen(){
+  listening = !listening;
+  const btn = document.getElementById('listenBtn');
+  btn.classList.toggle('playing', listening);
+  btn.textContent = listening ? '⏸ Reproduciendo narración…' : '🔊 Escuchar narración';
+}
+
+function openTeacherNotes(){ document.getElementById('teacherModal').classList.add('open'); }
+function closeTeacherNotes(){ document.getElementById('teacherModal').classList.remove('open'); }
+
+function copyTeacherNotes(){
+  const body = document.getElementById('teacherNotesBody');
+  let text = '';
+  body.querySelectorAll('h4, div, ul, li').forEach(el=>{
+    if(el.tagName === 'H4'){ text += '\n' + el.textContent.toUpperCase() + '\n'; }
+    else if(el.tagName === 'LI'){ text += '- ' + el.textContent + '\n'; }
+    else if(el.tagName === 'DIV' && !el.closest('ul')){ text += el.textContent + '\n'; }
+  });
+  navigator.clipboard.writeText(text.trim()).then(()=>{
+    const btn = document.getElementById('copyNotesBtn');
+    const original = btn.textContent;
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent = original; btn.classList.remove('copied'); }, 1800);
+  });
+}
+
+function buildWordBank(){
+  const words = [...document.querySelectorAll('.gloss')];
+  const seen = new Set();
+  const bank = document.getElementById('wordBank');
+  bank.innerHTML = '';
+  words.forEach(w=>{
+    const word = w.dataset.word;
+    if(seen.has(word)) return; seen.add(word);
+    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const row = document.createElement('div');
+    row.className='word-chip';
+    row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
+      <button class="save-word ${savedWords.has(word)?'saved':''}" onclick="toggleSaveWord('${word}', this)">${savedWords.has(word)?'✓':'+'}</button>`;
+    bank.appendChild(row);
+  });
+}
+function toggleSaveWord(word, btn){
+  if(savedWords.has(word)){ savedWords.delete(word); btn.classList.remove('saved'); btn.textContent='+'; }
+  else { savedWords.add(word); btn.classList.add('saved'); btn.textContent='✓'; }
+}
+
+/* ---------------- COMPREHENSION ---------------- */
+const answered = {};
+function answer(btn, isCorrect, qid){
+  if(answered[qid]) return;
+  answered[qid]=true;
+  const opts = btn.parentElement.querySelectorAll('.comp-opt');
+  opts.forEach(o=>o.disabled=true);
+  btn.classList.add(isCorrect?'correct':'incorrect');
+  if(!isCorrect){
+    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+  }
+  document.getElementById(qid+'result').style.display='block';
+}
+function finishStory(){
+  if(Object.keys(answered).length < 2){
+    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+    return;
+  }
+  document.getElementById('finishBtn').textContent = '✓ ¡Completado!';
+  document.getElementById('finishBtn').style.background = '#6fae7a';
+  setTimeout(()=> alert('¡Buena lectura! Este episodio ahora aparece 100% completo en tu estante, y tu maestra puede ver tus resultados de comprensión.'), 300);
+}
+
+/* ---------------- SCROLL PROGRESS ---------------- */
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('progressFill').style.width = Math.min(100,scrolled)+'%';
+});
+
+/* ---------------- INIT ---------------- */
+renderStory('A1');
+</script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Episodio 13: La Tormenta de Chiquibul — Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #14151c; --bg-panel: #1c1e29; --parchment: #f3e9c9; --parchment-dim: #cfc4a0;
+    --navy: #1b2a4a; --gold: #c9a227; --gold-soft: #e6cf7a; --green: #4a7c59; --green-soft: #6fae82; --ink: #2a2416;
+    --lamp-glow: radial-gradient(ellipse at 50% -10%, rgba(230,207,122,0.14), transparent 60%);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); background-image: var(--lamp-glow); color: var(--parchment); font-family: 'Public Sans', sans-serif; line-height: 1.5; min-height: 100vh; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 32px 20px 80px; }
+  header.top { text-align: center; margin-bottom: 24px; }
+  .brand { font-family: 'Space Mono', monospace; letter-spacing: 0.2em; font-size: 12px; color: var(--gold-soft); text-transform: uppercase; }
+  .series { font-family: 'Public Sans', sans-serif; font-style: italic; color: var(--parchment-dim); font-size: 14px; margin-top: 4px; }
+  h1.title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 34px; margin: 14px 0 6px; color: var(--parchment); }
+  .level-bar { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 20px 0 28px; }
+  .pill { font-family: 'Space Mono', monospace; font-size: 13px; padding: 8px 18px; border-radius: 999px; border: 1px solid var(--gold); color: var(--gold-soft); background: transparent; cursor: pointer; transition: all 0.15s ease; }
+  .pill:hover { background: rgba(201,162,39,0.12); }
+  .pill.active { background: var(--gold); color: var(--ink); font-weight: 700; }
+  .story-panel { background: var(--bg-panel); border: 1px solid rgba(201,162,39,0.25); border-radius: 14px; padding: 30px 32px; box-shadow: 0 8px 30px rgba(0,0,0,0.35); }
+  .story-panel p { font-family: 'Source Serif 4', serif; font-size: 19px; color: #f6efd8; margin: 0 0 16px; }
+  .story-panel p:last-child { margin-bottom: 0; }
+  .level-tag { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--parchment-dim); margin-bottom: 14px; display: block; }
+  section.block { margin-top: 34px; }
+  h2.block-title { font-family: 'Fraunces', serif; font-size: 20px; color: var(--gold-soft); border-bottom: 1px solid rgba(201,162,39,0.3); padding-bottom: 8px; margin-bottom: 14px; }
+  .glossary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+  .glossary-item { font-family: 'Public Sans', sans-serif; font-size: 15px; padding: 8px 0; border-bottom: 1px dashed rgba(243,233,201,0.15); }
+  .glossary-item b { color: var(--gold-soft); font-weight: 600; }
+  .word-bank { display: flex; flex-wrap: wrap; gap: 10px; }
+  .word-chip { font-family: 'Space Mono', monospace; font-size: 13px; background: rgba(201,162,39,0.1); border: 1px solid rgba(201,162,39,0.35); color: var(--gold-soft); padding: 6px 14px; border-radius: 8px; }
+  .comp-q { background: rgba(255,255,255,0.03); border-left: 3px solid var(--gold); padding: 12px 16px; margin-bottom: 12px; font-family: 'Public Sans', sans-serif; font-size: 15px; }
+  .huellas-empty { font-family: 'Public Sans', sans-serif; font-style: italic; color: var(--parchment-dim); font-size: 14px; border: 1px dashed rgba(243,233,201,0.25); border-radius: 10px; padding: 16px; }
+  .palabra-card { display: flex; align-items: center; gap: 16px; background: rgba(201,162,39,0.08); border: 1px solid rgba(201,162,39,0.3); border-radius: 10px; padding: 16px 20px; }
+  .palabra-word { font-family: 'Fraunces', serif; font-size: 24px; color: var(--gold-soft); }
+  .footer-actions { text-align: center; margin-top: 40px; }
+  .maestro-btn { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 15px; background: var(--green); color: #eafff0; border: none; padding: 14px 26px; border-radius: 999px; cursor: pointer; box-shadow: 0 4px 16px rgba(74,124,89,0.4); transition: background 0.15s ease; }
+  .maestro-btn:hover { background: var(--green-soft); }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 50; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #1a1c22; border: 1px solid var(--green-soft); border-radius: 16px; max-width: 700px; width: 100%; padding: 30px 32px 34px; color: var(--parchment); }
+  .modal h2 { font-family: 'Fraunces', serif; color: var(--green-soft); margin-top: 0; }
+  .modal h3 { font-family: 'Public Sans', sans-serif; font-size: 15px; color: var(--gold-soft); margin: 22px 0 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .modal p, .modal li { font-family: 'Public Sans', sans-serif; font-size: 14.5px; color: #e7e2cf; line-height: 1.55; }
+  .modal ul { margin: 0; padding-left: 20px; }
+  .modal-close { float: right; background: none; border: 1px solid rgba(243,233,201,0.3); color: var(--parchment); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-family: 'Public Sans', sans-serif; }
+  .copy-btn { font-family: 'Space Mono', monospace; font-size: 13px; background: var(--gold); color: var(--ink); border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer; margin-top: 20px; }
+  .copy-confirm { font-family: 'Public Sans', sans-serif; font-size: 13px; color: var(--green-soft); margin-left: 10px; }
+  @media (max-width: 560px) { .glossary-grid { grid-template-columns: 1fr; } .story-panel { padding: 22px 18px; } h1.title { font-size: 26px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">Cuentópolis</div>
+    <div class="series">Chica y sus Amigos · Temporada 1: Los Guardianes de Chiquibul</div>
+    <h1 class="title">Episodio 13: La Tormenta de Chiquibul</h1>
+  </header>
+
+  <div class="level-bar" id="levelBar">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+    <span class="level-tag" id="levelTag">Nivel A1 · presente, oraciones cortas y repetitivas</span>
+    <div id="storyText"></div>
+  </div>
+
+  <section class="block">
+    <h2 class="block-title">📖 Glosario</h2>
+    <div class="glossary-grid">
+      <div class="glossary-item"><b>la tormenta</b> — storm</div>
+      <div class="glossary-item"><b>subir (el agua)</b> — to rise (water)</div>
+      <div class="glossary-item"><b>empapado/a</b> — soaked</div>
+      <div class="glossary-item"><b>el arroyo</b> — stream</div>
+      <div class="glossary-item"><b>la rama</b> — branch</div>
+      <div class="glossary-item"><b>rápido</b> — fast, quickly</div>
+      <div class="glossary-item"><b>ayudar</b> — to help</div>
+      <div class="glossary-item"><b>a salvo</b> — safe</div>
+      <div class="glossary-item"><b>la abertura</b> — opening</div>
+      <div class="glossary-item"><b>la raíz</b> — root</div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🍃 Banco de Palabras</h2>
+    <div class="word-bank">
+      <span class="word-chip">llover</span>
+      <span class="word-chip">tormenta</span>
+      <span class="word-chip">equipo</span>
+      <span class="word-chip">rápido</span>
+      <span class="word-chip">proteger</span>
+      <span class="word-chip">empapado</span>
+      <span class="word-chip">juntos</span>
+      <span class="word-chip">a salvo</span>
+      <span class="word-chip">descubrir</span>
+      <span class="word-chip">abertura</span>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🌎 Huellas del Viajero</h2>
+    <div class="huellas-empty">
+      Sin visitante nuevo en este episodio — Luna sigue con el grupo desde el Episodio 12,
+      ya como parte del equipo, no como visita.
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🌱 La Palabra del Bosque</h2>
+    <div class="palabra-card">
+      <div class="palabra-word">Perseverancia</div>
+      <div style="font-family:'Public Sans',sans-serif; font-size:14px; color:var(--parchment-dim);">
+        Cognado con "perseverance" en inglés — el grupo no se rinde ante la tormenta.
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">❓ Comprobación de Comprensión</h2>
+    <div class="comp-q">1. ¿Qué cambia de repente en el clima de Chiquibul, después de tantas semanas de sequía?</div>
+    <div class="comp-q">2. ¿Cómo trabajan juntos Chica, Teo, Iggy y Luna para proteger la piedra?</div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🦜 La Pregunta de Don Pico</h2>
+    <div class="comp-q" style="border-left-color: var(--green-soft); font-style: italic;">
+      "¿Alguna vez tuviste que trabajar en equipo rápidamente para resolver un problema inesperado? ¿Cómo se sintió?"
+    </div>
+  </section>
+
+  <div class="footer-actions">
+    <button class="maestro-btn" onclick="document.getElementById('modalOverlay').classList.add('open')">🎓 Notas del maestro</button>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">Cerrar ✕</button>
+    <h2>🎓 Notas del maestro — Episodio 13</h2>
+
+    <h3>Información general</h3>
+    <p><b>Unidad curricular:</b> La ropa y el clima<br>
+    <b>Nivel original:</b> B2 (autoría original Cuentópolis)<br>
+    <b>Posición en la temporada:</b> Episodio 13 de 15 — tercer episodio del arco final</p>
+
+    <h3>Objetivos lingüísticos</h3>
+    <ul>
+      <li>Describir el clima cambiante y sus efectos</li>
+      <li>Hablar de ropa apropiada para el clima</li>
+      <li>Expresar urgencia y trabajo en equipo</li>
+      <li>Narrar una secuencia de acción bajo presión, con tono seguro</li>
+    </ul>
+
+    <h3>Notas de ritmo por nivel CEFR</h3>
+    <ul>
+      <li><b>A1:</b> presente, oraciones cortas sobre la lluvia y la urgencia de proteger la piedra.</li>
+      <li><b>A2:</b> pretérito simple para los momentos de acción, combinado con presente para el diálogo.</li>
+      <li><b>B1:</b> narración más completa del rescate del fragmento, con conectores de causa y efecto.</li>
+      <li><b>B2:</b> registro cercano al original, vocabulario sensorial rico, tensión creciente resuelta con calma.</li>
+    </ul>
+
+    <h3>Señales de sensibilidad de contenido</h3>
+    <p>Tormenta repentina y arroyo que sube de nivel presentados de forma genérica y ficticia, sin vínculo con desastres reales. Ningún personaje corre peligro real de ahogarse ni sufre lesiones; el conflicto se resuelve mediante cooperación y rapidez. Tono: tenso pero seguro, con resolución calmada y final positivo.</p>
+
+    <h3>Notas de continuidad</h3>
+    <ul>
+      <li>La sequía del Episodio 11 se paga narrativamente: la lluvia llega, intensa y repentina.</li>
+      <li>Luna se mantiene como parte del grupo desde el Episodio 12 — no se le da una nueva tarjeta de Huellas del Viajero.</li>
+      <li>El agua revela una raíz con una abertura nunca antes vista — el gancho directo hacia la revelación del Episodio 14.</li>
+      <li>Diario de los Guardianes y Misión del Guardián permanecen diferidos, fuera del alcance de esta Foundation edition.</li>
+    </ul>
+
+    <h3>Arco final (Episodios 11–15)</h3>
+    <p>Ep. 11 (pista) → Ep. 12 (investigación con visitante que regresa) → Ep. 13 (tensión/obstáculo) → Ep. 14 (revelación de la Gran Ceiba) → Ep. 15 (resolución + gancho abierto para la Temporada 2).</p>
+
+    <button class="copy-btn" onclick="copyNotes()">📋 Copiar notas</button>
+    <span class="copy-confirm" id="copyConfirm" style="display:none;">¡Copiado!</span>
+  </div>
+</div>
+
+<script>
+  const stories = {
+    A1: {
+      tag: "Nivel A1 · presente, oraciones cortas y repetitivas",
+      text: [
+        "Chica, Teo, Iggy y Luna están cerca de la piedra tallada. Buscan más pistas.",
+        "De repente, empieza a llover. Llueve mucho. Es una tormenta fuerte.",
+        "El arroyo, que normalmente está seco, ahora tiene mucha agua.",
+        "\u2014¡El agua sube! \u2014dice Iggy, preocupado.",
+        "El agua sube más y más. La piedra con el mensaje está en peligro.",
+        "\u2014¡Tenemos que proteger la piedra! \u2014dice Chica.",
+        "Luna encuentra una rama grande. Usan la rama como puente.",
+        "Todos trabajan juntos. Chica sostiene la rama. Teo levanta la piedra. Iggy ayuda a Luna.",
+        "Por fin, ponen la piedra en un lugar seguro, lejos del agua.",
+        "Están empapados, pero están bien. Nadie está herido.",
+        "Entonces ven algo nuevo: una raíz enorme, con una abertura.",
+        "\u2014¿Qué es eso? \u2014pregunta Teo, sorprendido.",
+        "\u2014No lo sé \u2014dice Chica\u2014, pero tenemos que descubrirlo."
+      ]
+    },
+    A2: {
+      tag: "Nivel A2 · pretérito para la acción, presente para el diálogo",
+      text: [
+        "Chica, Teo, Iggy y Luna seguían explorando cerca de la piedra tallada cuando, de repente, el cielo cambió por completo.",
+        "Empezó a llover, y no era una lluvia suave: era una tormenta fuerte, con mucho viento.",
+        "El arroyo que siempre estaba seco empezó a llenarse de agua muy rápido.",
+        "\u2014¡El agua está subiendo! \u2014gritó Iggy, mirando hacia la piedra con preocupación.",
+        "El agua subía cada vez más, y la piedra con el segundo fragmento del mensaje corría peligro de quedar cubierta.",
+        "\u2014¡Tenemos que proteger la piedra, ahora! \u2014dijo Chica, con voz firme.",
+        "Luna encontró una rama grande y fuerte. La usaron como un puente improvisado sobre el agua.",
+        "Todos trabajaron en equipo: Chica sostuvo la rama con fuerza, Teo levantó la piedra con cuidado, e Iggy ayudó a Luna a cruzar.",
+        "Después de varios minutos de esfuerzo, lograron poner la piedra en un lugar alto y seguro, lejos del agua.",
+        "Estaban completamente empapados, pero nadie estaba herido. Todos respiraron con alivio.",
+        "Fue entonces cuando notaron algo que el agua había dejado al descubierto: una raíz enorme, con una abertura oscura.",
+        "\u2014¿Qué es esto? \u2014preguntó Teo, acercándose con cautela.",
+        "\u2014No lo sé \u2014respondió Chica, mirando fijamente la abertura\u2014, pero creo que tenemos que descubrirlo."
+      ]
+    },
+    B1: {
+      tag: "Nivel B1 · narración de acción con tensión creciente",
+      text: [
+        "El grupo llevaba un buen rato explorando cerca de la piedra tallada cuando el cielo, sin previo aviso, se oscureció por completo.",
+        "La lluvia que llevaba semanas sin llegar cayó de golpe, y con una fuerza que ninguno de ellos esperaba: no era una llovizna, sino una tormenta de verdad.",
+        "En cuestión de minutos, el arroyo que normalmente estaba seco se transformó en una corriente de agua que subía a ojos vistas.",
+        "\u2014¡El agua está subiendo muy rápido! \u2014exclamó Iggy, señalando hacia la piedra con los ojos muy abiertos.",
+        "El nivel del agua amenazaba con cubrir por completo el fragmento tallado, el segundo indicio real que habían encontrado en toda la temporada.",
+        "\u2014Tenemos que moverla ahora mismo \u2014dijo Chica, con una determinación que sorprendió incluso a ella misma.",
+        "Fue Luna quien encontró la solución: una rama caída, lo suficientemente larga y firme como para servir de puente improvisado sobre la corriente.",
+        "Trabajando en perfecta coordinación, Chica sostuvo la rama con todas sus fuerzas mientras Teo levantaba la piedra con cuidado, e Iggy guiaba a Luna paso a paso a través del agua.",
+        "Después de varios minutos que parecieron eternos, finalmente colocaron la piedra en un terreno alto, completamente fuera del alcance del agua.",
+        "Empapados de pies a cabeza, pero ilesos, los cuatro se permitieron por fin respirar con alivio.",
+        "Fue en ese momento que algo llamó su atención: la fuerza del agua había dejado al descubierto una raíz gigantesca, con una abertura oscura que ninguno había visto antes.",
+        "\u2014¿Qué crees que sea esto? \u2014preguntó Teo, acercándose con una mezcla de miedo y curiosidad.",
+        "\u2014No lo sé \u2014dijo Chica, sin apartar la vista de la abertura\u2014, pero algo me dice que tenemos que averiguarlo."
+      ]
+    },
+    B2: {
+      tag: "Nivel B2 · registro cercano al original, tensión y resolución calmada",
+      text: [
+        "Llevaban un buen rato explorando cerca de la piedra tallada, absortos en el intento de descifrar más de sus líneas, cuando el cielo cambió sin previo aviso.",
+        "La lluvia que Chiquibul había esperado durante semanas cayó, por fin, con una violencia que nadie había anticipado. No era la lluvia gentil que los animales del bosque llevaban tanto tiempo pidiendo, sino una tormenta cerrada, cargada de viento y urgencia.",
+        "En cuestión de minutos, el arroyo que solía estar completamente seco se convirtió en una corriente turbia que subía a un ritmo alarmante.",
+        "\u2014¡El agua está subiendo demasiado rápido! \u2014exclamó Iggy, con la voz quebrada por la tensión, señalando hacia la piedra que aún reposaba cerca de la orilla.",
+        "El fragmento tallado \u2014la segunda pieza real de un misterio que apenas empezaban a comprender\u2014 corría el riesgo de desaparecer bajo el agua para siempre.",
+        "\u2014Hay que moverla ahora \u2014dijo Chica, con una firmeza que sorprendió incluso a sus propios amigos.",
+        "Fue Luna quien, con la mirada entrenada de quien ha volado sobre muchos paisajes distintos, encontró la solución: una rama caída, larga y firme, capaz de servir de puente improvisado sobre la corriente creciente.",
+        "Lo que siguió fue una coreografía de urgencia y confianza mutua: Chica sostuvo la rama con todas sus fuerzas, Teo levantó la piedra con un cuidado casi reverente, e Iggy guió a Luna, paso a paso, sobre el agua embravecida.",
+        "Minutos que parecieron interminables después, la piedra quedó por fin a salvo, en terreno alto, lejos del alcance de la corriente.",
+        "Empapados hasta los huesos, pero ilesos, los cuatro se permitieron, por primera vez en varios minutos, respirar con calma.",
+        "Fue entonces cuando algo capturó su atención: la fuerza del agua había arrancado la tierra alrededor de una raíz descomunal, dejando al descubierto una abertura oscura que ninguno de ellos había visto jamás, a pesar de conocer ese bosque de memoria.",
+        "\u2014¿Qué crees que sea esto? \u2014preguntó Teo, con la voz baja, mitad temor, mitad fascinación.",
+        "Chica no apartó la vista de la abertura. Algo en su interior \u2014quizás la misma corazonada que la había guiado hasta ahora\u2014 le decía que aquel agujero oscuro no era un simple accidente de la tormenta.",
+        "\u2014No lo sé \u2014respondió finalmente\u2014. Pero creo que ha llegado el momento de averiguarlo."
+      ]
+    }
+  };
+
+  function renderLevel(level) {
+    const data = stories[level];
+    document.getElementById('levelTag').textContent = data.tag;
+    document.getElementById('storyText').innerHTML = data.text.map(p => `<p>${p}</p>`).join('');
+    document.querySelectorAll('.pill').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.level === level);
+    });
+  }
+
+  document.querySelectorAll('.pill').forEach(btn => {
+    btn.addEventListener('click', () => renderLevel(btn.dataset.level));
+  });
+
+  renderLevel('A1');
+
+  function copyNotes() {
+    const modalText = document.querySelector('.modal').innerText;
+    const cleaned = modalText.replace('Cerrar ✕', '').replace('📋 Copiar notas', '').trim();
+    const ta = document.createElement('textarea');
+    ta.value = cleaned;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const confirm = document.getElementById('copyConfirm');
+    confirm.style.display = 'inline';
+    setTimeout(() => confirm.style.display = 'none', 2000);
+  }
+</script>
+</body>
+</html>

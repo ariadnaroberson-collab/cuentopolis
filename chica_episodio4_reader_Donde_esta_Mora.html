@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Dónde está Mora? — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c1024; --ink-2:#12172e; --ink-3:#1a2040;
+    --lamp:#e8a94c; --lamp-dim:#c98a34; --coral:#e8735c;
+    --parchment:#f3e9d6; --parchment-dim:#e4d6b8; --page:#faf3e4;
+    --slate:#8891a8; --slate-dim:#5c6480;
+    --leaf:#5fa876; --leaf-dim:#3d7d55;
+    --line: rgba(232,169,76,0.16);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--parchment);font-family:'Public Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;}
+  button{font-family:'Public Sans',sans-serif;cursor:pointer;}
+
+  /* ---------- TOP BAR ---------- */
+  .toolbar{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;gap:16px;padding:12px 24px;
+    background:rgba(9,12,26,0.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .back-link{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--slate);border:1px solid var(--line);padding:7px 12px;border-radius:20px;background:rgba(255,255,255,0.03);}
+  .back-link:hover{color:var(--parchment);border-color:var(--lamp-dim);}
+  .toolbar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;}
+  .toolbar-series{font-size:11px;color:var(--slate);}
+  .toolbar-level{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:1.5px solid var(--lamp);color:var(--lamp);border-radius:5px;padding:2px 7px;}
+  .toolbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .tool-btn{
+    display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);
+    background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;transition:background .15s, border-color .15s;
+  }
+  .tool-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--lamp-dim);}
+  .tool-btn.on{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+  .tool-btn.teacher{border-color:var(--leaf-dim);color:var(--leaf);}
+  .tool-btn.teacher:hover{background:rgba(95,168,118,0.12);}
+  .font-controls{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .font-controls button{background:rgba(255,255,255,0.03);color:var(--parchment);border:none;padding:8px 12px;font-size:13px;}
+  .font-controls button:hover{background:rgba(255,255,255,0.1);}
+  .font-controls .divider{width:1px;background:var(--line);align-self:stretch;}
+
+  .progress-rail{height:3px;background:var(--ink-3);position:sticky;top:57px;z-index:39;}
+  .progress-rail-fill{height:100%;background:linear-gradient(90deg,var(--lamp),var(--coral));width:0%;transition:width .1s linear;}
+
+  /* ---------- LEVEL SWITCH STRIP ---------- */
+  .level-strip{display:flex;align-items:center;gap:10px;justify-content:center;padding:18px 24px 4px;flex-wrap:wrap;}
+  .level-strip-label{font-size:12.5px;color:var(--slate);}
+  .level-pill{
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:6px 13px;border-radius:20px;
+    border:1.5px solid var(--line);color:var(--slate);background:rgba(255,255,255,0.03);
+  }
+  .level-pill:hover{border-color:var(--lamp-dim);color:var(--parchment);}
+  .level-pill.active{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  /* ---------- LAYOUT ---------- */
+  .reader-layout{display:flex;justify-content:center;gap:28px;padding:20px 24px 80px;max-width:1180px;margin:0 auto;}
+  .page-wrap{flex:1 1 680px;max-width:680px;}
+  .page{
+    background:var(--page);color:#2c2412;border-radius:14px;padding:44px 52px;box-shadow:0 30px 60px rgba(0,0,0,0.4);
+    font-family:'Source Serif 4', serif; line-height:1.85; position:relative;
+  }
+  .page::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--lamp),var(--coral));border-radius:14px 14px 0 0;}
+  .story-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lamp-dim);margin-bottom:6px;}
+  .story-heading{font-family:'Fraunces',serif;font-size:30px;margin:0 0 6px;color:#241d0e;}
+  .story-subheading{font-family:'Public Sans',sans-serif;font-size:13.5px;color:#8a7a52;margin-bottom:22px;font-weight:600;}
+  .story-body p{margin:0 0 20px;}
+  .story-body h3{font-size:17px;color:#5c4a1f;margin:26px 0 12px;font-family:'Fraunces',serif;}
+  .gloss{border-bottom:2px dotted var(--coral);cursor:help;position:relative;color:#241d0e;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(232,115,92,0.16);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--ink-2);color:var(--parchment);border:1px solid var(--line);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+
+  /* ---------- COMPREHENSION ---------- */
+  .comp-check{margin-top:8px;padding-top:28px;border-top:1px dashed var(--parchment-dim);}
+  .comp-title{font-family:'Fraunces',serif;font-size:19px;margin:0 0 4px;color:#241d0e;}
+  .comp-sub{font-family:'Public Sans',sans-serif;font-size:13px;color:#6b5e42;margin-bottom:18px;}
+  .comp-q{font-family:'Public Sans',sans-serif;font-size:14.5px;font-weight:600;color:#241d0e;margin-bottom:10px;}
+  .comp-options{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
+  .comp-opt{
+    font-family:'Public Sans',sans-serif;text-align:left;padding:10px 14px;border-radius:8px;border:1.5px solid #d8cba3;
+    background:#fffaf0;font-size:13.5px;color:#3a3120;
+  }
+  .comp-opt:hover{border-color:var(--coral);}
+  .comp-opt.correct{background:#dff1e2;border-color:#6fae7a;}
+  .comp-opt.incorrect{background:#f6dcd6;border-color:var(--coral);}
+  .comp-result{display:none;font-family:'Public Sans',sans-serif;font-size:13.5px;color:#4b6b4f;margin-top:-10px;margin-bottom:16px;}
+
+  .finish-bar{display:flex;align-items:center;gap:14px;margin-top:24px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:transform .12s;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--lamp);color:#26160a;}
+  .btn-primary:hover{background:#f0b768;}
+  .btn-outline{background:transparent;border:1.5px solid #c9b98a;color:#4a3f26;}
+
+  /* ---------- SIDE RAIL ---------- */
+  .side-rail{flex:0 0 250px;display:flex;flex-direction:column;gap:16px;}
+  .rail-card{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .rail-title{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:10px;font-weight:600;display:flex;align-items:center;gap:6px;}
+  .word-chip{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:7px 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .word-chip:last-child{border-bottom:none;}
+  .word-en{color:var(--parchment);font-weight:600;}
+  .word-def{color:var(--slate);font-size:11.5px;}
+  .save-word{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--slate);font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .save-word.saved{background:var(--coral);border-color:var(--coral);color:#2a0f0a;}
+  .rail-meta-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--slate);padding:5px 0;}
+  .rail-meta-row b{color:var(--parchment);font-weight:600;}
+  .listen-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;}
+  .listen-btn:hover{border-color:var(--lamp-dim);}
+  .listen-btn.playing{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  /* Huellas del Viajero card */
+  .traveler-card{background:linear-gradient(160deg, rgba(95,168,118,0.14), rgba(95,168,118,0.03));border-color:rgba(95,168,118,0.3);}
+  .traveler-name{font-family:'Fraunces',serif;font-size:17px;color:var(--parchment);margin-bottom:2px;}
+  .traveler-tag{font-size:11.5px;color:var(--leaf);margin-bottom:10px;font-weight:600;}
+  .traveler-row{display:flex;gap:8px;font-size:12px;color:var(--slate);padding:4px 0;line-height:1.4;}
+  .traveler-row .lbl{flex:0 0 76px;color:var(--leaf);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:1px;}
+  .traveler-note{margin-top:10px;padding-top:10px;border-top:1px solid rgba(95,168,118,0.2);font-size:11px;color:var(--slate-dim);font-style:italic;}
+  /* Empty Huellas del Viajero state (episodes with no visiting character) */
+  .traveler-card.traveler-gap{background:linear-gradient(160deg, rgba(136,145,168,0.10), rgba(136,145,168,0.02));border-color:var(--line);}
+  .traveler-card.traveler-gap .rail-title{color:var(--slate);}
+  .traveler-empty{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:var(--slate);margin-bottom:8px;}
+  .traveler-card.traveler-gap .traveler-note{border-top-color:var(--line);}
+
+  /* Palabra del Bosque / Pregunta de Don Pico */
+  .forest-word{font-family:'Fraunces',serif;font-style:italic;font-size:21px;color:var(--lamp);margin-bottom:4px;}
+  .forest-word-def{font-size:12.5px;color:var(--slate);margin-bottom:14px;}
+  .pico-q{font-size:13px;color:var(--parchment);line-height:1.55;padding:12px;background:rgba(232,169,76,0.06);border-radius:8px;border-left:3px solid var(--lamp);font-style:italic;}
+
+  /* ---------- TEACHER NOTES MODAL ---------- */
+  .modal-overlay{position:fixed;inset:0;background:rgba(6,8,18,0.78);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;max-width:600px;width:100%;max-height:86vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.6);}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--ink-2);}
+  .modal-head h3{margin:0;font-size:16.5px;color:var(--leaf);}
+  .modal-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);color:var(--parchment);font-size:13px;}
+  .modal-head-actions{display:flex;align-items:center;gap:8px;}
+  .copy-notes-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid rgba(95,168,118,0.35);background:rgba(95,168,118,0.08);color:var(--leaf);font-size:12px;font-weight:600;transition:background .15s;}
+  .copy-notes-btn:hover{background:rgba(95,168,118,0.18);}
+  .copy-notes-btn.copied{background:var(--leaf);color:#0f2015;border-color:var(--leaf);}
+  .modal-body{padding:20px 22px 26px;font-size:13.5px;line-height:1.7;color:#c9cfe0;}
+  .modal-body h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--leaf);margin:18px 0 6px;}
+  .modal-body h4:first-child{margin-top:0;}
+  .modal-body ul{margin:4px 0;padding-left:20px;}
+  .flag-box{background:rgba(232,115,92,0.08);border:1px solid rgba(232,115,92,0.25);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#e3b3a6;margin-top:6px;}
+
+  @media(max-width:920px){
+    .reader-layout{flex-direction:column-reverse;align-items:center;}
+    .side-rail{flex:none;width:100%;max-width:680px;flex-direction:row;overflow-x:auto;}
+    .rail-card{min-width:220px;}
+    .page{padding:30px 22px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <a class="back-link" href="#">← Biblioteca</a>
+  <div>
+    <div class="toolbar-title">¿Dónde está Mora?</div>
+    <div class="toolbar-series">Chica y sus Amigos · Ep. 4</div>
+  </div>
+  <span class="toolbar-level" id="toolbarLevel">A1</span>
+  <div class="toolbar-right">
+    <div class="font-controls">
+      <button onclick="changeFont(-1)" title="Texto más pequeño">A−</button>
+      <div class="divider"></div>
+      <button onclick="changeFont(1)" title="Texto más grande">A+</button>
+    </div>
+    <button class="tool-btn" id="glossToggle" onclick="toggleGloss()">🔤 Glosario: Activado</button>
+    <button class="tool-btn" id="nightToggle" onclick="toggleNight()">🌙 Luz de lámpara</button>
+    <button class="tool-btn teacher" onclick="openTeacherNotes()">🎓 Notas del maestro</button>
+  </div>
+</div>
+<div class="progress-rail"><div class="progress-rail-fill" id="progressFill"></div></div>
+
+<!-- LEVEL SWITCHER -->
+<div class="level-strip">
+  <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
+  <div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
+  <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
+  <div class="level-pill" data-level="B2" onclick="setReaderLevel('B2', this)">B2</div>
+  <span class="level-strip-label" style="margin-left:6px;">— mismo cuento, tu ritmo</span>
+</div>
+
+<!-- LAYOUT -->
+<div class="reader-layout">
+  <div class="page-wrap">
+    <div class="page" id="pageContent">
+      <div class="story-eyebrow">Temporada 1 · Los Guardianes de Chiquibul</div>
+      <h1 class="story-heading">¿Dónde está Mora?</h1>
+      <div class="story-subheading">Episodio 4 — Dar y seguir direcciones</div>
+      <div class="story-body" id="storyBody"><!-- filled by JS --></div>
+
+      <div class="comp-check">
+        <div class="comp-title">Chequeo rápido</div>
+        <div class="comp-sub">Responde para marcar este episodio como completado.</div>
+
+        <div class="comp-q">1. Cuando por fin encuentran a Mora, ¿por qué se había quedado en el jardín escondido?</div>
+        <div class="comp-options" id="q1opts">
+          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque se perdió y no sabía cómo volver.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q1')">Porque encontró una orquídea débil y quiso ayudarla a florecer antes del festival.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque quería explorar sola, sin avisar a nadie.</button>
+        </div>
+        <div class="comp-result" id="q1result">¡Exacto! Mora no estaba perdida — se quedó para cuidar una flor que la necesitaba.</div>
+
+        <div class="comp-q">2. ¿Quién es Luna, y qué comparte con el grupo?</div>
+        <div class="comp-options" id="q2opts">
+          <button class="comp-opt" onclick="answer(this,false,'q2')">Una guacamaya que siempre ha vivido en Chiquibul y no conoce otros lugares.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q2')">Una guacamaya que visita a sus abuelos desde Yucatán, México, y comparte historias de cenotes y flamencos.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q2')">Una mariposa que ayuda a Mora a cuidar flores.</button>
+        </div>
+        <div class="comp-result" id="q2result">Así es — Luna conecta a Chiquibul con Yucatán, y les muestra a los amigos un lugar nuevo sin salir de casa.</div>
+
+        <div class="finish-bar">
+          <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
+          <button class="btn btn-outline" onclick="alert('Volviendo a la biblioteca — tu progreso se guarda en Sigue leyendo.')">Guardar y salir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDE RAIL -->
+  <div class="side-rail">
+    <div class="rail-card">
+      <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">Datos del episodio</div>
+      <div class="rail-meta-row"><span>Nivel</span><b id="railLevel">A1</b></div>
+      <div class="rail-meta-row"><span>Tiempo de lectura</span><b id="railTime">3 min</b></div>
+      <div class="rail-meta-row"><span>Lugar</span><b>Río Cristal y el jardín escondido</b></div>
+      <div class="rail-meta-row"><span>Tema</span><b>Direcciones, pedir ayuda</b></div>
+    </div>
+
+    <div class="rail-card traveler-card">
+      <div class="rail-title">🐾 Huellas del Viajero</div>
+      <div class="traveler-name">Luna</div>
+      <div class="traveler-tag">Guacamaya · Península de Yucatán, México</div>
+      <div class="traveler-row"><span class="lbl">Tradición</span><span>Reuniones familiares con comidas tradicionales</span></div>
+      <div class="traveler-row"><span class="lbl">Comida</span><span>Cochinita pibil</span></div>
+      <div class="traveler-row"><span class="lbl">Naturaleza</span><span>Cenotes de agua cristalina y flamencos rosados</span></div>
+      <div class="traveler-row"><span class="lbl">Dato curioso</span><span>Belice y México comparten la misma selva y muchos de los mismos animales</span></div>
+      <div class="traveler-row"><span class="lbl">Valor</span><span>Descubrir que los vecinos tienen costumbres distintas, pero también muchas cosas en común</span></div>
+      <div class="traveler-note">Luna visita a sus abuelos en Belice — su familia vive repartida entre dos países que comparten la misma selva.</div>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">🌳 La Palabra del Bosque</div>
+      <div class="forest-word">confianza</div>
+      <div class="forest-word-def">Pedir ayuda no es debilidad. Es confiar en que no tienes que encontrar el camino solo.</div>
+      <div class="rail-title" style="margin-top:14px;">🦜 La Pregunta de Don Pico</div>
+      <div class="pico-q">"¿Qué haces cuando no sabes cómo llegar a un lugar?"</div>
+      <div class="pico-q" style="margin-top:8px;">"¿Quién te ayuda a encontrar el camino?"</div>
+      <div class="pico-q" style="margin-top:8px;">"¿Alguna vez tú ayudaste a otra persona a orientarse?"</div>
+    </div>
+
+    <div class="rail-card">
+      <div class="rail-title">Banco de palabras — este episodio</div>
+      <div id="wordBank"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHER NOTES MODAL -->
+<div class="modal-overlay" id="teacherModal" onclick="if(event.target===this) closeTeacherNotes()">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🎓 Notas del maestro — Episodio 4</h3>
+      <div class="modal-head-actions">
+        <button class="copy-notes-btn" id="copyNotesBtn" onclick="copyTeacherNotes()">📋 Copiar notas</button>
+        <button class="modal-close" onclick="closeTeacherNotes()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body" id="teacherNotesBody">
+      <h4>Unidad curricular</h4>
+      <div>Dar y seguir direcciones · Nivel original: B2</div>
+
+      <h4>Objetivos lingüísticos</h4>
+      <ul>
+        <li>Pedir ayuda para encontrar un lugar</li>
+        <li>Dar direcciones sencillas</li>
+        <li>Usar expresiones de ubicación</li>
+        <li>Describir un recorrido</li>
+        <li>Trabajar en equipo para resolver un problema</li>
+      </ul>
+
+      <h4>Estructuras de alta frecuencia</h4>
+      <div>está · no está · busca · encuentra · gira · sigue · cruza · delante de · detrás de · entre · al lado de · cerca de · lejos de</div>
+
+      <h4>Notas de ritmo CEFR por nivel</h4>
+      <ul>
+        <li><b>A1</b> — Presente únicamente, oraciones muy cortas, vocabulario de ubicación aislado. Se mantiene la trama completa pero muy comprimida.</li>
+        <li><b>A2</b> — Presente en su mayoría, con conectores de secuencia (primero, después, luego) para las instrucciones; diálogo con Luna casi completo.</li>
+        <li><b>B1</b> — Introduce el pretérito/imperfecto que usa el texto fuente, con subordinación moderada; casi todo el diálogo se mantiene.</li>
+        <li><b>B2</b> — Texto fuente completo, narrado en pasado (a diferencia de los Episodios 1–3, que usan presente), incluyendo el final ambiguo con la reaparición del símbolo de la Ceiba en una roca nueva.</li>
+      </ul>
+
+      <h4>Temas de preguntas de comprensión</h4>
+      <ul>
+        <li>El misterio del día — ¿por qué Mora no está en el festival?</li>
+        <li>La visitante — ¿quién es Luna y de dónde viene?</li>
+        <li>Siguiendo pistas — ¿qué instrucciones siguen los amigos hasta el jardín escondido?</li>
+        <li>La verdad sobre Mora — ¿por qué se quedó allí, y qué encuentra Bruno junto a ella?</li>
+      </ul>
+
+      <h4>Banderas de sensibilidad de contenido</h4>
+      <div class="flag-box">Ninguna significativa. Preocupación leve por una amiga desaparecida, resuelta rápida y positivamente. Sin peligro ni pérdida.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- CONTENT AT FOUR LEVELS ---------------- */
+const VERSIONS = {
+  A1: {
+    time:'3 min',
+    html: `
+      <p>Hoy es el Festival de las Flores en Chiquibul. Todos están felices. Los colibríes vuelan de flor en flor. Las abejas trabajan mucho. Los monos hacen guirnaldas.</p>
+      <p>—¿Dónde está Mora? —pregunta Chica. Mora siempre llega primero, pero hoy no está.</p>
+      <p>Nico mira su mapa. —Anoche Mora dice que va al Río Cristal a buscar flores.</p>
+      <p>—Vamos allí —dice Chica.</p>
+      <h3>Una visitante inesperada</h3>
+      <p>En el camino, escuchan una voz. —¡Disculpen! Una guacamaya joven baja de un árbol. Tiene <span class="gloss" data-word="plumas">plumas</span><span class="gloss-tooltip">cubren el cuerpo de un pájaro<span class="arrow"></span></span> rojas, verdes y azules.</p>
+      <p>—¿Buscan a alguien? —pregunta. —Sí, buscamos a Mora —dice Chica.</p>
+      <p>—Me llamo Luna. Llego de Yucatán para visitar a mis abuelos. Mi mamá nace en Belice, pero parte de mi familia vive en México.</p>
+      <p>—¡Bienvenida! —dice Chica.</p>
+      <p>Nico pregunta: —¿Cómo es Yucatán? Luna responde: —Muy bonito. Hay playas, cenotes y flamencos rosados. Mi familia come cochinita pibil.</p>
+      <p>Luna señala un <span class="gloss" data-word="sendero">sendero</span><span class="gloss-tooltip">un camino pequeño en la selva<span class="arrow"></span></span>. —Veo una mariposa azul allí.</p>
+      <h3>Siguiendo las pistas</h3>
+      <p>—Seguimos por aquí —dice Nico. Caminan derecho, cruzan el río, y giran a la izquierda. Todos repiten las instrucciones. Bruno camina detrás, pero también escucha.</p>
+      <h3>El jardín escondido</h3>
+      <p>Cruzan el puente. Encuentran un sendero nuevo. El aire huele a flores. Hay muchas mariposas.</p>
+      <p>En el centro está Mora. Mueve las alas sobre una <span class="gloss" data-word="orquídea">orquídea</span><span class="gloss-tooltip">una flor especial y delicada<span class="arrow"></span></span> pequeña.</p>
+      <p>—¡Mora! —grita Chica. —¡Hola! —dice Mora—. Lo siento. Esta orquídea está muy <span class="gloss" data-word="débil">débil</span><span class="gloss-tooltip">no tiene mucha fuerza<span class="arrow"></span></span>. Quiero ayudarla antes de volver.</p>
+      <p>La flor abre sus pétalos. Es de color violeta. Nadie ve un color así antes.</p>
+      <h3>La pista de la Ceiba</h3>
+      <p>Bruno toca una roca con musgo. —¿Qué es esto? Chica mira. Hay una espiral con cuatro hojas. Es el mismo símbolo de la Gran Ceiba.</p>
+      <p>Don Pico llega volando. Mira el símbolo. —Hace mucho tiempo no veo esta marca... Pero, como siempre, Don Pico solo sonríe. —Las respuestas llegan cuando estamos listos.</p>
+      <h3>La pregunta de Don Pico</h3>
+      <p>Don Pico camina con el grupo. —Hoy siguen un camino para encontrar a una amiga. Pedir ayuda también es importante cuando estamos perdidos.</p>`
+  },
+  A2: {
+    time:'4 min',
+    html: `
+      <p>Toda la selva está llena de emoción. Los colibríes van de una flor a otra. Las abejas trabajan sin descanso. Los monos cuelgan guirnaldas hechas con hojas y lianas. Teo prepara jugo de frutas para todos.</p>
+      <p>Hoy se celebra el Festival de las Flores, una tradición muy querida en Chiquibul.</p>
+      <p>—¿Dónde está Mora? —pregunta Chica mientras mira hacia el cielo. Es extraño: Mora siempre es la primera en llegar.</p>
+      <p>Nico consulta el mapa que lleva doblado en su mochila. —Anoche dijo que iba a recoger flores cerca del Río Cristal.</p>
+      <p>—Entonces vamos allí —responde Chica.</p>
+      <h3>Una visitante inesperada</h3>
+      <p>Mientras caminan por el sendero, escuchan una voz. —¡Disculpen! Todos se detienen. Una joven guacamaya de <span class="gloss" data-word="plumas">plumas</span><span class="gloss-tooltip">cubren el cuerpo de un pájaro<span class="arrow"></span></span> rojas, verdes y azules baja de una rama.</p>
+      <p>—¿Están buscando a alguien? —Sí —contesta Chica—. Buscamos a nuestra amiga Mora.</p>
+      <p>La guacamaya sonríe. —Yo soy Luna. Llegué ayer desde Yucatán para visitar a mis abuelos. Mi mamá nació en Belice, pero parte de mi familia vive en México.</p>
+      <p>—¡Bienvenida a Chiquibul! —dice Chica.</p>
+      <p>—Gracias. Mi abuelo siempre dice que nuestras selvas están unidas por los mismos árboles y los mismos animales.</p>
+      <p>Nico abre mucho los ojos. —¿Cómo es Yucatán?</p>
+      <p>—Muy bonito. Hay playas de agua turquesa, cenotes donde el agua es clara como un espejo, y a veces llegan miles de flamencos rosados. Mi familia también prepara cochinita pibil para las reuniones.</p>
+      <p>Luna señala un <span class="gloss" data-word="sendero">sendero</span><span class="gloss-tooltip">un camino pequeño en la selva<span class="arrow"></span></span>. —Hace unos minutos vi una mariposa azul volando hacia el puente de madera.</p>
+      <h3>Siguiendo las pistas</h3>
+      <p>—Entonces sigamos por aquí —dice Nico. —¿Derecha o izquierda? —pregunta Arlo. —Primero seguimos derecho hasta el puente. Después cruzamos el río. Luego giramos a la izquierda, junto a las orquídeas. Más adelante hay una roca grande.</p>
+      <p>Todos repiten las instrucciones para no olvidarlas. Incluso Bruno, que camina unos metros detrás, fingiendo que no le interesa la búsqueda.</p>
+      <h3>El jardín escondido</h3>
+      <p>Después de cruzar el puente, el grupo encuentra un sendero que nadie recuerda. El aire huele a flores. Miles de mariposas vuelan entre las ramas.</p>
+      <p>En el centro del claro está Mora. Mueve lentamente sus alas sobre una pequeña <span class="gloss" data-word="orquídea">orquídea</span><span class="gloss-tooltip">una flor especial y delicada<span class="arrow"></span></span>.</p>
+      <p>—¡Mora! —grita Chica. La mariposa sonríe. —¡Hola! —¡Te buscamos por toda la selva! —Lo siento. Encontré esta orquídea muy <span class="gloss" data-word="débil">débil</span><span class="gloss-tooltip">no tiene mucha fuerza<span class="arrow"></span></span>. Si la dejaba sola, no florecería para el festival. Quise ayudarla antes de regresar.</p>
+      <p>Todos guardan silencio. La pequeña flor empieza a abrir sus pétalos. Es de un color violeta brillante que nadie había visto antes.</p>
+      <h3>La pista de la Ceiba</h3>
+      <p>Mientras descansan, Bruno apoya una pata sobre una roca cubierta de musgo. —¿Qué es esto? Chica se acerca. En la piedra hay una espiral rodeada por cuatro hojas: el mismo símbolo de la Gran Ceiba.</p>
+      <p>Antes de que pueda decir algo, Don Pico aparece volando. Mira el símbolo unos segundos. —Hace mucho tiempo que no veía esta marca... Los jóvenes animales esperan una explicación, pero, como siempre, Don Pico solo sonríe. —Algunas respuestas llegan cuando estamos listos para hacer las preguntas correctas.</p>
+      <h3>La pregunta de Don Pico</h3>
+      <p>Cuando regresan al festival, Don Pico camina junto al grupo. —Hoy todos siguieron un camino para encontrar a una amiga. Dar direcciones es importante, pero también lo es saber pedir ayuda cuando nos sentimos perdidos.</p>`
+  },
+  B1: {
+    time:'6 min',
+    html: `
+      <p>Toda la selva estaba llena de emoción. Los colibríes iban de una flor a otra. Las abejas trabajaban sin descanso. Los monos colgaban guirnaldas hechas con hojas y lianas, y Teo preparaba jugo de frutas para todos.</p>
+      <p>Ese día se celebraba el Festival de las Flores, una tradición muy querida en Chiquibul.</p>
+      <p>—¿Dónde está Mora? —preguntó Chica mientras miraba hacia el cielo. Era extraño: Mora siempre era la primera en llegar.</p>
+      <p>Nico consultó el mapa que llevaba cuidadosamente doblado en su mochila. —Anoche dijo que iba a recoger unas flores cerca del Río Cristal.</p>
+      <p>—Entonces vamos allí —respondió Chica.</p>
+      <h3>Una visitante inesperada</h3>
+      <p>Mientras caminaban por el sendero, escucharon una voz. —¡Disculpen! Todos se detuvieron. Una joven guacamaya de <span class="gloss" data-word="plumas">plumas</span><span class="gloss-tooltip">cubren el cuerpo de un pájaro<span class="arrow"></span></span> rojas, verdes y azules bajó de una rama.</p>
+      <p>—¿Están buscando a alguien? —Sí —contestó Chica—. Buscamos a nuestra amiga Mora.</p>
+      <p>La guacamaya sonrió. —Yo soy Luna. Llegué ayer desde Yucatán para visitar a mis abuelos. Mi mamá nació en Belice, pero parte de mi familia vive en México.</p>
+      <p>—¡Bienvenida a Chiquibul! —dijo Chica.</p>
+      <p>—Gracias. Mi abuelo siempre dice que nuestras selvas están unidas por los mismos árboles y los mismos animales.</p>
+      <p>Nico abrió mucho los ojos. —¿Cómo es Yucatán?</p>
+      <p>—Muy bonito. Hay playas de agua turquesa, cenotes donde el agua es tan clara que parece un espejo, y en ciertas épocas del año llegan miles de flamencos rosados. Mi familia también prepara cochinita pibil para las reuniones especiales.</p>
+      <p>Luna señaló un <span class="gloss" data-word="sendero">sendero</span><span class="gloss-tooltip">un camino pequeño en la selva<span class="arrow"></span></span>. —Hace unos minutos vi una mariposa azul volando hacia el puente de madera.</p>
+      <h3>Siguiendo las pistas</h3>
+      <p>—Entonces sigamos por aquí —dijo Nico. —¿Derecha o izquierda? —preguntó Arlo. —Primero seguimos derecho hasta el puente. Después cruzamos el río. Luego giramos a la izquierda, junto a las orquídeas. Más adelante hay una roca grande.</p>
+      <p>Todos repitieron las instrucciones para no olvidarlas. Incluso Bruno, que caminaba unos metros detrás, fingiendo que no le interesaba la búsqueda.</p>
+      <h3>El jardín escondido</h3>
+      <p>Después de cruzar el puente, el grupo encontró un sendero que ninguno recordaba. El aire olía a flores. Miles de mariposas revoloteaban entre las ramas.</p>
+      <p>En el centro del claro estaba Mora. Movía lentamente sus alas sobre una pequeña <span class="gloss" data-word="orquídea">orquídea</span><span class="gloss-tooltip">una flor especial y delicada<span class="arrow"></span></span>.</p>
+      <p>—¡Mora! —gritó Chica. La mariposa sonrió. —¡Hola! —¡Te buscamos por toda la selva! —Lo siento. Encontré esta orquídea muy <span class="gloss" data-word="débil">débil</span><span class="gloss-tooltip">no tiene mucha fuerza<span class="arrow"></span></span>. Si la dejaba sola, no florecería para el festival. Quise ayudarla antes de regresar.</p>
+      <p>Todos guardaron silencio. La pequeña flor comenzó a abrir sus pétalos. Era de un color violeta brillante que ninguno había visto antes.</p>
+      <h3>La pista de la Ceiba</h3>
+      <p>Mientras descansaban, Bruno apoyó una pata sobre una roca cubierta de musgo. —¿Qué es esto? Chica se acercó. En la piedra había una espiral rodeada por cuatro hojas: exactamente el mismo símbolo de la Gran Ceiba.</p>
+      <p>Antes de que pudiera decir algo, Don Pico apareció volando. Miró el símbolo durante unos segundos. —Hace mucho tiempo que no veía esta marca... Los jóvenes animales esperaron una explicación, pero, como siempre, Don Pico solo sonrió. —Algunas respuestas llegan cuando estamos listos para hacer las preguntas correctas.</p>
+      <h3>La pregunta de Don Pico</h3>
+      <p>Cuando regresaban al festival, Don Pico caminó junto al grupo. —Hoy todos siguieron un camino para encontrar a una amiga. Dar direcciones es importante, pero también lo es saber pedir ayuda cuando nos sentimos perdidos.</p>`
+  },
+  B2: {
+    time:'8 min',
+    html: `
+      <p>Toda la selva estaba llena de emoción. Los colibríes iban de una flor a otra. Las abejas trabajaban sin descanso. Los monos colgaban guirnaldas hechas con hojas y lianas. Teo preparaba jugo de frutas para todos.</p>
+      <p>Ese día se celebraba el Festival de las Flores, una tradición muy querida en Chiquibul.</p>
+      <p>—¿Dónde está Mora? —preguntó Chica mientras miraba hacia el cielo. Era extraño. Mora siempre era la primera en llegar.</p>
+      <p>Nico consultó el mapa que llevaba cuidadosamente doblado en su mochila. —Anoche dijo que iba a recoger unas flores cerca del Río Cristal.</p>
+      <p>—Entonces vamos allí —respondió Chica.</p>
+      <h3>Una visitante inesperada</h3>
+      <p>Mientras caminaban por el sendero, escucharon una voz. —¡Disculpen! Todos se detuvieron.</p>
+      <p>Una joven guacamaya de <span class="gloss" data-word="plumas">plumas</span><span class="gloss-tooltip">cubren el cuerpo de un pájaro<span class="arrow"></span></span> rojas, verdes y azules bajó de una rama. —¿Están buscando a alguien?</p>
+      <p>—Sí —contestó Chica—. Buscamos a nuestra amiga Mora.</p>
+      <p>La guacamaya sonrió. —Yo soy Luna. Llegué ayer desde Yucatán para visitar a mis abuelos. Mi mamá nació en Belice, pero parte de mi familia vive en México.</p>
+      <p>—¡Bienvenida a Chiquibul! —dijo Chica.</p>
+      <p>—Gracias. Mi abuelo siempre dice que nuestras selvas están unidas por los mismos árboles y los mismos animales.</p>
+      <p>Nico abrió mucho los ojos. —¿Cómo es Yucatán?</p>
+      <p>—Muy bonito. Hay playas de agua turquesa, cenotes donde el agua es tan clara que parece un espejo y, en ciertas épocas del año, llegan miles de flamencos rosados. Mi familia también prepara cochinita pibil para las reuniones especiales. Cuando la extraño, cierro los ojos y todavía puedo sentir ese olor.</p>
+      <p>—¡Algún día me gustaría conocer ese lugar! —dijo Chica.</p>
+      <p>Luna señaló un <span class="gloss" data-word="sendero">sendero</span><span class="gloss-tooltip">un camino pequeño en la selva<span class="arrow"></span></span>. —Hace unos minutos vi una mariposa azul volando hacia el puente de madera.</p>
+      <h3>Siguiendo las pistas</h3>
+      <p>—Entonces sigamos por aquí —dijo Nico. —¿Derecha o izquierda? —preguntó Arlo. —Primero seguimos derecho hasta el puente. Después cruzamos el río. Luego giramos a la izquierda, junto a las orquídeas. Más adelante hay una roca grande. Si Mora pasó por aquí, encontraremos alguna pista.</p>
+      <p>Todos repitieron las instrucciones para no olvidarlas. Incluso Bruno, que caminaba unos metros detrás, fingiendo que no le interesaba la búsqueda.</p>
+      <h3>El jardín escondido</h3>
+      <p>Después de cruzar el puente, el grupo encontró un sendero que ninguno recordaba. El aire olía a flores. Miles de mariposas revoloteaban entre las ramas.</p>
+      <p>En el centro del claro estaba Mora. Movía lentamente sus alas sobre una pequeña <span class="gloss" data-word="orquídea">orquídea</span><span class="gloss-tooltip">una flor especial y delicada<span class="arrow"></span></span>. —¡Mora! —gritó Chica. La mariposa sonrió. —¡Hola!</p>
+      <p>—¡Te buscamos por toda la selva! —Lo siento. Encontré esta orquídea muy <span class="gloss" data-word="débil">débil</span><span class="gloss-tooltip">no tiene mucha fuerza<span class="arrow"></span></span>. Si la dejaba sola, no florecería para el festival. Quise ayudarla antes de regresar.</p>
+      <p>Todos guardaron silencio. La pequeña flor comenzó a abrir sus pétalos. Era de un color violeta brillante que ninguno había visto antes.</p>
+      <h3>La pista de la Ceiba</h3>
+      <p>Mientras descansaban, Bruno apoyó una pata sobre una roca cubierta de musgo. —¿Qué es esto? Chica se acercó. En la piedra había una espiral rodeada por cuatro hojas. Era exactamente el mismo símbolo de la Gran Ceiba.</p>
+      <p>Antes de que pudiera decir algo, Don Pico apareció volando. Miró el símbolo durante unos segundos. Luego levantó la vista. —Hace mucho tiempo que no veía esta marca...</p>
+      <p>Los jóvenes animales esperaron una explicación. Pero, como siempre, Don Pico solo sonrió. —Algunas respuestas llegan cuando estamos listos para hacer las preguntas correctas.</p>
+      <h3>La pregunta de Don Pico</h3>
+      <p>Cuando regresaban al festival, Don Pico caminó junto al grupo. —Hoy todos siguieron un camino para encontrar a una amiga. Dar direcciones es importante, pero también lo es saber pedir ayuda cuando nos sentimos perdidos.</p>`
+  }
+};
+
+let fontSize = 18;
+let glossOn = true;
+let listening = false;
+let currentLevel = 'A1';
+const savedWords = new Set();
+
+function renderStory(level){
+  currentLevel = level;
+  document.getElementById('storyBody').innerHTML = VERSIONS[level].html;
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+  document.getElementById('toolbarLevel').textContent = level;
+  document.getElementById('railLevel').textContent = level;
+  document.getElementById('railTime').textContent = VERSIONS[level].time;
+  applyGlossState();
+  buildWordBank();
+}
+
+function setReaderLevel(level, el){
+  document.querySelectorAll('.level-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  renderStory(level);
+}
+
+function changeFont(delta){
+  fontSize = Math.min(24, Math.max(14, fontSize+delta*2));
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+}
+
+function toggleGloss(){
+  glossOn = !glossOn;
+  document.getElementById('glossToggle').textContent = glossOn ? '🔤 Glosario: Activado' : '🔤 Glosario: Desactivado';
+  document.getElementById('glossToggle').classList.toggle('on', glossOn);
+  applyGlossState();
+}
+function applyGlossState(){
+  document.querySelectorAll('.gloss').forEach(g=>{
+    g.style.borderBottomColor = glossOn ? 'var(--coral)' : 'transparent';
+    g.style.cursor = glossOn ? 'help' : 'text';
+    g.style.fontWeight = glossOn ? '600' : '400';
+    if(!glossOn) g.classList.remove('tapped');
+  });
+}
+document.addEventListener('click', e=>{
+  if(e.target.closest('.gloss') && glossOn){
+    e.target.closest('.gloss').classList.toggle('tapped');
+  }
+});
+
+function toggleNight(){
+  const btn = document.getElementById('nightToggle');
+  btn.classList.toggle('on');
+  document.getElementById('pageContent').style.filter = btn.classList.contains('on') ? 'invert(1) hue-rotate(180deg)' : 'none';
+  btn.textContent = btn.classList.contains('on') ? '☀ Luz brillante' : '🌙 Luz de lámpara';
+}
+
+function toggleListen(){
+  listening = !listening;
+  const btn = document.getElementById('listenBtn');
+  btn.classList.toggle('playing', listening);
+  btn.textContent = listening ? '⏸ Reproduciendo narración…' : '🔊 Escuchar narración';
+}
+
+function openTeacherNotes(){ document.getElementById('teacherModal').classList.add('open'); }
+function closeTeacherNotes(){ document.getElementById('teacherModal').classList.remove('open'); }
+
+function copyTeacherNotes(){
+  const body = document.getElementById('teacherNotesBody');
+  let text = '';
+  body.querySelectorAll('h4, div, ul, li').forEach(el=>{
+    if(el.tagName === 'H4'){ text += '\n' + el.textContent.toUpperCase() + '\n'; }
+    else if(el.tagName === 'LI'){ text += '- ' + el.textContent + '\n'; }
+    else if(el.tagName === 'DIV' && !el.closest('ul')){ text += el.textContent + '\n'; }
+  });
+  navigator.clipboard.writeText(text.trim()).then(()=>{
+    const btn = document.getElementById('copyNotesBtn');
+    const original = btn.textContent;
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent = original; btn.classList.remove('copied'); }, 1800);
+  });
+}
+
+function buildWordBank(){
+  const words = [...document.querySelectorAll('.gloss')];
+  const seen = new Set();
+  const bank = document.getElementById('wordBank');
+  bank.innerHTML = '';
+  words.forEach(w=>{
+    const word = w.dataset.word;
+    if(seen.has(word)) return; seen.add(word);
+    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const row = document.createElement('div');
+    row.className='word-chip';
+    row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
+      <button class="save-word ${savedWords.has(word)?'saved':''}" onclick="toggleSaveWord('${word}', this)">${savedWords.has(word)?'✓':'+'}</button>`;
+    bank.appendChild(row);
+  });
+}
+function toggleSaveWord(word, btn){
+  if(savedWords.has(word)){ savedWords.delete(word); btn.classList.remove('saved'); btn.textContent='+'; }
+  else { savedWords.add(word); btn.classList.add('saved'); btn.textContent='✓'; }
+}
+
+/* ---------------- COMPREHENSION ---------------- */
+const answered = {};
+function answer(btn, isCorrect, qid){
+  if(answered[qid]) return;
+  answered[qid]=true;
+  const opts = btn.parentElement.querySelectorAll('.comp-opt');
+  opts.forEach(o=>o.disabled=true);
+  btn.classList.add(isCorrect?'correct':'incorrect');
+  if(!isCorrect){
+    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+  }
+  document.getElementById(qid+'result').style.display='block';
+}
+function finishStory(){
+  if(Object.keys(answered).length < 2){
+    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+    return;
+  }
+  document.getElementById('finishBtn').textContent = '✓ ¡Completado!';
+  document.getElementById('finishBtn').style.background = '#6fae7a';
+  setTimeout(()=> alert('¡Buena lectura! Este episodio ahora aparece 100% completo en tu estante, y tu maestra puede ver tus resultados de comprensión.'), 300);
+}
+
+/* ---------------- SCROLL PROGRESS ---------------- */
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('progressFill').style.width = Math.min(100,scrolled)+'%';
+});
+
+/* ---------------- INIT ---------------- */
+renderStory('A1');
+</script>
+</body>
+</html>
