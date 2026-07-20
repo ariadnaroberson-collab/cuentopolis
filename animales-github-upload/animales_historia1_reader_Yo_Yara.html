@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yo, Yara — Biografía de Animales Asombrosos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Biografía de Animales Asombrosos · Historia 1</div>
+    <h1>Yo, Yara</h1>
+    <div class="subtitle">La biografía de un jaguar del Pantanal</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Me llamo Yara. Soy un jaguar. Vivo en el Pantanal, el humedal más grande del mundo, entre Brasil, Bolivia y Paraguay.</p>
+        <p>Mi nombre, "jaguar," viene de una palabra indígena: yaguar. Significa "el que mata de un salto."</p>
+        <p>Soy el felino más grande de las Américas. Tengo manchas — rosetas — en mi piel. Cada roseta es diferente, como una huella digital.</p>
+        <p>Mi mamá me enseñó a cazar. Camino en silencio, muy despacio, y espero el momento correcto.</p>
+        <p>Yo no persigo a mi presa por mucho tiempo. Salto una vez, rápido y fuerte.</p>
+        <p>Tengo la mordida más fuerte de todos los felinos. Puedo morder el cráneo de un caimán.</p>
+        <p>Me encanta el agua. Nado muy bien, y cruzo ríos grandes sin problema.</p>
+        <p>En la época de lluvias, el río sube mucho. Entonces, subo a los árboles y vivo ahí varios meses.</p>
+        <p>Los mayas antiguos me consideraban un dios importante. Ellos creían que yo ayudaba al sol a viajar de noche, bajo la tierra.</p>
+        <p>Hoy, soy un símbolo de la selva. Pero mi hogar está en peligro — por la deforestación y la caza.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Me llamo Yara. Soy un jaguar y vivo en el Pantanal, el humedal más grande del mundo, compartido entre Brasil, Bolivia y Paraguay.</p>
+        <p>Mi nombre viene de una palabra indígena tupí-guaraní: yaguar, que significa "el que mata de un salto." Es un nombre que describe exactamente cómo cazo.</p>
+        <p>Soy el felino más grande de las Américas, y el tercero más grande del mundo, después del león y el tigre. Mi piel tiene manchas llamadas rosetas — cada una es única, como una huella digital que me distingue de otros jaguares.</p>
+        <p>Mi mamá me enseñó a cazar cuando era pequeño. Camino en silencio absoluto, acechando a mi presa despacio, hasta encontrar el momento perfecto para atacar. No persigo por mucho tiempo — salto una sola vez, con toda mi fuerza.</p>
+        <p>Tengo la mordida más potente entre los felinos del mundo. Puedo perforar el cráneo o el caparazón de un caimán con mis colmillos — algo que ningún otro gran felino puede hacer.</p>
+        <p>Me encanta el agua. Soy un excelente nadador, y cruzo ríos anchos sin ninguna dificultad, algo poco común entre los grandes felinos.</p>
+        <p>Durante la temporada de lluvias, el nivel del río sube mucho, e inunda gran parte del bosque. Cuando esto pasa, subo a los árboles y vivo ahí, a veces durante varios meses seguidos, hasta que baja el agua.</p>
+        <p>Los antiguos mayas me consideraban una deidad poderosa. Creían que yo ayudaba al sol a viajar bajo la tierra durante la noche, para que pudiera salir de nuevo cada mañana.</p>
+        <p>Hoy, soy un símbolo de la selva viva. Pero mi hogar está amenazado — por la deforestación, la caza furtiva y los conflictos con los ganaderos.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Me llamo Yara, y soy un jaguar del Pantanal, el humedal más grande del mundo, compartido entre Brasil, Bolivia y Paraguay. Esta es mi historia.</p>
+        <p>Mi nombre viene de una antigua palabra tupí-guaraní, yaguar, que significa "el que mata de un salto" — una descripción precisa de cómo cazo desde que era joven. Soy el felino más grande de las Américas, y el tercero más grande del planeta, detrás del león y el tigre. Mi piel está cubierta de manchas llamadas rosetas, y cada patrón es único, como una huella digital que me distingue de cualquier otro jaguar que exista.</p>
+        <p>Cuando era cachorro, mi mamá me enseñó todo lo que sé sobre cazar. Aprendí a caminar en absoluto silencio, acechando a mi presa durante minutos, a veces horas, hasta encontrar el momento exacto para atacar. A diferencia de otros felinos, yo no persigo largas distancias — salto una sola vez, con toda mi fuerza concentrada en ese instante.</p>
+        <p>Poseo la mordida más potente entre todos los felinos del mundo. Con mis colmillos, puedo perforar el cráneo o incluso el caparazón de un caimán — una habilidad que ningún otro gran felino posee. También me encanta el agua: soy un nadador excelente, capaz de cruzar ríos anchos sin dificultad, algo poco común entre los grandes depredadores felinos.</p>
+        <p>Durante la temporada de lluvias, cuando el nivel del río sube y buena parte del bosque queda inundado, subo a los árboles y vivo entre las ramas durante varios meses, hasta que el agua finalmente baja. Los científicos descubrieron este comportamiento hace pocos años, y todavía los sorprende.</p>
+        <p>Los antiguos mayas me consideraban una deidad de gran poder. Creían que yo ayudaba al sol a atravesar el inframundo durante la noche, para que pudiera regresar cada mañana. Esa creencia todavía se refleja en el arte y las historias de muchas comunidades amazónicas y andinas.</p>
+        <p>Hoy, soy un símbolo viviente de la selva. Pero mi futuro no está garantizado — la deforestación, la caza furtiva y los conflictos con los ganaderos amenazan constantemente mi hogar.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Me llamo Yara, y soy un jaguar del Pantanal, el humedal más extenso del planeta, compartido entre Brasil, Bolivia y Paraguay. Esta es mi historia, contada como solo yo puedo contarla.</p>
+        <p>Mi nombre desciende de una antigua palabra tupí-guaraní, yaguar, que significa "el que mata de un salto" —una descripción que resume con precisión mi manera de cazar desde joven. Soy el felino más grande de las Américas y el tercero a nivel mundial, superado únicamente por el león y el tigre. Mi pelaje está cubierto de manchas denominadas rosetas, cuyo patrón es absolutamente único en cada individuo, funcionando casi como una huella digital irrepetible.</p>
+        <p>Cuando era cachorro, mi madre me transmitió todo su conocimiento sobre la caza. Aprendí a desplazarme en un silencio absoluto, acechando a mi presa durante minutos —a veces horas— hasta identificar el instante preciso para atacar. A diferencia de otros felinos, prescindo de las persecuciones prolongadas: ejecuto un único salto, concentrando toda mi fuerza en ese momento decisivo.</p>
+        <p>Poseo la mordida más potente entre los felinos del mundo, capaz de perforar el cráneo o incluso el caparazón de un caimán —una capacidad que ningún otro gran felino comparte. Mi afinidad con el agua es igualmente notable: nado con destreza excepcional, cruzando ríos caudalosos sin la menor dificultad, un rasgo poco frecuente entre los grandes depredadores felinos.</p>
+        <p>Durante la temporada de lluvias, cuando el nivel del río asciende e inunda gran parte del bosque, asciendo a las copas de los árboles y permanezco allí durante meses, hasta que las aguas finalmente retroceden. Los investigadores documentaron este comportamiento apenas hace unos años, y continúa sorprendiendo a la comunidad científica.</p>
+        <p>Las antiguas civilizaciones mayas me atribuían el estatus de deidad de considerable poder, convencidas de que yo escoltaba al sol a través del inframundo durante la noche, garantizando así su regreso cada amanecer. Esa creencia ancestral perdura todavía en el arte y las narrativas de numerosas comunidades amazónicas y andinas.</p>
+        <p>En la actualidad, represento un símbolo viviente de la selva. Sin embargo, mi porvenir dista de estar asegurado: la deforestación, la caza furtiva y los conflictos con los ganaderos amenazan de manera persistente el territorio que habito.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la roseta</span> — rosette (jaguar spot pattern)</div>
+      <div><span class="term">acechar</span> — to stalk</div>
+      <div><span class="term">el colmillo</span> — fang</div>
+      <div><span class="term">el caparazón</span> — shell (of a caiman/turtle)</div>
+      <div><span class="term">el/la depredador/a</span> — predator (cognate)</div>
+      <div><span class="term">la presa</span> — prey</div>
+      <div><span class="term">el inframundo</span> — underworld</div>
+      <div><span class="term">la deidad</span> — deity (cognate)</div>
+      <div><span class="term">amenazar</span> — to threaten</div>
+      <div><span class="term">la deforestación</span> — deforestation (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>me llamo...</span>
+      <span>mi nombre viene de...</span>
+      <span>soy el/la más...</span>
+      <span>aprendí a...</span>
+      <span>a diferencia de otros...</span>
+      <span>hoy, soy un símbolo de...</span>
+      <span>mi hogar está en peligro</span>
+      <span>durante la temporada de...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué significa la palabra "yaguar" en tupí-guaraní, y por qué es un nombre apropiado?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué hace único al jaguar entre los grandes felinos (mordida, agua, árboles)?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Yo, Yara</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Biografía de Animales Asombrosos → Historia 1</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Ciencias naturales y biología animal — el jaguar, depredadores ápice, adaptaciones biológicas, mitología mesoamericana, conservación. Posible apoyo temático a la unidad "Amazing Animals" (Secondary 2, Episodio 4) de La Cuadrilla.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar en primera persona una autobiografía animal; describir características físicas y comportamiento; explicar el origen de un nombre; expresar comparación (a diferencia de otros...).</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>me llamo... · mi nombre viene de... · soy el/la más... · aprendí a... · a diferencia de otros... · hoy, soy un símbolo de... · mi hogar está en peligro.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, datos básicos contados en primera persona.<br>
+    <strong>A2:</strong> se añaden comparaciones con otros felinos y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado (aprendizaje con la madre); más detalle científico.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario científico y mitológico más preciso; cierre reflexivo sobre conservación.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>La caza como comportamiento natural del depredador se presenta de forma factual y biológica, sin detalles gráficos de violencia. Las amenazas reales (deforestación, caza furtiva, conflictos con ganaderos) se mencionan de forma factual y apropiada para concientización ambiental, sin imágenes perturbadoras. El origen del nombre "jaguar" (tupí-guaraní), las capacidades físicas del jaguar (mordida, natación, comportamiento arbóreo documentado en 2021), y su rol en la mitología maya son datos reales y documentados.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — en este libro no hay personaje visitante; cada animal narra su propia biografía sin anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>símbolo</em> — cognado natural con "symbol", usado para describir el papel cultural del jaguar.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Si pudieras contar tu propia biografía como un animal, ¿cuál elegirías y por qué?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Primera historia del libro final de Panorama Cultural. Cada historia está narrada en primera persona por un animal distinto, sin personaje anfitrión recurrente. El libro tiene una conexión temática (no de trama) con la unidad "Amazing Animals" de La Cuadrilla.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

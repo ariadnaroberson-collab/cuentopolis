@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis Muchos Nombres — Biografía de Animales Asombrosos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Biografía de Animales Asombrosos · Historia 2</div>
+    <h1>Mis Muchos Nombres</h1>
+    <div class="subtitle">La biografía de un armadillo de nueve bandas</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>No tengo un solo nombre. Tengo muchos nombres, según el país.</p>
+        <p>En México me llaman armadillo o ayotochtli. En Yucatán, huech. En El Salvador, Honduras y Nicaragua, cusuco. En Sudamérica, tatú o quirquincho.</p>
+        <p>Soy un armadillo de nueve bandas. Tengo un caparazón duro, hecho de placas de hueso.</p>
+        <p>Mi vista no es buena. Pero mi nariz es excelente. Uso el olfato para encontrar comida — hormigas, termitas, insectos.</p>
+        <p>Soy nocturno. Salgo por la noche, cuando hace menos calor.</p>
+        <p>Soy un excavador excelente. Hago mi madriguera muy rápido, con las uñas de mis patas delanteras.</p>
+        <p>Cuando excavo, aguanto la respiración — hasta seis minutos. Así, la tierra no entra a mi nariz.</p>
+        <p>También cruzo ríos. Camino por el fondo, aguantando la respiración. O infla mi estómago, como un globo, y floto en el agua.</p>
+        <p>Tengo un secreto increíble: siempre nazco con tres hermanos idénticos. Los cuatro venimos del mismo huevo.</p>
+        <p>Si me asusto, puedo saltar muy alto — casi un metro.</p>
+        <p>Vivo en Centroamérica y Sudamérica. Soy pequeño, pero tengo muchos trucos para sobrevivir.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>No tengo un solo nombre. Tengo muchos nombres distintos, según el país donde vivo.</p>
+        <p>En México me llaman armadillo, o su nombre náhuatl, ayotochtli. En la península de Yucatán, me dicen huech. En El Salvador, Honduras y Nicaragua, me conocen como cusuco. En Sudamérica, la gente me llama tatú, quirquincho, mulita o gurre, según la región.</p>
+        <p>Soy un armadillo de nueve bandas, con un caparazón duro formado por placas de hueso — soy el único mamífero del mundo con este tipo de armadura.</p>
+        <p>Mi vista no es muy buena, pero mi sentido del olfato es excelente. Lo uso constantemente para encontrar comida — hormigas, termitas y otros insectos que viven bajo tierra.</p>
+        <p>Soy un animal nocturno. Salgo a buscar comida al anochecer, cuando el calor del día ya bajó.</p>
+        <p>Soy, además, un excavador extraordinario. Puedo construir una madriguera completa en menos de dos minutos, usando las uñas fuertes de mis patas delanteras.</p>
+        <p>Cuando excavo, contengo la respiración — a veces hasta seis minutos — para que la tierra no entre por mi nariz mientras trabajo.</p>
+        <p>También sé cruzar ríos, de dos maneras distintas: camino por el fondo del río conteniendo la respiración, o inflo mi estómago como un globo y floto en la superficie, remando con las patas.</p>
+        <p>Tengo un secreto realmente increíble: siempre nazco junto a tres hermanos idénticos. Los cuatro venimos del mismo óvulo — somos, literalmente, cuatrillizos idénticos, siempre.</p>
+        <p>Si algo me asusta lo suficiente, puedo saltar casi un metro en el aire — a veces por eso me atropellan los carros, sin querer.</p>
+        <p>Vivo desde el sur de Estados Unidos hasta Sudamérica. Soy pequeño y de aspecto torpe, pero tengo muchos trucos para sobrevivir.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>No tengo un solo nombre. Tengo muchos, y cada país que he recorrido me llama de una manera distinta.</p>
+        <p>En México me dicen armadillo, o en náhuatl, ayotochtli. En la península de Yucatán, me conocen como huech. En El Salvador, Honduras y Nicaragua, me llaman cusuco. Y en Sudamérica, dependiendo de la región, me dicen tatú, quirquincho, mulita o gurre. A veces pienso que tengo tantas identidades como lugares he habitado.</p>
+        <p>Soy un armadillo de nueve bandas, y mi característica más distintiva es mi caparazón — una armadura hecha de placas óseas, algo que ningún otro mamífero del mundo posee.</p>
+        <p>Mi vista nunca fue mi punto fuerte, pero mi sentido del olfato compensa esa debilidad por completo. Lo uso constantemente para localizar hormigas, termitas y otros insectos escondidos bajo tierra.</p>
+        <p>Soy un animal nocturno por naturaleza: prefiero salir a buscar comida al anochecer, cuando el calor del día finalmente cede.</p>
+        <p>También soy, sin duda, un excavador extraordinario. Puedo construir una madriguera completa en menos de dos minutos, gracias a las garras fuertes de mis patas delanteras. Mientras excavo, contengo la respiración durante minutos enteros — hasta seis, en ocasiones — para evitar que la tierra entre por mi nariz.</p>
+        <p>Cruzar ríos tampoco representa un problema para mí: puedo caminar por el fondo, conteniendo el aire, o inflar mi estómago como un globo y flotar en la superficie, remando con las patas hasta llegar a la otra orilla.</p>
+        <p>Guardo, además, un secreto verdaderamente sorprendente: siempre nazco junto a tres hermanos genéticamente idénticos. Los cuatro provenimos del mismo óvulo original — somos, sin excepción, cuatrillizos idénticos cada vez.</p>
+        <p>Cuando algo me asusta lo suficiente, puedo saltar casi un metro en el aire de manera instintiva — un reflejo que, lamentablemente, a veces me pone en peligro cerca de las carreteras.</p>
+        <p>Habito un territorio que se extiende desde el sur de Estados Unidos hasta Sudamérica. Puede que parezca pequeño y torpe, pero llevo conmigo toda una colección de trucos para sobrevivir.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>No poseo un único nombre. Cargo con muchos, y cada país que he recorrido me ha bautizado de una manera distinta.</p>
+        <p>En México me llaman armadillo, o en su denominación náhuatl, ayotochtli. En la península de Yucatán, se me conoce como huech. En El Salvador, Honduras y Nicaragua, respondo al nombre de cusuco. Y en Sudamérica, según la región, se me denomina tatú, quirquincho, mulita o gurre. A veces considero que poseo tantas identidades como territorios he habitado.</p>
+        <p>Soy un armadillo de nueve bandas, y mi rasgo más distintivo es, sin duda, mi caparazón: una armadura compuesta de placas óseas que ningún otro mamífero del planeta posee.</p>
+        <p>Mi visión nunca constituyó una fortaleza particular, pero mi olfato compensa esa limitación con creces. Lo empleo constantemente para localizar hormigas, termitas y otros insectos ocultos bajo la superficie terrestre.</p>
+        <p>Soy, por naturaleza, un animal nocturno: prefiero emprender la búsqueda de alimento al anochecer, cuando el calor diurno finalmente amaina.</p>
+        <p>Constituyo, además, un excavador verdaderamente excepcional. Puedo construir una madriguera completa en menos de dos minutos, gracias a las garras robustas de mis patas delanteras. Durante la excavación, contengo la respiración durante minutos enteros —hasta seis, en ocasiones— para evitar que la tierra penetre mis vías respiratorias.</p>
+        <p>Atravesar cursos de agua tampoco representa dificultad alguna: puedo desplazarme por el lecho del río conteniendo el aliento, o bien inflar mi estómago como un globo y flotar en la superficie, propulsándome con las patas hasta alcanzar la orilla opuesta.</p>
+        <p>Guardo, asimismo, un secreto genuinamente extraordinario: invariablemente nazco junto a tres hermanos genéticamente idénticos, todos procedentes del mismo óvulo original —constituimos, sin excepción alguna, cuatrillizos idénticos en cada camada.</p>
+        <p>Cuando algo me sobresalta lo suficiente, puedo saltar casi un metro en el aire por puro instinto —un reflejo que, paradójicamente, en ocasiones me expone a peligros cerca de las carreteras.</p>
+        <p>Habito un territorio que se extiende desde el sur de Estados Unidos hasta Sudamérica. Podré parecer pequeño y de andar torpe, pero atesoro todo un repertorio de estrategias para sobrevivir.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el caparazón</span> — shell</div>
+      <div><span class="term">la placa (ósea)</span> — bony plate</div>
+      <div><span class="term">el olfato</span> — sense of smell</div>
+      <div><span class="term">la madriguera</span> — burrow</div>
+      <div><span class="term">excavar</span> — to dig</div>
+      <div><span class="term">aguantar (la respiración)</span> — to hold one's breath</div>
+      <div><span class="term">inflar</span> — to inflate</div>
+      <div><span class="term">idéntico/a</span> — identical (cognate)</div>
+      <div><span class="term">el óvulo</span> — egg cell, ovum</div>
+      <div><span class="term">el reflejo</span> — reflex (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>me llaman...</span>
+      <span>según el país / la región</span>
+      <span>soy un/a... excelente</span>
+      <span>aguanto la respiración hasta...</span>
+      <span>nazco junto a...</span>
+      <span>puedo saltar casi...</span>
+      <span>desde... hasta...</span>
+      <span>tengo muchos trucos para sobrevivir</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué nombres distintos recibe el armadillo según el país?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cómo cruza el armadillo un río? Describe las dos maneras.</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Mis Muchos Nombres</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Biografía de Animales Asombrosos → Historia 2</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Ciencias naturales y biología animal — el armadillo de nueve bandas, adaptaciones biológicas, variación lingüística regional (nombres del mismo animal en distintos países). Posible apoyo temático a la unidad "Amazing Animals" de La Cuadrilla.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar en primera persona una autobiografía animal; describir capacidades físicas sorprendentes; expresar variación regional de vocabulario; comparar (a diferencia de..., el único...).</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>me llaman... · según el país/la región · soy un/a... excelente · aguanto la respiración hasta... · nazco junto a... · puedo saltar casi... · desde... hasta...</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, datos básicos y nombres regionales.<br>
+    <strong>A2:</strong> se añaden detalles biológicos y conectores simples.<br>
+    <strong>B1:</strong> más detalle científico y reflexión sobre identidad/nombres.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario científico más preciso.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Se menciona brevemente que a veces los armadillos mueren atropellados al saltar cerca de carreteras — dato real, mencionado de forma breve y factual, no como advertencia alarmante. No se menciona la caza del armadillo por su carne o caparazón en algunas regiones, para mantener un tono positivo. Los nombres regionales, la capacidad de aguantar la respiración hasta 6 minutos, el cruce de ríos (caminando o flotando), y el nacimiento en cuatrillizos idénticos genéticos son datos reales y documentados.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — en este libro no hay personaje visitante; cada animal narra su propia biografía sin anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>idéntico</em> — cognado natural con "identical", usado para describir a los cuatro hermanos armadillo nacidos del mismo óvulo.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Sabías que en distintos países el mismo animal puede tener nombres diferentes? ¿Conoces algún otro ejemplo?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>La especie de este animal coincide con la de Toño, el armadillo guatemalteco de [[chica-y-sus-amigos]] — conexión temática intencional entre ambos proyectos, aunque esta narradora es un individuo distinto, no Toño mismo.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

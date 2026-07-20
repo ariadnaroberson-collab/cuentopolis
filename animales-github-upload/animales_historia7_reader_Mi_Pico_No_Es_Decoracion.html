@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Pico No Es Decoración — Biografía de Animales Asombrosos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Biografía de Animales Asombrosos · Historia 7</div>
+    <h1>Mi Pico No Es Decoración</h1>
+    <div class="subtitle">La biografía de un tucán</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Soy un tucán. Vivo en la selva tropical, desde México hasta Sudamérica.</p>
+        <p>Mi pico es muy grande — casi un tercio de mi cuerpo. Pero mi pico es liviano. Por dentro, es como un panal de abejas, no es sólido.</p>
+        <p>La gente piensa que mi pico es solo decoración. Pero tiene muchas funciones.</p>
+        <p>Mi pico regula mi temperatura. Cuando hace calor, mis venas se abren y el calor sale por el pico — como un aire acondicionado. Cuando hace frío, mis venas se cierran.</p>
+        <p>También uso mi pico para alcanzar frutas en ramas delgadas. Mi cuerpo es muy pesado para esas ramas, pero mi pico llega fácilmente.</p>
+        <p>Como fruta — casi todos los días. También como insectos y a veces huevos.</p>
+        <p>Mis patas tienen dos dedos hacia adelante y dos hacia atrás. Así, me agarro bien de las ramas.</p>
+        <p>Cuando como fruta, las semillas pasan por mi cuerpo. Después, las dejo en otras partes del bosque. Soy un dispersor de semillas importante.</p>
+        <p>Un solo tucán puede dispersar semillas de más de cincuenta especies de plantas en un año.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Soy un tucán, un ave de la selva tropical que vive desde México hasta Sudamérica.</p>
+        <p>Mi característica más famosa es mi pico enorme — puede medir casi un tercio del largo de mi cuerpo. Pero, a pesar de su tamaño, mi pico es sorprendentemente liviano: por fuera está hecho de queratina, y por dentro tiene una estructura como un panal de abejas, hueca y ligera.</p>
+        <p>Mucha gente piensa que mi pico es solo un adorno llamativo, pero en realidad cumple varias funciones importantes.</p>
+        <p>La más sorprendente es la termorregulación: mi pico funciona como un radiador natural. Cuando tengo calor, los vasos sanguíneos de mi pico se dilatan y liberan calor hacia el exterior. Cuando hace frío, esos mismos vasos se contraen para conservar el calor de mi cuerpo.</p>
+        <p>También uso mi pico para alcanzar frutas en ramas muy delgadas, que no soportarían el peso de mi cuerpo si me acercara directamente.</p>
+        <p>Mi dieta es principalmente frutal — entre el sesenta y el setenta por ciento —, aunque también como insectos, y ocasionalmente huevos de otras aves.</p>
+        <p>Mis patas son zigodáctilas: tengo dos dedos hacia adelante y dos hacia atrás, lo que me permite agarrarme con firmeza a las ramas mientras me muevo por el dosel del bosque.</p>
+        <p>Cuando como fruta, muchas semillas pasan por mi cuerpo sin digerirse. Las voy dejando repartidas por el bosque, a veces a más de quince kilómetros del árbol original — por eso soy uno de los dispersores de semillas más importantes de la selva.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un mediodía cualquiera, mientras me movía entre las ramas altas de la selva tropical, alguien se detuvo a observar mi pico enorme, preguntándose para qué serviría realmente algo tan llamativo.</p>
+        <p>Soy un tucán, y vivo en un rango que se extiende desde México hasta Sudamérica. Mi rasgo más reconocible es, sin duda, mi pico, que puede alcanzar casi un tercio del largo total de mi cuerpo. A pesar de sus dimensiones, es sorprendentemente liviano: la capa exterior está hecha de queratina, mientras que el interior tiene una estructura porosa, similar a un panal, que le da rigidez sin agregar peso.</p>
+        <p>Durante mucho tiempo, los científicos pensaron que mi pico era simplemente decorativo, pero un estudio publicado en la revista Science en 2009 reveló su función más importante: actúa como un radiador biológico. Cuando tengo calor, los vasos sanguíneos de mi pico se dilatan, liberando calor hacia el exterior. Cuando baja la temperatura, esos mismos vasos se contraen para conservar el calor corporal.</p>
+        <p>Además de regular mi temperatura, mi pico me permite alcanzar frutas en ramas demasiado delgadas para soportar el peso de mi cuerpo — algo que sería imposible sin esta herramienta.</p>
+        <p>Mi dieta se compone principalmente de fruta, aunque también consumo insectos y, ocasionalmente, huevos de otras aves. Mis patas zigodáctilas, con dos dedos hacia adelante y dos hacia atrás, me dan un agarre firme mientras me desplazo por el dosel del bosque.</p>
+        <p>Cuando como fruta, muchas semillas atraviesan mi cuerpo sin digerirse por completo, y las voy dejando repartidas por el bosque, a veces a quince kilómetros del árbol original. Un solo tucán como yo puede dispersar semillas de entre cincuenta y ochenta especies de plantas distintas en un solo año.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un mediodía cualquiera, mientras me desplazaba entre las ramas altas de la selva tropical, alguien se detuvo a contemplar mi pico descomunal, cuestionándose la utilidad real de una estructura tan llamativa.</p>
+        <p>Soy un tucán, y habito un territorio que se extiende desde México hasta Sudamérica. Mi rasgo más distintivo es, indudablemente, mi pico, capaz de alcanzar casi un tercio de la longitud total de mi cuerpo. Pese a sus considerables dimensiones, resulta sorprendentemente liviano: su capa externa está compuesta de queratina, mientras que el interior presenta una estructura porosa, análoga a un panal, que confiere rigidez sin comprometer el peso.</p>
+        <p>Durante décadas, la comunidad científica asumió que mi pico cumplía una función meramente ornamental, hasta que un estudio publicado en la revista Science en 2009 reveló su propósito fisiológico más relevante: opera como un radiador biológico. Cuando experimento calor excesivo, los vasos sanguíneos de mi pico se dilatan, disipando calor hacia el exterior; cuando la temperatura desciende, esos mismos vasos se contraen para conservar el calor corporal.</p>
+        <p>Más allá de la termorregulación, mi pico me permite alcanzar frutos situados en ramas excesivamente delgadas para soportar el peso de mi cuerpo —una capacidad que resultaría inviable sin esta herramienta anatómica.</p>
+        <p>Mi dieta se compone predominantemente de fruta, complementada con insectos y, ocasionalmente, huevos de otras aves. Mis patas zigodáctilas, dotadas de dos dedos orientados hacia adelante y dos hacia atrás, me proporcionan un agarre firme mientras me desplazo por el dosel forestal.</p>
+        <p>Al consumir fruta, numerosas semillas atraviesan mi organismo sin digerirse completamente, distribuyéndose por el bosque a distancias que pueden alcanzar los quince kilómetros del árbol original. Un solo ejemplar de mi especie puede dispersar semillas de entre cincuenta y ochenta especies vegetales distintas a lo largo de un año.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el pico</span> — beak</div>
+      <div><span class="term">liviano/a</span> — lightweight</div>
+      <div><span class="term">la termorregulación</span> — thermoregulation (cognate)</div>
+      <div><span class="term">dilatarse</span> — to dilate (cognate)</div>
+      <div><span class="term">contraerse</span> — to contract (cognate)</div>
+      <div><span class="term">zigodáctilo/a</span> — zygodactyl (two toes forward, two back)</div>
+      <div><span class="term">el dosel</span> — canopy</div>
+      <div><span class="term">dispersar</span> — to disperse (cognate)</div>
+      <div><span class="term">la especie</span> — species (cognate)</div>
+      <div><span class="term">digerir</span> — to digest (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>mi pico es liviano</span>
+      <span>la gente piensa que...</span>
+      <span>pero en realidad...</span>
+      <span>cuando tengo calor...</span>
+      <span>cuando hace frío...</span>
+      <span>uso mi pico para...</span>
+      <span>dispersar semillas</span>
+      <span>a veces hasta...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cuáles son las funciones reales del pico del tucán?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cómo ayuda el tucán a dispersar semillas por el bosque?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Mi Pico No Es Decoración</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Biografía de Animales Asombrosos → Historia 7</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Ciencias naturales y biología animal — el tucán, adaptaciones biológicas del pico, termorregulación, dispersión de semillas. Posible apoyo temático a la unidad "Amazing Animals" de La Cuadrilla.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar en primera persona una autobiografía animal; corregir una idea errónea común (la gente piensa que..., pero en realidad...); explicar un proceso fisiológico; describir un rol ecológico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>mi pico es liviano · la gente piensa que... · pero en realidad... · cuando tengo calor... · cuando hace frío... · uso mi pico para... · dispersar semillas · a veces hasta...</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, las funciones del pico contadas paso a paso.<br>
+    <strong>A2:</strong> se añade explicación científica de la termorregulación y conectores simples.<br>
+    <strong>B1:</strong> más detalle científico, incluida referencia al estudio de 2009.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario científico más preciso.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Ninguno significativo. La estructura liviana del pico (queratina exterior, hueso esponjoso interior), su función de termorregulación (confirmada por un estudio de 2009 en la revista Science), las patas zigodáctilas, y el rol del tucán como dispersor de semillas (50-80 especies de plantas al año) son datos reales y documentados.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — en este libro no hay personaje visitante; cada animal narra su propia biografía sin anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>termorregulación</em> — cognado natural con "thermoregulation", usado para describir la función principal del pico.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez pensaste que algo tenía una sola función, y después descubriste que tenía otro propósito sorprendente? ¿Qué era?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

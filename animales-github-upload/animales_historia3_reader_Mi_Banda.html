@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Banda — Biografía de Animales Asombrosos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Biografía de Animales Asombrosos · Historia 3</div>
+    <h1>Mi Banda</h1>
+    <div class="subtitle">La biografía de un coatí de nariz blanca</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Soy un coatí. En algunos países me llaman pizote. También me dicen antón o tejón mexicano — aunque no soy un tejón de verdad.</p>
+        <p>Vivo en una banda — un grupo de coatíes. En mi banda hay muchas hembras y crías. Los machos adultos no viven con nosotras.</p>
+        <p>Tengo una cola larga con anillos. No puedo agarrar cosas con la cola, como los monos. Uso la cola para el equilibrio, cuando subo a los árboles.</p>
+        <p>Cuando camino por el suelo, llevo la cola bien alta. Así, mis amigas me ven fácilmente entre las plantas.</p>
+        <p>Como de todo: frutas, insectos, huevos, animales pequeños.</p>
+        <p>En mi banda, cuidamos a las crías juntas. Unas hembras buscan comida. Otras vigilan — cuidan a los bebés y avisan si hay peligro.</p>
+        <p>Soy diurna. Salgo de día, no de noche.</p>
+        <p>Cuando los machos crecen, se van de la banda. Viven solos, lejos de nosotras. Por eso, a un macho adulto solitario le dicen "coatimundi."</p>
+        <p>Puedo vivir hasta diecisiete años.</p>
+        <p>Mi banda es mi familia. Trabajamos juntas todos los días.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Soy un coatí de nariz blanca. En algunos países me llaman pizote, y también me dicen antón o, erróneamente, tejón mexicano — aunque no tengo ningún parentesco real con los tejones.</p>
+        <p>Vivo en un grupo social llamado banda — puede tener desde tres hasta veinte miembros, o incluso más. Mi banda está formada principalmente por hembras emparentadas y sus crías. Los machos adultos no viven con nosotras.</p>
+        <p>Tengo una cola larga con anillos, parecida a la de un mapache, pero no puedo agarrar cosas con ella como hacen algunos monos. La uso, en cambio, como poste de equilibrio cuando subo a los árboles.</p>
+        <p>Cuando busco comida en el suelo, mantengo la cola bien erguida. Los investigadores creen que esto ayuda a mis compañeras a localizarme entre la vegetación densa.</p>
+        <p>Soy omnívora: como frutas, insectos, huevos de aves, pequeños vertebrados y, a veces, hasta carroña.</p>
+        <p>En mi banda, cuidamos a las crías de forma colectiva. Mientras algunas hembras buscan comida, otras se quedan vigilando — cuidan a los bebés y avisan si aparece algún depredador, como una boa o un ave rapaz.</p>
+        <p>Soy un animal diurno, a diferencia de muchos de mis parientes carnívoros que prefieren la noche.</p>
+        <p>Cuando los machos de mi banda alcanzan la madurez, alrededor de los dos años, son expulsados del grupo. A partir de ese momento, viven solos — por eso a un macho adulto solitario se le llama "coatimundi."</p>
+        <p>Puedo vivir hasta diecisiete años, siempre rodeada de mi banda — mi verdadera familia.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Soy un coatí de nariz blanca, aunque según el país donde me encuentres, es posible que me llamen pizote, antón, o incluso, de forma incorrecta, tejón mexicano — un nombre que no tiene ningún fundamento real, ya que no estoy emparentada con los tejones.</p>
+        <p>Vivo en un grupo social conocido como banda, que puede tener desde tres hasta veinte miembros, o incluso más. Mi banda está compuesta principalmente por hembras emparentadas entre sí y sus crías; los machos adultos, en cambio, no forman parte de este grupo.</p>
+        <p>Una de mis características más distintivas es mi cola larga y anillada, similar a la de un mapache, aunque a diferencia de algunos monos, no puedo utilizarla para sujetarme de las ramas. La empleo, más bien, como una especie de poste de equilibrio mientras trepo por los árboles.</p>
+        <p>Cuando busco comida en el suelo, mantengo la cola erguida en todo momento. Según los investigadores del zoológico de San Diego, este comportamiento ayuda a mis compañeras a seguir mi rastro entre la vegetación espesa.</p>
+        <p>Soy completamente omnívora — me alimento de frutas, insectos, huevos de aves, pequeños vertebrados y, ocasionalmente, carroña, dependiendo de lo que encuentre disponible.</p>
+        <p>Dentro de mi banda, practicamos algo que los científicos llaman cuidado cooperativo: mientras algunas hembras salen a buscar comida, otras se quedan cuidando a las crías y vigilando la presencia de depredadores, como boas, aves rapaces o felinos. Nos turnamos constantemente en este papel.</p>
+        <p>A diferencia de muchos de mis parientes carnívoros, que prefieren la vida nocturna, yo soy un animal diurno por naturaleza.</p>
+        <p>Cuando los machos de mi banda alcanzan la madurez sexual, generalmente alrededor de los dos años de edad, son expulsados del grupo de manera definitiva. A partir de ese momento, viven completamente solos — y es precisamente por esto que a un macho adulto solitario se le conoce como "coatimundi," un nombre distinto al que usamos para describir a los grupos.</p>
+        <p>Con algo de suerte, puedo vivir hasta diecisiete años, siempre rodeada de mi banda — la única familia que conozco.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Soy un coatí de nariz blanca, aunque, dependiendo del país en el que me encuentres, es posible que se me conozca como pizote, antón o, de manera errónea, tejón mexicano —una denominación carente de fundamento real, dado que no guardo parentesco alguno con los tejones.</p>
+        <p>Habito en una estructura social denominada banda, que puede oscilar entre tres y veinte miembros, o incluso más. Mi banda está compuesta predominantemente por hembras emparentadas entre sí junto con sus crías; los machos adultos, por el contrario, quedan excluidos de esta configuración.</p>
+        <p>Uno de mis rasgos más distintivos es mi cola prolongada y anillada, semejante a la de un mapache, aunque, a diferencia de ciertos primates, carezco de la capacidad de utilizarla como herramienta prensil. La empleo, en cambio, a modo de poste de equilibrio durante mis ascensos arbóreos.</p>
+        <p>Cuando forrajeo en el suelo, mantengo la cola erguida de manera constante. Según investigadores del zoológico de San Diego, este comportamiento facilita que mis compañeras rastreen mi ubicación entre la densa vegetación circundante.</p>
+        <p>Mi dieta es enteramente omnívora —consumo frutas, insectos, huevos de aves, pequeños vertebrados y, ocasionalmente, carroña, según la disponibilidad del entorno.</p>
+        <p>Dentro de mi banda, practicamos lo que la comunidad científica denomina cuidado cooperativo: mientras algunas hembras se dedican a forrajear, otras permanecen vigilando a las crías y detectando la presencia de depredadores potenciales, como boas, aves rapaces o félidos. Este rol rota constantemente entre las integrantes del grupo.</p>
+        <p>A diferencia de numerosos parientes carnívoros de hábitos nocturnos, mi comportamiento es predominantemente diurno.</p>
+        <p>Cuando los machos de mi banda alcanzan la madurez sexual, generalmente hacia los dos años de edad, son expulsados del grupo de forma definitiva. A partir de entonces, adoptan una existencia completamente solitaria —circunstancia que explica por qué a un macho adulto aislado se le denomina "coatimundi," término distinto al empleado para referirnos a los grupos.</p>
+        <p>Con cierta fortuna, puedo alcanzar los diecisiete años de vida, siempre en compañía de mi banda —la única familia que he conocido.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la banda</span> — social group of coatis</div>
+      <div><span class="term">la cría</span> — offspring, young</div>
+      <div><span class="term">erguido/a</span> — upright</div>
+      <div><span class="term">forrajear</span> — to forage</div>
+      <div><span class="term">el/la depredador/a</span> — predator (cognate)</div>
+      <div><span class="term">la carroña</span> — carrion</div>
+      <div><span class="term">cooperativo/a</span> — cooperative (cognate)</div>
+      <div><span class="term">expulsar</span> — to expel (cognate)</div>
+      <div><span class="term">solitario/a</span> — solitary (cognate)</div>
+      <div><span class="term">el rastro</span> — trail, trace</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>me llaman...</span>
+      <span>vivo en un grupo llamado...</span>
+      <span>a diferencia de...</span>
+      <span>mantengo la cola erguida</span>
+      <span>cuidamos a las crías juntas</span>
+      <span>cuando... alcanzan la madurez</span>
+      <span>la única familia que conozco</span>
+      <span>según los investigadores</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué es una "banda", y quiénes la forman?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué pasa con los machos cuando alcanzan la madurez, y cómo se les llama después?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Mi Banda</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Biografía de Animales Asombrosos → Historia 3</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Ciencias naturales y biología animal — el coatí de nariz blanca, estructura social, cuidado cooperativo de crías, diferencias entre machos y hembras adultos. Posible apoyo temático a la unidad "Amazing Animals" de La Cuadrilla.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar en primera persona una autobiografía animal; describir estructura social y roles cooperativos; expresar comparación (a diferencia de...); explicar un ciclo de vida.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>me llaman... · vivo en un grupo llamado... · a diferencia de... · mantengo la cola erguida · cuidamos a las crías juntas · cuando... alcanzan la madurez · la única familia que conozco.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, datos básicos sobre la banda.<br>
+    <strong>A2:</strong> se añaden detalles biológicos y conectores simples.<br>
+    <strong>B1:</strong> más detalle científico sobre el cuidado cooperativo.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario científico más preciso.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>La expulsión de los machos adultos de la banda se presenta como un hecho biológico natural, no como un abandono triste — tono neutral y factual. Se mencionan depredadores (boas, aves rapaces, félidos) de forma factual, sin detalles gráficos. La estructura social en bandas, el cuidado cooperativo de crías, el uso de la cola como poste de equilibrio y señal visual, y la expulsión de los machos a los dos años de edad son datos reales y documentados.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — en este libro no hay personaje visitante; cada animal narra su propia biografía sin anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>cooperativo</em> — cognado natural con "cooperative", usado para describir el cuidado compartido de las crías en la banda.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Cómo se compara la manera en que las coatíes cuidan a sus crías en grupo con cómo se cuida a los niños en tu familia o comunidad?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>La especie de esta narradora coincide con la de Valentina, la coatí guatemalteca de [[chica-y-sus-amigos]] — conexión temática intencional entre ambos proyectos, aunque esta narradora es un individuo distinto.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

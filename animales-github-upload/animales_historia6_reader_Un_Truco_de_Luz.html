@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Un Truco de Luz — Biografía de Animales Asombrosos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Biografía de Animales Asombrosos · Historia 6</div>
+    <h1>Un Truco de Luz</h1>
+    <div class="subtitle">La biografía de una mariposa morfo azul</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Soy una mariposa morfo azul. Vivo en la selva tropical, desde México hasta Colombia.</p>
+        <p>Mis alas son azules, muy brillantes. Pero mi color azul es un truco de la luz — no es pintura ni color normal. Mis alas tienen escamas muy pequeñas que reflejan solo la luz azul.</p>
+        <p>Cuando cierro las alas, se ve otro color: café, con manchas grandes como ojos. Estas manchas asustan a los pájaros que quieren comerme.</p>
+        <p>Vuelo de una manera rara — no en línea recta. Vuelo de un lado a otro, rápido. Así, es difícil para un depredador atraparme.</p>
+        <p>Mi vida tiene cuatro etapas: huevo, oruga, crisálida y, al final, mariposa.</p>
+        <p>Como mariposa adulta, vivo poco tiempo — como ciento quince días.</p>
+        <p>Paso la mayor parte del tiempo en el sotobosque, con las alas cerradas. Pero cuando busco pareja, vuelo más alto, sobre los árboles.</p>
+        <p>Soy grande — mis alas pueden medir hasta veinte centímetros.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Soy una mariposa morfo azul. Vivo en las selvas tropicales de América, desde México hasta Colombia.</p>
+        <p>Mis alas tienen un azul intenso e iridiscente, pero este color no viene de ningún pigmento — es un efecto óptico. Mis alas están cubiertas de escamas microscópicas que reflejan solo la luz azul, como pequeños prismas. Por eso, mi color cambia un poco según el ángulo desde donde me mires.</p>
+        <p>Cuando cierro las alas, muestro un lado completamente distinto: café, con grandes manchas que parecen ojos. Estas manchas confunden y asustan a los pájaros y otros depredadores que intentan cazarme.</p>
+        <p>Además, tengo un vuelo errático — no vuelo en línea recta, sino de un lado a otro, de manera impredecible. Esta estrategia evolucionó específicamente para hacer más difícil que un depredador me atrape en el aire.</p>
+        <p>Mi vida pasa por cuatro etapas completas: primero soy un huevo, después una oruga, luego una crisálida, y finalmente, mariposa adulta.</p>
+        <p>Como mariposa adulta, vivo relativamente poco tiempo — apenas unos ciento quince días, dedicados casi por completo a comer y reproducirme.</p>
+        <p>Paso la mayor parte de mi tiempo en el sotobosque, con las alas plegadas, pero cuando busco pareja, vuelo más alto, incluso por encima de las copas de los árboles.</p>
+        <p>Soy una de las mariposas más grandes del mundo — mis alas pueden extenderse hasta veinte centímetros.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un mediodía cualquiera, mientras volaba entre los claros soleados de la selva tropical que va desde México hasta Colombia, alguien se detuvo a observarme, fascinado por el destello azul de mis alas.</p>
+        <p>Soy una mariposa morfo azul, y mi color más llamativo —ese azul intenso e iridiscente— en realidad no proviene de ningún pigmento. Es un efecto óptico: mis alas están cubiertas de escamas microscópicas dispuestas en capas, que reflejan únicamente la luz azul, como pequeños prismas naturales. Por eso, el tono exacto que se ve depende del ángulo desde el cual me observen.</p>
+        <p>Cuando cierro las alas, sin embargo, revelo un lado completamente distinto: café apagado, con grandes manchas circulares que se parecen a ojos. Estas manchas cumplen una función defensiva clara — confunden y asustan a los pájaros y otros depredadores que intentan atraparme.</p>
+        <p>A esto se suma otra estrategia de supervivencia: mi vuelo errático. En lugar de volar en línea recta, me desplazo de un lado a otro de forma impredecible, una adaptación evolutiva que dificulta enormemente que un depredador calcule mi trayectoria y me atrape en pleno vuelo.</p>
+        <p>Mi existencia atraviesa cuatro etapas bien definidas: comienzo como un huevo diminuto, me convierto en oruga, después en crisálida, y finalmente emerjo como la mariposa que ves ahora.</p>
+        <p>Como mariposa adulta, mi vida es relativamente breve — apenas ciento quince días, dedicados casi por completo a alimentarme y reproducirme antes de que termine mi ciclo.</p>
+        <p>Paso la mayor parte de mi tiempo en el sotobosque, con las alas plegadas para pasar desapercibida, pero durante la temporada de apareamiento, me aventuro más alto, incluso por encima de las copas de los árboles, en busca de pareja.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un mediodía cualquiera, mientras sobrevolaba los claros soleados de la selva tropical que se extiende desde México hasta Colombia, alguien se detuvo a contemplarme, cautivado por el destello azul de mis alas.</p>
+        <p>Soy una mariposa morfo azul, y mi rasgo más distintivo —ese azul intenso e iridiscente— no proviene, en realidad, de ningún pigmento. Se trata de un efecto óptico: mis alas están recubiertas de escamas microscópicas dispuestas en capas superpuestas, que reflejan exclusivamente la longitud de onda azul, funcionando como diminutos prismas naturales. Por esta razón, el tono percibido varía sutilmente según el ángulo de observación.</p>
+        <p>Al plegar las alas, sin embargo, revelo una fisonomía completamente distinta: un tono café apagado, salpicado de grandes manchas circulares que emulan ojos. Estas manchas cumplen una función defensiva evidente, generando confusión y aprensión en aves y otros depredadores que intentan capturarme.</p>
+        <p>A esta estrategia se suma otra adaptación evolutiva notable: mi patrón de vuelo errático. En lugar de desplazarme en línea recta, oscilo de un lado a otro de manera impredecible, dificultando considerablemente que un depredador calcule mi trayectoria y logre interceptarme en pleno vuelo.</p>
+        <p>Mi existencia atraviesa cuatro etapas claramente diferenciadas: comienzo como un huevo diminuto, evoluciono hacia la fase de oruga, posteriormente crisálida, y finalmente emerjo en la forma de mariposa que se observa actualmente.</p>
+        <p>Como ejemplar adulto, mi vida resulta comparativamente breve —apenas ciento quince días, dedicados casi íntegramente a la alimentación y la reproducción antes de concluir mi ciclo vital.</p>
+        <p>Transcurro la mayor parte de mi existencia en el sotobosque, con las alas plegadas para pasar inadvertida, aunque durante la temporada de apareamiento me aventuro a mayor altura, sobrevolando incluso las copas arbóreas, en busca de pareja.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">iridiscente</span> — iridescent (cognate)</div>
+      <div><span class="term">la escama</span> — scale</div>
+      <div><span class="term">el pigmento</span> — pigment (cognate)</div>
+      <div><span class="term">el/la depredador/a</span> — predator (cognate)</div>
+      <div><span class="term">errático/a</span> — erratic (cognate)</div>
+      <div><span class="term">la oruga</span> — caterpillar</div>
+      <div><span class="term">la crisálida</span> — chrysalis</div>
+      <div><span class="term">plegar</span> — to fold</div>
+      <div><span class="term">el sotobosque</span> — undergrowth</div>
+      <div><span class="term">impredecible</span> — unpredictable</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>mi color no viene de...</span>
+      <span>es un efecto óptico</span>
+      <span>cuando cierro las alas...</span>
+      <span>vuelo de manera errática</span>
+      <span>mi vida tiene cuatro etapas</span>
+      <span>vivo apenas...</span>
+      <span>paso la mayor parte del tiempo...</span>
+      <span>en busca de pareja</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué es azul la mariposa morfo, si no tiene pigmento azul?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué dos estrategias usa la mariposa morfo para protegerse de los depredadores?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Un Truco de Luz</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Biografía de Animales Asombrosos → Historia 6</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Ciencias naturales y biología animal — la mariposa morfo azul, color estructural (óptica), estrategias de defensa animal, metamorfosis. Posible apoyo temático a la unidad "Amazing Animals" de La Cuadrilla.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar en primera persona una autobiografía animal; explicar un fenómeno científico (color estructural); describir estrategias de defensa; narrar las etapas de un ciclo de vida.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>mi color no viene de... · es un efecto óptico · cuando cierro las alas... · vuelo de manera errática · mi vida tiene cuatro etapas · vivo apenas... · paso la mayor parte del tiempo... · en busca de pareja.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, el color y las etapas de vida contados paso a paso.<br>
+    <strong>A2:</strong> se añade explicación científica del color estructural y conectores simples.<br>
+    <strong>B1:</strong> más detalle científico sobre las estrategias de defensa.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario científico más preciso.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Ninguno significativo. Se mencionan depredadores de forma factual, sin detalles gráficos. El color estructural (escamas microscópicas que reflejan solo luz azul, no pigmento), las manchas oculares defensivas en el reverso de las alas, el vuelo errático como estrategia anti-depredadores, y las cuatro etapas de metamorfosis son datos reales y documentados.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — en este libro no hay personaje visitante; cada animal narra su propia biografía sin anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>iridiscente</em> — cognado natural con "iridescent", usado para describir el color característico de las alas.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Sabías que algunos colores en la naturaleza no vienen de pigmento, sino de cómo la luz interactúa con una superficie? ¿Conoces otro ejemplo?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>
