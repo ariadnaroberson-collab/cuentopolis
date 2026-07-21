@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El camarón encantado — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Cuento clásico</div>
+    <h1>El camarón encantado</h1>
+    <div class="subtitle">José Martí, de <i>La Edad de Oro</i> (1889) — adaptado del francés de Laboulaye</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Cerca del mar Báltico vive un leñador pobre. Se llama Loppi. Vive con su esposa, Masicas, en una casa vieja y pobre.</p>
+        <p>Masicas siempre está de mal humor. Nunca está contenta.</p>
+        <p>Un día, Loppi sale a trabajar, muy triste. Cerca de un charco, ve un animal extraño: ¡un camarón enorme!</p>
+        <p>El camarón habla: "Yo soy una maga. Si me ayudas, yo te ayudo a ti."</p>
+        <p>Loppi pide algo pequeño: peces para comer. El camarón dice las palabras mágicas, y aparecen muchos peces.</p>
+        <p>Pero Masicas no está contenta. Quiere más: una sopa buena y tocino. Loppi va otra vez a ver al camarón.</p>
+        <p>El camarón le da lo que pide. Pero Masicas siempre quiere más: un vestido bonito, después una casa grande, después ser una princesa, y después una reina.</p>
+        <p>Cada vez, Loppi va al charco y dice: "Camaroncito duro, sácame del apuro." Y cada vez, el camarón le da lo que pide.</p>
+        <p>Pero Masicas nunca está contenta. Siempre quiere algo más grande.</p>
+        <p>Un día, Masicas pide algo imposible. Quiere gobernar el cielo y el mundo entero.</p>
+        <p>Loppi no quiere pedir eso. Es demasiado. Pero Masicas insiste, y Loppi, con miedo, va a ver al camarón por última vez.</p>
+        <p>El camarón se enoja mucho. Dice: "¡Los maridos cobardes hacen a las mujeres locas! ¡A tu casuca, con tu mujer!"</p>
+        <p>Todo desaparece: el castillo, el vestido bonito, la corona. Loppi y Masicas regresan a su casa vieja y pobre, como al principio.</p>
+        <p>Loppi y Masicas aprenden una lección difícil: es importante estar agradecidos con lo que tenemos, y no querer siempre más y más.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Cerca del mar Báltico, del lado de Rusia, vivía un leñador pobre llamado Loppi, en una casa vieja y humilde, junto a su esposa Masicas. Su nombre significaba "fresa agria," y en verdad era una mujer difícil, que nunca estaba contenta con nada.</p>
+        <p>Un día, después de escuchar los reclamos de Masicas, Loppi salió a trabajar con el corazón triste y el morral vacío. Cerca de un charco de agua, notó algo extraño moviéndose entre la hierba: un camarón enorme, de aspecto casi mágico.</p>
+        <p>"No soy un simple camarón," le dijo la criatura. "Soy una maga con mucho poder. Si tú me ayudas, yo te ayudaré a ti."</p>
+        <p>Loppi, humilde como siempre, solo pidió algo pequeño: peces para llevar a casa. El camarón pronunció unas palabras mágicas, y de inmediato el morral se llenó de peces frescos.</p>
+        <p>Pero cuando Loppi llegó a casa, Masicas no quedó satisfecha por mucho tiempo. Al día siguiente, pidió una buena sopa con tocino. Loppi, sin saber qué más hacer, regresó al charco y llamó al camarón con las palabras mágicas: "Camaroncito duro, sácame del apuro."</p>
+        <p>Así comenzó un patrón que se repetiría una y otra vez: cada vez que Masicas conseguía lo que pedía, pronto quería algo más grande. Primero fue un vestido elegante. Después, una casa señorial. Luego, convertirse en princesa. Y finalmente, ser coronada reina de todo el país.</p>
+        <p>Cada vez, Loppi caminaba hasta el charco con el corazón encogido, y cada vez, el camarón cumplía el deseo sin poner ninguna objeción.</p>
+        <p>Pero llegó el día en que Masicas pidió algo verdaderamente imposible: quería gobernar el cielo mismo, y ser dueña de todo el mundo.</p>
+        <p>Loppi, esta vez, se resistió. Sabía que aquel deseo iba demasiado lejos. Pero Masicas insistió con tanta fuerza que, con el corazón lleno de miedo, Loppi caminó una última vez hacia el charco.</p>
+        <p>El camarón, furioso, salió del agua de golpe. "¡Los maridos cobardes hacen a las mujeres locas!" gritó. "¡A tu casuca, con tu mujer, marido cobarde!"</p>
+        <p>Y en un instante, todo desapareció: el castillo, los vestidos finos, la corona dorada. Loppi y Masicas se encontraron de nuevo en su vieja y humilde casa, exactamente como al principio de la historia.</p>
+        <p>Loppi y Masicas aprendieron entonces una lección muy difícil: la verdadera felicidad no está en tener siempre más, sino en saber estar agradecidos con lo que ya se tiene.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Cerca del mar Báltico, del lado de Rusia, vivía un pobre leñador llamado Loppi, en un casuco viejo, sin más compañía que su hacha y su esposa. Su mujer se llamaba Masicas, que quiere decir "fresa agria," y era agria de verdad: nunca se enojaba cuando le hacían el gusto, pero si se quedaba sin su capricho, era mejor irse al bosque antes que escucharla.</p>
+        <p>Un día, después de que Masicas se pusiera especialmente buscapleitos, Loppi salió de la casa suspirando, con el morral de cuero vacío al hombro. Cerca de un charco, muy de mañanita, vio algo que le pareció un animal raro y negruzco, de muchas bocas: era un camarón enorme.</p>
+        <p>"No soy un camarón como parezco," le dijo la criatura, "sino una maga de mucho poder. Si me escuchas, tu mujer se contentará; y si no me escuchas, toda la vida te arrepentirás."</p>
+        <p>Loppi, con humildad, solo pidió peces para su morral vacío. El camarón le dijo unas palabras mágicas, y tantos peces entraron en el morral que casi se le caía de las manos.</p>
+        <p>Pero al día siguiente, Masicas ya no le hizo tantas fiestas al morral de pescado, y pidió, en cambio, una buena sopa y un trozo de tocino. Así, poco a poco, comenzó un patrón que se repetiría una y otra vez: apenas Masicas conseguía lo que pedía, pronto deseaba algo todavía más grande.</p>
+        <p>Primero fue un vestido de señora, para no sentarse tan pobremente vestida en la mesa. Después, una casa señorial con jardín. Luego, convertirse en princesa, con capa de armiño y sombrero de plumas. Y finalmente, ser coronada reina de todo el país, sentada en un trono de oro.</p>
+        <p>Cada vez, Loppi caminaba hasta el charco con el corazón encogido, llamando: "Camaroncito duro, sácame del apuro." Y cada vez, el camarón cumplía el deseo sin ninguna objeción, aunque con una advertencia cada vez más seria en la voz.</p>
+        <p>Pero llegó el día en que Masicas, ya cansada de ser solamente reina, pidió algo verdaderamente imposible: quería gobernar el cielo mismo, y ser dueña de todo el mundo, harta de que los hombres le mintieran y la adularan.</p>
+        <p>Loppi, esta vez, se negó rotundamente. Sabía que aquel deseo iba demasiado lejos. Pero Masicas insistió con tanta furia, amenazándolo incluso con mandar que le cortaran la cabeza, que Loppi, temblando de miedo, caminó una última vez hacia el charco.</p>
+        <p>El camarón, esta vez verdaderamente furioso, sacó todo el cuerpo del agua de un salto. "¡Los maridos cobardes hacen a las mujeres locas!" gritó. "¡Abajo el palacio, abajo el castillo, abajo la corona! ¡A tu casuca, con tu mujer, marido cobarde!"</p>
+        <p>Y en un instante, todo desapareció: el castillo, los vestidos finos, la corona dorada. Loppi se encontró de nuevo en el camino oscuro de siempre, con el morral vacío al hombro. Y de pronto sintió que dos manos furiosas le apretaban el cuello: era Masicas, enloquecida de rabia, gritándole que la había arruinado.</p>
+        <p>—¡Masicas, que te lastimas! —le suplicó Loppi. Pero las venas del cuello de Masicas se hincharon de furia, y ella cayó muerta en el acto, consumida por su propia rabia.</p>
+        <p>Loppi se sentó a su lado, le acomodó los harapos sobre el cuerpo, y le puso el morral vacío de almohada. Por la mañana, cuando salió el sol, encontraron a Loppi tendido junto a Masicas, también muerto — vencido, dicen, por la pena.</p>
+        <p>Y así termina el cuento de El camarón encantado, con una lección tan antigua como severa: la codicia sin límite no solo nos hace perder lo que ganamos, sino que puede llevarnos a perderlo absolutamente todo.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Texto auténtico</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Texto auténtico de José Martí, publicado en <i>La Edad de Oro</i> (1889), adaptado del francés de Édouard Laboulaye. Dominio público. Fuente: Wikisource, Portal José Martí.</p>
+        <p>Allá por un pueblo del mar Báltico, del lado de Rusia, vivía el pobre Loppi, en un <span class="gloss" data-word="casuco">casuco</span> viejo, sin más compañía que su hacha y su mujer. El hacha, ¡bueno!; pero la mujer se llamaba Masicas, que quiere decir «fresa agria». Y era agria Masicas de veras, como la fresa silvestre. ¡Vaya un nombre: Masicas! Ella nunca se enojaba, por supuesto, cuando le hacían el gusto, o no la contradecían; pero si se quedaba sin el capricho, era de irse a los bosques por no oírla.</p>
+        <p>De veras que era pobre la casa de Loppi: las arañas no hacían telas en sus rincones porque no había allí moscas que coger, y dos ratones que entraron extraviados, se murieron de hambre.</p>
+        <p>Un día estuvo Masicas más buscapleitos que de costumbre, y el buen leñador salió de la casa suspirando, con el morral vacío al hombro: el morral de cuero, donde echaba el pico de pan, o la col, o las papas que le daban de limosna. Era muy de mañanita, y al pasar cerca de un charco vio en la yerba húmeda uno que le pareció animal raro y negruzco, de muchas bocas, como muerto o dormido. Era grande por cierto: era un enorme camarón.</p>
+        <p>—Pues mira, leñador, que yo no soy camarón como parezco, sino una maga de mucho poder, y si me oyes, tu mujer se contentará, y si no me oyes, toda la vida te has de arrepentir. —Tú contenta a Masicas, y yo te dejaré ir, que por gusto a nadie le hago daño. —Dime qué pescado le gusta más a tu mujer. —Pues el que haya, camarón, que los pobres no escogen; lo que has de hacer es que no vuelva yo con el morral vacío.</p>
+        <p>—Pues ponme en la yerba, mete en el charco tu morral abierto, y di: "¡Peces, al morral!" —Probaré, señora maga, probaré —dijo el leñador; y puso en la yerba con mucho cuidado el camarón milagroso, que se metió de un salto en el agua. Y tantos peces entraron en el morral que casi se le iba a Loppi de las manos.</p>
+        <p>Pero al otro día no le hizo Masicas tantas fiestas al morral de pescados. Y al otro, se puso a hablar sola. Y el sábado, le sacó la lengua en cuanto lo vio venir. Y el domingo, se le fue encima a Loppi: —¡Mal marido, mal hombre, mal compañero! ¡que me vas a matar a pescado! —Y ¿qué quieres que te traiga, pues? —dijo el pobre Loppi. —Pues lo que comen todas las mujeres de los leñadores honrados: una sopa buena y un trozo de tocino.</p>
+        <p>Así, poco a poco, cada deseo cumplido dio paso a uno mayor: un vestido de señora, porque no estaba bien que Masicas se sentara con tanta pobreza a una mesa de lujo; después, un castillo con jardín; luego, ser princesa, con capa de armiño y sombrero de plumas, viendo cómo barones y baronesas se disputaban el honor de visitarla. Y cada mañana, con la voz resistiéndosele un poco más, Loppi volvía al charco y llamaba: «Camaroncito duro, sácame del apuro.»</p>
+        <p>Hasta que un día vino un chambelán a decirle que la reina lo quería ver, sentada en su trono de oro. —Estoy cansada de ser reina, Loppi. Estoy cansada de que todos estos hombres me mientan y me adulen. Quiero gobernar a hombres libres. Ve a ver a la maga por última vez. Ve: dile lo que quiero. —Pero ¿qué quieres entonces, infeliz? ¿Quieres reinar en el cielo donde están los soles y las estrellas, y ser dueña del mundo? —Que vayas te digo, y le digas a la maga que quiero reinar en el cielo, y ser dueña del mundo. —Que no voy, te digo, a pedirle a la maga semejante locura. —Soy tu reina, Loppi, y vas a ver a la maga, o mando que te corten la cabeza.</p>
+        <p>El camarón, al escuchar la nueva petición, dio una vuelta en redondo, y se fue sobre Loppi, con las bocas abiertas: —¡A tu rincón, imbécil, a tu rincón! ¡Los maridos cobardes hacen a las mujeres locas! ¡Abajo el palacio, abajo el castillo, abajo la corona! ¡A tu casuca, con tu mujer, marido cobarde! ¡A tu casuca, con el morral vacío!</p>
+        <p>Loppi se tendió en la yerba, como herido de un rayo. Cuando se levantó, no tenía en la cabeza el sombrero de plumas, ni llevaba al brazo el manto de armiño, ni vestía la casaca bordada de colores. El camino era oscuro, y matorral, como antes. Cargaba a la espalda su morral vacío. Iba, sin saber que iba, mirando a la tierra. Y de pronto sintió que le apretaban el cuello dos manos feroces.</p>
+        <p>—¿Estás aquí, monstruo? ¿Estás aquí, mal marido? ¡Me has arruinado, mal compañero! ¡Muere a mis manos, mal hombre! —¡Masicas, que te lastimas! ¡Oye a tu Loppi, Masicas! Pero las venas de la garganta de la mujer se hincharon, y reventaron, y cayó muerta, muerta de la furia.</p>
+        <p>Loppi se sentó a sus pies, le compuso los harapos sobre el cuerpo, y le puso de almohada el morral vacío.</p>
+        <p><em>Por la mañana, cuando salió el sol, Loppi estaba tendido junto a Masicas, muerto.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el camarón</span> — the shrimp</div>
+      <div><span class="term">el casuco</span> — the shack, hovel</div>
+      <div><span class="term">el morral</span> — the pouch, satchel</div>
+      <div><span class="term">buscapleitos</span> — quarrelsome, looking for a fight</div>
+      <div><span class="term">el capricho</span> — the whim</div>
+      <div><span class="term">la codicia</span> — greed</div>
+      <div><span class="term">arruinar</span> — to ruin</div>
+      <div><span class="term">la furia</span> — fury, rage</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>camaroncito duro, sácame del apuro</span>
+      <span>para mí, nada; ¿qué puedo yo querer?</span>
+      <span>mi mujer está triste</span>
+      <span>los maridos cobardes hacen a las mujeres locas</span>
+      <span>a tu casuca, con tu mujer</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cuáles son los deseos que pide Masicas, en orden, del más pequeño al más grande?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué le pide Masicas al camarón que hace que todo se pierda, y por qué es un pedido imposible?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El camarón encantado</h3>
+
+    <h4>⚠ Nota especial de contenido</h4>
+    <p>A diferencia de la mayoría de los títulos de la Biblioteca FVR, este cuento NO tiene un final suavizado en los niveles superiores — es el final auténtico y central de la moraleja de Martí. Ver "Contenido sensible" abajo antes de asignar B1/B2.</p>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — undécimo título bajo la filosofía de narrativa completa.</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Cuentos clásicos / literatura hispanoamericana — la codicia y sus consecuencias, la gratitud por lo que se tiene, el matrimonio y la indecisión, la tradición del cuento de magia europeo adaptado al español por José Martí.</p>
+
+    <h4>Nivel original</h4>
+    <p>El texto fuente de Martí (1889) corresponde aproximadamente a un registro B2/C1. A1 recibe una simplificación real y sustancial; A2–B2 se mantienen progresivamente más cerca del texto auténtico de Martí, hasta llegar en B2 casi al texto original completo.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar una secuencia de deseos crecientes y sus consecuencias; reconocer el patrón narrativo acumulativo; identificar la moraleja explícita sobre la codicia y la gratitud.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>camaroncito duro, sácame del apuro · para mí, nada; ¿qué puedo yo querer? · mi mujer está triste · los maridos cobardes hacen a las mujeres locas · a tu casuca, con tu mujer.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa)</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; se conserva la estructura acumulativa de deseos crecientes. FINAL SUAVIZADO: todo vuelve a ser como antes, sin mencionar la muerte.<br>
+    <strong>A2:</strong> se recupera más vocabulario original. FINAL SUAVIZADO, igual que en A1.<br>
+    <strong>B1:</strong> se introduce el pasado narrativo con mayor naturalidad. Aquí aparece el final auténtico (la muerte de ambos personajes), de forma breve y no gráfica.<br>
+    <strong>B2:</strong> texto prácticamente idéntico al de Martí, incluido el final completo, con glosario de apoyo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>En el texto original (1889), cuando el camarón deshace todos los deseos por la codicia desmedida de Masicas, ambos personajes mueren: Masicas muere de un ataque de furia ("las venas de la garganta... se hincharon, y reventaron, y cayó muerta"), y Loppi es encontrado muerto junto a ella a la mañana siguiente, aparentemente de pena. Esto NO es un detalle secundario como en otros cuentos clásicos ya construidos: es el clímax mismo y el punto central de la moraleja sobre la codicia. Por eso, a diferencia del patrón habitual, aquí SÍ aparece la muerte en B1 y B2 (de forma breve y sin descripción gráfica de sufrimiento), enmarcada como convención de los cuentos de advertencia clásicos, comparable a los hermanos Grimm, de quienes se inspira directamente este cuento. En A1–A2, el final se suaviza por completo.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — cuento clásico de la Biblioteca FVR, sin personaje anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>la codicia</em> — se relaciona con "greed"; concepto central del cuento, la fuerza que destruye todo lo que Loppi y Masicas habían ganado.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Masicas nunca está contenta con lo que tiene, y siempre quiere más. ¿Por qué crees que a veces es difícil sentirse satisfecho, aunque tengamos mucho?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Undécimo título de la Biblioteca FVR. Cuento clásico adaptado por José Martí del francés de Édouard Laboulaye (a su vez inspirado en los hermanos Grimm); forma parte de La Edad de Oro (1889), la misma colección de la que ya provienen Meñique y Los dos príncipes.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
