@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peter Pan — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Novela clásica (versión abreviada)</div>
+    <h1>Peter Pan</h1>
+    <div class="subtitle">J. M. Barrie (1911) — el niño que nunca quiso crecer</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>En Londres, vive una familia. Se llaman los Darling. Tienen tres hijos: Wendy, John y Michael.</p>
+        <p>Una noche, un niño extraño entra en la habitación de los niños. Se llama Peter Pan. Peter nunca crece.</p>
+        <p>Peter busca su sombra. La perdió en su última visita. Wendy la encuentra y la cose a los pies de Peter.</p>
+        <p>Peter le dice a Wendy: "Ven conmigo a Nunca Jamás. Allí viven los Niños Perdidos. Tú puedes ser nuestra mamá."</p>
+        <p>Peter tiene una amiga hada. Se llama Campanita. Campanita es celosa de Wendy.</p>
+        <p>Con un poco de polvo de hadas, Wendy, John y Michael aprenden a volar.</p>
+        <p>Los cuatro vuelan por el cielo. Pasan la segunda estrella a la derecha, y llegan a Nunca Jamás.</p>
+        <p>En Nunca Jamás, viven los Niños Perdidos. También viven piratas malos. El capitán de los piratas se llama Garfio.</p>
+        <p>Garfio tiene un garfio de metal en vez de una mano. Un cocodrilo le comió la mano hace mucho tiempo. Ahora el cocodrilo persigue a Garfio, siempre.</p>
+        <p>Wendy es la nueva mamá de los Niños Perdidos. Les cuenta historias cada noche.</p>
+        <p>Un día, Garfio hace un plan malo. Quiere atrapar a Peter y a los niños.</p>
+        <p>Campanita, muy celosa de Wendy, comete un error grave. Pero después, ella salva a Peter de un plan de Garfio: bebe una medicina envenenada antes que él.</p>
+        <p>Campanita está muy débil. Casi muere.</p>
+        <p>Peter le dice a todos los niños del mundo: "¡Aplaudan si creen en las hadas!"</p>
+        <p>Muchos niños aplauden, y Campanita se salva.</p>
+        <p>Peter y los Niños Perdidos luchan contra los piratas. Ganan la batalla.</p>
+        <p>Garfio, con miedo, corre hacia el mar. El cocodrilo todavía lo persigue.</p>
+        <p>Wendy, después de un tiempo feliz en Nunca Jamás, extraña a su familia.</p>
+        <p>"Es hora de regresar a casa," dice Wendy. "Quiero crecer, como mis padres."</p>
+        <p>Peter no quiere crecer nunca. Por eso, se queda en Nunca Jamás.</p>
+        <p>Wendy, John y Michael vuelan de regreso a Londres, y abrazan a sus padres.</p>
+        <p>Años después, Peter regresa a visitar a Wendy. Pero ahora Wendy es una mujer adulta.</p>
+        <p>Peter, siempre niño, sigue volando a Nunca Jamás — ahora con la hija de Wendy.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>En Londres vivía la familia Darling: el señor y la señora Darling, y sus tres hijos, Wendy, John y Michael. Todo parecía normal en su casa, hasta una noche especial.</p>
+        <p>Esa noche, un niño extraño entró volando por la ventana de la habitación de los niños. Se llamaba Peter Pan, y tenía un secreto increíble: nunca crecía. Había perdido su sombra en una visita anterior, y ahora la buscaba desesperadamente por toda la habitación.</p>
+        <p>Wendy encontró la sombra escondida en un cajón, y con aguja e hilo, se la cosió de nuevo a los pies. Agradecido, Peter le hizo una invitación irresistible: "Ven conmigo a Nunca Jamás. Allí viven los Niños Perdidos, y ninguno de ellos tiene una mamá de verdad. Tú podrías ser nuestra mamá."</p>
+        <p>Con Peter siempre viajaba Campanita, un hada diminuta con un carácter muy fuerte, que sintió celos de Wendy desde el primer momento.</p>
+        <p>Peter espolvoreó un poco de polvo de hadas sobre los tres hermanos, y de repente, ¡pudieron volar! Juntos salieron por la ventana, pasaron la segunda estrella a la derecha, y siguieron todo recto hasta la mañana, hasta llegar a la maravillosa isla de Nunca Jamás.</p>
+        <p>Allí vivían los Niños Perdidos, una banda de niños sin familia, además de un grupo de piratas peligrosos liderados por el temible Capitán Garfio. Garfio tenía un garfio de metal en lugar de una mano — se la había arrancado, años atrás, un cocodrilo hambriento, que desde entonces lo perseguía sin descanso, siempre con el sonido de un reloj dentro de su estómago.</p>
+        <p>Wendy se convirtió enseguida en la mamá de todos los Niños Perdidos, contándoles historias cada noche antes de dormir, mientras Peter los llevaba en aventuras cada día.</p>
+        <p>Pero el Capitán Garfio no dejaba de tramar un plan para capturar a Peter de una vez por todas. En medio de todo esto, Campanita, cegada por sus celos hacia Wendy, cometió un grave error. Sin embargo, cuando finalmente comprendió su equivocación, hizo algo increíblemente valiente: bebió una medicina envenenada que estaba destinada a Peter, para salvarle la vida.</p>
+        <p>Campanita quedó al borde de la muerte, su luz cada vez más débil. Peter, desesperado, se dirigió a todos los niños del mundo, más allá de la historia misma: "¡Si creen en las hadas, aplaudan con fuerza!"</p>
+        <p>Miles de niños aplaudieron, y la luz de Campanita volvió a brillar con fuerza.</p>
+        <p>Peter y los Niños Perdidos se enfrentaron entonces a los piratas en una batalla decisiva, y lograron vencerlos. El Capitán Garfio, aterrado, huyó saltando al mar — donde el cocodrilo, paciente como siempre, seguía esperándolo.</p>
+        <p>Después de tantas aventuras, Wendy empezó a extrañar a sus padres. "Ha llegado el momento de volver a casa," le dijo a Peter. "Quiero crecer, como todos en mi familia."</p>
+        <p>Peter, que jamás quería crecer, decidió quedarse para siempre en Nunca Jamás. Wendy, John y Michael volaron de regreso a Londres, donde sus padres los recibieron con lágrimas de alegría.</p>
+        <p>Años más tarde, Peter regresó a buscar a Wendy — pero se encontró con una mujer adulta, que ya no podía volar como antes. Sin desanimarse, Peter siguió su camino a Nunca Jamás, esta vez acompañado por la propia hija de Wendy, comenzando así una nueva generación de aventuras.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>En Londres vivía la familia Darling: el señor y la señora Darling, y sus tres hijos, Wendy, John y Michael. Todo transcurría con normalidad en su hogar, hasta que una noche cambió todo para siempre.</p>
+        <p>Esa noche, un niño extraño entró volando por la ventana de la habitación infantil. Se llamaba Peter Pan, y guardaba un secreto asombroso: nunca crecía, sin importar cuánto tiempo pasara. Había perdido su sombra durante una visita anterior, y ahora la buscaba con desesperación por toda la habitación, revolviendo cajones y armarios.</p>
+        <p>Wendy finalmente la encontró escondida en un cajón, y con aguja e hilo se la volvió a coser a los pies. Agradecido, Peter le hizo una invitación que Wendy jamás habría imaginado: "Ven conmigo a Nunca Jamás. Allí viven los Niños Perdidos, y ninguno de ellos tiene una mamá de verdad. Tú podrías ser nuestra mamá."</p>
+        <p>Con Peter viajaba siempre Campanita, un hada diminuta pero de carácter fuerte, que desde el primer instante sintió celos intensos de Wendy.</p>
+        <p>Peter espolvoreó un poco de polvo de hadas sobre los tres hermanos, y, para su sorpresa, ¡pudieron volar! Juntos salieron por la ventana, siguieron la segunda estrella a la derecha, y volaron toda la noche hasta llegar a la maravillosa isla de Nunca Jamás, al amanecer.</p>
+        <p>Allí vivían los Niños Perdidos, una banda de niños sin familia que llevaba años esperando algo así como una madre, además de un grupo de piratas peligrosos liderados por el temible Capitán Garfio. Garfio llevaba un garfio de metal en lugar de una mano: se la había arrancado, años atrás, un cocodrilo hambriento que, desde entonces, lo perseguía sin descanso por toda la isla, con el tictac de un reloj sonando siempre dentro de su estómago —el mismo reloj que se había tragado junto con la mano.</p>
+        <p>Wendy se convirtió de inmediato en la madre de todos los Niños Perdidos, y cada noche les contaba historias antes de dormir, mientras Peter los llevaba a nuevas aventuras cada día que pasaba.</p>
+        <p>Pero el Capitán Garfio no dejaba de tramar un plan para capturar a Peter de una vez por todas y vengarse del niño que le había cortado la mano. En medio de esta tensión, Campanita, cegada por los celos que sentía hacia Wendy, cometió un grave error que puso en peligro a la propia Wendy. Sin embargo, cuando finalmente comprendió lo que había hecho, decidió hacer algo extraordinariamente valiente: cuando Garfio envenenó la medicina de Peter, ella se la bebió primero, para salvarle la vida a su amigo.</p>
+        <p>Campanita quedó al borde de la muerte, su luz cada vez más débil y a punto de apagarse. Desesperado, Peter se dirigió entonces a todos los niños del mundo, más allá incluso de los límites de la propia historia: "¡Si de verdad creen en las hadas, aplaudan con todas sus fuerzas!"</p>
+        <p>Miles de niños, en todas partes, aplaudieron con fuerza, y la luz de Campanita volvió a brillar tan intensamente como antes.</p>
+        <p>Peter y los Niños Perdidos se enfrentaron entonces a los piratas en una batalla decisiva a bordo del barco pirata, y lograron vencerlos tras una lucha feroz. El Capitán Garfio, aterrado y sin ninguna salida, terminó saltando al mar — donde el paciente cocodrilo, que nunca había dejado de esperarlo, seguía nadando en círculos.</p>
+        <p>Después de tantas aventuras, Wendy comenzó a extrañar profundamente a sus padres. "Ha llegado el momento de volver a casa," le dijo a Peter una noche. "Quiero crecer, como todos en mi familia lo hicieron algún día."</p>
+        <p>Peter, que jamás había querido crecer ni un solo día, decidió quedarse para siempre en Nunca Jamás junto a los Niños Perdidos que quisieran acompañarlo. Wendy, John y Michael volaron de regreso a Londres, donde sus padres los recibieron con lágrimas de alegría y alivio.</p>
+        <p>Años más tarde, Peter regresó a buscar a Wendy, tal como había prometido — pero en su lugar encontró a una mujer adulta, que ya no podía volar como antes. Sin desanimarse ni un instante, Peter emprendió el vuelo de nuevo hacia Nunca Jamás, esta vez acompañado por la propia hija de Wendy, comenzando así una nueva generación de aventuras que, como Peter mismo, parecía no tener final.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Registro cercano al original</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Versión abreviada, adaptada y traducida al español a partir del texto original de J. M. Barrie, <i>Peter and Wendy</i> (1911). Dominio público. Se omite por completo el grupo de habitantes indígenas de Nunca Jamás presente en el texto original, retratado con estereotipos étnicos propios de su época.</p>
+        <p>En el número 14 de una calle tranquila de Londres vivía la familia Darling: el señor y la señora Darling, y sus tres hijos, Wendy, John y Michael. La vida transcurría con toda normalidad en aquel hogar, hasta que una noche lo cambió todo para siempre.</p>
+        <p>Esa noche, mientras la niñera dormía, un niño extraño entró volando por la ventana de la habitación infantil. Se llamaba Peter Pan, y guardaba un secreto asombroso: por más que pasaran los años, él jamás crecía. Había perdido su sombra durante una visita anterior, y ahora la buscaba con desesperación, <span class="gloss" data-word="revolviendo">revolviendo</span> cajones y armarios sin ningún cuidado.</p>
+        <p>Wendy la encontró finalmente escondida en un cajón, y, con aguja e hilo, se la volvió a coser a los pies. Peter, agradecido y encantado con su nueva amiga, le hizo una invitación que ella jamás habría imaginado recibir: "Ven conmigo a Nunca Jamás. Allí viven los Niños Perdidos, y ninguno de ellos tiene una madre de verdad. Tú podrías ser nuestra mamá."</p>
+        <p>Con Peter viajaba siempre Campanita, un hada diminuta de carácter fuerte y temperamento vivo, que sintió celos intensos de Wendy desde el primer instante en que la vio.</p>
+        <p>Peter espolvoreó un poco de <span class="gloss" data-word="polvo de hadas">polvo de hadas</span> sobre los tres hermanos, y, para su propia sorpresa, descubrieron que podían volar. Salieron juntos por la ventana, dejaron atrás Londres, siguieron la segunda estrella a la derecha, y volaron durante toda la noche hasta llegar, al amanecer, a la maravillosa isla de Nunca Jamás.</p>
+        <p>Allí vivían los Niños Perdidos, una pequeña banda sin familia que llevaba años soñando con tener una madre, y también un grupo de temibles piratas al mando del célebre Capitán Garfio. Este llevaba, en lugar de una mano, un afilado garfio de metal: años atrás, un cocodrilo hambriento se la había arrancado de un mordisco, tragándose además un reloj que llevaba puesto. Desde entonces, el animal perseguía a Garfio por toda la isla, y su tictac, cada vez más cercano, le anunciaba siempre su proximidad —el único aviso que tenía antes de que el peligro lo alcanzara.</p>
+        <p>Wendy se convirtió de inmediato en la madre de todos los Niños Perdidos, y cada noche les narraba historias antes de dormir, mientras Peter los conducía a nuevas aventuras cada día.</p>
+        <p>Pero el Capitán Garfio no dejaba de tramar un plan para capturar a Peter de una vez por todas, decidido a vengarse del niño que lo había desfigurado años atrás. En medio de esta tensión, Campanita, cegada por los celos que sentía hacia Wendy, cometió un grave error que estuvo a punto de costarle la vida a esta última. Sin embargo, cuando comprendió el alcance de lo que había hecho, llevó a cabo un acto de una valentía extraordinaria: cuando Garfio envenenó la medicina destinada a Peter, ella se la bebió primero, sacrificándose por salvar a su amigo.</p>
+        <p>Campanita quedó al borde de la muerte, su luz apagándose poco a poco. Peter, desesperado, se dirigió entonces —traspasando incluso los límites de la propia narración— a todos los niños del mundo: "¿Creen ustedes en las hadas? Si es así, ¡aplaudan, no dejen que Campanita muera!"</p>
+        <p>Miles de niños, en todas partes, aplaudieron con todas sus fuerzas, y la luz de Campanita volvió a arder con la misma intensidad de siempre.</p>
+        <p>Peter y los Niños Perdidos se enfrentaron entonces a los piratas en una batalla decisiva a bordo del propio barco pirata, y lograron vencerlos tras una lucha tan feroz como memorable. El Capitán Garfio, acorralado y sin escapatoria, terminó por saltar al mar —donde el paciente cocodrilo, que jamás había dejado de esperarlo, seguía nadando en círculos, fiel a su tictac.</p>
+        <p>Con el paso de los días, Wendy comenzó a extrañar profundamente a sus padres. "Ha llegado el momento de volver a casa," le confesó a Peter una noche. "Quiero crecer, como todos en mi familia lo hicieron alguna vez."</p>
+        <p>Peter, que jamás había deseado crecer ni un solo día de su vida, decidió quedarse para siempre en Nunca Jamás. Wendy, John y Michael emprendieron el vuelo de regreso a Londres, donde sus padres los recibieron entre lágrimas de alegría y alivio.</p>
+        <p><em>Años más tarde, Peter volvió a buscar a Wendy, tal como había prometido —pero en su lugar encontró a una mujer adulta, que ya no podía volar como antes. Sin desanimarse, emprendió de nuevo el vuelo hacia Nunca Jamás, esta vez junto a la propia hija de Wendy, dando comienzo a una nueva generación de aventuras que, como el propio Peter, parecía no tener final jamás.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">Nunca Jamás</span> — Neverland</div>
+      <div><span class="term">los Niños Perdidos</span> — the Lost Boys</div>
+      <div><span class="term">el Capitán Garfio</span> — Captain Hook</div>
+      <div><span class="term">el polvo de hadas</span> — fairy dust</div>
+      <div><span class="term">el garfio</span> — the hook</div>
+      <div><span class="term">envenenado/a</span> — poisoned</div>
+      <div><span class="term">aplaudir</span> — to clap, applaud</div>
+      <div><span class="term">crecer</span> — to grow up</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>Nunca Jamás</span>
+      <span>los Niños Perdidos</span>
+      <span>el Capitán Garfio</span>
+      <span>polvo de hadas</span>
+      <span>aplaudan si creen en las hadas</span>
+      <span>crecer</span>
+      <span>segunda estrella a la derecha</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué va Peter Pan a la habitación de los niños Darling al principio de la historia?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Por qué decide Wendy, al final, regresar a casa en vez de quedarse para siempre en Nunca Jamás?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Peter Pan</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — séptimo título bajo la filosofía de narrativa completa, y el primero de los cuatro grandes clásicos (junto a Colmillo Blanco, Alicia en el país de las maravillas, y El mago de Oz).</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Literatura infantil clásica británica — crecer vs. no querer crecer, la imaginación y el juego, la familia, el valor y la lealtad, el bien contra el mal en clave de aventura.</p>
+
+    <h4>Nivel original</h4>
+    <p>El texto fuente de Barrie (1911) es una novela completa de más de 50.000 palabras. Esta es una VERSIÓN ABREVIADA/CONDENSADA que conserva el arco argumental completo en una extensión manejable. A1 recibe una simplificación real; B2 se acerca al registro de una traducción clásica al español, con vocabulario de apoyo.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar una aventura fantástica con múltiples escenarios; describir personajes arquetípicos (el héroe eterno, la villana celosa, el villano cómico); expresar el contraste temático entre crecer y no querer crecer.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>Nunca Jamás · los Niños Perdidos · el Capitán Garfio · polvo de hadas · aplaudan si creen en las hadas · crecer · segunda estrella a la derecha.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa — versión abreviada)</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; se conserva el arco completo condensado a sus escenas clave.<br>
+    <strong>A2:</strong> se añaden detalles descriptivos de Nunca Jamás y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrativo con más naturalidad; se desarrolla más la aventura con los piratas.<br>
+    <strong>B2:</strong> registro cercano a una traducción clásica en español, con vocabulario de época y glosario de apoyo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Dos decisiones editoriales importantes: (1) Se OMITE por completo el grupo de habitantes indígenas de Nunca Jamás que aparece en el texto original de 1911 (retratado con estereotipos étnicos propios de su época, hoy considerados ofensivos e inapropiados) — la trama abreviada se centra en Wendy, los Niños Perdidos, Campanita y los piratas, sin necesidad de ese elemento para funcionar. (2) La violencia entre piratas y niños se mantiene como convención de aventura clásica infantil, sin detalle gráfico; nadie muere en pantalla en esta versión — el desenlace de Garfio se deja abierto/cómico (huye del cocodrilo) en vez de mostrar su muerte, como en muchas adaptaciones familiares posteriores. El momento en que Campanita bebe veneno para salvar a Peter se mantiene por ser central al tema de la lealtad, pero se resuelve rápidamente y de forma positiva.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — novela clásica de la Biblioteca FVR, sin personaje anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>la imaginación</em> — cognado natural con "imagination", usado para describir el poder central de Nunca Jamás y de la infancia misma.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Peter Pan nunca quiere crecer, pero Wendy decide regresar a casa y crecer. ¿Qué es lo mejor de ser niño, y qué es lo mejor de crecer?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Séptimo título de la Biblioteca FVR, primero de los cuatro grandes clásicos. Versión ABREVIADA de la novela completa de J. M. Barrie (1911), de dominio público en Estados Unidos.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
