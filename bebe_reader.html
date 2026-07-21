@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bebé y el señor Don Pomposo — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Cuento clásico</div>
+    <h1>Bebé y el señor Don Pomposo</h1>
+    <div class="subtitle">José Martí, de <i>La Edad de Oro</i> (1889)</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Bebé es un niño de cinco años. Tiene el pelo rubio, y su familia es rica. Lo visten con ropa muy elegante.</p>
+        <p>Bebé es bueno. Quiere mucho a todos, y todos lo quieren a él.</p>
+        <p>Bebé tiene un primo. Se llama Raúl. Raúl no tiene mucho dinero. No tiene mamá.</p>
+        <p>Un día, Bebé, Raúl, y la mamá de Bebé van de visita. Van a ver a un señor muy rico: el tío Don Pomposo.</p>
+        <p>El señor Don Pomposo saluda a Bebé con mucho cariño. Le da la mano, le da besos, y le dice: "Tengo un regalo para ti."</p>
+        <p>El señor Don Pomposo le da a Bebé un sable de oro. ¡Qué sable tan bonito!</p>
+        <p>Pero el señor Don Pomposo no saluda a Raúl. No le da nada. Ni siquiera lo mira.</p>
+        <p>Bebé mira a Raúl. Raúl mira el sable de oro con los ojos muy grandes. Raúl está triste.</p>
+        <p>Bebé piensa: "El señor Don Pomposo no es bueno. No es justo con Raúl."</p>
+        <p>Esa noche, Bebé no puede dormir. Piensa en la cara triste de Raúl.</p>
+        <p>Bebé se levanta de la cama, muy despacio, sin hacer ruido.</p>
+        <p>Camina en la punta de los pies hasta la mesa donde está el sable de oro.</p>
+        <p>Toma el sable, con mucho cuidado.</p>
+        <p>Camina hasta la cama de Raúl.</p>
+        <p>Con mucho cariño, pone el sable de oro en la almohada de Raúl.</p>
+        <p>Bebé regresa a su cama, feliz, y se duerme con una sonrisa.</p>
+        <p>Esta historia nos enseña algo importante: es bueno notar cuando alguien está triste, y hacer algo para ayudar, sin esperar nada a cambio.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Bebé es un niño magnífico, de apenas cinco años, con el pelo muy rubio que le cae en rizos por la espalda. Su familia es muy rica, y lo visten siempre como a un pequeño duque, con ropa elegante y fina.</p>
+        <p>Aunque lo quieren mucho, Bebé no es un niño egoísta: él también quiere mucho a los demás, incluso a los criados más humildes, con quienes le encanta pasar horas escuchando sus historias.</p>
+        <p>Bebé tiene un primo llamado Raúl, un niño humilde que no tiene la misma suerte: no tiene madre que le compre ropa elegante, ni tíos ricos que le hagan regalos costosos.</p>
+        <p>Un día, Bebé, Raúl, y la mamá de Bebé salieron de visita. Entre otros lugares, fueron a ver a un pariente muy rico de la familia: el tío Don Pomposo, un hombre alto, flaco, y de aspecto muy serio.</p>
+        <p>En cuanto entraron, el señor Don Pomposo saludó a Bebé con muchísimo cariño: le dio la mano como se la dan los hombres importantes, le puso el sombrerito sobre la cama con mucho cuidado, y le dio varios besos.</p>
+        <p>Después, sacó un llavero enorme, abrió una gaveta especial, y le regaló a Bebé un hermoso sable dorado. "Esto cuesta mucho dinero," le dijo. "Es para que quieras mucho a tu tío."</p>
+        <p>Pero al pobre Raúl, el señor Don Pomposo ni siquiera lo saludó, ni le quitó el sombrero, ni le dio ningún beso. Raúl se quedó sentado en un sillón, con el sombrero entre las manos, y los ojos muy abiertos.</p>
+        <p>Bebé, emocionado al principio con su nuevo sable, miró hacia donde estaba su primo, y notó cómo Raúl observaba el sable con una tristeza enorme en la mirada.</p>
+        <p>De repente, a Bebé ya no le pareció tan bonito el sable. Pensó que el tío Don Pomposo, en el fondo, no había sido nada bueno con Raúl.</p>
+        <p>Esa noche, ya en la cama, Bebé no podía dejar de pensar en la cara triste de su primo. Así que, muy despacio, para no hacer ruido, se escurrió fuera de las sábanas.</p>
+        <p>Caminando de puntillas, se acercó al tocador donde brillaba el sable dorado, lo tomó con mucho cuidado, y avanzó silenciosamente hasta la cama de Raúl.</p>
+        <p>Con una sonrisa traviesa, dejó el sable dorado justo sobre la almohada de su primo dormido.</p>
+        <p>Después, regresó a su propia cama de puntillas, y se durmió feliz, con el corazón lleno de una alegría distinta a la de tener cosas: la alegría de haber hecho algo bueno.</p>
+        <p>Y así, esta pequeña historia nos deja una lección hermosa: a veces, lo más valioso que podemos hacer es notar la tristeza de otra persona, y actuar con generosidad, sin esperar nada a cambio.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Bebé es un niño magnífico, de apenas cinco años, con el pelo muy rubio que le cae en rizos por la espalda, como en las láminas de los príncipes de los cuentos. Su familia es muy rica, y siempre lo visten como a un pequeño duque, con pantaloncitos cortos, blusa de marinero, y medias de seda colorada.</p>
+        <p>Aunque todos lo quieren mucho, Bebé no es un niño egoísta ni consentido en el mal sentido: él también quiere mucho a los demás, y le encanta pasar horas escuchando las historias de los criados más viejos de la casa, sobre sus tierras lejanas de África.</p>
+        <p>Bebé tiene un primo llamado Raúl, un niño de familia humilde que no ha tenido la misma suerte que él: no tiene madre que le compre vestidos elegantes, ni tíos ricos que le hagan regalos costosos como los que recibe Bebé.</p>
+        <p>Un día, Bebé, Raúl, y la mamá de Bebé salieron a hacer varias visitas juntos. Entre otros lugares, fueron a ver a un pariente muy adinerado de la familia: el tío Don Pomposo, un hombre alto, flaco, y de expresión muy seria y solemne.</p>
+        <p>En cuanto entraron al cuarto, el señor Don Pomposo saludó a Bebé con gran cariño: le dio la mano como se la dan los adultos importantes entre sí, colocó el sombrerito de Bebé sobre la cama con sumo cuidado, como si fuera algo sagrado, y le dio varios besos que a Bebé, en el fondo, no le agradaron del todo.</p>
+        <p>Después, sacó de su bolsillo un llavero con al menos treinta llaves distintas, abrió una gaveta especial, y le entregó a Bebé un hermoso sable dorado. "Esto cuesta mucho dinero," le explicó con orgullo. "Es para que quieras mucho a tu tío."</p>
+        <p>Pero al pobre Raúl, sentado en un rincón con el sombrero entre las manos, el señor Don Pomposo ni siquiera lo saludó, ni le quitó el sombrero, ni le dio ningún beso — como si simplemente no estuviera allí.</p>
+        <p>Bebé, al principio encantado con su nuevo sable, miró de reojo hacia donde estaba su primo, y notó cómo Raúl observaba el regalo con los ojos muy abiertos, y una tristeza profunda dibujada en el rostro.</p>
+        <p>De repente, a Bebé ya no le pareció tan hermoso el sable. Empezó a pensar que el tío Don Pomposo, en realidad, había sido bastante injusto con su primo.</p>
+        <p>Esa noche, ya acostado en su cama, Bebé no podía dejar de pensar en la expresión triste de Raúl. Así que, con mucho cuidado para no hacer ningún ruido, se escurrió fuera de las sábanas.</p>
+        <p>Caminando en la punta de los pies, se acercó al tocador donde brillaba el sable dorado bajo la luz de la luna, lo tomó con delicadeza, y avanzó en silencio hasta la cama donde dormía su primo.</p>
+        <p>Con una sonrisa pícara y llena de ternura, colocó el sable dorado justo sobre la almohada de Raúl, junto a su cabeza.</p>
+        <p>Después, regresó de puntillas a su propia cama, y se durmió profundamente feliz, con una satisfacción muy distinta a la de poseer cosas bonitas: la alegría silenciosa de haber hecho lo correcto.</p>
+        <p>Y así, esta pequeña historia nos deja una enseñanza hermosa y sencilla: a veces, el gesto más valioso que podemos ofrecer es simplemente notar la tristeza ajena, y actuar con generosidad genuina, sin esperar nada a cambio.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Texto auténtico</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Texto auténtico de José Martí, publicado en <i>La Edad de Oro</i> (1889). Dominio público. Fuente: Wikisource, Portal José Martí.</p>
+        <p>Bebé es un niño magnífico, de cinco años. Tiene el pelo muy rubio, que le cae en rizos por la espalda, como en la lámina de los Hijos del Rey Eduardo, que el pícaro Gloucester hizo matar en la Torre de Londres, para hacerse él rey. A Bebé lo visten como al duquecito Fauntleroy, el que no tenía vergüenza de que lo vieran conversando en la calle con los niños pobres. Le ponen pantaloncitos cortos <span class="gloss" data-word="ceñidos">ceñidos</span> a la rodilla, y blusa con cuello de marinero, de dril blanco como los pantalones, y medias de seda colorada, y zapatos bajos.</p>
+        <p>Como lo quieren a él mucho, él quiere mucho a los demás. No es un santo, ¡oh, no! le tuerce los ojos a su criada francesa cuando no le quiere dar más dulces, y se sentó una vez en visita con las piernas cruzadas, y rompió un día un jarrón muy hermoso, corriendo detrás de un gato. Pero en cuanto ve un niño descalzo le quiere dar todo lo que tiene: a su caballo le lleva azúcar todas las mañanas, y lo llama «caballito de mi alma»; con los criados viejos se está horas y horas, oyéndoles los cuentos de su tierra de África, de cuando ellos eran príncipes y reyes.</p>
+        <p>Bebé y Raúl han hecho hoy muchas visitas: han ido con su mamá a ver a los ciegos, que leen con los dedos, en unos libros con las letras muy altas; han ido a la calle de los periódicos, a ver cómo los niños pobres que no tienen casa donde dormir, compran diarios para venderlos después, y pagar su casa; han ido a un hotel elegante, con criados de casaca azul y pantalón amarillo, a ver a un señor muy flaco y muy estirado, el tío de mamá, el señor Don Pomposo.</p>
+        <p>Bebé está pensando en la visita del señor Don Pomposo. Bebé está pensando. Con los ojos cerrados, él piensa: él se acuerda de todo. ¡Qué largo, qué largo el tío de mamá, como los palos del telégrafo! ¡Qué <span class="gloss" data-word="leontina">leontina</span> tan grande y tan suelta, como la cuerda de saltar! ¡Qué pedrote tan feo, como un pedazo de vidrio, el pedrote de la corbata! ¡Y a mamá no la dejaba mover, y le ponía un cojín detrás de la espalda, y le puso una banqueta en los pies! ¡Y le hablaba como dicen que les hablan a las reinas!</p>
+        <p>En cuanto entró en el cuarto el señor Don Pomposo le dio la mano, como se la dan los hombres a los papás; le puso el sombrerito en la cama, como si fuera una cosa santa, y le dio muchos besos, unos besos feos, que se le pegaban a la cara, como si fueran manchas. Y a Raúl, al pobre Raúl, ni lo saludó, ni le quitó el sombrero, ni le dio un beso. Raúl estaba metido en un sillón, con el sombrero en la mano, y con los ojos muy grandes.</p>
+        <p>Y entonces se levantó Don Pomposo del sofá colorado: «Mira, mira, Bebé, lo que te tengo guardado: esto cuesta mucho dinero, Bebé: esto es para que quieras mucho a tu tío». Y se sacó del bolsillo un llavero como con treinta llaves, y abrió una gaveta que olía a lo que huele el tocador de Luisa, y le trajo a Bebé un sable dorado —¡oh, qué sable!</p>
+        <p>Él no ha visto nunca caballos morados, pero se lo mandarán a hacer. Y a Raúl ¿quién le manda hacer caballos? Nadie, nadie: Raúl no tiene mamá que le compre vestidos de duquecito: Raúl no tiene tíos largos que le compren sables.</p>
+        <p>Bebé se escurre de la cama, va al tocador en la punta de los pies, levanta el sable despacio, para que no haga ruido... y ¿qué hace, qué hace Bebé? ¡Va riéndose, va riéndose el pícaro! Hasta que llega a la almohada de Raúl, y le pone el sable dorado en la almohada.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el sable</span> — the saber, sword</div>
+      <div><span class="term">ceñido/a</span> — snug-fitting</div>
+      <div><span class="term">la leontina</span> — the watch chain</div>
+      <div><span class="term">el sillón</span> — the armchair</div>
+      <div><span class="term">escurrirse</span> — to slip away quietly</div>
+      <div><span class="term">la punta de los pies</span> — tiptoe</div>
+      <div><span class="term">la almohada</span> — the pillow</div>
+      <div><span class="term">generoso/a</span> — generous</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>Bebé es un niño magnífico</span>
+      <span>al pobre Raúl</span>
+      <span>esto es para que quieras mucho a tu tío</span>
+      <span>con los ojos muy grandes</span>
+      <span>se escurre de la cama, en la punta de los pies</span>
+      <span>le pone el sable dorado en la almohada</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cómo trata el señor Don Pomposo a Bebé, y cómo trata a Raúl? ¿Por qué crees que hay esa diferencia?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué hace Bebé por la noche, y qué nos dice ese gesto sobre su carácter?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Bebé y el señor Don Pomposo</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — duodécimo título bajo la filosofía de narrativa completa.</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Cuentos clásicos / literatura hispanoamericana — la empatía y la generosidad, la conciencia de la desigualdad social desde la mirada infantil, el valor de notar los sentimientos de los demás.</p>
+
+    <h4>Nivel original</h4>
+    <p>El texto fuente de Martí (1889) corresponde aproximadamente a un registro B1/B2 — es uno de los cuentos más breves y tiernos de La Edad de Oro. A1 recibe una simplificación real; B2 se acerca casi por completo al texto original de Martí.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir a dos personajes en contraste (uno rico, uno humilde) con empatía, sin caricatura; narrar una pequeña injusticia y una reacción generosa y silenciosa ante ella; expresar sentimientos observados en el rostro o la mirada de otra persona.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>Bebé es un niño magnífico · al pobre Raúl · esto es para que quieras mucho a tu tío · con los ojos muy grandes · se escurre de la cama, en la punta de los pies · le pone el sable dorado en la almohada.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa)</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; se conserva el arco completo.<br>
+    <strong>A2:</strong> se añaden detalles descriptivos de los dos niños y de la visita, y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrativo con más naturalidad.<br>
+    <strong>B2:</strong> registro cercano al texto auténtico de Martí, con vocabulario de época y glosario de apoyo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Ninguno significativo. Se menciona que Raúl no tiene la misma posición económica que Bebé, y el texto original sugiere que Raúl es huérfano ("Raúl no tiene mamá que le compre vestidos") — esto se mantiene de forma suave y factual en todos los niveles, como contexto para el gesto de generosidad de Bebé, sin profundizar en detalles tristes de la orfandad. El cuento en su totalidad es tierno y termina de forma positiva y esperanzadora.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — cuento clásico de la Biblioteca FVR, sin personaje anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>generoso/a</em> — cognado natural con "generous", usado para describir el gesto final de Bebé hacia su primo.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Bebé nota la tristeza en los ojos de Raúl, sin que nadie se lo diga. ¿Alguna vez notaste que alguien estaba triste, aunque no dijera nada, y decidiste hacer algo para ayudar?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Duodécimo título de la Biblioteca FVR. Cuento de dominio público de José Martí; forma parte de La Edad de Oro (1889), la misma colección de la que ya provienen Meñique, Los dos príncipes, y El camarón encantado.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
