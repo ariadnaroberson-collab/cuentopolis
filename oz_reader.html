@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El mago de Oz — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Novela clásica (versión abreviada)</div>
+    <h1>El mago de Oz</h1>
+    <div class="subtitle">L. Frank Baum (1900) — no hay lugar como el hogar</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Dorothy vive en una granja en Kansas, con su tío, su tía, y su perrito, Totó.</p>
+        <p>Un día, llega un tornado muy fuerte. La casa de Dorothy vuela por el aire, con ella y Totó adentro.</p>
+        <p>La casa cae en un lugar extraño y mágico: el país de Oz.</p>
+        <p>La casa cae encima de la Bruja Mala del Este, y la mata sin querer. La gente de Oz, los Munchkins, están felices. ¡Dorothy es una heroína!</p>
+        <p>Una bruja buena, Glinda, le da a Dorothy unos zapatos mágicos de rubí.</p>
+        <p>Dorothy quiere regresar a casa. Glinda le dice: "Camina por el Camino de Baldosas Amarillas. Al final, está la Ciudad Esmeralda. Allí vive el Mago de Oz. Él puede ayudarte."</p>
+        <p>Dorothy camina por el camino. En el camino, conoce a un Espantapájaros. Él quiere un cerebro, para poder pensar.</p>
+        <p>Después, Dorothy conoce a un Hombre de Hojalata. Él quiere un corazón, para poder amar.</p>
+        <p>Luego, conocen a un León. El León tiene miedo de todo. Quiere valor.</p>
+        <p>Los cuatro amigos caminan juntos hasta la Ciudad Esmeralda.</p>
+        <p>El Mago de Oz es muy misterioso. Les dice: "Primero, maten a la Bruja Mala del Oeste. Después, les doy lo que piden."</p>
+        <p>Los amigos viajan al oeste. La Bruja Mala los captura.</p>
+        <p>Dorothy, muy enojada, le tira un cubo de agua a la bruja. ¡La bruja se derrite! Desaparece para siempre.</p>
+        <p>Los amigos regresan a la Ciudad Esmeralda, felices.</p>
+        <p>Pero descubren un secreto: el Mago de Oz no es un mago de verdad. ¡Es solo un hombre normal, detrás de una cortina!</p>
+        <p>El Mago, un poco avergonzado, ayuda a sus amigos de otra manera: le da al Espantapájaros diplomas de sabiduría, al Hombre de Hojalata un corazón de seda, y al León una medalla de valor.</p>
+        <p>Los tres amigos comprenden: siempre tuvieron lo que buscaban, dentro de ellos mismos.</p>
+        <p>Dorothy usa sus zapatos mágicos para regresar a casa. Dice: "No hay lugar como el hogar," tres veces.</p>
+        <p>Dorothy regresa a Kansas, feliz de estar con su familia otra vez.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Dorothy vivía en una granja de Kansas con su tío Henry, su tía Em, y su fiel perrito Totó. Un día, mientras jugaba afuera, vio venir un tornado enorme y aterrador.</p>
+        <p>No tuvo tiempo de esconderse: la casa entera salió volando por el aire con ella y Totó adentro, dando vueltas y vueltas hasta caer, finalmente, en un lugar completamente desconocido.</p>
+        <p>Ese lugar resultó ser el mágico país de Oz. Para su sorpresa, la casa había caído justo encima de la Bruja Mala del Este, matándola por accidente. Los pequeños habitantes del lugar, llamados Munchkins, celebraron la noticia con alegría: ¡Dorothy se había convertido, sin proponérselo, en una heroína!</p>
+        <p>La bondadosa bruja Glinda le regaló a Dorothy unos brillantes zapatos mágicos de rubí, que habían pertenecido a la bruja fallecida.</p>
+        <p>Cuando Dorothy expresó su deseo de volver a casa, Glinda le explicó: "Sigue el Camino de Baldosas Amarillas hasta llegar a la Ciudad Esmeralda. Allí vive el gran Mago de Oz, y él seguramente podrá ayudarte."</p>
+        <p>Así comenzó su viaje. En el camino, Dorothy conoció a un Espantapájaros que se lamentaba de no tener cerebro, y por eso no podía pensar con claridad. Poco después, se topó con un Hombre de Hojalata, oxidado y triste, que anhelaba tener un corazón para poder amar de verdad.</p>
+        <p>Más adelante, un León enorme los asustó al principio, pero pronto descubrieron que, a pesar de su tamaño, era terriblemente cobarde, y solo deseaba tener valor.</p>
+        <p>Los cuatro decidieron viajar juntos hasta la Ciudad Esmeralda, apoyándose unos a otros en cada dificultad del camino.</p>
+        <p>El gran Mago de Oz resultó ser una presencia misteriosa e intimidante. Les puso una condición antes de conceder sus deseos: "Primero deben derrotar a la Bruja Mala del Oeste. Después, les daré lo que piden."</p>
+        <p>Durante su peligrosa misión hacia el oeste, la bruja logró capturarlos a todos. Pero cuando Dorothy, furiosa por lo que le había hecho a sus amigos, le arrojó un balde de agua encima sin pensarlo, ¡la bruja comenzó a derretirse frente a sus ojos, hasta desaparecer por completo!</p>
+        <p>Los cuatro amigos regresaron triunfantes a la Ciudad Esmeralda. Pero allí descubrieron un secreto sorprendente: el temible Mago de Oz no era ningún mago de verdad, sino tan solo un hombre común, escondido detrás de una gran cortina.</p>
+        <p>Un poco apenado por el engaño, el Mago encontró otra manera de ayudar a sus nuevos amigos: le entregó al Espantapájaros un diploma de sabiduría, al Hombre de Hojalata un corazón hecho de seda, y al León una medalla que representaba su valentía.</p>
+        <p>Y así, los tres comprendieron algo hermoso: siempre habían tenido, dentro de sí mismos, exactamente lo que tanto habían buscado afuera.</p>
+        <p>Finalmente, Dorothy usó el poder de sus zapatos mágicos para regresar a casa, repitiendo tres veces: "No hay lugar como el hogar." Y así, abrió los ojos de nuevo en Kansas, rodeada por fin de su querida familia.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Dorothy vivía en una granja de Kansas junto a su tío Henry, su tía Em, y su fiel perrito Totó. Un día, mientras jugaba tranquilamente afuera, vio acercarse un tornado enorme y aterrador, tan rápido que no tuvo ni tiempo de refugiarse en el sótano.</p>
+        <p>La casa entera salió volando por los aires con ella y Totó adentro, girando y girando durante lo que le pareció una eternidad, hasta que finalmente aterrizó con fuerza en un lugar por completo desconocido.</p>
+        <p>Ese lugar resultó ser el mágico país de Oz. Para su sorpresa, la casa había caído directamente sobre la Bruja Mala del Este, acabando con su vida por completo accidente. Los pequeños habitantes de la región, conocidos como Munchkins, celebraron la noticia con auténtica alegría: sin proponérselo, Dorothy se había convertido en una verdadera heroína.</p>
+        <p>La bondadosa bruja Glinda se acercó a saludarla y le regaló los brillantes zapatos mágicos de rubí que habían pertenecido a la bruja fallecida, advirtiéndole que guardaban un poder especial.</p>
+        <p>Cuando Dorothy expresó su deseo de regresar a casa cuanto antes, Glinda le aconsejó: "Sigue el Camino de Baldosas Amarillas hasta llegar a la Ciudad Esmeralda. Allí vive el gran Mago de Oz, y estoy segura de que él sabrá cómo ayudarte."</p>
+        <p>Así comenzó su largo viaje. En el camino, se encontró primero con un Espantapájaros que se lamentaba amargamente de no tener cerebro, convencido de que por eso jamás lograba pensar con claridad. Poco después, apareció un Hombre de Hojalata, oxidado y profundamente triste, que llevaba años deseando tener un corazón para poder finalmente amar de verdad.</p>
+        <p>Más adelante, un León de aspecto feroz los sorprendió con un rugido aterrador, pero pronto quedó claro que, a pesar de su tamaño imponente, era en realidad un cobarde absoluto, y lo único que deseaba en el mundo era tener valor de verdad.</p>
+        <p>Los cuatro decidieron continuar el viaje juntos, apoyándose mutuamente en cada obstáculo que se presentaba en el camino hacia la Ciudad Esmeralda.</p>
+        <p>El gran Mago de Oz resultó ser una presencia sumamente misteriosa e intimidante, que se manifestaba de formas distintas ante cada visitante. Antes de conceder cualquier deseo, les impuso una condición: primero tendrían que derrotar a la peligrosa Bruja Mala del Oeste.</p>
+        <p>Durante la peligrosa expedición hacia el oeste, la bruja logró capturarlos a todos con ayuda de sus temibles monos alados. Sin embargo, cuando Dorothy, furiosa al ver cómo trataban a sus amigos, le arrojó un balde de agua encima sin pensarlo dos veces, la bruja comenzó a derretirse ante sus propios ojos, hasta desvanecerse completamente.</p>
+        <p>Los cuatro amigos regresaron triunfantes a la Ciudad Esmeralda, ansiosos por recibir finalmente lo que tanto habían deseado. Pero allí descubrieron un secreto sorprendente: el temible Mago de Oz no era en realidad ningún mago poderoso, sino simplemente un hombre corriente, escondido durante todo ese tiempo detrás de una gran cortina.</p>
+        <p>Avergonzado por haber sido descubierto, el Mago encontró de todos modos una manera ingeniosa de ayudar a sus nuevos amigos: le entregó al Espantapájaros un diploma oficial de sabiduría, al Hombre de Hojalata un delicado corazón hecho de seda, y al León una reluciente medalla que simbolizaba su valentía.</p>
+        <p>Y así, los tres comprendieron finalmente algo hermoso: siempre habían llevado dentro de sí mismos exactamente aquello que con tanto esfuerzo habían estado buscando afuera.</p>
+        <p>Por último, Dorothy utilizó el poder oculto de sus zapatos mágicos para regresar a casa, repitiendo con determinación tres veces seguidas: "No hay lugar como el hogar." Y así, abrió los ojos de nuevo en Kansas, feliz de estar por fin junto a su querida familia.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Registro cercano al original</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Versión abreviada, adaptada y traducida al español a partir del texto original de L. Frank Baum, <i>The Wonderful Wizard of Oz</i> (1900). Dominio público.</p>
+        <p>Dorothy vivía en una modesta granja de Kansas junto a su tío Henry, su tía Em, y su fiel perrito Totó. Cierto día, mientras jugaba tranquilamente en el patio, vio aproximarse un tornado de proporciones descomunales, tan repentino que no le dio tiempo de refugiarse en el sótano de la vivienda.</p>
+        <p>La casa entera salió despedida por los aires con ella y Totó en su interior, girando sin cesar durante lo que le pareció una eternidad, hasta descender con fuerza en un paraje absolutamente desconocido.</p>
+        <p>Aquel lugar resultó ser el fantástico país de Oz. Para su asombro, la vivienda había caído directamente sobre la Bruja Mala del Este, acabando con su vida de manera completamente accidental. Los diminutos habitantes de la región, los Munchkins, celebraron la noticia con auténtico júbilo: sin habérselo propuesto, Dorothy se había convertido de inmediato en una verdadera heroína.</p>
+        <p>La bondadosa Bruja del Norte se acercó a saludarla y le obsequió los brillantes zapatos de <span class="gloss" data-word="rubíes">rubíes</span> que habían pertenecido a la difunta bruja, advirtiéndole que aquel calzado guardaba un poder considerable, aunque nadie supiera aún exactamente cuál.</p>
+        <p>Cuando Dorothy manifestó su deseo de regresar a casa cuanto antes, le aconsejaron: "Sigue el Camino de Baldosas Amarillas hasta llegar a la Ciudad Esmeralda. Allí reside el gran Mago de Oz, y sin duda él sabrá cómo ayudarte."</p>
+        <p>Comenzó así su largo periplo. En el camino se topó primero con un Espantapájaros que se lamentaba amargamente de carecer de cerebro, convencido de que por ello jamás lograba razonar con claridad. Poco después apareció un Hombre de Hojalata, <span class="gloss" data-word="oxidado">oxidado</span> y profundamente melancólico, que llevaba años anhelando un corazón para poder amar de verdad.</p>
+        <p>Más adelante, un León de aspecto feroz los sorprendió con un rugido aterrador, aunque pronto quedó de manifiesto que, pese a su porte imponente, se trataba en realidad de un cobarde absoluto, cuyo único deseo era hacerse por fin de valor genuino.</p>
+        <p>Los cuatro decidieron proseguir el viaje juntos, apoyándose mutuamente ante cada obstáculo que se presentaba camino a la Ciudad Esmeralda.</p>
+        <p>El gran Mago de Oz resultó ser una presencia sumamente misteriosa e intimidante, que se manifestaba de manera distinta ante cada visitante. Antes de conceder deseo alguno, les impuso una condición ineludible: primero tendrían que dar muerte a la temible Bruja Mala del Oeste.</p>
+        <p>Durante la peligrosa expedición hacia el oeste, la bruja consiguió capturarlos con ayuda de sus temibles monos alados. Sin embargo, cuando Dorothy, indignada al ver el trato que recibían sus amigos, le arrojó encima un cubo de agua sin pensarlo dos veces, la bruja comenzó a derretirse ante sus propios ojos, hasta desvanecerse por completo.</p>
+        <p>Los cuatro amigos regresaron triunfantes a la Ciudad Esmeralda, expectantes ante la recompensa tan largamente anhelada. Fue entonces cuando descubrieron un secreto revelador: el temible Mago de Oz no era, en absoluto, un hechicero poderoso, sino simplemente un hombre corriente que se había ocultado todo aquel tiempo tras una imponente cortina.</p>
+        <p>Avergonzado por haber sido descubierto, el Mago halló, no obstante, la manera de ayudar a sus nuevos amigos: entregó al Espantapájaros un diploma oficial de sabiduría, al Hombre de Hojalata un delicado corazón de seda, y al León una reluciente medalla que simbolizaba su valentía.</p>
+        <p>Y así, los tres comprendieron finalmente algo revelador: siempre habían llevado consigo, en su propio interior, exactamente aquello que con tanto empeño habían estado buscando en el mundo exterior.</p>
+        <p><em>Por último, Dorothy hizo uso del poder oculto de sus zapatos mágicos para regresar a casa, repitiendo con firmeza, tres veces seguidas: "No hay lugar como el hogar." Y así, abrió los ojos de nuevo en Kansas, dichosa de hallarse por fin junto a su querida familia.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el tornado</span> — the tornado</div>
+      <div><span class="term">el Camino de Baldosas Amarillas</span> — the Yellow Brick Road</div>
+      <div><span class="term">el Espantapájaros</span> — the Scarecrow</div>
+      <div><span class="term">el Hombre de Hojalata</span> — the Tin Man</div>
+      <div><span class="term">el León Cobarde</span> — the Cowardly Lion</div>
+      <div><span class="term">derretirse</span> — to melt</div>
+      <div><span class="term">detrás de la cortina</span> — behind the curtain</div>
+      <div><span class="term">el valor</span> — courage</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>el Camino de Baldosas Amarillas</span>
+      <span>no hay lugar como el hogar</span>
+      <span>el Mago de Oz</span>
+      <span>pídele un cerebro / un corazón / valor</span>
+      <span>detrás de la cortina</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué busca cada uno de los tres compañeros de Dorothy en su viaje a Oz?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué descubre Dorothy sobre el verdadero Mago de Oz, y qué le enseña eso?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El mago de Oz</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — décimo y último título del teaser bajo la filosofía de narrativa completa, y el cuarto y último de los cuatro grandes clásicos (después de Peter Pan, Colmillo Blanco, y Alicia en el país de las maravillas). Con este título se completa el teaser de 10 libros.</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Literatura infantil clásica estadounidense — el viaje del héroe, la amistad, encontrar dentro de uno mismo lo que se busca afuera (valentía, corazón, sabiduría, hogar).</p>
+
+    <h4>Nivel original</h4>
+    <p>El texto fuente de Baum (1900) es una novela completa. Esta es una VERSIÓN ABREVIADA/CONDENSADA que conserva el arco argumental completo en una extensión manejable. A1 recibe una simplificación real; B2 se acerca al registro de una traducción clásica al español, con vocabulario de apoyo.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar un viaje con una meta clara y compañeros de camino; describir deseos y carencias percibidas de cada personaje; expresar una revelación final (lo que cada personaje buscaba ya lo tenía).</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>el Camino de Baldosas Amarillas · no hay lugar como el hogar · el Mago de Oz · pídele un cerebro / un corazón / valor · detrás de la cortina.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa — versión abreviada)</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; se conserva el arco completo condensado a sus escenas clave.<br>
+    <strong>A2:</strong> se añaden detalles descriptivos de Oz y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrativo con más naturalidad.<br>
+    <strong>B2:</strong> registro cercano a una traducción clásica en español, con vocabulario de apoyo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>La Bruja Mala del Oeste obliga a Dorothy a trabajar para ella durante un tiempo, presentado de forma breve y sin detalle, similar a una situación de cautiverio temporal en un cuento de hadas. El final de la Bruja Mala (se derrite al contacto con agua) es una escena clásica y ampliamente conocida en todas las adaptaciones familiares, sin ningún detalle gráfico — se presenta como un final mágico y hasta cómico, no como una muerte violenta. No hay otro contenido sensible significativo en este título.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — novela clásica de la Biblioteca FVR, sin personaje anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>el valor</em> — cognado parcial con "valor"/"courage", usado para describir lo que busca el León Cobarde a lo largo de todo el viaje.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Al final, cada personaje descubre que ya tenía lo que buscaba. ¿Alguna vez descubriste que ya tenías algo que creías que te faltaba?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Décimo y último título del teaser de la Biblioteca FVR. Versión ABREVIADA de la novela completa de L. Frank Baum (1900), de dominio público. Con este título se completa el teaser de 10 libros para el lanzamiento del 30 de julio.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
