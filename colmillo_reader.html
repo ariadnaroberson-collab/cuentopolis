@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colmillo Blanco — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Novela clásica (versión abreviada)</div>
+    <h1>Colmillo Blanco</h1>
+    <div class="subtitle">Jack London (1906) — el Yukón, la crueldad, y la redención</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>En el Yukón, un lugar muy frío del norte, nace un cachorro especial. Es hijo de una loba y un perro-lobo. Se llama Colmillo Blanco.</p>
+        <p>Colmillo Blanco vive en la naturaleza con su madre. Aprende rápido: en el bosque, hay que ser fuerte para sobrevivir.</p>
+        <p>Un día, un cazador llamado Castor Gris encuentra a Colmillo Blanco y a su madre. Los captura y se los lleva a su campamento.</p>
+        <p>En el campamento, los otros perros no aceptan a Colmillo Blanco. Un perro grande, Labio Labio, es muy cruel con él.</p>
+        <p>Colmillo Blanco, con tanta crueldad a su alrededor, se vuelve feroz también. Es la única manera de sobrevivir.</p>
+        <p>Colmillo Blanco trabaja tirando de un trineo. Castor Gris no es muy bueno con él.</p>
+        <p>Un día, Castor Gris vende a Colmillo Blanco a un hombre malo. Se llama Beauty Smith.</p>
+        <p>Beauty Smith es muy cruel. Obliga a Colmillo Blanco a pelear contra otros animales, por dinero.</p>
+        <p>En una pelea contra un perro grande, Colmillo Blanco resulta gravemente herido. Casi muere.</p>
+        <p>Un hombre bueno, Weedon Scott, ve la pelea. Decide salvar a Colmillo Blanco y llevárselo.</p>
+        <p>Al principio, Colmillo Blanco no confía en Weedon. Le muerde la mano.</p>
+        <p>Pero Weedon tiene mucha paciencia. Habla con calma a Colmillo Blanco, día tras día, sin enojarse.</p>
+        <p>Poco a poco, Colmillo Blanco empieza a confiar. Por primera vez en su vida, siente amor por una persona.</p>
+        <p>Weedon lleva a Colmillo Blanco a su casa en California. Allí, Colmillo Blanco vive feliz, con una familia.</p>
+        <p>Un día, un hombre malo entra a la casa de la familia de Weedon. Colmillo Blanco lo ataca para proteger a todos.</p>
+        <p>Colmillo Blanco resulta herido, pero salva a la familia. Poco a poco, se recupera.</p>
+        <p>La familia lo llama "el Lobo Bendito." Colmillo Blanco, después de una vida tan dura, por fin encuentra paz y amor.</p>
+        <p>Esta historia nos enseña algo importante: la crueldad crea más crueldad, pero la bondad y la paciencia pueden cambiar hasta el corazón más duro.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>En el Yukón, una región helada y salvaje del norte, nació un cachorro especial: hijo de una loba y un perro-lobo, con más lobo que perro en su sangre. Sus dueños lo llamarían más tarde Colmillo Blanco.</p>
+        <p>Desde muy pequeño, Colmillo Blanco vivió en plena naturaleza junto a su madre, aprendiendo rápidamente una lección fundamental: en aquel mundo helado, solo los más fuertes sobrevivían.</p>
+        <p>Un día, un cazador llamado Castor Gris encontró a la loba y a su cachorro, y decidió capturarlos para llevarlos a su campamento. Allí comenzó una nueva vida para Colmillo Blanco, rodeado de humanos y de otros perros.</p>
+        <p>Los demás cachorros del campamento, liderados por un perro cruel llamado Labio Labio, se burlaban constantemente de Colmillo Blanco y lo atacaban sin razón. Con el tiempo, y sin conocer otra forma de sobrevivir, Colmillo Blanco se volvió tan feroz como el mundo que lo rodeaba.</p>
+        <p>Castor Gris lo entrenó para tirar de un trineo, tratándolo con dureza en vez de cariño. Un día, sin pensarlo demasiado, Castor Gris decidió vender a Colmillo Blanco a un hombre de mala fama llamado Beauty Smith.</p>
+        <p>Beauty Smith resultó ser aún más cruel que todo lo que Colmillo Blanco había conocido: lo obligaba a pelear contra otros animales frente a un público que apostaba dinero por cada combate.</p>
+        <p>En una de esas peleas, contra un perro mucho más grande, Colmillo Blanco resultó gravemente herido, y por poco pierde la vida. Fue entonces cuando un hombre llamado Weedon Scott, que presenciaba la pelea, decidió intervenir y comprarlo para salvarlo de aquella vida de sufrimiento.</p>
+        <p>Al principio, Colmillo Blanco, que jamás había conocido la bondad de un humano, no confiaba en Weedon en absoluto, y hasta llegó a morderle la mano cuando este intentó acercarse.</p>
+        <p>Pero Weedon no se rindió. Con muchísima paciencia, le hablaba con calma día tras día, sin gritarle ni castigarlo, esperando pacientemente a que confiara en él por voluntad propia.</p>
+        <p>Poco a poco, algo cambió dentro de Colmillo Blanco. Por primera vez en toda su vida, sintió algo parecido al amor — no por miedo, sino de manera genuina.</p>
+        <p>Weedon se lo llevó consigo hasta su casa en California, donde Colmillo Blanco finalmente encontró un hogar de verdad, rodeado por toda la familia de Weedon.</p>
+        <p>Cierto día, un hombre peligroso, escapado de la cárcel, entró en la casa con malas intenciones. Sin dudarlo un instante, Colmillo Blanco atacó al intruso para proteger a la familia que tanto había llegado a querer.</p>
+        <p>Aunque resultó gravemente herido en la pelea, Colmillo Blanco logró salvar a todos, y con el tiempo se recuperó por completo.</p>
+        <p>Desde entonces, la familia comenzó a llamarlo cariñosamente "el Lobo Bendito." Después de una vida marcada por tanta dureza, Colmillo Blanco encontró, por fin, la paz y el amor que nunca había conocido.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>En el Yukón, una región helada y salvaje del norte, nació un cachorro fuera de lo común: hijo de una loba y un perro con sangre de lobo, con mucho más de salvaje que de doméstico en su naturaleza. Con el tiempo, sus dueños lo llamarían Colmillo Blanco.</p>
+        <p>Desde muy pequeño, Colmillo Blanco creció en plena naturaleza junto a su madre, y aprendió enseguida una lección que marcaría toda su vida: en aquel mundo de hielo y hambre, solo los más fuertes lograban sobrevivir.</p>
+        <p>Un día, un cazador llamado Castor Gris encontró a la loba y a su cachorro, y decidió capturarlos para llevarlos a su campamento. Fue así como comenzó, para Colmillo Blanco, una nueva vida rodeado de humanos y de otros perros que nunca terminaron de aceptarlo.</p>
+        <p>Los demás cachorros del campamento, liderados por un perro particularmente cruel llamado Labio Labio, se burlaban constantemente de Colmillo Blanco y lo atacaban sin motivo alguno. Con el paso del tiempo, sin conocer otra forma de sobrevivir a tanta hostilidad, Colmillo Blanco se volvió tan feroz como el mundo que lo rodeaba, e incluso llegó a matar a Labio Labio en un encuentro a solas en el bosque.</p>
+        <p>Castor Gris lo entrenó para tirar de un trineo, tratándolo siempre con dureza en lugar de cariño. Un día, sin pensarlo demasiado, decidió venderlo a un hombre de pésima reputación llamado Beauty Smith.</p>
+        <p>Beauty Smith resultó ser todavía más cruel que cualquier cosa que Colmillo Blanco hubiera conocido hasta entonces: lo obligaba a pelear contra otros animales frente a un público que apostaba dinero por cada combate, sin importarle en absoluto el sufrimiento del animal.</p>
+        <p>En una de esas peleas, contra un perro mucho más grande y fuerte, Colmillo Blanco resultó gravemente herido, y estuvo a punto de perder la vida. Fue entonces cuando un hombre llamado Weedon Scott, que presenciaba el combate, decidió intervenir y comprarlo, decidido a salvarlo de aquella existencia de sufrimiento constante.</p>
+        <p>Al principio, Colmillo Blanco, que jamás había conocido la bondad de ningún ser humano, no confiaba en Weedon en lo más mínimo, y hasta llegó a morderle la mano cuando este intentó acercarse por primera vez.</p>
+        <p>Pero Weedon no se dio por vencido. Con una paciencia extraordinaria, le hablaba con calma día tras día, sin gritarle ni castigarlo jamás, esperando con serenidad a que la confianza llegara por sí sola.</p>
+        <p>Poco a poco, algo comenzó a cambiar en el interior de Colmillo Blanco. Por primera vez en toda su vida, sintió algo parecido al amor verdadero — no por miedo ni por obligación, sino de manera completamente genuina.</p>
+        <p>Weedon se lo llevó consigo hasta su casa en California, donde Colmillo Blanco encontró, finalmente, un hogar de verdad, rodeado por toda la familia de Weedon, que llegó a quererlo como a uno más.</p>
+        <p>Cierto día, un hombre peligroso, escapado de la cárcel, entró en la casa con claras intenciones de hacer daño. Sin dudarlo ni un instante, Colmillo Blanco se lanzó contra el intruso para proteger a la familia que tanto había llegado a querer.</p>
+        <p>Aunque resultó gravemente herido en el enfrentamiento, Colmillo Blanco logró detener al hombre y salvar a todos, y con cuidados constantes, poco a poco se recuperó por completo.</p>
+        <p>Desde entonces, la familia comenzó a llamarlo cariñosamente "el Lobo Bendito." Después de una vida marcada por tanta dureza y crueldad, Colmillo Blanco encontró, por fin, la paz y el amor que nunca antes había conocido.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Registro cercano al original</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Versión abreviada, adaptada y traducida al español a partir del texto original de Jack London, <i>White Fang</i> (1906). Dominio público. El papel de Castor Gris se simplificó en esta adaptación para evitar tanto el estereotipo étnico como el énfasis en el alcohol presentes en el texto original.</p>
+        <p>En las vastas y heladas extensiones del Yukón, donde el frío gobernaba cada aspecto de la existencia, nació un cachorro fuera de lo común: hijo de una loba y de un perro con sangre de lobo, con mucho más de <span class="gloss" data-word="salvaje">salvaje</span> que de doméstico corriendo por sus venas. Con el tiempo, sus dueños lo bautizarían Colmillo Blanco.</p>
+        <p>Desde muy pequeño, creció en plena naturaleza junto a su madre, y aprendió con rapidez una lección que marcaría el resto de su existencia: en aquel mundo de hielo y hambre implacable, únicamente los más fuertes lograban sobrevivir.</p>
+        <p>Un día, un cazador llamado Castor Gris dio con la loba y su cachorro, y decidió capturarlos para llevarlos a su campamento. Comenzó así, para Colmillo Blanco, una nueva existencia rodeado de seres humanos y de otros perros que jamás terminaron de aceptarlo del todo.</p>
+        <p>Los demás cachorros del campamento, encabezados por un perro particularmente cruel apodado Labio Labio, se ensañaban constantemente con Colmillo Blanco, atacándolo sin ninguna provocación de por medio. Con el paso del tiempo, sin conocer otra manera de sobrevivir a tanta <span class="gloss" data-word="hostilidad">hostilidad</span>, Colmillo Blanco se tornó tan feroz como el propio entorno que lo rodeaba, hasta el punto de acabar con la vida de Labio Labio durante un encuentro a solas en el bosque.</p>
+        <p>Castor Gris lo adiestró para tirar de un trineo, tratándolo siempre con mano dura antes que con cariño. Un día, sin mediar demasiada reflexión, decidió venderlo a un hombre de pésima reputación conocido como Beauty Smith.</p>
+        <p>Beauty Smith resultó ser todavía más despiadado que cualquier cosa que Colmillo Blanco hubiese conocido hasta entonces: lo obligaba a enfrentarse a otros animales ante un público que apostaba dinero en cada combate, sin la menor consideración por el sufrimiento del animal.</p>
+        <p>En una de aquellas peleas, contra un perro considerablemente más grande y fuerte, Colmillo Blanco resultó gravemente herido, a punto de perder la vida. Fue entonces cuando un hombre llamado Weedon Scott, testigo del combate, decidió intervenir y adquirirlo, resuelto a rescatarlo de aquella existencia de sufrimiento continuo.</p>
+        <p>En un principio, Colmillo Blanco —que jamás había experimentado la bondad de ningún ser humano— no depositaba la menor confianza en Weedon, y llegó incluso a morderle la mano en su primer intento de acercamiento.</p>
+        <p>Pero Weedon no se dio por vencido. Con una paciencia fuera de lo común, le hablaba con serenidad día tras día, sin levantarle jamás la voz ni castigarlo, aguardando con calma a que la confianza surgiera por su propia voluntad.</p>
+        <p>Poco a poco, algo comenzó a transformarse en el interior de Colmillo Blanco. Por primera vez en toda su vida, experimentó algo semejante al amor genuino —no por temor ni obligación, sino de manera del todo auténtica.</p>
+        <p>Weedon lo llevó consigo hasta su hacienda en California, donde Colmillo Blanco halló, por fin, un verdadero hogar, rodeado por toda la familia de Weedon, que llegó a considerarlo uno más de los suyos.</p>
+        <p>Cierto día, un hombre peligroso, fugado de prisión, se introdujo en la vivienda con claras intenciones criminales. Sin vacilar un instante, Colmillo Blanco se abalanzó sobre el intruso para proteger a la familia que tanto había llegado a amar.</p>
+        <p>Aunque resultó gravemente herido en el enfrentamiento, logró contener al hombre y salvar a todos los presentes, y gracias a cuidados constantes, se recuperó por completo con el paso de las semanas.</p>
+        <p><em>Desde entonces, la familia comenzó a llamarlo, con cariño, "el Lobo Bendito." Tras una vida marcada por tanta dureza y crueldad, Colmillo Blanco encontró, por fin, la paz y el amor que jamás había conocido.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el Yukón</span> — the Yukon (region)</div>
+      <div><span class="term">la manada</span> — the pack</div>
+      <div><span class="term">el trineo</span> — the sled</div>
+      <div><span class="term">herido/a</span> — injured</div>
+      <div><span class="term">confiar</span> — to trust</div>
+      <div><span class="term">la paciencia</span> — patience (cognate)</div>
+      <div><span class="term">salvaje</span> — wild, savage</div>
+      <div><span class="term">bendito/a</span> — blessed</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>el Yukón</span>
+      <span>la manada de lobos</span>
+      <span>Castor Gris</span>
+      <span>Colmillo Blanco aprende a confiar</span>
+      <span>con paciencia y cariño</span>
+      <span>el Lobo Bendito</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cómo cambia el comportamiento de Colmillo Blanco según quién lo trata — Castor Gris, Beauty Smith, o Weedon Scott?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué hace finalmente Colmillo Blanco por la familia de Weedon Scott, y qué nos dice eso sobre cómo ha cambiado?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Colmillo Blanco</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — octavo título bajo la filosofía de narrativa completa, y el segundo de los cuatro grandes clásicos (después de Peter Pan; quedan Alicia en el país de las maravillas y El mago de Oz).</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Literatura de aventura y naturaleza — la supervivencia, la naturaleza frente a la crianza (nature vs. nurture), la redención a través de la bondad, la vida en el Yukón durante la fiebre del oro.</p>
+
+    <h4>Nivel original</h4>
+    <p>El texto fuente de London (1906) es una novela completa y extensa. Esta es una VERSIÓN ABREVIADA/CONDENSADA que conserva el arco argumental completo en una extensión manejable. A1 recibe una simplificación real; B2 se acerca al registro de una traducción clásica al español, con vocabulario de apoyo.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar el desarrollo de un personaje (animal) a través de distintas etapas de su vida; describir el contraste entre crueldad y bondad, y su efecto en el comportamiento; expresar causa y efecto (el entorno moldea el carácter).</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>el Yukón · la manada de lobos · Castor Gris · Colmillo Blanco aprende a confiar · con paciencia y cariño · el Lobo Bendito.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa — versión abreviada)</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; se conserva el arco completo condensado a sus escenas clave.<br>
+    <strong>A2:</strong> se añaden detalles descriptivos del Yukón y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrativo con más naturalidad; se desarrolla más el proceso de confianza con Weedon Scott.<br>
+    <strong>B2:</strong> registro cercano a una traducción clásica en español, con vocabulario de época y glosario de apoyo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Varios elementos requieren manejo cuidadoso: (1) Beauty Smith obliga a Colmillo Blanco a pelear contra otros animales por dinero — se menciona como hecho de la trama, sin detalle gráfico de las peleas; la pelea contra un perro grande que casi lo mata se resume como "resultó gravemente herido" en vez de describir la violencia directamente. (2) Castor Gris, personaje indígena en el texto original, se simplificó en esta adaptación a "un cazador que lo captura y luego lo vende," eliminando tanto el estereotipo étnico como el énfasis en el consumo de alcohol presentes en el texto de 1906. (3) La crueldad de Beauty Smith se presenta como la maldad clara de un personaje individual, nunca como algo divertido o aceptable, y siempre contrastada con la bondad posterior de Weedon Scott.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — novela clásica de la Biblioteca FVR, sin personaje anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>la paciencia</em> — cognado natural con "patience", usado para describir la clave del método de Weedon Scott para ganarse la confianza de Colmillo Blanco.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Colmillo Blanco se vuelve feroz con la crueldad, y leal con la bondad. ¿Crees que el entorno puede cambiar de verdad el carácter de alguien? ¿Por qué?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Octavo título de la Biblioteca FVR, segundo de los cuatro grandes clásicos. Versión ABREVIADA de la novela completa de Jack London (1906), de dominio público.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
