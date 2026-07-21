@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mujercitas — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --rust:#a3492e;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  .age-warning{
+    display:flex;align-items:center;gap:10px;
+    background:rgba(163,73,46,0.15);
+    border:1px solid var(--rust);
+    color:#f0c4b4;
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    padding:10px 16px;
+    border-radius:10px;
+    margin-bottom:18px;
+  }
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+  <div class="age-warning">⚠ Middle School y Secundaria únicamente (6–11) — no recomendado para Elemental.</div>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Novela clásica (versión abreviada)</div>
+    <h1>Mujercitas</h1>
+    <div class="subtitle">Louisa May Alcott (1868/1869) — cuatro hermanas, cuatro caminos</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>En Estados Unidos, durante la Guerra Civil, vive la familia March. El padre está lejos, ayudando en la guerra.</p>
+        <p>En casa viven la mamá y sus cuatro hijas: Meg, Jo, Beth, y Amy. La familia no tiene mucho dinero.</p>
+        <p>Meg es la mayor. Es responsable y sueña con tener su propia familia algún día.</p>
+        <p>Jo es la segunda. Es fuerte, un poco rebelde, y quiere ser escritora.</p>
+        <p>Beth es la tercera. Es muy tranquila y tímida. Le encanta tocar el piano.</p>
+        <p>Amy es la más pequeña. Es artística, y a veces un poco vanidosa.</p>
+        <p>Es Navidad, pero la familia no tiene dinero para regalos. Las hermanas deciden dar su desayuno especial a una familia pobre del barrio.</p>
+        <p>Los años pasan. Cada hermana trabaja duro y aprende lecciones importantes sobre la vida.</p>
+        <p>Meg se enamora, y se casa. Empieza su propia familia.</p>
+        <p>Jo escribe historias. Quiere publicar un libro algún día.</p>
+        <p>Amy estudia arte en Europa, y crece mucho como persona.</p>
+        <p>Pero Beth se enferma de fiebre escarlatina. Poco a poco, se pone más débil.</p>
+        <p>Beth sabe que va a morir pronto. Habla con calma con su familia.</p>
+        <p>Beth muere en paz, rodeada de todo su amor: su mamá, sus hermanas, y su música favorita.</p>
+        <p>La familia está muy triste. Pero se apoyan mucho, y siguen adelante juntas.</p>
+        <p>Con el tiempo, Jo también encuentra el amor, y publica su primer libro.</p>
+        <p>Las hermanas March, cada una a su manera, aprenden a crecer con amor, generosidad, y fuerza.</p>
+        <p>Esta historia nos enseña algo importante: la familia y el amor nos ayudan a superar los momentos más difíciles de la vida.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Durante la Guerra Civil de Estados Unidos, la familia March vivía con dificultades económicas. El señor March estaba lejos de casa, sirviendo como capellán para los soldados, mientras la señora March cuidaba sola de sus cuatro hijas.</p>
+        <p>Meg, la mayor, era responsable y con frecuencia soñaba con formar algún día su propia familia. Jo, la segunda, tenía un carácter fuerte y un poco rebelde, y su mayor sueño era convertirse en escritora. Beth, la tercera, era extremadamente tímida y tranquila, y encontraba su mayor felicidad tocando el piano de la familia. Amy, la más pequeña, tenía un gran talento artístico, aunque a veces se dejaba llevar por la vanidad.</p>
+        <p>Una Navidad, sin apenas dinero para comprar regalos, las cuatro hermanas decidieron regalar su desayuno especial a una familia vecina todavía más pobre que ellas, aprendiendo así una de las primeras grandes lecciones de generosidad de la historia.</p>
+        <p>Con el paso de los años, cada una de las hermanas fue tomando su propio camino, enfrentando dificultades y aprendiendo lecciones valiosas sobre la vida, el trabajo, y el carácter.</p>
+        <p>Meg conoció el amor verdadero y se casó, formando finalmente su propia familia, tal como siempre había soñado. Jo, mientras tanto, seguía escribiendo con dedicación, con la esperanza de publicar algún día un libro propio. Amy viajó a Europa para estudiar arte, y regresó convertida en una joven mucho más madura y reflexiva.</p>
+        <p>Pero un día, Beth enfermó gravemente de fiebre escarlatina, y aunque al principio pareció recuperarse, su salud fue debilitándose lentamente con el paso del tiempo.</p>
+        <p>Consciente de que se acercaba su final, Beth habló con serenidad y cariño con toda su familia, sin miedo, agradecida por la vida sencilla y llena de amor que había tenido.</p>
+        <p>Rodeada de su madre, sus hermanas, y la música que tanto amaba, Beth murió en paz, dejando un vacío profundo pero también un ejemplo de dulzura que la familia nunca olvidaría.</p>
+        <p>Aunque el dolor fue inmenso, la familia March se apoyó mutuamente con más fuerza que nunca, encontrando consuelo en el amor que las unía.</p>
+        <p>Con el tiempo, Jo también encontró el amor verdadero, y finalmente logró publicar su primer libro, cumpliendo el sueño que había perseguido desde niña.</p>
+        <p>Cada una de las hermanas March, a su propia manera y siguiendo su propio camino, aprendió a crecer con generosidad, fortaleza, y un amor familiar que las acompañó siempre.</p>
+        <p>Y así, esta hermosa historia nos deja una lección memorable: la familia y el amor verdadero nos dan la fuerza necesaria para superar hasta los momentos más difíciles de la vida.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Durante los años de la Guerra Civil de Estados Unidos, la familia March atravesaba serias dificultades económicas. El señor March se encontraba lejos de casa, sirviendo como capellán junto a los soldados en el frente, mientras la señora March se encargaba sola del cuidado de sus cuatro hijas y del sustento diario del hogar.</p>
+        <p>Meg, la mayor de las hermanas, era responsable y con frecuencia soñaba con formar algún día su propia familia, a pesar de las estrecheces económicas que habían marcado su infancia. Jo, la segunda, poseía un carácter fuerte, impulsivo y algo rebelde para la época, y su mayor anhelo era convertirse en una escritora reconocida. Beth, la tercera, era extremadamente tímida y de naturaleza tranquila, y encontraba su mayor felicidad en las tardes junto al viejo piano familiar. Amy, la menor, tenía un talento artístico notable, aunque en su juventud se dejaba llevar con frecuencia por cierta vanidad propia de su edad.</p>
+        <p>Una Navidad particularmente difícil, sin apenas dinero disponible para comprar regalos, las cuatro hermanas decidieron, sin dudarlo, regalar su desayuno especial a una familia vecina que pasaba por circunstancias todavía más difíciles que las suyas — una de las primeras grandes lecciones de generosidad que marcarían el resto de sus vidas.</p>
+        <p>Con el paso de los años, cada una de las hermanas fue tomando su propio rumbo, enfrentando dificultades personales y aprendiendo lecciones profundas sobre el trabajo, el carácter, y el sacrificio que exige la vida adulta.</p>
+        <p>Meg conoció finalmente el amor verdadero y contrajo matrimonio, formando su propia familia tal como siempre había soñado desde niña. Jo, mientras tanto, continuó escribiendo con auténtica dedicación, enfrentando numerosos rechazos antes de finalmente lograr publicar sus primeros relatos. Amy viajó a Europa para perfeccionar su arte, y regresó convertida en una joven considerablemente más madura, generosa, y reflexiva que la niña vanidosa que todos recordaban.</p>
+        <p>Pero un día, Beth enfermó gravemente de fiebre escarlatina, y aunque en un primer momento pareció recuperarse por completo, su delicada salud fue debilitándose de forma lenta pero constante con el paso de los meses.</p>
+        <p>Consciente, con serenidad, de que su final se acercaba, Beth habló abiertamente y con calma con cada uno de los miembros de su familia, sin ningún temor, profundamente agradecida por la vida sencilla y llena de cariño que había tenido el privilegio de vivir junto a ellos.</p>
+        <p>Rodeada del amor de su madre, sus hermanas, y acompañada hasta el final por la música que tanto había amado durante toda su vida, Beth falleció en completa paz, dejando tras de sí un vacío profundo, pero también un ejemplo imborrable de dulzura y entereza que la familia entera llevaría consigo para siempre.</p>
+        <p>Aunque el dolor de la pérdida fue inmenso, la familia March se sostuvo mutuamente con una fuerza renovada, encontrando en el amor que las unía el consuelo necesario para seguir adelante juntas.</p>
+        <p>Con el tiempo, Jo también encontró el amor verdadero, y finalmente logró ver publicado su primer libro, cumpliendo así el sueño que había perseguido con tanta pasión desde su más temprana infancia.</p>
+        <p>Cada una de las hermanas March, siguiendo su propio y singular camino, aprendió a crecer con generosidad genuina, fortaleza de carácter, y un amor familiar profundo que las acompañaría durante el resto de sus vidas.</p>
+        <p>Y así, esta hermosa historia nos deja una enseñanza memorable: la familia y el amor verdadero nos otorgan la fuerza necesaria para superar incluso los momentos más dolorosos que la vida nos presenta.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Registro cercano al original</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Versión abreviada, adaptada y traducida al español a partir del texto original de Louisa May Alcott, <i>Little Women</i> (1868/1869). Dominio público.</p>
+        <p>Durante los años de la Guerra de Secesión estadounidense, la familia March atravesaba serias estrecheces económicas. El señor March se hallaba lejos del hogar, sirviendo como <span class="gloss" data-word="capellán">capellán</span> junto a las tropas en el frente, mientras la señora March se ocupaba en solitario del cuidado de sus cuatro hijas y del sustento cotidiano del hogar.</p>
+        <p>Meg, la mayor de las hermanas, era responsable y no pocas veces soñaba con formar, algún día, su propia familia, pese a las privaciones que habían marcado su infancia. Jo, la segunda, poseía un temperamento fuerte, impetuoso y algo rebelde para los cánones de su época, y su mayor anhelo era convertirse en una escritora de renombre. Beth, la tercera, era de naturaleza sumamente tímida y apacible, y hallaba su mayor dicha en las tardes junto al viejo piano familiar. Amy, la menor, poseía un talento artístico considerable, aunque en su juventud se dejaba llevar con frecuencia por cierta vanidad propia de la edad.</p>
+        <p>Cierta Nochebuena particularmente difícil, sin apenas recursos para adquirir obsequio alguno, las cuatro hermanas decidieron, sin vacilar, ceder su desayuno especial a una familia vecina que atravesaba circunstancias todavía más precarias que las suyas — una de las primeras grandes lecciones de generosidad que habría de marcar el resto de sus vidas.</p>
+        <p>Con el transcurso de los años, cada una de las hermanas fue trazando su propio rumbo, enfrentando dificultades personales y asimilando lecciones profundas sobre el trabajo, el carácter, y el sacrificio que exige la vida adulta.</p>
+        <p>Meg conoció, al fin, el amor verdadero y contrajo matrimonio, formando su propio hogar tal como había soñado desde niña. Jo, entre tanto, prosiguió escribiendo con auténtica entrega, sobreponiéndose a numerosos rechazos antes de lograr, finalmente, la publicación de sus primeros relatos. Amy viajó a Europa para perfeccionar su arte, y regresó convertida en una joven considerablemente más madura, generosa y reflexiva que la niña vanidosa que todos recordaban.</p>
+        <p>Pero un día, Beth enfermó gravemente de <span class="gloss" data-word="fiebre escarlatina">fiebre escarlatina</span>, y aunque en un primer momento pareció recuperarse por completo, su delicada salud fue apagándose de forma lenta pero inexorable con el paso de los meses.</p>
+        <p>Consciente, con serenidad, de que su final se aproximaba, Beth conversó abiertamente y sin temor con cada uno de los suyos, profundamente agradecida por la vida sencilla y colmada de cariño que había tenido el privilegio de compartir con su familia.</p>
+        <p>Rodeada del amor de su madre y sus hermanas, y acompañada hasta el último instante por la música que tanto había amado en vida, Beth falleció en completa paz, dejando tras de sí un vacío profundo, pero también un ejemplo imperecedero de dulzura y entereza que la familia entera habría de llevar consigo para siempre.</p>
+        <p>Aunque el dolor de la pérdida fue inmenso, la familia March se sostuvo mutuamente con renovada fortaleza, hallando en el amor que las unía el consuelo necesario para continuar adelante, unidas.</p>
+        <p><em>Con el tiempo, Jo también encontró el amor verdadero, y vio por fin publicado su primer libro, cumpliendo así el sueño que había perseguido con tanta pasión desde su más temprana infancia. Cada una de las hermanas March, siguiendo su propio y singular camino, aprendió a crecer con genuina generosidad, fortaleza de carácter, y un amor familiar profundo que habría de acompañarlas durante el resto de sus vidas.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">las hermanas March</span> — the March sisters</div>
+      <div><span class="term">el capellán</span> — the chaplain</div>
+      <div><span class="term">la fiebre escarlatina</span> — scarlet fever</div>
+      <div><span class="term">generoso/a</span> — generous</div>
+      <div><span class="term">vanidoso/a</span> — vain</div>
+      <div><span class="term">rodeado/a de</span> — surrounded by</div>
+      <div><span class="term">crecer</span> — to grow up</div>
+      <div><span class="term">apoyarse</span> — to support one another</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>las cuatro hermanas March</span>
+      <span>Jo quiere ser escritora</span>
+      <span>Beth es la más tranquila de todas</span>
+      <span>Amy quiere ser artista</span>
+      <span>Meg sueña con una familia</span>
+      <span>el trabajo de cada día</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cómo es cada una de las cuatro hermanas March, y qué sueño tiene cada una?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cómo afecta a la familia la muerte de Beth, y cómo siguen adelante juntas?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Mujercitas</h3>
+
+    <h4>⚠ Restricción de edad</h4>
+    <p><strong>Middle School y Secundaria únicamente (6–11).</strong> No recomendado para Elemental en el estante de la Biblioteca FVR, dada la muerte de Beth hacia el final de la historia.</p>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — décimo cuarto título bajo la filosofía de narrativa completa, y el segundo con restricción de edad (después de El sombrero de tres picos).</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Literatura clásica estadounidense — la familia y la hermandad, crecer y madurar, la generosidad en tiempos difíciles, el trabajo y la ambición personal de cada hermana, el duelo dentro de una familia unida.</p>
+
+    <h4>Nivel original</h4>
+    <p>El texto fuente de Alcott (1868/1869) es una novela extensa en dos partes (cerca de 180.000 palabras en total). Esta es una VERSIÓN ABREVIADA/CONDENSADA que conserva el arco argumental completo de las cuatro hermanas March a lo largo de varios años. A1 recibe una simplificación real; B2 se acerca al registro de una traducción clásica en español, con vocabulario de apoyo.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir a cuatro hermanas con personalidades claramente distintas; narrar el paso del tiempo y el crecimiento de varios personajes a la vez; expresar generosidad y sacrificio en momentos de dificultad económica; narrar una pérdida familiar con sensibilidad, dentro de un marco de amor y cercanía.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>las cuatro hermanas March · Jo quiere ser escritora · Beth es la más tranquila de todas · Amy quiere ser artista · Meg sueña con una familia · el trabajo de cada día.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa — versión abreviada)</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; se conserva el arco completo condensado a sus escenas clave.<br>
+    <strong>A2:</strong> se añaden detalles descriptivos de la vida de la familia March y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrativo con más naturalidad; la muerte de Beth se presenta con algo más de detalle emocional, siempre con delicadeza.<br>
+    <strong>B2:</strong> registro cercano a una traducción clásica en español, con vocabulario de época y glosario de apoyo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>El padre está ausente durante buena parte de la historia, sirviendo como capellán en la Guerra Civil estadounidense — mencionado de forma factual y breve, sin detalles de guerra o violencia. El elemento más delicado es la muerte de Beth tras una enfermedad prolongada (fiebre escarlatina y sus complicaciones), ya en la parte final de la historia — un momento central y muy conocido de la novela, tratado aquí con delicadeza, como una despedida serena y rodeada de amor familiar, no como un evento aterrador. En A1–A2 se menciona con brevedad y ternura; en B1–B2 se desarrolla con algo más de profundidad emocional, siempre sin detalles clínicos ni gráficos.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — novela clásica de la Biblioteca FVR, sin personaje anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>la generosidad</em> — cognado natural con "generosity", tema central de la novela.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Cada una de las hermanas March tiene un sueño diferente, pero todas se apoyan entre sí. ¿Tienes hermanos, primos, o amigos cercanos con sueños muy distintos a los tuyos? ¿Cómo se apoyan mutuamente?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Décimo cuarto título de la Biblioteca FVR. Versión ABREVIADA de la novela completa de Louisa May Alcott (1868/1869), de dominio público. Segundo título con restricción de edad, esta vez Middle School + Secundaria (6–11) en vez de solo Secundaria.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
