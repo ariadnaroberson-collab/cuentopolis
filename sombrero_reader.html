@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El sombrero de tres picos — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --rust:#a3492e;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  .age-warning{
+    display:flex;align-items:center;gap:10px;
+    background:rgba(163,73,46,0.15);
+    border:1px solid var(--rust);
+    color:#f0c4b4;
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    padding:10px 16px;
+    border-radius:10px;
+    margin-bottom:18px;
+  }
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+  <div class="age-warning">⚠ Secundaria (9–11) únicamente — no recomendado para Elemental ni Middle School.</div>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Novela clásica (versión abreviada)</div>
+    <h1>El sombrero de tres picos</h1>
+    <div class="subtitle">Pedro Antonio de Alarcón (1874) — comedia de enredos andaluza</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>En un pueblo de Andalucía hay un molino. En el molino viven el tío Lucas y su esposa, la señá Frasquita.</p>
+        <p>Lucas no es guapo, pero es bueno, trabajador y muy listo. Frasquita es muy bonita, alegre y buena persona. Los dos se quieren mucho.</p>
+        <p>En el pueblo también vive el corregidor. El corregidor es un hombre importante y viejo. Tiene mucho poder. Siempre usa un sombrero grande, con tres picos.</p>
+        <p>El corregidor ve a Frasquita. Piensa: "Ella es muy bonita. Quiero estar con ella."</p>
+        <p>Pero Frasquita ama solo a su esposo. El corregidor tiene un plan.</p>
+        <p>El corregidor manda a su ayudante, Garduña, con una orden falsa: "Lucas tiene que ir a la ciudad esta noche."</p>
+        <p>Lucas no quiere ir, pero es una orden del corregidor. Lucas se va, un poco preocupado.</p>
+        <p>Ahora Frasquita está sola en el molino. El corregidor camina hacia el molino, de noche, con su plan.</p>
+        <p>Pero hay un problema: hay un canal de agua cerca del molino. Está muy oscuro.</p>
+        <p>¡El corregidor no ve el canal, y se cae dentro! Ahora está todo mojado.</p>
+        <p>Frasquita ve al corregidor mojado y con frío. Ella no quiere ayudarlo, pero le da la ropa de Lucas para secarse, y se va rápido a buscar a su esposo.</p>
+        <p>Mientras tanto, Lucas regresa a casa. Ve a un hombre con la ropa del corregidor, durmiendo en su cama. ¡Lucas piensa que es una trampa!</p>
+        <p>Lucas, enojado, se pone la ropa y el sombrero del corregidor. Camina a la casa del corregidor para hablar con su esposa, la corregidora.</p>
+        <p>La corregidora ve a Lucas con la ropa de su esposo, y piensa que es él.</p>
+        <p>Al final, todos se encuentran. Hay mucha confusión, pero también se descubre la verdad: Frasquita nunca traicionó a Lucas. La corregidora tampoco hizo nada malo.</p>
+        <p>El corregidor, con su plan fallido y su ropa mojada, queda en ridículo delante de todo el pueblo.</p>
+        <p>Lucas y Frasquita se abrazan, felices. Su amor es más fuerte que la mentira del corregidor.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Cerca de un pueblo andaluz hay un famoso molino de harina. Allí viven sus dueños: el tío Lucas, un hombre poco atractivo pero trabajador, honrado y muy inteligente, y su esposa, la señá Frasquita, guapa, alegre y siempre de buen humor. Los dos se quieren mucho, y todo el pueblo los conoce por su felicidad.</p>
+        <p>En el pueblo también vive el corregidor, un hombre viejo con mucho poder, fácil de reconocer por su enorme sombrero de tres picos. Un día, el corregidor ve a Frasquita y queda completamente prendado de su belleza. Decide, sin importarle nada más, conseguir su amor.</p>
+        <p>Pero Frasquita solo tiene ojos para su esposo. Así que el corregidor, astuto, inventa un plan: manda a su ayudante Garduña con una orden falsa para que Lucas vaya esa misma noche a la ciudad vecina, con cualquier pretexto tonto.</p>
+        <p>Lucas, aunque desconfiado, no puede negarse a una orden del corregidor, y se marcha preocupado, dejando a Frasquita sola en el molino por primera vez.</p>
+        <p>Esa misma noche, muy tarde, el corregidor camina en secreto hacia el molino, seguro de que por fin tendrá su oportunidad. Pero en la oscuridad no ve una acequia de agua que cruza el camino, y cae de cabeza dentro. Sale empapado, temblando de frío, y sin nada de la elegancia con la que había salido de su casa.</p>
+        <p>Frasquita, al verlo en ese estado, no siente ninguna simpatía por sus intenciones, pero por educación le presta ropa seca de su esposo mientras ella sale corriendo a buscar ayuda.</p>
+        <p>Mientras tanto, Lucas, sospechando que algo no está bien, regresa antes de tiempo al molino. Al llegar, encuentra a un hombre dormido en su propia cama, vestido con la ropa del corregidor. Furioso y convencido de que ha sido traicionado, decide vengarse a su manera.</p>
+        <p>Se pone la ropa y el famoso sombrero de tres picos, y camina directo a la casa del corregidor, con la intención de hablar con la corregidora. Ella, al verlo llegar vestido así en la oscuridad, lo confunde inmediatamente con su propio esposo.</p>
+        <p>Al final, todos los personajes terminan reunidos en una escena de mucha confusión — pero también de mucha claridad, porque la verdad sale a la luz: ni Frasquita traicionó a Lucas, ni la corregidora hizo nada indebido. Todo fue un enredo de ropa, oscuridad y malas intenciones que no llegaron a nada.</p>
+        <p>El corregidor, mojado, humillado y sin haber conseguido su propósito, queda completamente en ridículo frente a todo el pueblo. Lucas y Frasquita, en cambio, se reencuentran más unidos que nunca, y su historia se convierte en la comidilla —y la risa— de todo el pueblo durante mucho tiempo.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Cerca de un pueblo andaluz había un famoso molino de harina, atendido por sus dueños: el tío Lucas, un hombre feo pero trabajador, honrado y muy astuto, y su esposa, la señá Frasquita, guapa, alegre y siempre radiante de buen humor. Los dos se querían profundamente, y todo el pueblo los conocía por su felicidad.</p>
+        <p>En el pueblo vivía también el corregidor, un hombre viejo, con mucho poder y fama de mujeriego, fácil de reconocer por su enorme sombrero de tres picos. Un día, el corregidor vio a Frasquita y quedó completamente prendado de su belleza. Decidió, sin importarle su propia posición ni la de ella, conseguir su amor a toda costa.</p>
+        <p>Pero Frasquita solo tenía ojos para su esposo, así que el corregidor ideó un plan: mandó a su ayudante Garduña con una orden falsa para que Lucas fuera esa misma noche al pueblo vecino, con cualquier pretexto sin importancia.</p>
+        <p>Lucas, aunque desconfiaba, no podía negarse a una orden del corregidor, y se marchó preocupado, dejando a Frasquita sola en el molino por primera vez en mucho tiempo.</p>
+        <p>Esa misma noche, ya muy tarde, el corregidor caminó en secreto hacia el molino, convencido de que por fin tendría su oportunidad. Pero en la oscuridad no vio una acequia que cruzaba el camino, y cayó de cabeza dentro del agua. Salió empapado y temblando de frío, sin nada de la elegancia con la que había salido de su casa.</p>
+        <p>Frasquita, al verlo en ese estado, no sintió ninguna simpatía por sus verdaderas intenciones, pero por cortesía le prestó ropa seca de su esposo mientras salía corriendo a buscar ayuda en el pueblo.</p>
+        <p>Mientras tanto, Lucas, sospechando que algo no estaba bien, regresó antes de tiempo. Al llegar, encontró a un hombre dormido en su propia cama, vestido con la ropa del corregidor, y quedó convencido de que había sido traicionado. Furioso, decidió vengarse a su manera: se puso la ropa y el famoso sombrero de tres picos, y caminó directo a la casa del corregidor, con la intención de hablar con la corregidora.</p>
+        <p>Ella, al verlo llegar así vestido en medio de la oscuridad, lo confundió de inmediato con su propio esposo.</p>
+        <p>Al final, todos los personajes terminaron reunidos en una escena de gran confusión — pero también de gran claridad, porque la verdad salió a la luz: ni Frasquita había traicionado a Lucas, ni la corregidora había hecho nada indebido. Todo había sido un enredo de ropa, oscuridad y malas intenciones que no llegaron a ninguna parte.</p>
+        <p>El corregidor, mojado, humillado, y sin haber logrado su propósito, quedó completamente en ridículo frente a todo el pueblo. Lucas y Frasquita, en cambio, se reencontraron más unidos que nunca, y su historia se convirtió en la comidilla —y la risa— de todo el pueblo durante mucho tiempo.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Registro cercano al original</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Versión abreviada, con fragmentos de diálogo adaptados del texto original de Pedro Antonio de Alarcón (1874). Dominio público.</p>
+        <p>Cerca de un pueblo andaluz existía un famoso molino harinero, atendido por sus dueños: el tío Lucas, feo pero simpático, laborioso, honrado y discreto, y su esposa, la señá Frasquita, "radiante siempre de salud y alegría", pero muy honesta y amante de su marido.</p>
+        <p>El corregidor del pueblo, viejo libertino, lujurioso e inconfundible por su descomunal sombrero de tres picos, quedó prendado de la belleza de la molinera desde el primer momento en que la vio, y se propuso, con la <span class="gloss" data-word="desvergüenza">desvergüenza</span> propia de quien nunca ha conocido un "no", lograr sus favores a toda costa.</p>
+        <p>Como Frasquita no le daba ni la más mínima esperanza, el corregidor urdió una <span class="gloss" data-word="patraña">patraña</span>: ordenó a su alguacil, Garduña —"flaco, agilísimo, de diminuto y repugnante rostro", la sombra fiel de su amo—, que hiciera comparecer a Lucas ante el alcalde del pueblo vecino, bajo un pretexto tan pueril como falso, con el único fin de tenerlo lejos hasta la mañana siguiente.</p>
+        <p>A sabiendas de que Frasquita se encontraba completamente sola, el corregidor se dirigió esa misma noche hacia el molino, dispuesto por fin a lograr su propósito. Pero, para su desgracia, al intentar cruzar en la oscuridad por un camino que no conocía bien, cayó de cabeza dentro de una acequia. Salió de allí "sin nada de lo que un caballero necesita para conquistar a una dama": empapado, temblando, y hecho un completo <span class="gloss" data-word="mamarracho">mamarracho</span>.</p>
+        <p>Frasquita, al verlo en tal estado, sintió por él tan poca compasión como respeto por sus verdaderas intenciones; sin embargo, por elemental cortesía, le prestó ropa seca de su marido mientras ella misma salía a buscar auxilio en el pueblo.</p>
+        <p>Mientras tanto, Lucas, que había sospechado desde el principio de la orden repentina, regresó al molino antes de lo previsto. Al llegar, se encontró con un hombre profundamente dormido en su propia cama, vestido nada menos que con la ropa del corregidor —y comprendió, o creyó comprender, la naturaleza exacta del engaño del que había sido víctima.</p>
+        <p>Sin decir palabra, se vistió con la ropa y el célebre sombrero del corregidor, y emprendió camino hacia la casa de este, decidido a ajustar cuentas a su manera: hablando con la corregidora misma. Ella, al verlo llegar en la penumbra vestido de ese modo tan inconfundible, lo tomó de inmediato por su propio esposo.</p>
+        <p>El manejo perfecto que de la trama hace Alarcón permite que, después de algunos incidentes más, ni el molinero ni el corregidor lograran finalmente sus propósitos — quedando así comprobada, ante todo el pueblo, tanto la virtud de la molinera como la de la corregidora.</p>
+        <p>El corregidor, mojado, ridiculizado y derrotado por su propia treta, no pudo hacer otra cosa que retirarse en silencio, mientras Lucas y Frasquita, más unidos que nunca tras el enredo, se reían —como se rió después todo el pueblo— de aquella célebre noche del sombrero de tres picos.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el corregidor</span> — the magistrate (colonial-era Spanish official)</div>
+      <div><span class="term">el molino / el molinero</span> — the mill / the miller</div>
+      <div><span class="term">la acequia</span> — the irrigation ditch</div>
+      <div><span class="term">estar prendado/a de</span> — to be smitten with</div>
+      <div><span class="term">la patraña</span> — the lie, made-up story</div>
+      <div><span class="term">la desvergüenza</span> — shamelessness</div>
+      <div><span class="term">el mamarracho</span> — a ridiculous-looking mess (of a person)</div>
+      <div><span class="term">quedar en ridículo</span> — to end up looking ridiculous</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>el corregidor</span>
+      <span>la señá Frasquita</span>
+      <span>el tío Lucas</span>
+      <span>pretender lograr sus favores</span>
+      <span>caer en la cuenta</span>
+      <span>quedar en ridículo</span>
+      <span>a fin de cuentas</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué plan usa el corregidor para quedarse a solas con Frasquita, y por qué falla ese plan desde el principio?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cómo termina la historia para el corregidor, y qué nos dice ese final sobre quién realmente "gana" en la comedia?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El sombrero de tres picos</h3>
+
+    <h4>⚠ Restricción de edad</h4>
+    <p><strong>Secundaria (9–11) únicamente.</strong> No disponible para Elemental ni Middle School en el estante de la Biblioteca FVR.</p>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — quinto título bajo la filosofía de narrativa completa, y el primero con restricción de edad. Versión ABREVIADA (no la novela completa de 36 capítulos).</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Literatura española del siglo XIX — la comedia de enredos, el honor y la virtud como temas costumbristas, la sátira del abuso de poder, el costumbrismo andaluz.</p>
+
+    <h4>Nivel original</h4>
+    <p>El texto fuente de Alarcón (1874) corresponde a un registro C1, con 36 capítulos breves. Esta versión abreviada conserva el arco argumental completo condensado en escenas clave. A1 recibe una simplificación real; B2 se acerca al registro y humor del original, con fragmentos de diálogo adaptados directamente del texto de Alarcón.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar una comedia de enredos con múltiples personajes y malentendidos; reconocer el humor de la ironía situacional y la sátira social; identificar el tema del honor y la virtud, resuelto de forma cómica en vez de trágica; describir personajes tipo.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>el corregidor · la señá Frasquita · el tío Lucas · pretender lograr sus favores · caer en la cuenta · quedar en ridículo · a fin de cuentas.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa — versión abreviada)</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; se conserva el arco completo condensado a sus escenas clave.<br>
+    <strong>A2:</strong> se añaden detalles de ambiente andaluz y conectores simples.<br>
+    <strong>B1:</strong> <em>techo bajado intencionalmente, enfocado más cerca de A2</em> — se introduce el pasado narrativo con suavidad, pero sin dar el salto grande hacia la complejidad de B2, según indicación específica de la maestra para este título.<br>
+    <strong>B2:</strong> registro cercano al original, con fragmentos de diálogo adaptados del texto de Alarcón y vocabulario del siglo XIX con glosario de apoyo — aquí sí se da el salto grande de complejidad.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Esta es la razón de la restricción a Secundaria. La trama gira en torno al deseo del corregidor, un hombre casado y mayor, de seducir a Frasquita, una mujer casada más joven — el motor central de la comedia. Ningún personaje comete finalmente una infidelidad real: la obra resuelve la tensión de forma cómica, humillando al corregidor y reafirmando la virtud de ambas parejas, sin ninguna escena explícita. Aun así, el tema central requiere madurez para apreciarse como la comedia de costumbres que es. Se mantiene el humor físico (el corregidor cae en una acequia de noche) y la sátira del abuso de poder, ambos manejados de forma ligera.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — novela clásica de la Biblioteca FVR, sin personaje anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>ridículo</em> — cognado natural con "ridiculous", usado para describir el destino final del corregidor, humillado por su propio plan.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>En esta historia, quien abusa de su poder termina en ridículo, y quien actúa con astucia e integridad, gana. ¿Conoces alguna historia real o de ficción con ese mismo tipo de final?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Quinto título de la Biblioteca FVR, primero con restricción de edad (badge visual añadido en la parte superior del lector, distinto de los pills de género). Versión ABREVIADA de la novela completa de Alarcón (1874), de dominio público. B1 construido con techo bajado por indicación específica de la maestra, enfocado más cerca de A2 que de B2.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
