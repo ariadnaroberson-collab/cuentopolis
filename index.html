@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&display=swap');
+  :root {
+    --bg: #171512;
+    --bg-panel: #1f1c18;
+    --parchment: #f3ecd9;
+    --parchment-dim: #d8cfb4;
+    --navy: #26344d;
+    --gold: #c9a24b;
+    --gold-soft: #8a734a;
+    --lamp: #e7b96b;
+    --green: #4c7a5e;
+    --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Public Sans', sans-serif;
+    background: var(--bg);
+    background-image: radial-gradient(circle at 20% 15%, rgba(231,185,107,0.05), transparent 40%);
+    color: var(--parchment);
+    min-height: 100vh;
+    padding: 40px 20px 60px;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 40px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 3.2rem; color: var(--parchment); }
+  .subtitle { color: var(--parchment-dim); font-size: 1rem; margin-top: 10px; font-style: italic; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 2.3rem; } }
+  .tile {
+    display: block;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 26px 28px;
+    text-decoration: none;
+    color: var(--parchment);
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .tile.active:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .tile-icon { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 10px; }
+  .tile-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.5rem; margin-bottom: 8px; color: var(--parchment); }
+  .tile-desc { font-size: 0.9rem; color: var(--parchment-dim); line-height: 1.5; }
+  .tile-go { display: inline-block; margin-top: 14px; font-family: 'Space Mono', monospace; font-size: 0.78rem; color: var(--lamp); }
+  .tile.soon { opacity: 0.55; border-style: dashed; cursor: default; }
+  .tile.soon .tile-go { color: var(--parchment-dim); }
+  .footer-note { text-align: center; margin-top: 40px; font-family: 'Space Mono', monospace; color: var(--gold-soft); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Biblioteca de lectura · Español</p>
+    <h1>Cuentópolis</h1>
+    <p class="subtitle">Una biblioteca de lectura organizada por nivel ACTFL/CEFR</p>
+  </header>
+  <div class="grid">
+    <a class="tile active" href="series-curriculares.html">
+      <span class="tile-icon">Currículo</span>
+      <div class="tile-title">Series curriculares</div>
+      <p class="tile-desc">Los Guardianes de Chiquibul, El Club del Barrio, La Cuadrilla — la secuencia de clase.</p>
+      <span class="tile-go">Abrir →</span>
+    </a>
+    <a class="tile active" href="panorama-cultural.html">
+      <span class="tile-icon">Apoyo curricular</span>
+      <div class="tile-title">Panorama cultural</div>
+      <p class="tile-desc">4 libros, 33 historias — pueblos, entrevistas, recetas, animales.</p>
+      <span class="tile-go">Abrir →</span>
+    </a>
+    <a class="tile active" href="baul-de-emilio.html">
+      <span class="tile-icon">Unidad selectiva</span>
+      <div class="tile-title">El Baúl de Emilio</div>
+      <p class="tile-desc">4 episodios podcast — Messi, Frida Kahlo, Celia Cruz, José Martí.</p>
+      <span class="tile-go">Abrir →</span>
+    </a>
+    <a class="tile soon" tabindex="0" aria-label="Mes de la Herencia Hispana — próximamente">
+      <span class="tile-icon">Unidad selectiva</span>
+      <div class="tile-title">Mes de la Herencia Hispana</div>
+      <p class="tile-desc">Texto ancla, leyendas y poesía del mes de la herencia hispana.</p>
+      <span class="tile-go">✎ Próximamente</span>
+    </a>
+    <a class="tile soon" tabindex="0" aria-label="Recursos auténticos — próximamente">
+      <span class="tile-icon">Realia</span>
+      <div class="tile-title">Recursos auténticos</div>
+      <p class="tile-desc">Menús, folletos y materiales auténticos del mundo hispano.</p>
+      <span class="tile-go">✎ Próximamente</span>
+    </a>
+    <a class="tile active" href="biblioteca-fvr.html">
+      <span class="tile-icon">Lectura libre</span>
+      <div class="tile-title">Biblioteca FVR</div>
+      <p class="tile-desc">Lectura libre por nivel, A1–B2 — busca y elige tu próxima historia.</p>
+      <span class="tile-go">Abrir →</span>
+    </a>
+  </div>
+  <p class="footer-note">Cuentópolis · construido con cariño</p>
+</div>
+</body>
+</html>
