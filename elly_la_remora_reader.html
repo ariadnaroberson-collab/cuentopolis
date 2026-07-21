@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elly, la rémora amigable — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c1024; --ink-2:#12172e; --ink-3:#1a2040;
+    --lamp:#e8a94c; --lamp-dim:#c98a34; --coral:#e8735c;
+    --parchment:#f3e9d6; --parchment-dim:#e4d6b8; --page:#faf3e4;
+    --slate:#8891a8; --slate-dim:#5c6480;
+    --line: rgba(232,169,76,0.16);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--parchment);font-family:'Public Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;}
+  button{font-family:'Public Sans',sans-serif;cursor:pointer;}
+
+  .toolbar{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;gap:16px;padding:12px 24px;
+    background:rgba(9,12,26,0.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+  }
+  .back-link{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--slate);border:1px solid var(--line);padding:7px 12px;border-radius:20px;background:rgba(255,255,255,0.03);}
+  .back-link:hover{color:var(--parchment);border-color:var(--lamp-dim);}
+  .toolbar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;}
+  .toolbar-level{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:1.5px solid var(--lamp);color:var(--lamp);border-radius:5px;padding:2px 7px;}
+  .toolbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+  .tool-btn{
+    display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);
+    background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;transition:background .15s, border-color .15s;
+  }
+  .tool-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--lamp-dim);}
+  .tool-btn.on{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+  .font-controls{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .font-controls button{background:rgba(255,255,255,0.03);color:var(--parchment);border:none;padding:8px 12px;font-size:13px;}
+  .font-controls button:hover{background:rgba(255,255,255,0.1);}
+  .font-controls .divider{width:1px;background:var(--line);align-self:stretch;}
+
+  .progress-rail{height:3px;background:var(--ink-3);position:sticky;top:57px;z-index:39;}
+  .progress-rail-fill{height:100%;background:linear-gradient(90deg,var(--lamp),var(--coral));width:0%;transition:width .1s linear;}
+
+  .level-strip{display:flex;align-items:center;gap:10px;justify-content:center;padding:18px 24px 4px;flex-wrap:wrap;}
+  .level-strip-label{font-size:12.5px;color:var(--slate);}
+  .level-pill{
+    font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:6px 13px;border-radius:20px;
+    border:1.5px solid var(--line);color:var(--slate);background:rgba(255,255,255,0.03);
+  }
+  .level-pill:hover{border-color:var(--lamp-dim);color:var(--parchment);}
+  .level-pill.active{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  .reader-layout{display:flex;justify-content:center;gap:28px;padding:20px 24px 80px;max-width:1180px;margin:0 auto;}
+  .page-wrap{flex:1 1 680px;max-width:680px;}
+  .page{
+    background:var(--page);color:#2c2412;border-radius:14px;padding:44px 52px;box-shadow:0 30px 60px rgba(0,0,0,0.4);
+    font-family:'Source Serif 4', serif; line-height:1.85; position:relative;
+  }
+  .page::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--lamp),var(--coral));border-radius:14px 14px 0 0;}
+  .story-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lamp-dim);margin-bottom:6px;}
+  .story-heading{font-family:'Fraunces',serif;font-size:30px;margin:0 0 22px;color:#241d0e;}
+  .story-body p{margin:0 0 20px;}
+  .gloss{border-bottom:2px dotted var(--coral);cursor:help;position:relative;color:#241d0e;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(232,115,92,0.16);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--ink-2);color:var(--parchment);border:1px solid var(--line);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+
+  .comp-check{margin-top:8px;padding-top:28px;border-top:1px dashed var(--parchment-dim);}
+  .comp-title{font-family:'Fraunces',serif;font-size:19px;margin:0 0 4px;color:#241d0e;}
+  .comp-sub{font-family:'Public Sans',sans-serif;font-size:13px;color:#6b5e42;margin-bottom:18px;}
+  .comp-q{font-family:'Public Sans',sans-serif;font-size:14.5px;font-weight:600;color:#241d0e;margin-bottom:10px;}
+  .comp-options{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
+  .comp-opt{
+    font-family:'Public Sans',sans-serif;text-align:left;padding:10px 14px;border-radius:8px;border:1.5px solid #d8cba3;
+    background:#fffaf0;font-size:13.5px;color:#3a3120;
+  }
+  .comp-opt:hover{border-color:var(--coral);}
+  .comp-opt.correct{background:#dff1e2;border-color:#6fae7a;}
+  .comp-opt.incorrect{background:#f6dcd6;border-color:var(--coral);}
+  .comp-result{display:none;font-family:'Public Sans',sans-serif;font-size:13.5px;color:#4b6b4f;margin-top:-10px;margin-bottom:16px;}
+
+  .finish-bar{display:flex;align-items:center;gap:14px;margin-top:24px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:transform .12s;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--lamp);color:#26160a;}
+  .btn-primary:hover{background:#f0b768;}
+  .btn-outline{background:transparent;border:1.5px solid #c9b98a;color:#4a3f26;}
+
+  .side-rail{flex:0 0 240px;display:flex;flex-direction:column;gap:16px;}
+  .rail-card{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .rail-title{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:10px;font-weight:600;}
+  .word-chip{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:7px 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .word-chip:last-child{border-bottom:none;}
+  .word-en{color:var(--parchment);font-weight:600;}
+  .word-def{color:var(--slate);font-size:11.5px;}
+  .save-word{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--slate);font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .save-word.saved{background:var(--coral);border-color:var(--coral);color:#2a0f0a;}
+  .rail-meta-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--slate);padding:5px 0;}
+  .rail-meta-row b{color:var(--parchment);font-weight:600;}
+  .listen-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;}
+  .listen-btn:hover{border-color:var(--lamp-dim);}
+  .listen-btn.playing{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+
+  @media(max-width:920px){
+    .reader-layout{flex-direction:column-reverse;align-items:center;}
+    .side-rail{flex:none;width:100%;max-width:680px;flex-direction:row;overflow-x:auto;}
+    .rail-card{min-width:220px;}
+    .page{padding:30px 22px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <a class="back-link" href="index.html">← Biblioteca</a>
+  <div class="toolbar-title">Elly, la rémora amigable</div>
+  <span class="toolbar-level" id="toolbarLevel">A1</span>
+  <div class="toolbar-right">
+    <div class="font-controls">
+      <button onclick="changeFont(-1)" title="Texto más pequeño">A−</button>
+      <div class="divider"></div>
+      <button onclick="changeFont(1)" title="Texto más grande">A+</button>
+    </div>
+    <button class="tool-btn" id="glossToggle" onclick="toggleGloss()">🔤 Glosario: Activado</button>
+    <button class="tool-btn" id="nightToggle" onclick="toggleNight()">🌙 Luz de lámpara</button>
+  </div>
+</div>
+<div class="progress-rail"><div class="progress-rail-fill" id="progressFill"></div></div>
+
+<div class="level-strip">
+  <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
+  <div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
+  <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
+  <div class="level-pill" data-level="B2" style="opacity:.4;cursor:not-allowed;" onclick="alert('La versión B2 todavía no está lista — revisa el panel de Producción del maestro.')">B2 🔒</div>
+  <span class="level-strip-label" style="margin-left:6px;">— mismo cuento, tu ritmo</span>
+</div>
+
+<div class="reader-layout">
+  <div class="page-wrap">
+    <div class="page" id="pageContent">
+      <div class="story-eyebrow">Cuento original · Belice</div>
+      <h1 class="story-heading">Elly, la rémora amigable</h1>
+      <div class="story-body" id="storyBody"></div>
+
+      <div class="comp-check">
+        <div class="comp-title">Chequeo rápido</div>
+        <div class="comp-sub">Responde para marcar este cuento como completado.</div>
+        <div class="comp-q">1. ¿A dónde va la familia para hacer snorkel?</div>
+        <div class="comp-options" id="q1opts">
+          <button class="comp-opt" onclick="answer(this,false,'q1')">A una piscina en la ciudad.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q1')">Al Arrecife de Coral de Belice.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q1')">A un río cerca de su casa.</button>
+        </div>
+        <div class="comp-result" id="q1result">¡Correcto! El arrecife de Belice es famoso por sus colores y su vida marina.</div>
+
+        <div class="comp-q">2. ¿Por qué la familia recuerda a Elly como una amiga especial?</div>
+        <div class="comp-options" id="q2opts">
+          <button class="comp-opt" onclick="answer(this,false,'q2')">Porque Elly les da comida.</button>
+          <button class="comp-opt" onclick="answer(this,true,'q2')">Porque Elly los sigue a todas partes durante su aventura.</button>
+          <button class="comp-opt" onclick="answer(this,false,'q2')">Porque Elly habla con ellos.</button>
+        </div>
+        <div class="comp-result" id="q2result">Exacto — su curiosidad y compañía hacen que el día sea inolvidable.</div>
+
+        <div class="finish-bar">
+          <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
+          <button class="btn btn-outline" onclick="alert('Volviendo a la biblioteca — tu progreso se guarda en Sigue leyendo.')">Guardar y salir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="side-rail">
+    <div class="rail-card">
+      <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
+    </div>
+    <div class="rail-card">
+      <div class="rail-title">Datos del cuento</div>
+      <div class="rail-meta-row"><span>Nivel</span><b id="railLevel">A1</b></div>
+      <div class="rail-meta-row"><span>Tiempo de lectura</span><b id="railTime">4 min</b></div>
+      <div class="rail-meta-row"><span>Origen</span><b>Belice</b></div>
+      <div class="rail-meta-row"><span>Tema</span><b>Naturaleza, Amistad</b></div>
+    </div>
+    <div class="rail-card">
+      <div class="rail-title">Banco de palabras — este cuento</div>
+      <div id="wordBank"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const VERSIONS = {
+  A1: {
+    time:'4 min',
+    html: `
+      <p>Hay una familia de cuatro personas en Belice: una mamá, un papá y dos niños. A todos les encanta nadar y explorar la naturaleza.</p>
+      <p>Un día, la familia va en su bote al <span class="gloss" data-word="arrecife">Arrecife de Coral</span><span class="gloss-tooltip">un lugar en el mar con corales<span class="arrow"></span></span> de Belice para hacer <span class="gloss" data-word="snorkel">snorkel</span><span class="gloss-tooltip">nadar y mirar debajo del agua con máscara<span class="arrow"></span></span>. Se ponen sus máscaras, sus <span class="gloss" data-word="aletas">aletas</span><span class="gloss-tooltip">zapatos especiales para nadar rápido<span class="arrow"></span></span> y sus chalecos. Después, suben al bote y salen al mar.</p>
+      <p>El agua es clara y azul. Hay peces de muchos colores: amarillos, azules, naranjas y rojos. También hay corales bonitos. Los niños miran todo con mucha atención.</p>
+      <p>De repente, hay una <span class="gloss" data-word="rémora">rémora</span><span class="gloss-tooltip">un pez pequeño que sigue a otros animales del mar<span class="arrow"></span></span> pequeña y <span class="gloss" data-word="curiosa">curiosa</span><span class="gloss-tooltip">que quiere ver y saber todo<span class="arrow"></span></span> cerca de ellos. No tiene miedo. La familia le da un nombre: Elly.</p>
+      <p>Elly nada con la familia todo el tiempo. Si los niños van a la izquierda, Elly va a la izquierda. Si el papá va a la derecha, Elly va a la derecha.</p>
+      <p>—¡Creo que Elly es nuestra amiga! —dice uno de los niños.</p>
+      <p>Después de nadar mucho tiempo, la familia regresa al bote. Elly nada cerca por unos momentos más y después se va.</p>
+      <p>Esa noche, la familia habla de su aventura y de Elly. Fue un día inolvidable, lleno de colores y una nueva amiga.</p>`
+  },
+  A2: {
+    time:'5 min',
+    html: `
+      <p>En Belice vive una familia de cuatro personas — una mamá, un papá y dos niños — a quienes les encanta explorar la naturaleza y nadar en el mar. Un día deciden vivir una aventura especial: van en su bote hasta el <span class="gloss" data-word="arrecife">Arrecife de Coral</span><span class="gloss-tooltip">una zona del mar llena de corales de colores<span class="arrow"></span></span> de Belice para hacer <span class="gloss" data-word="snorkel">snorkel</span><span class="gloss-tooltip">nadar cerca de la superficie mirando debajo del agua<span class="arrow"></span></span>.</p>
+      <p>Primero se preparan: se ponen las máscaras, las <span class="gloss" data-word="aletas">aletas</span><span class="gloss-tooltip">un tipo de calzado para nadar más rápido<span class="arrow"></span></span> y los chalecos salvavidas. Luego suben al bote y salen mar adentro.</p>
+      <p>Cuando llegan, el agua es tan clara que pueden ver todo desde arriba. Hay peces de muchos colores — amarillos, azules, naranjas, rojos — y corales con formas impresionantes. Los niños señalan cada cosa nueva que descubren, y sus padres sonríen, igual de sorprendidos.</p>
+      <p>De pronto, una <span class="gloss" data-word="rémora">rémora</span><span class="gloss-tooltip">un pez que suele seguir a otros animales marinos<span class="arrow"></span></span> pequeña se acerca, tan <span class="gloss" data-word="curiosa">curiosa</span><span class="gloss-tooltip">interesada en ver y descubrir cosas nuevas<span class="arrow"></span></span> que casi la pueden tocar. No parece tener miedo en absoluto. La familia decide ponerle un nombre — Elly — y desde ese momento, la pequeña rémora los acompaña a todas partes: gira cuando ellos giran, se detiene cuando ellos se detienen.</p>
+      <p>—¡Creo que Elly es nuestra amiga! —dice uno de los niños, emocionado, mientras el otro añade que los sigue a todas partes.</p>
+      <p>Cuando termina el snorkel y la familia regresa al bote, Elly nada cerca unos momentos más antes de alejarse moviendo la cola. De camino a casa, todos hablan de lo divertido que fue el día, de lo increíbles que eran los corales y, sobre todo, de lo especial que fue conocer a una nueva amiga marina.</p>`
+  },
+  B1: {
+    time:'6 min',
+    html: `
+      <p>En Belice vive una familia de cuatro integrantes — madre, padre y dos hijos — unidos por su pasión por la naturaleza y el mar. Un día deciden emprender una aventura distinta a las demás: navegar hasta el famoso <span class="gloss" data-word="arrecife">Arrecife de Coral</span><span class="gloss-tooltip">una extensa formación submarina llena de corales y vida marina<span class="arrow"></span></span> de Belice para practicar <span class="gloss" data-word="snorkel">esnórquel</span><span class="gloss-tooltip">la actividad de nadar en la superficie observando el fondo marino<span class="arrow"></span></span>.</p>
+      <p>Tras prepararse con máscaras, <span class="gloss" data-word="aletas">aletas</span><span class="gloss-tooltip">calzado especial que ayuda a nadar con más fuerza<span class="arrow"></span></span> y chalecos salvavidas, suben al bote y se adentran en el mar. Al llegar, el agua resulta tan transparente que parece un cristal: peces amarillos, azules, naranjas y rojos cruzan entre corales de formas sorprendentes, y los niños no dejan de señalar cada nuevo descubrimiento.</p>
+      <p>La aventura, sin embargo, apenas comienza. De entre los corales aparece una pequeña <span class="gloss" data-word="rémora">rémora</span><span class="gloss-tooltip">un pez que acostumbra adherirse o nadar junto a animales más grandes<span class="arrow"></span></span>, tan <span class="gloss" data-word="curiosa">curiosa</span><span class="gloss-tooltip">llena de interés por explorar lo que la rodea<span class="arrow"></span></span> que se acerca lo suficiente como para casi rozarla con la mano. Lejos de mostrar temor, el pequeño pez parece disfrutar de la compañía, y la familia decide bautizarla: Elly.</p>
+      <p>A partir de ese momento, Elly se convierte en su sombra submarina. Si los niños giran a la izquierda, Elly gira con ellos; si el padre se desvía hacia un grupo de peces, allí va también la rémora, fiel a su nueva compañía durante toda la travesía.</p>
+      <p>—¡Creo que Elly es nuestra amiga! —exclama uno de los niños, mientras el otro insiste en que los sigue a todas partes, como si formara parte del grupo.</p>
+      <p>Cuando la sesión de esnórquel llega a su fin y la familia regresa al bote, Elly permanece unos instantes más cerca de la embarcación antes de despedirse con un movimiento de cola y perderse entre el arrecife. Durante el camino de regreso, todos coinciden en que los corales fueron impresionantes, pero que conocer a Elly fue, sin duda, lo más memorable de un día que ninguno olvidará.</p>`
+  }
+};
+
+let fontSize = 18;
+let glossOn = true;
+let listening = false;
+let currentLevel = 'A1';
+const savedWords = new Set();
+
+function renderStory(level){
+  currentLevel = level;
+  document.getElementById('storyBody').innerHTML = VERSIONS[level].html;
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+  document.getElementById('toolbarLevel').textContent = level;
+  document.getElementById('railLevel').textContent = level;
+  document.getElementById('railTime').textContent = VERSIONS[level].time;
+  applyGlossState();
+  buildWordBank();
+}
+
+function setReaderLevel(level, el){
+  document.querySelectorAll('.level-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  renderStory(level);
+}
+
+function changeFont(delta){
+  fontSize = Math.min(24, Math.max(14, fontSize+delta*2));
+  document.getElementById('storyBody').style.fontSize = fontSize+'px';
+}
+
+function toggleGloss(){
+  glossOn = !glossOn;
+  document.getElementById('glossToggle').textContent = glossOn ? '🔤 Glosario: Activado' : '🔤 Glosario: Desactivado';
+  document.getElementById('glossToggle').classList.toggle('on', glossOn);
+  applyGlossState();
+}
+function applyGlossState(){
+  document.querySelectorAll('.gloss').forEach(g=>{
+    g.style.borderBottomColor = glossOn ? 'var(--coral)' : 'transparent';
+    g.style.cursor = glossOn ? 'help' : 'text';
+    g.style.fontWeight = glossOn ? '600' : '400';
+    if(!glossOn) g.classList.remove('tapped');
+  });
+}
+document.addEventListener('click', e=>{
+  if(e.target.closest('.gloss') && glossOn){
+    e.target.closest('.gloss').classList.toggle('tapped');
+  }
+});
+
+function toggleNight(){
+  const btn = document.getElementById('nightToggle');
+  btn.classList.toggle('on');
+  document.getElementById('pageContent').style.filter = btn.classList.contains('on') ? 'invert(1) hue-rotate(180deg)' : 'none';
+  btn.textContent = btn.classList.contains('on') ? '☀ Luz brillante' : '🌙 Luz de lámpara';
+}
+
+function toggleListen(){
+  listening = !listening;
+  const btn = document.getElementById('listenBtn');
+  btn.classList.toggle('playing', listening);
+  btn.textContent = listening ? '⏸ Reproduciendo narración…' : '🔊 Escuchar narración';
+}
+
+function buildWordBank(){
+  const words = [...document.querySelectorAll('.gloss')];
+  const seen = new Set();
+  const bank = document.getElementById('wordBank');
+  bank.innerHTML = '';
+  words.forEach(w=>{
+    const word = w.dataset.word;
+    if(seen.has(word)) return; seen.add(word);
+    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const row = document.createElement('div');
+    row.className='word-chip';
+    row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
+      <button class="save-word ${savedWords.has(word)?'saved':''}" onclick="toggleSaveWord('${word}', this)">${savedWords.has(word)?'✓':'+'}</button>`;
+    bank.appendChild(row);
+  });
+}
+function toggleSaveWord(word, btn){
+  if(savedWords.has(word)){ savedWords.delete(word); btn.classList.remove('saved'); btn.textContent='+'; }
+  else { savedWords.add(word); btn.classList.add('saved'); btn.textContent='✓'; }
+}
+
+const answered = {};
+function answer(btn, isCorrect, qid){
+  if(answered[qid]) return;
+  answered[qid]=true;
+  const opts = btn.parentElement.querySelectorAll('.comp-opt');
+  opts.forEach(o=>o.disabled=true);
+  btn.classList.add(isCorrect?'correct':'incorrect');
+  if(!isCorrect){
+    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+  }
+  document.getElementById(qid+'result').style.display='block';
+}
+function finishStory(){
+  if(Object.keys(answered).length < 2){
+    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+    return;
+  }
+  document.getElementById('finishBtn').textContent = '✓ ¡Completado!';
+  document.getElementById('finishBtn').style.background = '#6fae7a';
+  setTimeout(()=> alert('¡Buena lectura! Este cuento ahora aparece 100% completo en tu estante, y tu maestra puede ver tus resultados de comprensión.'), 300);
+}
+
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('progressFill').style.width = Math.min(100,scrolled)+'%';
+});
+
+renderStory('A1');
+</script>
+</body>
+</html>
