@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ratón de campo y ratón de ciudad — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Fábula clásica</div>
+    <h1>Ratón de campo y ratón de ciudad</h1>
+    <div class="subtitle">Fábula atribuida a Esopo — traducción tradicional al español</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Hay dos ratones. Son primos. Uno vive en el campo. El otro vive en la ciudad.</p>
+        <p>El ratón de campo vive en una casa pequeña y simple. Tiene una cama de hojas y flores por todos lados.</p>
+        <p>Un día, el ratón de ciudad visita a su primo en el campo.</p>
+        <p>El ratón de campo le ofrece su mejor comida: granos, raíces y pan seco.</p>
+        <p>El ratón de ciudad prueba la comida. No le gusta mucho. Dice: "Esto es muy simple. En la ciudad, yo como mejor."</p>
+        <p>"Ven a mi casa," dice el ratón de ciudad. "Te muestro cómo vivo yo."</p>
+        <p>Los dos ratones caminan a la ciudad. Entran a una casa grande y elegante.</p>
+        <p>El ratón de ciudad muestra mucha comida rica: queso, pan fresco, y fruta dulce.</p>
+        <p>"¡Qué comida tan buena!" dice el ratón de campo, muy contento.</p>
+        <p>Pero de repente, un gato entra a la habitación.</p>
+        <p>¡Los dos ratones corren muy rápido! Se esconden detrás de una pared.</p>
+        <p>El ratón de campo tiene mucho miedo. Su corazón late muy rápido.</p>
+        <p>Cuando el peligro pasa, el ratón de campo dice: "Amigo, tu comida es muy buena, pero tu vida es muy peligrosa. Yo prefiero mi comida simple, pero mi vida tranquila."</p>
+        <p>El ratón de campo regresa a su casa en el campo, feliz con su vida sencilla.</p>
+        <p>Esta fábula nos enseña algo importante: más vale vivir tranquilo con poco, que vivir con lujos pero con miedo.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Había una vez dos ratones primos: uno vivía en una madriguera sencilla en el campo, rodeada de flores, y el otro vivía en el sótano de una casa elegante, en medio de una ciudad ruidosa.</p>
+        <p>Un día, el ratón de ciudad decidió visitar a su primo en el campo. El ratón de campo, muy contento de recibirlo, le preparó lo mejor que tenía: granos de trigo, raíces frescas, y un poco de pan seco.</p>
+        <p>El ratón de ciudad comió un poco, por cortesía, pero no pudo esconder su decepción. "Esto está bien," dijo, "pero en mi casa comemos cosas mucho más ricas. Ven conmigo a la ciudad, y te lo voy a demostrar."</p>
+        <p>Los dos primos caminaron juntos hasta la ciudad, y entraron a una casa grande, llena de habitaciones elegantes. Sobre la mesa había quesos deliciosos, pan recién horneado, y fruta jugosa de todos los colores.</p>
+        <p>"¡Qué banquete tan increíble!" exclamó el ratón de campo, comiendo con entusiasmo un pedazo de queso. "Ahora entiendo por qué te gusta tanto vivir aquí."</p>
+        <p>Pero justo en ese momento, un gato entró silenciosamente a la habitación, con los ojos fijos en los dos ratones. Sin perder ni un segundo, ambos salieron corriendo a toda velocidad, hasta esconderse detrás de un mueble.</p>
+        <p>El corazón del ratón de campo latía muy rápido del susto. Nunca había sentido tanto miedo en su vida tranquila del campo.</p>
+        <p>Cuando por fin el peligro pasó, el ratón de campo respiró hondo y le dijo a su primo: "Tu comida es deliciosa, y tu casa es hermosa, pero yo no podría vivir así, con tanto miedo todos los días. Prefiero mi comida sencilla, pero mi vida tranquila."</p>
+        <p>Y sin esperar más, el ratón de campo regresó a su humilde madriguera, feliz de volver a su vida simple, lejos del peligro de la ciudad.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Había una vez dos ratones que eran primos, pero vivían en mundos completamente diferentes: uno tenía su madriguera en el tranquilo campo, rodeada de flores silvestres, mientras que el otro vivía en el sótano de una casa elegante, en el corazón de una ciudad llena de ruido y movimiento.</p>
+        <p>Un día, el ratón de ciudad decidió ir a visitar a su primo en el campo. El ratón de campo, encantado de recibirlo después de tanto tiempo, le organizó una bienvenida con lo mejor que tenía a su alcance: granos de trigo, raíces, y un poco de pan seco. Para él, era todo un banquete.</p>
+        <p>Sin embargo, el ratón de ciudad, acostumbrado a comidas más refinadas, apenas pudo disimular su decepción mientras comía. "Esto está bien," dijo finalmente, "pero en la ciudad comemos platos mucho más exquisitos. ¿Por qué no vienes conmigo y lo compruebas tú mismo?"</p>
+        <p>Curioso, el ratón de campo aceptó la invitación, y ambos se pusieron en camino hacia la ciudad. Al llegar, entraron a una casa grande y lujosa, donde sobre una mesa había quesos deliciosos, pan recién horneado, y fruta fresca de todos los colores.</p>
+        <p>"¡Nunca había visto tanta comida junta!" exclamó el ratón de campo, maravillado, mientras probaba un trozo de queso exquisito. Por un momento, entendió perfectamente por qué su primo prefería esa vida.</p>
+        <p>Pero justo cuando más disfrutaba del banquete, un gato apareció de repente en la habitación, con la mirada fija en ellos. Sin pensarlo dos veces, los dos ratones salieron disparados, corriendo con todas sus fuerzas hasta esconderse detrás de un mueble, con el corazón latiéndoles a mil por hora.</p>
+        <p>El ratón de campo, que jamás había vivido un susto así en su vida tranquila, tardó varios minutos en recuperar el aliento. Cuando finalmente el peligro pasó, se giró hacia su primo y le dijo, con toda sinceridad: "Tu comida es deliciosa, y tu casa impresionante, pero yo no podría vivir con este miedo todos los días. Prefiero mis raíces sencillas, pero mi tranquilidad."</p>
+        <p>Y sin esperar a que amaneciera, el ratón de campo emprendió el camino de regreso a su humilde madriguera, feliz de volver a la vida simple que tanto valoraba.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Texto auténtico</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Fábula atribuida a Esopo. El texto sigue de cerca las traducciones clásicas al español, de dominio público, tal como se transmiten en las colecciones tradicionales de fábulas.</p>
+        <p>Dos ratones, que eran primos, vivían alejados el uno del otro, en dos zonas totalmente diferentes. Uno de ellos habitaba en una humilde madriguera en pleno campo, rodeada de flores silvestres, mientras que el otro vivía en el sótano de una vivienda en pleno centro de una ruidosa ciudad.</p>
+        <p>Un día, el ratón de campo invitó a su primo a pasar con él unos días tranquilos en medio de la naturaleza, y el ratón de ciudad, encantado, aceptó. El ratón de campo lo recibió con la mejor bienvenida que pudo ofrecerle: granos de trigo, raíces frescas y un poco de pan seco — lo mejor que tenía.</p>
+        <p>Pero el ratón de ciudad, apenas terminó de comer, no pudo disimular su desilusión. —Esto no está mal —dijo—, pero en mi casa se come de otra manera. Ven conmigo, y verás lo que es vivir de verdad.</p>
+        <p>Emprendieron juntos el camino hacia la ciudad, y al llegar, el ratón de campo quedó boquiabierto ante lo que vio: una despensa llena de <span class="gloss" data-word="manjares">manjares</span> — quesos finos, pan recién horneado, frutas de todos los colores. Nunca había imaginado semejante <span class="gloss" data-word="abundancia">abundancia</span>.</p>
+        <p>Comenzaron a comer con entusiasmo, pero, de repente, sin previo aviso, apareció un gato en la habitación, con los ojos fijos en ellos. Los dos primos salieron disparados, corriendo a toda velocidad para esconderse detrás de un mueble, con el corazón latiéndoles con fuerza.</p>
+        <p>Cuando por fin el peligro pasó, el ratón de campo, todavía temblando del susto, se despidió de su primo con estas palabras: —Tu comida es exquisita, y tu casa, un lujo. Pero yo prefiero mi pan seco, comido en paz, a tus manjares, comidos con miedo.</p>
+        <p>Y esa misma noche, el ratón de campo regresó a su humilde madriguera, feliz de volver a su tranquilidad.</p>
+        <p><em>Más vale vivir tranquilo, aunque solo sea con unos cuantos granos de cebada, que vivir con lujos en una moderna ciudad, pero con una vida más estresada.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el ratón de campo</span> — the country mouse</div>
+      <div><span class="term">el ratón de ciudad</span> — the city mouse</div>
+      <div><span class="term">la madriguera</span> — the burrow</div>
+      <div><span class="term">los granos</span> — the grains</div>
+      <div><span class="term">los manjares</span> — delicacies, fine foods</div>
+      <div><span class="term">la abundancia</span> — abundance (cognate)</div>
+      <div><span class="term">esconderse</span> — to hide</div>
+      <div><span class="term">tranquilo/a</span> — peaceful, calm (cognate-ish)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>el ratón de campo</span>
+      <span>el ratón de ciudad</span>
+      <span>lo mejor que podía ofrecerle</span>
+      <span>de repente</span>
+      <span>más vale vivir tranquilo</span>
+      <span>que vivir con lujos pero con miedo</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué le ofrece el ratón de campo a su primo, y qué le ofrece después el ratón de ciudad a él?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Por qué decide el ratón de campo regresar a su casa, en vez de quedarse en la ciudad?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Ratón de campo y ratón de ciudad</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — cuarto título bajo la nueva filosofía de narrativa completa, y el último de las tres fábulas cortas (después de Meñique, La zorra y las uvas, y El lobo con piel de oveja).</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Fábulas clásicas — la sencillez frente al lujo, la tranquilidad frente al riesgo, el valor de estar contento con lo que se tiene.</p>
+
+    <h4>Nivel original</h4>
+    <p>Fábula breve y de estructura muy clara (visita al campo, visita a la ciudad, decisión final). Bajo la filosofía de Biblioteca FVR, A1 recibe una simplificación real pero conserva el arco completo; B2 se acerca a la traducción tradicional clásica, con la moraleja explícita al final.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Comparar dos formas de vida usando estructuras de comparación (más... que, mejor... que); narrar una visita y una reacción de sorpresa o susto; expresar una decisión final y su razón.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>el ratón de campo · el ratón de ciudad · lo mejor que podía ofrecerle · de repente · más vale vivir tranquilo · que vivir con lujos pero con miedo.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa)</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; se conserva el arco completo (invitación al campo, invitación a la ciudad, el susto, la decisión final).<br>
+    <strong>A2:</strong> se añaden detalles sensoriales sobre la comida y el ambiente de cada lugar, y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrativo con más naturalidad; se desarrolla más el contraste entre los dos estilos de vida.<br>
+    <strong>B2:</strong> cercano a la traducción clásica tradicional en español, con la moraleja explícita al final.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>El momento de mayor tensión ocurre cuando los dos ratones son sorprendidos por un gato mientras comen en la ciudad, y tienen que huir corriendo a esconderse. Se presenta como un susto breve, sin daño real ni detalle gráfico — es el motor de la decisión final del ratón de campo, no un evento violento. Apropiado para todos los niveles sin necesidad de suavizarlo, a diferencia de los finales de Meñique y El lobo con piel de oveja.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — fábula clásica de la Biblioteca FVR, sin personaje anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>tranquilo/a</em> — cognado natural con "tranquil", usado para describir el tipo de vida que finalmente prefiere el ratón de campo.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Prefieres una vida sencilla y tranquila, o una vida con más lujos pero también más riesgos? ¿Por qué?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Cuarto título de la Biblioteca FVR, y el último de las tres fábulas cortas planeadas antes de pasar a los títulos más largos (Peter Pan, El mago de Oz, etc.). Fábula de dominio público, atribuida a Esopo.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
