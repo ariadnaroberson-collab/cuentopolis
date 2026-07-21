@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinocho — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Novela clásica (versión abreviada)</div>
+    <h1>Pinocho</h1>
+    <div class="subtitle">Carlo Collodi (1883) — un pedazo de madera que aprende a ser niño</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Geppetto es un carpintero pobre. Un día, encuentra un pedazo de madera especial. La madera habla y se ríe.</p>
+        <p>Geppetto usa la madera para hacer una marioneta. La llama Pinocho.</p>
+        <p>En cuanto Geppetto termina, Pinocho ya puede moverse solo. ¡Es una marioneta muy traviesa!</p>
+        <p>Un grillo parlante entra a la casa. "Escúchame, Pinocho," dice el grillo. "Los niños que desobedecen y no van a la escuela, no llegan a nada bueno."</p>
+        <p>Pinocho, de mal humor, asusta al grillo, y el grillo se va, un poco enojado. Pero el grillo regresa muchas veces más adelante para darle consejos a Pinocho.</p>
+        <p>Geppetto vende su única chaqueta para comprarle a Pinocho un libro para la escuela.</p>
+        <p>Pero Pinocho, en vez de ir a la escuela, vende el libro para comprar un boleto al teatro de marionetas.</p>
+        <p>En el teatro, las otras marionetas reconocen a Pinocho como uno de ellos. El dueño del teatro, al principio enojado, termina regalándole cinco monedas de oro.</p>
+        <p>En el camino a casa, un zorro astuto y un gato ladrón engañan a Pinocho. Quieren robarle sus monedas.</p>
+        <p>Pinocho, muy asustado, corre y se esconde, pero el zorro y el gato lo atrapan.</p>
+        <p>En el momento más peligroso, un Hada de cabellos color turquesa aparece y salva a Pinocho.</p>
+        <p>El Hada cuida a Pinocho, y le hace una pregunta. Pinocho, para no admitir la verdad, dice una mentira.</p>
+        <p>¡De repente, la nariz de Pinocho empieza a crecer! Cada vez que Pinocho miente, su nariz crece un poco más.</p>
+        <p>Pinocho, muy asustado, promete decir siempre la verdad. El Hada lo perdona, y su nariz regresa a su tamaño normal.</p>
+        <p>Un amigo invita a Pinocho a un lugar mágico: la Isla de los Juguetes. Allí, los niños solo juegan, sin ir a la escuela ni trabajar.</p>
+        <p>Pinocho va a la isla, feliz. Pero después de unos meses, algo extraño pasa: ¡le crecen orejas de burro!</p>
+        <p>Poco a poco, Pinocho se convierte completamente en un burro. Es el castigo por ser tan perezoso.</p>
+        <p>Después de muchas aventuras más, Pinocho encuentra a su papá Geppetto dentro del vientre de un tiburón enorme.</p>
+        <p>Juntos, padre e hijo, escapan del tiburón, y regresan a casa.</p>
+        <p>Pinocho, ahora arrepentido, trabaja duro para cuidar a su papá, y estudia mucho.</p>
+        <p>Una noche, el Hada premia a Pinocho por su buen corazón: ¡lo convierte en un niño de verdad!</p>
+        <p>Pinocho, feliz, mira su cuerpo de niño de verdad, y abraza a su papá con todo su corazón.</p>
+        <p>Esta historia nos enseña algo importante: la honestidad, el trabajo, y el amor a la familia nos ayudan a crecer de verdad.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Geppetto era un carpintero pobre que vivía solo, con el gran sueño de tener un hijo. Un día, encontró un pedazo de madera muy especial: cuando lo tocaba, ¡la madera se reía y hablaba!</p>
+        <p>Emocionado, Geppetto usó esa madera mágica para tallar una marioneta, a la que llamó Pinocho. Apenas terminó de hacerle los pies, la marioneta ya se había escapado corriendo por la puerta, traviesa desde el primer instante.</p>
+        <p>Poco después, un grillo parlante entró a la casa de Geppetto para darle un consejo importante a Pinocho: "Los niños que desobedecen a sus padres y no van a la escuela, nunca llegan a nada bueno en la vida."</p>
+        <p>Pinocho, de mal humor, espantó al grillo sin escucharlo, aunque el pequeño insecto, paciente, seguiría regresando muchas veces más a lo largo de la historia para aconsejarlo.</p>
+        <p>Con mucho sacrificio, Geppetto vendió su única chaqueta de invierno para comprarle a Pinocho un libro de escuela. Pero Pinocho, tentado por un cartel colorido, terminó vendiendo el libro para comprar un boleto al teatro de marionetas.</p>
+        <p>Dentro del teatro, las demás marionetas reconocieron a Pinocho como uno de los suyos, y el dueño del espectáculo, después de fingir estar furioso, terminó regalándole cinco monedas de oro.</p>
+        <p>En el camino de regreso a casa, un astuto zorro y un gato ladrón, fingiéndose amigos, engañaron a Pinocho con la promesa de multiplicar sus monedas. En realidad, solo querían robárselas.</p>
+        <p>Descubierto el engaño, Pinocho corrió aterrorizado, pero el zorro y el gato terminaron atrapándolo en un momento de mucho peligro.</p>
+        <p>Justo quando parecía que todo estaba perdido, un Hada de cabellos color turquesa apareció como por arte de magia, y rescató a Pinocho de las garras de sus enemigos.</p>
+        <p>El Hada cuidó de Pinocho con cariño, pero al hacerle una pregunta sencilla, Pinocho decidió mentir en vez de decir la verdad.</p>
+        <p>¡De inmediato, su nariz comenzó a crecer y crecer, cada vez más larga! Con cada nueva mentira, la nariz de Pinocho se alargaba todavía más.</p>
+        <p>Asustado por su propia nariz, Pinocho prometió, con el corazón en la mano, decir siempre la verdad de ahora en adelante. El Hada lo perdonó, y poco a poco, su nariz volvió a su tamaño normal.</p>
+        <p>Tiempo después, un compañero travieso invitó a Pinocho a un lugar que parecía un sueño: la Isla de los Juguetes, donde los niños solo jugaban todo el día, sin escuela ni obligaciones de ningún tipo.</p>
+        <p>Encantado, Pinocho viajó a la isla y disfrutó meses de diversión sin límites. Pero un día, al despertar, notó con horror que le habían crecido un par de orejas de burro.</p>
+        <p>Poco a poco, para su total espanto, Pinocho se transformó por completo en un burrito de verdad — el castigo mágico por tanta pereza y desobediencia.</p>
+        <p>Después de vivir muchas otras aventuras, Pinocho finalmente encontró a su querido papá Geppetto, viviendo dentro del vientre de un tiburón gigantesco que lo había tragado tiempo atrás.</p>
+        <p>Juntos, padre e hijo lograron escapar del enorme animal, y regresaron sanos y salvos a su hogar.</p>
+        <p>Verdaderamente arrepentido de todas sus travesuras pasadas, Pinocho empezó a trabajar duro para cuidar de su papá, y se dedicó por fin a estudiar con seriedad.</p>
+        <p>Una noche, como recompensa por su corazón bondadoso y su esfuerzo genuino, el Hada cumplió el deseo más grande de Pinocho: lo transformó en un niño de verdad.</p>
+        <p>Pinocho, maravillado al mirar su nuevo cuerpo de niño real, corrió a abrazar a su papá con todo el amor de su corazón.</p>
+        <p>Y así, esta hermosa historia nos deja una lección memorable: la honestidad, el esfuerzo, y el amor verdadero por la familia son lo que realmente nos ayuda a crecer.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Geppetto era un carpintero pobre que vivía completamente solo, con el gran sueño de tener algún día un hijo propio. Cierto día, encontró un pedazo de madera de lo más peculiar: cada vez que lo tocaba, ¡la madera se reía y hablaba como si tuviera vida propia!</p>
+        <p>Emocionado ante semejante hallazgo, Geppetto utilizó aquella madera mágica para tallar una marioneta, a la que decidió llamar Pinocho. Apenas había terminado de esculpirle los pies, cuando la travesura ya corría por sus venas de madera: la marioneta salió disparada por la puerta antes de que su creador pudiera reaccionar.</p>
+        <p>Poco después, un grillo parlante se instaló en la casa de Geppetto con el propósito de aconsejar al recién nacido Pinocho: "Los niños que desobedecen a sus padres y se niegan a ir a la escuela," le explicó con calma, "jamás llegan a nada bueno en esta vida."</p>
+        <p>Pinocho, molesto por semejante sermón, espantó al pequeño insecto sin prestarle la menor atención, aunque el grillo, paciente y persistente, regresaría en muchas más ocasiones a lo largo de la historia para seguir aconsejándolo.</p>
+        <p>Con gran sacrificio personal, Geppetto vendió su única chaqueta de invierno para poder comprarle a Pinocho un libro de escuela. Sin embargo, Pinocho, tentado por un llamativo cartel callejero, terminó vendiendo el libro para comprar, en su lugar, un boleto de entrada al teatro de marionetas.</p>
+        <p>Dentro del teatro, las demás marionetas reconocieron de inmediato a Pinocho como uno de los suyos, y el dueño del espectáculo, tras fingir una furia tremenda, terminó regalándole generosamente cinco monedas de oro.</p>
+        <p>En el camino de regreso a casa, un astuto zorro y un gato ladrón, haciéndose pasar por amigos bienintencionados, engañaron a Pinocho con la fantástica promesa de multiplicar sus monedas si las sembraba en un campo mágico. En realidad, lo único que pretendían era robárselas sin más.</p>
+        <p>Al descubrir el engaño, Pinocho corrió aterrorizado en busca de ayuda, pero el zorro y el gato terminaron alcanzándolo, y lo colgaron de la rama de un árbol para robarle sus monedas, dejándolo en verdadero peligro.</p>
+        <p>Justo cuando todo parecía perdido, un Hada de cabellos color turquesa apareció como por arte de magia, y logró rescatar a Pinocho de las garras de sus enemigos a tiempo.</p>
+        <p>El Hada cuidó de Pinocho con auténtico cariño durante su recuperación, pero al hacerle una pregunta sencilla sobre lo ocurrido, Pinocho decidió mentir en lugar de contar la verdad.</p>
+        <p>De inmediato, su nariz comenzó a crecer sin control, cada vez más y más larga. Con cada mentira adicional que pronunciaba, la nariz de Pinocho se alargaba todavía más ante la mirada atónita del Hada.</p>
+        <p>Verdaderamente asustado por el estado de su propia nariz, Pinocho prometió solemnemente decir siempre la verdad de ahí en adelante. El Hada, conmovida, lo perdonó, y poco a poco su nariz recuperó su tamaño original.</p>
+        <p>Tiempo después, un compañero travieso invitó a Pinocho a un lugar que parecía sacado de un sueño infantil: la Isla de los Juguetes, donde los niños se pasaban el día entero jugando, sin escuela ni obligación alguna que cumplir.</p>
+        <p>Encantado con la idea, Pinocho viajó a la isla y disfrutó de varios meses de diversión ilimitada. Pero cierta mañana, al despertar, descubrió con verdadero horror que le habían crecido un par de largas orejas de burro.</p>
+        <p>Poco a poco, para su total espanto, Pinocho se transformó por completo en un auténtico burrito — el castigo mágico reservado para tanta pereza y desobediencia acumulada.</p>
+        <p>Tras vivir muchas otras aventuras y desventuras, Pinocho finalmente logró encontrar a su querido papá Geppetto, viviendo dentro del vientre de un tiburón gigantesco que lo había devorado tiempo atrás mientras lo buscaba desesperadamente por el mar.</p>
+        <p>Juntos, padre e hijo lograron idear un plan para escapar del enorme animal, y regresaron sanos y salvos a su modesto hogar.</p>
+        <p>Verdaderamente arrepentido de todas sus travesuras pasadas, Pinocho comenzó a trabajar arduamente para poder cuidar de su anciano padre, y se dedicó por fin, con seriedad genuina, a sus estudios.</p>
+        <p>Cierta noche, como recompensa por su corazón bondadoso y su esfuerzo sincero, el Hada cumplió finalmente el mayor deseo de Pinocho: lo transformó, ante su propio asombro, en un niño de carne y hueso.</p>
+        <p>Pinocho, maravillado al contemplar su nuevo cuerpo de niño real, corrió a abrazar a su papá con todo el amor que había aprendido a sentir a lo largo de su difícil camino.</p>
+        <p>Y así, esta hermosa historia nos deja una enseñanza memorable: la honestidad, el esfuerzo genuino, y el amor verdadero por la familia son, al final, lo que realmente nos hace crecer.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Registro cercano al original</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Versión abreviada, adaptada y traducida al español a partir del texto original de Carlo Collodi, <i>Le avventure di Pinocchio</i> (1883). Dominio público.</p>
+        <p>Geppetto era un carpintero de escasos recursos que vivía completamente solo, albergando el gran sueño de tener, algún día, un hijo propio. Cierto día, encontró un pedazo de madera de lo más singular: cada vez que lo rozaba, la madera se reía y hablaba, como dotada de vida propia.</p>
+        <p>Entusiasmado ante semejante hallazgo, Geppetto empleó aquella madera <span class="gloss" data-word="encantada">encantada</span> para tallar una marioneta, a la que decidió bautizar como Pinocho. Apenas había terminado de esculpirle los pies, cuando la travesura ya corría por sus venas de madera: la marioneta salió disparada por la puerta antes de que su creador pudiera siquiera reaccionar.</p>
+        <p>Poco después, un grillo parlante se instaló en la vivienda de Geppetto con el firme propósito de aconsejar al recién creado Pinocho: "Los niños que desobedecen a sus padres y se niegan a asistir a la escuela," le explicó con serena autoridad, "jamás llegan a buen puerto en esta vida."</p>
+        <p>Pinocho, irritado por semejante sermón, ahuyentó al pequeño insecto sin prestarle la menor atención, aunque el grillo, paciente y persistente, regresaría en numerosas ocasiones a lo largo de la historia para continuar aconsejándolo.</p>
+        <p>Con gran sacrificio personal, Geppetto vendió su única casaca de invierno para poder comprarle a Pinocho una cartilla escolar. Sin embargo, Pinocho, tentado por un llamativo cartel callejero, terminó vendiendo la cartilla para adquirir, en su lugar, una entrada al teatro de marionetas.</p>
+        <p>Dentro del teatro, las demás marionetas reconocieron de inmediato a Pinocho como uno de los suyos, y el dueño del espectáculo, tras fingir una cólera tremenda y amenazarlo con arrojarlo al fuego, terminó obsequiándole generosamente cinco monedas de oro.</p>
+        <p>En el camino de regreso a casa, una astuta zorra y un gato ladrón, haciéndose pasar por amistades bienintencionadas, engañaron a Pinocho con la fantástica promesa de multiplicar sus monedas si las sembraba en el llamado "Campo de los Milagros." En realidad, lo único que pretendían era robárselas sin más contemplación.</p>
+        <p>Al descubrir el engaño, Pinocho huyó aterrorizado en busca de auxilio, pero la zorra y el gato terminaron por darle alcance, y lo colgaron de la rama de la Encina Grande con la intención de despojarlo de sus monedas, dejándolo así en un peligro auténticamente mortal.</p>
+        <p>Justo cuando todo parecía perdido, una niña de cabellos color turquesa —el Hada— acudió en su auxilio, y logró rescatarlo de las garras de sus enemigos justo a tiempo.</p>
+        <p>El Hada cuidó de Pinocho con genuino esmero durante su convalecencia, pero al formularle una sencilla pregunta sobre lo ocurrido, Pinocho optó por mentir en lugar de confesar la verdad.</p>
+        <p>De inmediato, su nariz comenzó a alargarse sin control, cada vez más y más, ante la mirada atónita del Hada. Con cada mentira adicional que pronunciaba, su nariz se prolongaba todavía más.</p>
+        <p>Verdaderamente aterrado ante el estado de su propia nariz, Pinocho prometió solemnemente decir siempre la verdad de ahí en adelante. El Hada, conmovida, lo perdonó, y poco a poco su nariz recuperó su longitud original.</p>
+        <p>Tiempo después, un compañero de travesuras invitó a Pinocho a un lugar que parecía sacado de un sueño infantil: la Isla de los Juguetes, donde los niños se pasaban el día entero jugando, sin escuela ni obligación alguna que cumplir.</p>
+        <p>Fascinado con la idea, Pinocho viajó a la isla y disfrutó de varios meses de diversión desmedida. Pero cierta mañana, al despertar, descubrió con auténtico horror que le habían crecido un par de largas orejas de asno.</p>
+        <p>Poco a poco, para su total espanto, Pinocho se transformó por completo en un burrito de verdad, cola incluida — el castigo mágico reservado para tanta pereza y desobediencia acumulada.</p>
+        <p>Tras protagonizar muchas otras aventuras y desventuras, Pinocho finalmente logró dar con su querido padre Geppetto, quien vivía dentro del vientre de un descomunal tiburón que lo había devorado tiempo atrás mientras lo buscaba desesperadamente por el mar.</p>
+        <p>Juntos, padre e hijo, idearon un plan para escapar del enorme animal, y regresaron sanos y salvos a su modesto hogar.</p>
+        <p>Verdaderamente arrepentido de todas sus travesuras pasadas, Pinocho comenzó a trabajar con ahínco para poder mantener a su anciano padre, y se dedicó por fin, con auténtica seriedad, a sus estudios.</p>
+        <p><em>Cierta noche, como recompensa por su corazón bondadoso y su esfuerzo sincero, el Hada cumplió finalmente el mayor anhelo de Pinocho: lo transformó, ante su propio asombro, en un niño de carne y hueso. Pinocho, maravillado al contemplar su nuevo cuerpo de niño real, corrió a abrazar a su padre con todo el amor que había aprendido a sentir a lo largo de su arduo camino.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la marioneta</span> — the puppet</div>
+      <div><span class="term">el grillo parlante</span> — the talking cricket</div>
+      <div><span class="term">el Hada</span> — the Fairy</div>
+      <div><span class="term">la nariz</span> — the nose</div>
+      <div><span class="term">la Isla de los Juguetes</span> — the Land of Toys</div>
+      <div><span class="term">el burro</span> — the donkey</div>
+      <div><span class="term">el tiburón</span> — the shark</div>
+      <div><span class="term">arrepentido/a</span> — repentant, sorry</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>un pedazo de madera que habla</span>
+      <span>el grillo parlante</span>
+      <span>le crece la nariz</span>
+      <span>el Hada de los cabellos turquesa</span>
+      <span>la Isla de los Juguetes</span>
+      <span>convertirse en un niño de verdad</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué le pasa a la nariz de Pinocho cada vez que dice una mentira?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué le pasa a los niños que van a la Isla de los Juguetes, y qué representa ese castigo?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Pinocho</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — décimo quinto título bajo la filosofía de narrativa completa. Elegido como alternativa de registro similar a El Principito (no disponible por derechos de autor en EE.UU. hasta 2039).</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Literatura infantil clásica italiana — la desobediencia y sus consecuencias, la mentira y su castigo físico (la nariz), el camino hacia la madurez y la conciencia, el amor de un padre por su hijo.</p>
+
+    <h4>Nivel original</h4>
+    <p>El texto fuente de Collodi (1883) es una novela episódica de extensión moderada. Esta es una VERSIÓN ABREVIADA/CONDENSADA que conserva el arco argumental completo. A1 recibe una simplificación real; B2 se acerca al registro de una traducción clásica en español, con vocabulario de apoyo.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar una secuencia de decisiones y sus consecuencias directas; describir una transformación física como símbolo de una lección moral; expresar arrepentimiento y cambio de carácter a lo largo de una historia.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>un pedazo de madera que habla · el grillo parlante · le crece la nariz · el Hada de los cabellos turquesa · la Isla de los Juguetes · convertirse en un niño de verdad.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa — versión abreviada)</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; se conserva el arco completo condensado a sus escenas clave.<br>
+    <strong>A2:</strong> se añaden detalles descriptivos de los personajes y lugares, y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrativo con más naturalidad.<br>
+    <strong>B2:</strong> registro cercano a una traducción clásica en español, con vocabulario de apoyo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>El texto original de Collodi es notablemente más oscuro que las versiones modernas (incluida la de Disney). Tres decisiones editoriales: (1) Pinocho mata al grillo parlante de un golpe en el original — en esta adaptación, el grillo simplemente se asusta y se va, y reaparece más adelante como personaje recurrente, sin la muerte ni el elemento fantasmal del original. (2) La zorra y el gato lo cuelgan de un árbol dejándolo en peligro real — en A1–A2 se presenta como un susto del que el Hada lo rescata a tiempo, sin detalle del ahorcamiento; en B1–B2 se mantiene más cerca del original pero sin detalle gráfico. (3) La transformación en burro se mantiene en todos los niveles como convención mágica de cuento clásico. No hay contenido sexual ni temas de adultos.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — novela clásica de la Biblioteca FVR, sin personaje anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>la conciencia</em> — cognado natural con "conscience", concepto central representado por el grillo parlante a lo largo de toda la historia.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Cada vez que Pinocho miente, su nariz lo delata. ¿Crees que siempre hay una manera en la que la verdad termina saliendo a la luz, aunque no sea tan visible como una nariz que crece?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Décimo quinto título de la Biblioteca FVR. Versión ABREVIADA de la novela completa de Carlo Collodi (1883), de dominio público.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
