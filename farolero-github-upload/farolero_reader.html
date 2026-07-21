@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El farolero y la niña de las estrellas — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Historia original</div>
+    <h1>El farolero y la niña de las estrellas</h1>
+    <div class="subtitle">Historia original de Cuentópolis</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>En un acantilado, muy lejos de todo, vive un farolero llamado Tomás. Cada noche, sube la escalera de su faro y enciende la luz, para que los barcos no choquen contra las rocas.</p>
+        <p>Pero los tiempos han cambiado. Ahora, los barcos usan mapas electrónicos, y ya casi nadie necesita la luz del faro. Tomás sigue subiendo cada noche, aunque a veces piensa: "¿Para qué sirve mi trabajo ya?"</p>
+        <p>Una noche, mientras enciende la luz, Tomás escucha una vocecita detrás de él.</p>
+        <p>—Buenas noches —dice la voz—. ¿Por qué enciendes una luz que ya nadie necesita?</p>
+        <p>Tomás se da la vuelta, sorprendido. Ve a una niña pequeña, de ojos muy grandes y curiosos, sentada tranquilamente en el borde del acantilado.</p>
+        <p>—¿Quién eres tú? —pregunta Tomás—. ¿Cómo llegaste hasta aquí?</p>
+        <p>—Vengo de una estrella —responde la niña, con total naturalidad—. Una estrella muy pequeña. Tan pequeña, que se puede caminar alrededor de ella en una tarde.</p>
+        <p>Tomás no le cree del todo, pero la niña parece tan tranquila y tan segura, que decide no discutir. Esa noche, hablan durante horas.</p>
+        <p>La niña vuelve la noche siguiente. Y la siguiente. Cada noche, hace preguntas simples, pero profundas.</p>
+        <p>—¿Por qué los adultos siempre están tan ocupados? —pregunta una noche.</p>
+        <p>—¿Qué es exactamente un amigo? —pregunta otra noche.</p>
+        <p>Tomás, poco a poco, empieza a esperar sus visitas con alegría. Le cuenta historias del mar. Ella le cuenta cosas curiosas de su pequeña estrella.</p>
+        <p>Una noche, la niña le pregunta: —¿Por qué sigues cuidando tu faro, si ya no lo necesitan?</p>
+        <p>Tomás piensa un momento, y responde: —Quizás ya no es tan necesario como antes. Pero yo lo he cuidado durante tantos años... Ahora es mío. Es especial para mí, aunque para otros ya no lo sea.</p>
+        <p>La niña sonríe. —Eso es exactamente lo que quería entender. Lo que de verdad importa no siempre se ve a simple vista. Se ve con más atención, con el tiempo, con el cariño.</p>
+        <p>Tomás sonríe también. Por primera vez en mucho tiempo, entiende por qué su trabajo todavía es importante: no porque el mundo lo necesite, sino porque él lo cuida con amor, y eso lo hace valioso.</p>
+        <p>Una noche, la niña le dice, con un poco de tristeza: —Tomás, mañana debo volver a mi estrella.</p>
+        <p>Tomás siente una tristeza profunda, pero también comprende. —Voy a extrañar nuestras conversaciones —dice.</p>
+        <p>—Yo también —responde la niña—. Pero ahora, cada vez que veas tu luz brillar en la noche, vas a recordar esto: cuidar algo con cariño es lo que lo hace especial.</p>
+        <p>A la mañana siguiente, la niña ya no está. Tomás nunca vuelve a verla.</p>
+        <p>Pero cada noche, cuando sube a encender su luz, sonríe. Ya no piensa "¿para qué sirve?" Ahora piensa: "Esto es mío, y lo cuido con cariño. Eso es suficiente."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>En un acantilado solitario, lejos de cualquier pueblo, vivía un farolero llamado Tomás. Cada noche, sin falta, subía la larga escalera de caracol de su faro y encendía la luz, para que los barcos no se estrellaran contra las rocas escondidas bajo el agua.</p>
+        <p>Pero los tiempos habían cambiado. Los barcos modernos usaban mapas electrónicos y sistemas de navegación por satélite, y ya casi nadie necesitaba la luz de un viejo faro como el suyo. Aun así, Tomás seguía subiendo cada noche, aunque cada vez con más frecuencia se preguntaba: "¿Para qué sirve realmente mi trabajo ahora?"</p>
+        <p>Una noche, mientras encendía la luz, Tomás escuchó una vocecita a sus espaldas.</p>
+        <p>—Buenas noches —dijo la voz—. ¿Por qué enciendes una luz que ya nadie necesita?</p>
+        <p>Tomás se dio la vuelta, completamente sorprendido. Sentada tranquilamente en el borde del acantilado había una niña pequeña, de ojos grandes y curiosos, como si aquel lugar tan alto y peligroso no le diera ningún miedo.</p>
+        <p>—¿Quién eres tú? —preguntó Tomás—. ¿Y cómo llegaste hasta aquí, tan de noche?</p>
+        <p>—Vengo de una estrella —respondió la niña, con absoluta naturalidad, como si fuera lo más normal del mundo—. Una estrella muy pequeña. Tan pequeña, que se puede recorrer entera caminando en una sola tarde.</p>
+        <p>Tomás no le creyó del todo, pero había algo en la calma de la niña que le impidió cuestionarla. Esa noche conversaron durante horas, sentados junto a la luz del faro.</p>
+        <p>La niña regresó la noche siguiente. Y la siguiente. Y así, noche tras noche, hacía preguntas que parecían simples, pero que, pensándolo bien, escondían algo mucho más profundo.</p>
+        <p>—¿Por qué los adultos siempre están tan ocupados con cosas que no parecen tan importantes? —preguntó una noche, mirando las olas.</p>
+        <p>—¿Qué es exactamente un amigo? —preguntó otra vez, unos días después.</p>
+        <p>Poco a poco, sin darse cuenta, Tomás comenzó a esperar sus visitas con verdadera alegría. Él le contaba historias sobre el mar y los barcos de antaño; ella le contaba curiosidades sobre su diminuta estrella.</p>
+        <p>Una noche, la niña le hizo una pregunta que lo dejó pensando largo rato: —¿Por qué sigues cuidando tu faro con tanto esmero, si ya casi nadie lo necesita?</p>
+        <p>Tomás guardó silencio un momento antes de responder. —Quizás ya no sea tan necesario como antes —dijo finalmente—. Pero lo he cuidado durante tantos años, con mis propias manos, que ahora es mío de una manera especial. Es valioso para mí, aunque ya no lo sea de la misma forma para los demás.</p>
+        <p>La niña sonrió, como si por fin hubiera encontrado la respuesta que buscaba. —Eso es justamente lo que quería entender. Lo que de verdad importa no siempre se ve a simple vista. Hace falta mirar con más atención, con el tiempo, y sobre todo, con cariño.</p>
+        <p>Tomás sonrió también. Por primera vez en mucho tiempo, comprendió por qué su trabajo seguía siendo importante: no porque el mundo entero lo necesitara, sino porque él lo cuidaba con amor genuino, y eso, en sí mismo, ya lo hacía valioso.</p>
+        <p>Una noche, sin embargo, la niña le habló con un dejo de tristeza en la voz: —Tomás, mañana debo regresar a mi estrella.</p>
+        <p>Una profunda tristeza invadió a Tomás, aunque en el fondo entendía que ese momento tenía que llegar. —Voy a extrañar mucho nuestras conversaciones —le dijo, con sinceridad.</p>
+        <p>—Yo también las voy a extrañar —respondió ella—. Pero de ahora en adelante, cada vez que veas tu luz brillar en la oscuridad de la noche, vas a recordar esto: cuidar algo con verdadero cariño es lo que lo convierte en algo especial.</p>
+        <p>A la mañana siguiente, la niña ya no estaba en ninguna parte. Tomás nunca volvió a verla.</p>
+        <p>Pero desde entonces, cada noche, cuando subía a encender su luz, sonreía para sus adentros. Ya no se preguntaba "¿para qué sirve esto ahora?" En cambio, pensaba: "Esto es mío, y yo lo cuido con cariño. Y eso, después de todo, ya es más que suficiente."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el farolero</span> — the lighthouse keeper</div>
+      <div><span class="term">el faro</span> — the lighthouse</div>
+      <div><span class="term">el acantilado</span> — the cliff</div>
+      <div><span class="term">encender</span> — to light, turn on</div>
+      <div><span class="term">cuidar</span> — to care for, take care of</div>
+      <div><span class="term">valioso/a</span> — valuable</div>
+      <div><span class="term">extrañar</span> — to miss (someone/something)</div>
+      <div><span class="term">esencial</span> — essential</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>una niña que dice venir de una estrella muy pequeña</span>
+      <span>ya nadie necesita mi luz</span>
+      <span>lo que de verdad importa no siempre se ve a simple vista</span>
+      <span>cuidar algo lo vuelve importante</span>
+      <span>volveré a mi estrella</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué se siente Tomás, el farolero, un poco triste al principio de la historia?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué le enseña la niña de las estrellas a Tomás sobre el cuidado y la amistad?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El farolero y la niña de las estrellas</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — historia original, construida directamente en A2–B1 con techo bajo intencional para Middle School y Secundaria.</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Reflexión filosófica en clave narrativa — la soledad y el propósito, la amistad como algo que se construye con el tiempo, ver más allá de las apariencias, el valor de lo aparentemente inútil.</p>
+
+    <h4>Nivel original</h4>
+    <p>No aplica — historia original de Cuentópolis, escrita directamente en dos niveles (A2 y B1), sin nivel A1 ni B2/auténtico esta vez, por indicación específica de la maestra.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar una amistad que se construye poco a poco, a través de visitas repetidas; expresar preguntas filosóficas simples con estructuras propias del nivel; describir un objeto cotidiano (un faro) que adquiere un significado especial a través del cuidado.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>una niña que dice venir de una estrella muy pequeña · ya nadie necesita mi luz · lo que de verdad importa no siempre se ve a simple vista · cuidar algo lo vuelve importante · volveré a mi estrella.</p>
+
+    <h4>Pacing CEFR (techo bajo intencional — solo A2 y B1)</h4>
+    <p><strong>A2:</strong> oraciones claras y de longitud media; diálogo simple entre el farolero y la niña; vocabulario cotidiano y descriptivo.<br>
+    <strong>B1:</strong> se profundiza un poco más en la reflexión filosófica y en el pasado narrativo, sin llegar a la complejidad de un registro B2/auténtico.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Ninguno significativo. La historia trata temas de soledad y de sentirse innecesario en el trabajo, pero de forma esperanzadora y reflexiva, sin tristeza profunda ni temas delicados.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — historia original de la Biblioteca FVR, sin estructura de serie.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>esencial</em> — cognado natural con "essential", concepto central de la historia.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Tomás cuida su faro aunque ya casi nadie lo necesite. ¿Hay algo que tú cuidas con cariño, aunque otros piensen que ya no es importante?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Historia original construida a solicitud de la maestra como alternativa segura a El Principito (no disponible por derechos de autor en EE.UU. hasta 2039). Comparte el tono y los temas filosóficos de la obra de Saint-Exupéry, pero con personajes, escenario, y símbolo central (un faro, en vez de una rosa) completamente originales — ninguna frase, personaje, ni elemento de trama se toma del texto protegido.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
