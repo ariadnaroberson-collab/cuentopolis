@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El minotauro y el laberinto de Creta — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Mito clásico</div>
+    <h1>El minotauro y el laberinto de Creta</h1>
+    <div class="subtitle">Mito griego — Teseo, Ariadna y el Minotauro</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Hace muchos años, en la isla de Creta, vive un rey. Se llama Minos.</p>
+        <p>El rey Minos tiene un monstruo terrible. Se llama el Minotauro. Tiene cuerpo de hombre y cabeza de toro. Es un castigo de los dioses.</p>
+        <p>El rey Minos no mata al Minotauro. En cambio, construye un laberinto enorme. El arquitecto se llama Dédalo.</p>
+        <p>El laberinto tiene muchos caminos. Es imposible salir. Allí vive el Minotauro.</p>
+        <p>Cada nueve años, la ciudad de Atenas manda catorce jóvenes a Creta: siete chicos y siete chicas. Van al laberinto, y no regresan.</p>
+        <p>Teseo es un príncipe de Atenas, hijo del rey Egeo. Teseo dice: "Yo voy a Creta. Yo voy a matar al Minotauro."</p>
+        <p>El rey Egeo tiene miedo. Le dice a su hijo: "Si regresas vivo, cambia las velas negras del barco por velas blancas. Así yo sé que estás bien."</p>
+        <p>Teseo viaja a Creta con el barco de velas negras.</p>
+        <p>En Creta, Teseo conoce a Ariadna, la hija del rey Minos. Ariadna mira a Teseo y se enamora de él.</p>
+        <p>Ariadna quiere ayudar a Teseo. Habla con Dédalo, el arquitecto del laberinto.</p>
+        <p>Dédalo le da una idea a Ariadna: un ovillo de hilo.</p>
+        <p>Ariadna le da el ovillo a Teseo. "Ata el hilo en la entrada," dice ella. "Camina por el laberinto, y el hilo va detrás de ti. Después, sigue el hilo para regresar."</p>
+        <p>Teseo entra al laberinto. Camina y camina, con el hilo detrás de él.</p>
+        <p>Por fin, encuentra al Minotauro. Los dos luchan. Es una lucha difícil.</p>
+        <p>Teseo gana la lucha. El Minotauro ya no existe.</p>
+        <p>Teseo sigue el hilo de Ariadna. Sale del laberinto, vivo y feliz.</p>
+        <p>Teseo, Ariadna, y los otros jóvenes de Atenas escapan de Creta en el barco.</p>
+        <p>Pero Teseo, muy ocupado y feliz, olvida una cosa importante: cambiar las velas del barco.</p>
+        <p>El rey Egeo espera en una montaña cerca del mar. Ve el barco de lejos. Ve las velas negras.</p>
+        <p>El rey piensa: "Mi hijo está muerto." El rey está tan triste que no puede más.</p>
+        <p>Desde ese día, ese mar se llama el mar Egeo, en honor al rey.</p>
+        <p>Esta historia nos enseña algo importante: a veces, una idea simple — como un hilo — puede resolver un problema muy grande.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Hace muchísimos años, en la isla de Creta, gobernaba un rey llamado Minos. Los dioses lo habían castigado con una criatura terrible: el Minotauro, un monstruo con cuerpo de hombre y cabeza de toro, tan fuerte y peligroso que nadie podía controlarlo.</p>
+        <p>En lugar de matarlo, el rey Minos decidió encerrarlo. Mandó construir un laberinto enorme, diseñado por el arquitecto más famoso de su reino: Dédalo. El laberinto tenía tantos caminos y pasillos que era completamente imposible encontrar la salida.</p>
+        <p>Cada nueve años, como parte de un antiguo castigo, la ciudad de Atenas tenía que enviar a catorce jóvenes — siete chicos y siete chicas — hasta Creta, donde entraban al laberinto y jamás volvían a salir.</p>
+        <p>Teseo, príncipe de Atenas e hijo del rey Egeo, decidió que ya era suficiente. "Yo mismo iré a Creta," dijo, "y voy a acabar con el Minotauro para siempre." Su padre, preocupado por perderlo, le pidió una sola cosa: "Si regresas con vida, cambia las velas negras del barco por velas blancas, para que yo sepa desde lejos que estás bien."</p>
+        <p>Teseo zarpó hacia Creta con el resto de los jóvenes, en un barco con las tradicionales velas negras de luto. Al llegar, conoció a Ariadna, la hija del rey Minos, quien quedó inmediatamente enamorada de su valentía.</p>
+        <p>Decidida a salvarlo, Ariadna buscó ayuda en secreto con Dédalo, el mismo arquitecto que había diseñado el laberinto. Dédalo le dio una idea sencilla pero brillante: un ovillo de hilo.</p>
+        <p>"Ata un extremo del hilo en la entrada," le explicó Ariadna a Teseo esa misma noche, "y ve dejándolo caer detrás de ti mientras avanzas. Cuando termines, solo tienes que seguirlo de vuelta."</p>
+        <p>Armado con una espada y el hilo mágico, Teseo entró al laberinto al día siguiente. Caminó durante horas por pasillos oscuros y confusos, siempre desenrollando el hilo detrás de él, hasta que finalmente encontró al Minotauro en el centro exacto del laberinto.</p>
+        <p>La lucha fue feroz, pero Teseo, más ágil e inteligente que el monstruo, logró vencerlo. Agotado pero triunfante, siguió el hilo de Ariadna paso a paso, hasta encontrar de nuevo la salida.</p>
+        <p>Teseo, Ariadna, y los demás jóvenes atenienses escaparon de Creta esa misma noche, felices de estar libres por fin. Pero en medio de la celebración, Teseo cometió un error fatal: olvidó por completo cambiar las velas del barco.</p>
+        <p>Mientras tanto, el rey Egeo esperaba día tras día en lo alto de un acantilado, mirando el horizonte en busca del barco de su hijo. Cuando finalmente lo vio acercarse, con las velas todavía negras, el dolor fue tan grande que no pudo soportarlo.</p>
+        <p>Desde entonces, en su memoria, ese mar lleva el nombre de mar Egeo.</p>
+        <p>Y así, este antiguo mito nos sigue recordando algo simple pero poderoso: a veces, una idea pequeña — como un hilo — puede ser la clave para resolver el problema más grande.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Hace muchísimos años, en la isla de Creta, gobernaba el rey Minos. Los dioses lo habían castigado con una criatura terrible: el Minotauro, un monstruo con cuerpo de hombre y cabeza de toro, tan fuerte y peligroso que nadie en el reino podía controlarlo.</p>
+        <p>En lugar de matarlo, Minos decidió encerrarlo para siempre. Mandó construir un laberinto gigantesco, diseñado por el arquitecto más brillante de la época: Dédalo. Sus pasillos eran tan numerosos y confusos que, una vez dentro, resultaba completamente imposible encontrar la salida.</p>
+        <p>Como parte de un antiguo pacto, cada nueve años la ciudad de Atenas tenía que enviar a catorce jóvenes —siete muchachos y siete muchachas— hasta Creta, donde eran enviados al laberinto y jamás regresaban.</p>
+        <p>Cuando llegó el momento del tercer tributo, Teseo, el joven príncipe de Atenas e hijo del rey Egeo, decidió que aquello tenía que terminar. Se ofreció voluntario para viajar con el grupo, decidido a enfrentarse al Minotauro él mismo. Su padre, angustiado, intentó convencerlo de no ir, pero finalmente aceptó, pidiéndole solo una cosa: "Si logras vencer y regresas con vida, cambia las velas negras del barco por velas blancas, para que yo sepa desde la distancia que estás bien."</p>
+        <p>Teseo zarpó hacia Creta junto a los demás jóvenes, en un barco con las tradicionales velas negras de luto. Al llegar, fue recibido por el rey Minos y su hija Ariadna, quien, desde el primer momento en que lo vio, quedó profundamente enamorada de su valentía y determinación.</p>
+        <p>Decidida a salvarlo, Ariadna acudió en secreto a Dédalo, el mismo hombre que había diseñado el laberinto, para pedirle ayuda. Dédalo le dio una solución tan sencilla como ingeniosa: un ovillo de hilo.</p>
+        <p>Esa misma noche, Ariadna se lo entregó a Teseo con instrucciones precisas: "Ata un extremo en la entrada, y ve dejándolo caer detrás de ti mientras avanzas por el laberinto. Cuando hayas terminado, solo tendrás que seguirlo de regreso."</p>
+        <p>Al día siguiente, armado con una espada y el hilo mágico, Teseo entró en el laberinto. Avanzó durante horas por pasillos oscuros y llenos de vueltas, desenrollando el hilo sin parar, hasta que por fin llegó al centro exacto, donde lo esperaba el Minotauro.</p>
+        <p>La lucha fue feroz y agotadora, pero Teseo, más ágil e inteligente que la bestia, logró vencerlo. Exhausto pero triunfante, siguió el hilo de Ariadna paso a paso hasta encontrar de nuevo la salida del laberinto.</p>
+        <p>Esa misma noche, Teseo, Ariadna y el resto de los jóvenes atenienses escaparon de Creta en el barco, felices de haber recuperado su libertad. Pero en medio de la celebración y el alivio, Teseo cometió un error que cambiaría todo: olvidó por completo cambiar las velas del barco antes de llegar a Atenas.</p>
+        <p>Mientras tanto, el rey Egeo llevaba días esperando en lo alto de un acantilado, con la mirada fija en el horizonte. Cuando finalmente distinguió el barco a lo lejos, con las velas todavía negras, creyó que su hijo había muerto en el laberinto. El dolor fue tan grande que no pudo soportarlo, y se arrojó al mar desde la roca donde esperaba.</p>
+        <p>Desde entonces, en su memoria, ese mar lleva el nombre de mar Egeo — un nombre que ha sobrevivido miles de años, como recuerdo de aquel error tan simple con consecuencias tan grandes.</p>
+        <p>Y así, este antiguo mito nos sigue recordando algo poderoso: a veces, una idea pequeña —como un hilo— puede resolver el problema más grande de todos.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Registro cercano a las versiones clásicas</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Adaptación de un mito de tradición oral, sin autor único. El texto sigue de cerca las versiones clásicas del mito adaptadas en español, con vocabulario mitológico de apoyo.</p>
+        <p>En la isla de Creta gobernaba el rey Minos, sobre quien pesaba una maldición de los dioses: el Minotauro, una criatura de cuerpo humano y cabeza de toro, dotada de una fuerza descomunal e imposible de dominar. En vez de destruirlo, Minos ordenó encerrarlo para siempre en un <span class="gloss" data-word="laberinto">laberinto</span> descomunal, obra del arquitecto más ingenioso de su reino: Dédalo. Sus pasillos, entrelazados sin lógica aparente, hacían que quien entrara jamás pudiera hallar el camino de vuelta.</p>
+        <p>Como parte de un antiguo tributo impuesto tras la muerte de su hijo Androgeo, Atenas debía enviar cada nueve años a catorce jóvenes —siete muchachos y siete muchachas— para que el laberinto los devorase, uno tras otro, sin que ninguno regresara jamás.</p>
+        <p>Llegado el tercer tributo, Teseo, príncipe de Atenas e hijo del rey Egeo, se ofreció voluntario, decidido a poner fin a esa <span class="gloss" data-word="humillación">humillación</span> que pesaba sobre su pueblo. Su padre, temiendo perderlo, apenas logró arrancarle una promesa: si regresaba victorioso, debía izar velas blancas al aproximarse a Atenas; si las velas negras seguían ondeando, sabría que su hijo había muerto.</p>
+        <p>Teseo zarpó junto a los demás jóvenes en la nave de velas negras, símbolo del luto que Atenas ya daba por hecho. Al llegar a Creta, fue recibido por el rey Minos y su hija Ariadna, quien, al posar los ojos sobre él, quedó perdidamente enamorada de su valor y su porte.</p>
+        <p>Decidida a que Teseo no compartiera el destino de los tributos anteriores, Ariadna acudió en secreto a Dédalo, el mismo artífice del laberinto, en busca de una solución. Este le entregó algo tan modesto como decisivo: un ovillo de hilo.</p>
+        <p>Aquella noche, antes de que el héroe entrara al laberinto, Ariadna le explicó el plan: debía atar un extremo del hilo a la entrada y dejarlo correr tras de sí conforme avanzara; así, tras enfrentarse al Minotauro, le bastaría con seguir el hilo de vuelta.</p>
+        <p>Armado apenas con una espada y aquel ovillo, Teseo se internó en el laberinto al amanecer. Avanzó durante horas por corredores oscuros y sin lógica aparente, desenrollando el hilo sin descanso, hasta llegar al fin al corazón mismo del laberinto, donde el Minotauro aguardaba.</p>
+        <p>El combate fue violento y prolongado, pero Teseo, más ágil e ingenioso que la bestia, logró abatirla. Exhausto pero triunfante, siguió el hilo de Ariadna, paso a paso, hasta hallar de nuevo la salida a la luz del día.</p>
+        <p>Esa misma noche, Teseo, Ariadna y el resto de los jóvenes atenienses zarparon de Creta rumbo a casa, libres al fin de aquel tributo que había marcado a su ciudad durante generaciones. Pero, absorto en la victoria y en los preparativos del regreso, Teseo cometió el descuido que sellaría su destino: olvidó cambiar las velas negras por las blancas.</p>
+        <p>Mientras tanto, el rey Egeo llevaba días vigilando el horizonte desde lo alto de un acantilado junto al mar. Cuando distinguió por fin la nave, aún con sus velas negras ondeando al viento, la certeza de haber perdido a su único hijo le resultó insoportable, y desde aquella misma roca se arrojó a las aguas.</p>
+        <p><em>Desde entonces, en su memoria, ese mar lleva el nombre de mar Egeo — un vestigio, hasta nuestros días, de aquel olvido tan pequeño y tan irreversible.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el laberinto</span> — the labyrinth, maze</div>
+      <div><span class="term">el ovillo de hilo</span> — the ball of thread</div>
+      <div><span class="term">el Minotauro</span> — the Minotaur</div>
+      <div><span class="term">ofrecerse voluntario/a</span> — to volunteer</div>
+      <div><span class="term">las velas (del barco)</span> — the (ship's) sails</div>
+      <div><span class="term">el tributo</span> — the tribute (forced offering)</div>
+      <div><span class="term">la humillación</span> — humiliation (cognate)</div>
+      <div><span class="term">el mar Egeo</span> — the Aegean Sea</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>el laberinto</span>
+      <span>el hilo de Ariadna</span>
+      <span>el Minotauro</span>
+      <span>ofrecerse como voluntario</span>
+      <span>las velas negras / las velas blancas</span>
+      <span>el mar Egeo</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué le da Ariadna a Teseo antes de entrar al laberinto, y para qué sirve?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué error comete Teseo al final del mito, y qué consecuencia tiene ese error?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El minotauro y el laberinto de Creta</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — sexto título bajo la filosofía de narrativa completa, y el último de los títulos cortos antes de los cuatro grandes clásicos (Peter Pan, Colmillo Blanco, Alicia en el país de las maravillas, El mago de Oz).</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Mitología griega clásica — el heroísmo, el ingenio frente al peligro, símbolos (el laberinto, el hilo de Ariadna), la mitología como explicación de nombres reales (el mar Egeo).</p>
+
+    <h4>Nivel original</h4>
+    <p>Mito de transmisión oral, con muchas versiones. Bajo la filosofía de Biblioteca FVR, A1 recibe una simplificación real; B2 se acerca al registro de las versiones clásicas adaptadas en español, con vocabulario mitológico de apoyo.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar un mito con estructura de misión heroica (problema, ayuda mágica, prueba, resolución); describir un símbolo narrativo (el hilo de Ariadna) y su función; conectar el mito con el origen de un nombre real (el mar Egeo).</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>el laberinto · el hilo de Ariadna · el Minotauro · ofrecerse como voluntario · las velas negras / las velas blancas · el mar Egeo.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa)</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; se conserva el arco completo.<br>
+    <strong>A2:</strong> se añaden detalles descriptivos del laberinto y de Creta, y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrativo con más naturalidad.<br>
+    <strong>B2:</strong> registro cercano a las versiones clásicas adaptadas en español, con vocabulario mitológico de apoyo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Dos elementos requieren manejo cuidadoso: (1) El origen del Minotauro tradicionalmente involucra la unión de la reina Pasífae con un toro — este detalle se OMITE por completo en TODOS los niveles de este lector; el Minotauro se presenta simplemente como una criatura mitad hombre, mitad toro, nacida como castigo de los dioses al rey Minos, sin explicar el mecanismo. (2) El mito clásico incluye el tributo de catorce jóvenes atenienses entregados al Minotauro, y termina con el rey Egeo lanzándose al mar. Ambos se presentan como convención narrativa de la mitología clásica, sin detalle gráfico: el sacrificio se menciona en abstracto, y el final de Egeo se suaviza considerablemente en A1–A2 ("el rey está tan triste que no puede más," sin detallar el método) y aparece de forma más completa pero aun así breve y no gráfica en B1–B2.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — mito clásico de la Biblioteca FVR, sin personaje anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>el laberinto</em> — cognado natural con "labyrinth"/"maze", símbolo central del mito.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Ariadna ayuda a Teseo con un simple hilo, no con fuerza ni magia poderosa. ¿Alguna vez una idea simple te ayudó a resolver un problema grande?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Sexto título de la Biblioteca FVR, y el último de los títulos cortos antes de los cuatro grandes clásicos. Mito de dominio público; no requiere restricción de edad como El sombrero de tres picos, pero sí el manejo cuidadoso de contenido descrito arriba.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
