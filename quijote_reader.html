@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Don Quijote de la Mancha — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Novela clásica (versión abreviada)</div>
+    <h1>Don Quijote de la Mancha</h1>
+    <div class="subtitle">Miguel de Cervantes (1605/1615) — el caballero que soñaba con gigantes</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>En un pueblo de La Mancha, España, vive un señor mayor llamado Alonso Quijano.</p>
+        <p>Alonso lee muchos libros sobre caballeros. Lee tanto, y tan rápido, que empieza a confundir la ficción con la realidad.</p>
+        <p>Un día, Alonso decide algo increíble: "Yo también voy a ser caballero andante. Voy a viajar por el mundo, defender la justicia, y vivir grandes aventuras."</p>
+        <p>Alonso se pone un nombre nuevo: Don Quijote de la Mancha.</p>
+        <p>Busca su armadura vieja, la limpia, y encuentra un caballo flaco. Le pone un nombre elegante: Rocinante.</p>
+        <p>Don Quijote también necesita una dama a quien dedicar sus aventuras. Piensa en una campesina de un pueblo cercano, y la imagina como una gran princesa. La llama Dulcinea del Toboso.</p>
+        <p>Don Quijote sale de su casa, listo para grandes aventuras.</p>
+        <p>Pronto, encuentra a un campesino llamado Sancho Panza. Don Quijote lo invita a ser su escudero.</p>
+        <p>"Si me ayudas en mis aventuras," le dice Don Quijote, "algún día te voy a dar una isla para gobernar."</p>
+        <p>Sancho, un poco confundido pero curioso, acepta la oferta.</p>
+        <p>Un día, Don Quijote ve algo en el horizonte: treinta o cuarenta molinos de viento.</p>
+        <p>"¡Mira, Sancho!" grita Don Quijote. "¡Son gigantes enormes! Voy a luchar contra ellos."</p>
+        <p>"Señor," dice Sancho, "esos no son gigantes. Son molinos de viento."</p>
+        <p>Pero Don Quijote no escucha. Ataca uno de los molinos con su lanza.</p>
+        <p>El viento mueve las aspas del molino, y Don Quijote y su caballo caen al suelo, adoloridos.</p>
+        <p>"Un mago malvado convirtió a los gigantes en molinos," dice Don Quijote, todavía convencido. Sancho solo suspira.</p>
+        <p>Don Quijote y Sancho viven muchas aventuras más: liberan a unos prisioneros, confunden un plato de barbero con un yelmo mágico, y se meten en muchos problemas cómicos.</p>
+        <p>Con el tiempo, Don Quijote se hace viejo y se enferma. Poco a poco, recupera la razón.</p>
+        <p>"Ya no soy Don Quijote," dice. "Soy solo Alonso Quijano, un hombre común."</p>
+        <p>Alonso, en paz, rodeado de su familia y amigos, muere tranquilamente en su cama.</p>
+        <p>Esta historia nos enseña algo importante: la imaginación puede llevarnos a grandes aventuras, pero también es hermoso, al final, aceptar quiénes somos de verdad.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>En un pequeño pueblo de La Mancha, en España, vivía un hidalgo ya entrado en años llamado Alonso Quijano. Su gran pasión eran los libros de caballería, historias de caballeros valientes que luchaban contra gigantes y monstruos por amor y por honor.</p>
+        <p>Alonso leía tanto, y con tanta intensidad, que poco a poco fue perdiendo la capacidad de distinguir entre la ficción de sus libros y el mundo real que lo rodeaba.</p>
+        <p>Un día, convencido de que su destino era vivir como los héroes de sus historias, tomó una decisión sorprendente: se convertiría en caballero andante, recorriendo el mundo para defender la justicia y vivir grandes aventuras.</p>
+        <p>Se puso un nombre nuevo y solemne: Don Quijote de la Mancha. Buscó entre sus pertenencias una vieja armadura familiar, la limpió con esmero, y encontró un caballo flaco y viejo al que llamó, con gran orgullo, Rocinante.</p>
+        <p>Todo caballero andante, según los libros, necesitaba una dama a quien dedicar sus hazañas. Don Quijote pensó entonces en una campesina de un pueblo cercano, a quien apenas conocía, y decidió imaginarla como una princesa de extraordinaria belleza. La llamó Dulcinea del Toboso.</p>
+        <p>Con su armadura puesta y su lanza en mano, Don Quijote partió de su casa en busca de aventuras. En el camino, se encontró con un sencillo campesino llamado Sancho Panza, a quien convenció de acompañarlo como su fiel escudero.</p>
+        <p>"Si me sirves con lealtad," le prometió Don Quijote, "algún día te daré una isla entera para que la gobiernes tú mismo."</p>
+        <p>Sancho, aunque confundido por las ideas de su nuevo amo, aceptó la propuesta, movido por la curiosidad y la promesa de una vida mejor.</p>
+        <p>Una tarde, mientras cabalgaban por el campo, Don Quijote divisó en el horizonte treinta o cuarenta molinos de viento.</p>
+        <p>"¡Mira, Sancho!" exclamó, con los ojos brillantes de emoción. "Ahí están los gigantes más terribles que jamás hayamos enfrentado. Voy a luchar contra ellos."</p>
+        <p>"Mi señor," respondió Sancho, tratando de razonar con él, "esos no son gigantes. Son simplemente molinos de viento."</p>
+        <p>Pero Don Quijote, absolutamente convencido de su misión, espoleó a Rocinante y atacó uno de los molinos con su lanza en alto.</p>
+        <p>El viento, en ese preciso instante, hizo girar las aspas del molino con fuerza, y tanto Don Quijote como su caballo terminaron rodando por el suelo, magullados.</p>
+        <p>"Sin duda, un mago maligno transformó a los gigantes en molinos justo antes de que llegara," insistió Don Quijote, todavía convencido de su versión de los hechos. Sancho, resignado, solo suspiró y lo ayudó a levantarse.</p>
+        <p>Los dos vivieron muchas otras aventuras disparatadas: liberaron sin querer a un grupo de prisioneros peligrosos, confundieron el plato metálico de un barbero con un yelmo mágico legendario, y se metieron en toda clase de líos cómicos por el camino.</p>
+        <p>Con el paso de los años, Don Quijote finalmente regresó a su pueblo, ya bastante mayor y agotado por tantas aventuras. Poco después, cayó gravemente enfermo, y en su lecho, para sorpresa de todos, recuperó por completo la razón.</p>
+        <p>"Ya no soy Don Quijote de la Mancha," confesó con voz serena. "Vuelvo a ser, simplemente, Alonso Quijano, un hombre común y corriente."</p>
+        <p>Rodeado del cariño de su familia y sus amigos más cercanos, Alonso murió en paz, en su propia cama, tras una vida que, disparatada o no, había estado llena de significado.</p>
+        <p>Y así, esta historia inmortal nos deja una reflexión hermosa: la imaginación puede llevarnos a vivir aventuras extraordinarias, pero también es profundamente valioso, al final del camino, aceptar con serenidad quiénes somos de verdad.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>En un pequeño pueblo de la región de La Mancha, en España, vivía un hidalgo ya entrado en años llamado Alonso Quijano. Su gran pasión, casi una obsesión, eran los libros de caballería: historias de valientes caballeros que luchaban contra gigantes y monstruos por amor y por honor, dejando de lado todo lo demás.</p>
+        <p>Alonso leía con tanta intensidad y durante tantas horas seguidas, que fue perdiendo, poco a poco, la capacidad de distinguir entre la ficción de sus novelas y la realidad que lo rodeaba día a día.</p>
+        <p>Un día, plenamente convencido de que su verdadero destino era vivir como los héroes de sus libros favoritos, tomó una decisión que sorprendería a todo el pueblo: se convertiría él mismo en caballero andante, recorriendo los caminos del mundo para defender la justicia y vivir aventuras memorables.</p>
+        <p>Se puso entonces un nombre nuevo y solemne: Don Quijote de la Mancha. Rebuscó entre las pertenencias de su familia una vieja armadura oxidada, la limpió con esmero durante días, y encontró en su establo un caballo flaco y de edad avanzada, al que bautizó con gran orgullo como Rocinante.</p>
+        <p>Todo caballero andante que se preciara, según sus libros, necesitaba una dama a quien dedicar sus hazañas más gloriosas. Don Quijote pensó entonces en una sencilla campesina de un pueblo vecino, a quien apenas conocía de vista, y decidió reinventarla en su mente como una princesa de belleza incomparable. La llamó Dulcinea del Toboso.</p>
+        <p>Con su vieja armadura puesta y la lanza firmemente en mano, Don Quijote partió de su casa una madrugada en busca de aventuras. En el camino, se topó con un sencillo campesino de nombre Sancho Panza, a quien logró convencer, no sin esfuerzo, de acompañarlo como su fiel escudero.</p>
+        <p>"Si me sirves con lealtad y valentía," le prometió Don Quijote con gran solemnidad, "algún día te daré una isla entera para que la gobiernes con toda la autoridad de un verdadero señor."</p>
+        <p>Sancho, aunque bastante confundido por las ideas de su nuevo amo, terminó aceptando la propuesta, movido tanto por la curiosidad como por la tentadora promesa de una vida mejor para él y su familia.</p>
+        <p>Una tarde, mientras cabalgaban juntos por un extenso campo, Don Quijote divisó en el horizonte treinta o cuarenta molinos de viento, girando lentamente bajo el sol.</p>
+        <p>"¡Mira allá, Sancho!" exclamó, con los ojos encendidos de emoción. "Ahí tenemos a los gigantes más terribles que jamás hayamos enfrentado en nuestra vida. Voy a luchar contra ellos, cueste lo que cueste."</p>
+        <p>"Mi señor," respondió Sancho, tratando en vano de hacerlo entrar en razón, "esos no son gigantes de ninguna manera. Son, simplemente, molinos de viento, como los que se usan para moler el trigo."</p>
+        <p>Pero Don Quijote, absolutamente convencido de la nobleza de su misión, espoleó a Rocinante con determinación y atacó uno de los molinos con su lanza bien en alto, gritando su nombre de batalla.</p>
+        <p>El viento, en ese preciso instante, hizo girar las enormes aspas del molino con fuerza inesperada, y tanto Don Quijote como su pobre caballo terminaron rodando por el suelo, bastante magullados y sin ningún gigante a la vista.</p>
+        <p>"Sin ninguna duda, un mago maligno transformó a los gigantes en simples molinos justo antes de que yo llegara," insistió Don Quijote, todavía firmemente convencido de su propia versión de los hechos. Sancho, ya resignado a estas alturas, solo suspiró profundamente y lo ayudó a levantarse del suelo.</p>
+        <p>Los dos compañeros vivieron muchas otras aventuras tan disparatadas como memorables a lo largo de su camino: liberaron sin querer a un grupo de prisioneros peligrosos que terminaron por atacarlos a ellos mismos, confundieron el sencillo plato metálico de un barbero con el legendario yelmo mágico de un antiguo héroe, y se metieron en toda clase de líos cómicos allá por donde pasaban.</p>
+        <p>Con el paso de los años, Don Quijote finalmente regresó a su pueblo natal, ya considerablemente mayor y agotado tras tantas aventuras vividas. Poco después de su regreso, cayó gravemente enfermo, y en su lecho de muerte, para sorpresa y alivio de todos los que lo rodeaban, recuperó por completo la razón que había perdido tiempo atrás.</p>
+        <p>"Ya no soy Don Quijote de la Mancha," confesó con una voz serena y sin rastro alguno de locura. "He vuelto a ser, simplemente, Alonso Quijano, un hombre común y corriente, como cualquier otro."</p>
+        <p>Rodeado del cariño sincero de su familia y de sus amigos más cercanos, entre ellos el fiel Sancho, Alonso murió en completa paz, en su propia cama, tras una vida que, por disparatada que hubiese sido en ciertos momentos, había estado llena de un significado profundo y genuino.</p>
+        <p>Y así, esta historia inmortal de la literatura universal nos deja una reflexión hermosa y perdurable: la imaginación puede llevarnos a vivir aventuras verdaderamente extraordinarias, pero también resulta profundamente valioso, al final de nuestro camino, aceptar con serenidad y honestidad quiénes somos realmente.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Registro literario inspirado en Cervantes</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Versión abreviada, adaptada a un español moderno de registro literario, a partir de la obra original de Miguel de Cervantes, <i>El ingenioso hidalgo don Quijote de la Mancha</i> (1605/1615). Dominio público.</p>
+        <p>En un lugar de La Mancha de cuyo nombre no vale la pena acordarse, vivía, no hace demasiado tiempo, un hidalgo de aquellos de lanza en astillero y rocín flaco, cuya afición desmedida por los libros de caballerías terminaría por trastornarle el juicio de manera irreversible.</p>
+        <p>Tanto se enfrascaba en la lectura de aquellas historias de caballeros errantes, gigantes y encantamientos, que fue perdiendo, noche tras noche y página tras página, la facultad de distinguir con claridad la ficción de sus libros de la realidad que a diario lo rodeaba.</p>
+        <p>Convencido, con la firmeza propia de los locos de buena fe, de que su verdadero destino era emular a los héroes de sus lecturas, tomó la resolución de armarse él mismo caballero andante, y salir a recorrer el mundo en busca de aventuras que le dieran fama eterna y sirvieran de remedio a los agravios del mundo.</p>
+        <p>Se puso, pues, un nombre a la altura de tan alta empresa: Don Quijote de la Mancha. Desempolvó las armas <span class="gloss" data-word="mohosas">mohosas</span> que habían pertenecido a sus bisabuelos, las limpió con paciencia durante varios días, y dio con un rocín flaco y de escaso brío al que bautizó, no sin cierta solemnidad, con el nombre de Rocinante.</p>
+        <p>Todo caballero andante que se preciara, según rezaban sus libros, había de tener una dama a quien dedicar sus proezas. Recordó entonces a una moza labradora de un pueblo cercano, de cuya existencia apenas tenía noticia más allá de haberla visto un par de veces, y decidió, con la libertad que solo concede la imaginación, transfigurarla en su mente en una princesa de hermosura sin igual. La llamó Dulcinea del Toboso.</p>
+        <p>Armado de punta en blanco y lanza en ristre, Don Quijote partió de su aldea una madrugada en busca de aventuras. En su camino dio con un labrador vecino suyo, de nombre Sancho Panza, a quien, no sin cierta labia persuasiva, logró convencer de que le sirviera de escudero.</p>
+        <p>—Si me sirves con lealtad —le prometió Don Quijote, con la gravedad de quien reparte reinos—, no tardarás en verte gobernador de alguna ínsula que yo, en el discurso de mis hazañas, habré de conquistar para dártela.</p>
+        <p>Sancho, aunque no del todo persuadido por las ideas de su nuevo amo, aceptó la propuesta, movido tanto por la curiosidad como por la tentadora promesa de mejorar su suerte y la de los suyos.</p>
+        <p>Una tarde, andando ambos por el campo, descubrió Don Quijote treinta o cuarenta molinos de viento que había en aquel campo, y así como los vio, dijo a su escudero:</p>
+        <p>—La fortuna va guiando nuestras cosas mejor de lo que acertáramos a desear; porque ves allí, amigo Sancho Panza, donde se descubren treinta, o pocos más, desaforados gigantes, con quien pienso hacer batalla.</p>
+        <p>—¿Qué gigantes? —dijo Sancho Panza. —Aquellos que allí ves —respondió su amo— de los brazos largos, que los suelen tener algunos de casi dos leguas.</p>
+        <p>—Mire vuestra merced —respondió Sancho— que aquellos que allí se parecen no son gigantes, sino molinos de viento, y lo que en ellos parecen brazos son las aspas.</p>
+        <p>Pero, sin atender a las voces de su escudero, Don Quijote arremetió con Rocinante contra el primer molino que topó, y en aquel punto, comenzando a moverse las aspas por el viento, dieron con él y con el rocín en tierra, bien maltrechos ambos.</p>
+        <p>—Aquel sabio Frestón que me robó el aposento y los libros —murmuró Don Quijote, todavía convencido de su versión— ha vuelto estos gigantes en molinos, por quitarme la gloria de su vencimiento. Sancho, resignado ya, solo suspiró y lo ayudó a incorporarse.</p>
+        <p>Los dos compañeros vivieron todavía muchas otras aventuras tan disparatadas como memorables: dieron libertad, sin quererlo, a una cuerda de galeotes que terminaron por apedrearlos a ellos mismos; confundieron la sencilla bacía de un barbero con el legendario yelmo encantado de Mambrino; y se vieron envueltos en toda suerte de trances cómicos por los caminos de España.</p>
+        <p>Con el paso de los años y de las aventuras, Don Quijote regresó por fin a su aldea, ya considerablemente entrado en años y rendido de tantas fatigas. Poco después de su regreso cayó gravemente enfermo, y en su lecho de muerte, para asombro y alivio de cuantos lo rodeaban, recobró de pronto el juicio que tanto tiempo había tenido perdido.</p>
+        <p>—Ya no soy don Quijote de la Mancha —confesó con voz serena, sin rastro alguno de la locura de antaño—, sino Alonso Quijano, a quien mis costumbres me dieron renombre de bueno.</p>
+        <p><em>Rodeado del cariño sincero de su familia y de sus amigos más cercanos, entre ellos el fiel Sancho, murió Alonso Quijano en completa paz, en su propio lecho, tras una vida que, por disparatada que hubiese parecido en ciertos trances, había estado colmada de un significado tan hondo como genuino.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el hidalgo</span> — the nobleman (lesser Spanish nobility)</div>
+      <div><span class="term">el caballero andante</span> — the knight-errant</div>
+      <div><span class="term">el escudero</span> — the squire</div>
+      <div><span class="term">el molino de viento</span> — the windmill</div>
+      <div><span class="term">la lanza</span> — the lance</div>
+      <div><span class="term">el yelmo</span> — the helmet</div>
+      <div><span class="term">mohoso/a</span> — rusty</div>
+      <div><span class="term">la locura / la cordura</span> — madness / sanity</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>un hidalgo que leía demasiados libros de caballería</span>
+      <span>armarse caballero</span>
+      <span>su fiel escudero Sancho Panza</span>
+      <span>aquellos no son gigantes, sino molinos</span>
+      <span>su amada Dulcinea del Toboso</span>
+      <span>el yelmo de Mambrino</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué decide Alonso Quijano convertirse en caballero andante, y qué nombre se pone a sí mismo?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué ve Don Quijote cuando mira los molinos de viento, y qué nos dice eso sobre su forma de ver el mundo?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Don Quijote de la Mancha</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — décimo séptimo título bajo la filosofía de narrativa completa.</p>
+
+    <h4>Unidad curricular</h4>
+    <p>La obra cumbre de la literatura española — la imaginación frente a la realidad, el idealismo, la amistad entre amo y escudero, el humor como vehículo de una historia profundamente humana.</p>
+
+    <h4>Nivel original</h4>
+    <p>El texto fuente de Cervantes (1605/1615) es una de las novelas más extensas y complejas de la literatura universal, escrita en español del Siglo de Oro. Esta es una VERSIÓN ABREVIADA/CONDENSADA que conserva los episodios más icónicos en una extensión manejable y en español moderno. A1 recibe una simplificación real; B2 se acerca a un registro literario moderno inspirado en Cervantes, con fragmentos de diálogo adaptados del texto original y glosario de apoyo.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar una serie de aventuras episódicas con un dúo protagonista (amo y escudero); reconocer el humor que nace del choque entre la imaginación y la realidad; describir el idealismo de un personaje y cómo afecta su percepción del mundo.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>un hidalgo que leía demasiados libros de caballería · armarse caballero · su fiel escudero Sancho Panza · aquellos no son gigantes, sino molinos · su amada Dulcinea del Toboso · el yelmo de Mambrino.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa — versión abreviada)</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; se conserva el arco completo condensado a sus escenas clave.<br>
+    <strong>A2:</strong> se añaden detalles descriptivos de La Mancha y de los personajes, y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrativo con más naturalidad.<br>
+    <strong>B2:</strong> registro literario inspirado en Cervantes, con fragmentos de diálogo cercanos al original y glosario de apoyo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>La mayoría de la violencia en la novela es cómica y sin consecuencias graves (Don Quijote se golpea contra los molinos, recibe palizas cómicas en varias aventuras) — se mantiene como convención de comedia física clásica, sin detalle gráfico. El único momento genuinamente delicado es el final de la historia: Don Quijote, ya anciano, recupera la cordura, renuncia a la caballería andante, y muere en paz, en su cama, rodeado de sus seres queridos, tras una enfermedad relacionada con la vejez. Se presenta con brevedad y ternura en todos los niveles, como el cierre natural y sereno de una vida larga, sin detalle clínico. Dulcinea del Toboso se menciona como el ideal romántico e imaginario de Don Quijote (una campesina real a la que él nunca ha visto en persona), sin ningún contenido romántico explícito.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — novela clásica de la Biblioteca FVR, sin personaje anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>la imaginación</em> — cognado natural con "imagination", el motor central de todas las aventuras (y desventuras) de Don Quijote.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Don Quijote ve gigantes donde otros ven molinos de viento. ¿Crees que ver el mundo con imaginación, aunque a veces nos equivoquemos, puede ser algo valioso?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Décimo séptimo título de la Biblioteca FVR. Versión ABREVIADA de la novela completa de Miguel de Cervantes (1605/1615), de dominio público.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
