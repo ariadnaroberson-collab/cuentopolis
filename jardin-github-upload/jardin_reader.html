@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El jardín secreto — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Novela clásica (versión abreviada)</div>
+    <h1>El jardín secreto</h1>
+    <div class="subtitle">Frances Hodgson Burnett (1911) — un jardín, una amistad, una sanación</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Mary Lennox vive en la India con sus padres. Pero sus padres se enferman y mueren.</p>
+        <p>Mary, ahora sola, viaja a Inglaterra. Va a vivir con su tío, el señor Craven, en una mansión muy grande: Misselthwaite Manor.</p>
+        <p>Mary es una niña triste y de mal humor. No tiene amigos.</p>
+        <p>En la mansión, Mary escucha un secreto: hay un jardín cerrado con llave. Nadie puede entrar. El tío Craven cerró el jardín hace muchos años, cuando su esposa murió allí, en un accidente.</p>
+        <p>Un día, un petirrojo (un pájaro) ayuda a Mary a encontrar la llave del jardín, escondida en la tierra.</p>
+        <p>Mary encuentra la puerta secreta, y entra al jardín. ¡Está lleno de plantas, pero todo está seco y abandonado!</p>
+        <p>Mary decide cuidar el jardín en secreto. Cada día, planta flores y quita las malas hierbas.</p>
+        <p>Mary conoce a Dickon, un niño del campo que sabe mucho de plantas y animales. Dickon la ayuda con el jardín.</p>
+        <p>Una noche, Mary escucha un llanto en la mansión. Descubre un secreto más grande: su primo Colin.</p>
+        <p>Colin vive en una habitación, siempre en la cama. Cree que está muy enfermo, y que nunca va a poder caminar. Tiene mucho miedo.</p>
+        <p>Mary le habla a Colin del jardín secreto. Colin quiere verlo también.</p>
+        <p>Con la ayuda de Mary y Dickon, llevan a Colin al jardín en una silla de ruedas.</p>
+        <p>En el jardín, Colin respira aire fresco por primera vez. Poco a poco, con ejercicio y con la ayuda de sus amigos, Colin empieza a pararse, y después, a caminar.</p>
+        <p>Colin no estaba tan enfermo como creía. Tenía miedo, y estaba muy solo. El jardín, y la amistad, lo ayudan a sanar.</p>
+        <p>El tío Craven regresa a la mansión, muy triste todavía por su esposa. Pero ve a Colin caminando, feliz, en el jardín.</p>
+        <p>El tío Craven, muy emocionado, abraza a su hijo. Por fin, la familia encuentra la felicidad otra vez.</p>
+        <p>Esta historia nos enseña algo importante: la naturaleza y la amistad tienen el poder de sanar el corazón.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Mary Lennox vivía en la India junto a sus padres, aunque apenas los conocía de verdad. Un día, una terrible enfermedad se extendió por la región, y sus padres murieron, dejándola completamente sola en el mundo.</p>
+        <p>Mary viajó entonces a Inglaterra, a vivir con un tío que nunca había conocido: el señor Craven, dueño de una mansión enorme y misteriosa llamada Misselthwaite Manor.</p>
+        <p>Mary era una niña de carácter difícil, triste y malhumorada, acostumbrada a que los demás le dieran todo sin que ella tuviera que pedir nada con cariño. En su nuevo hogar, no tenía ni un solo amigo.</p>
+        <p>Poco después de llegar, Mary escuchó un secreto fascinante: en algún lugar de los jardines de la mansión había un jardín cerrado con llave desde hacía diez años, al que nadie tenía permitido entrar. Su tío lo había mandado cerrar tras la muerte repentina de su esposa, ocurrida allí mismo, en un trágico accidente.</p>
+        <p>Un día, mientras exploraba los jardines, un pequeño petirrojo llamó la atención de Mary hacia un punto exacto de la tierra, donde ella encontró, para su sorpresa, la llave perdida del jardín secreto.</p>
+        <p>Mary encontró también la puerta oculta entre la hiedra, y al entrar, descubrió un jardín completamente abandonado: plantas secas, malas hierbas por todas partes, pero también un aire de magia silenciosa que la cautivó de inmediato.</p>
+        <p>Decidida a mantenerlo en secreto, Mary comenzó a cuidar el jardín ella sola, día tras día, arrancando hierbas y plantando nuevas semillas con una dedicación que jamás había sentido por nada.</p>
+        <p>Pronto conoció a Dickon, un niño del campo con un don especial para comunicarse con plantas y animales, que se convirtió en su fiel compañero de aventuras dentro del jardín.</p>
+        <p>Una noche, un llanto misterioso resonó por los pasillos de la mansión. Siguiendo el sonido, Mary descubrió un secreto todavía más profundo: su primo Colin, a quien nadie le había mencionado nunca.</p>
+        <p>Colin vivía encerrado en su habitación, convencido de que estaba gravemente enfermo y de que jamás podría caminar. Vivía dominado por el miedo, y profundamente solo, sin nadie que realmente lo comprendiera.</p>
+        <p>Mary le habló con entusiasmo del jardín secreto, y Colin, fascinado, expresó un deseo ardiente de conocerlo también.</p>
+        <p>Con la ayuda de Mary y Dickon, llevaron a Colin al jardín en una silla de ruedas, desafiando las órdenes de que nunca saliera de su cuarto.</p>
+        <p>Allí, respirando aire fresco por primera vez en años, algo comenzó a cambiar en Colin. Poco a poco, animado por sus amigos, comenzó a hacer ejercicio, a ponerse de pie, y finalmente, a dar sus primeros pasos.</p>
+        <p>Resultó que Colin nunca había estado tan enfermo como todos creían: su verdadero mal había sido el miedo y la soledad extrema en la que había vivido. El contacto con la naturaleza y la amistad verdadera fueron, al final, su mejor medicina.</p>
+        <p>Cuando el señor Craven regresó a la mansión, todavía consumido por la tristeza de haber perdido a su esposa, se encontró con una escena que jamás esperó: su hijo Colin, corriendo feliz por el jardín secreto, completamente sano.</p>
+        <p>Profundamente conmovido, el señor Craven abrazó a su hijo con lágrimas en los ojos, y por fin, después de tantos años de dolor, la familia volvió a encontrar la felicidad.</p>
+        <p>Y así, esta hermosa historia nos deja una lección memorable: la naturaleza y la amistad verdadera tienen el poder de sanar hasta las heridas más profundas del corazón.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Mary Lennox vivía en la India junto a sus padres, aunque en realidad apenas los conocía, ya que había crecido más al cuidado de sirvientes que de su propia familia. Un día, una epidemia terrible se extendió por la región, y sus padres murieron, dejándola completamente sola en el mundo, sin nadie que se ocupara de ella.</p>
+        <p>Mary viajó entonces a Inglaterra, para vivir con un tío al que nunca había conocido: el señor Craven, dueño de una mansión enorme y llena de misterios llamada Misselthwaite Manor, situada en los páramos solitarios de Yorkshire.</p>
+        <p>Mary había crecido siendo una niña de carácter sumamente difícil, triste y malhumorada, acostumbrada a que los demás le dieran todo sin necesidad de pedir nada con amabilidad. En su nuevo hogar, aislado y silencioso, no tenía absolutamente ningún amigo.</p>
+        <p>Poco después de instalarse, Mary escuchó hablar de un secreto que despertó de inmediato su curiosidad: en algún rincón de los extensos jardines de la mansión había un jardín cerrado con llave desde hacía diez largos años, al que a nadie se le permitía entrar bajo ninguna circunstancia. Su tío lo había mandado sellar tras la muerte repentina de su esposa, ocurrida precisamente en aquel lugar, en un trágico accidente que lo había dejado destrozado.</p>
+        <p>Cierto día, mientras exploraba distraídamente los jardines, un pequeño petirrojo llamó su atención hacia un punto exacto de la tierra removida, donde Mary encontró, para su enorme sorpresa, la llave perdida del misterioso jardín secreto.</p>
+        <p>Buscando entre la espesa hiedra que cubría los muros, Mary encontró también la puerta oculta, y al atravesarla, descubrió un jardín completamente abandonado a su suerte: plantas resecas, maleza por todas partes, pero también un aire de magia silenciosa que la cautivó desde el primer instante.</p>
+        <p>Decidida a mantener el jardín en absoluto secreto, Mary comenzó a cuidarlo ella misma, día tras día, arrancando hierbas silvestres y plantando nuevas semillas con una dedicación que jamás había sentido por nada en toda su vida.</p>
+        <p>Pronto conoció a Dickon, un niño de campo con un don especial para comunicarse con plantas y animales salvajes, que se convirtió rápidamente en su fiel compañero dentro de las aventuras del jardín.</p>
+        <p>Una noche, un llanto lejano y misterioso resonó por los interminables pasillos de la mansión. Siguiendo aquel sonido con sigilo, Mary descubrió un secreto todavía más profundo que el jardín mismo: la existencia de su primo Colin, de quien nadie le había hablado jamás.</p>
+        <p>Colin llevaba años encerrado en su propia habitación, absolutamente convencido de que padecía una enfermedad grave y de que jamás lograría caminar por sí mismo. Vivía dominado por un miedo constante, y profundamente solo, sin que nadie se hubiera atrevido nunca a contradecir sus propios temores.</p>
+        <p>Mary le habló con entusiasmo genuino sobre el jardín secreto, y Colin, fascinado por primera vez en mucho tiempo, expresó un deseo ferviente de conocerlo con sus propios ojos.</p>
+        <p>Con la ayuda decidida de Mary y Dickon, y desafiando las estrictas órdenes de que nunca saliera de su habitación, llevaron a Colin hasta el jardín en una silla de ruedas.</p>
+        <p>Allí, respirando aire fresco por primera vez en años, algo profundo comenzó a transformarse en el interior de Colin. Poco a poco, animado constantemente por sus nuevos amigos, comenzó a hacer ejercicio, a ponerse de pie con ayuda, y finalmente, para sorpresa de todos, a dar sus primeros pasos por sí mismo.</p>
+        <p>Resultó que Colin, en realidad, nunca había estado tan enfermo como todos a su alrededor habían llegado a creer: su verdadero mal había sido el miedo profundo y la soledad extrema en la que había vivido encerrado durante años. El contacto genuino con la naturaleza y la amistad verdadera resultaron ser, al final, su mejor medicina.</p>
+        <p>Cuando el señor Craven regresó por fin a la mansión, todavía consumido por la tristeza de haber perdido a su esposa años atrás, se encontró con una escena que jamás había imaginado posible: su propio hijo Colin, corriendo feliz y completamente sano por el jardín secreto que él mismo había mandado cerrar.</p>
+        <p>Profundamente conmovido hasta las lágrimas, el señor Craven abrazó a su hijo con todo su corazón, y por fin, después de tantos años consumido por el dolor, toda la familia volvió a encontrar la felicidad que tanto había perdido.</p>
+        <p>Y así, esta hermosa historia nos deja una lección memorable: la naturaleza y la amistad verdadera tienen el poder de sanar hasta las heridas más profundas y silenciosas del corazón.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Registro cercano al original</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Versión abreviada, adaptada y traducida al español a partir del texto original de Frances Hodgson Burnett, <i>The Secret Garden</i> (1911). Dominio público.</p>
+        <p>Mary Lennox había crecido en la India junto a sus padres, aunque en verdad apenas los conocía, pues había sido criada casi por completo al cuidado de sirvientes indios, ajena a cualquier muestra real de cariño familiar. Cierto día, una epidemia de <span class="gloss" data-word="cólera">cólera</span> asoló la región, y sus padres perdieron la vida, dejándola por completo sola en el mundo, sin nadie que se hiciera cargo de ella.</p>
+        <p>Mary viajó entonces a Inglaterra, para vivir junto a un tío al que nunca antes había conocido: el señor Craven, propietario de una mansión inmensa y cargada de misterios llamada Misselthwaite Manor, situada en los solitarios páramos de Yorkshire.</p>
+        <p>Mary se había convertido, con los años, en una niña de carácter sumamente agrio, triste y desagradable, habituada a que los demás le concedieran todo sin necesidad de pedir nada con amabilidad. En su nuevo hogar, aislado y silencioso, no contaba con un solo amigo.</p>
+        <p>Poco después de instalarse, Mary tuvo noticia de un secreto que despertó de inmediato su curiosidad: en algún rincón de los extensos jardines de la propiedad existía un jardín cerrado con llave desde hacía ya diez años, al que nadie tenía permitido acceder bajo ninguna circunstancia. Su tío había ordenado sellarlo tras la muerte repentina de su esposa, ocurrida precisamente en aquel lugar, en un trágico accidente que lo había dejado sumido en el luto más profundo.</p>
+        <p>Cierto día, mientras exploraba distraídamente los jardines, un pequeño <span class="gloss" data-word="petirrojo">petirrojo</span> atrajo su atención hacia un punto exacto de la tierra recién removida, donde Mary encontró, para su enorme sorpresa, la llave largamente perdida del misterioso jardín secreto.</p>
+        <p>Escarbando entre la espesa hiedra que cubría los muros, dio también con la puerta oculta, y al atravesarla, descubrió un jardín completamente abandonado a su suerte: plantas resecas, maleza por doquier, pero también un aire de magia silenciosa que la cautivó desde el primer instante.</p>
+        <p>Decidida a mantener el jardín en el más absoluto secreto, Mary comenzó a cuidarlo con sus propias manos, día tras día, arrancando hierbas silvestres y sembrando nuevas semillas con una dedicación que jamás había sentido por nada en toda su vida.</p>
+        <p>Pronto conoció a Dickon, un muchacho de campo dotado de un don particular para comunicarse con plantas y animales salvajes, que se convirtió rápidamente en su fiel compañero en las aventuras del jardín.</p>
+        <p>Una noche, un llanto lejano y misterioso resonó por los interminables corredores de la mansión. Siguiendo aquel sonido con sigilo, Mary descubrió un secreto todavía más profundo que el jardín mismo: la existencia de su primo Colin, de quien nadie jamás le había hablado.</p>
+        <p>Colin llevaba años recluido en su propia habitación, absolutamente convencido de padecer una enfermedad grave y de no poder jamás caminar por sus propios medios. Vivía dominado por un temor constante, y profundamente solo, sin que nadie se hubiese atrevido nunca a contradecir sus propios miedos.</p>
+        <p>Mary le habló con auténtico entusiasmo sobre el jardín secreto, y Colin, fascinado por primera vez en mucho tiempo, manifestó un deseo ferviente de conocerlo con sus propios ojos.</p>
+        <p>Con la ayuda decidida de Mary y Dickon, y desafiando las estrictas órdenes de que jamás abandonara su cuarto, lograron llevar a Colin hasta el jardín en una silla de ruedas.</p>
+        <p>Allí, respirando aire fresco por primera vez en años, algo profundo comenzó a transformarse en su interior. Poco a poco, animado constantemente por sus nuevos amigos, comenzó a ejercitarse, a sostenerse de pie con ayuda, y finalmente, ante el asombro de todos, a dar sus primeros pasos por sí mismo.</p>
+        <p>Resultó que Colin, en realidad, jamás había estado tan gravemente enfermo como todos a su alrededor habían llegado a creer: su verdadero mal había sido el miedo profundo y la soledad extrema en que había vivido recluido durante años. El contacto genuino con la naturaleza y la amistad sincera resultaron ser, al final, su mejor remedio.</p>
+        <p><em>Cuando el señor Craven regresó por fin a la mansión, todavía consumido por el duelo de su esposa perdida años atrás, se encontró con una escena que jamás habría imaginado posible: su propio hijo Colin, corriendo feliz y completamente sano por el jardín secreto que él mismo había mandado sellar. Profundamente conmovido hasta las lágrimas, abrazó a su hijo con todo su corazón, y así, después de tantos años consumidos por el dolor, toda la familia recuperó al fin la felicidad que tanto tiempo había estado ausente.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">Misselthwaite Manor</span> — the manor house (setting)</div>
+      <div><span class="term">el jardín secreto</span> — the secret garden</div>
+      <div><span class="term">el petirrojo</span> — the robin (bird)</div>
+      <div><span class="term">la hiedra</span> — the ivy</div>
+      <div><span class="term">la silla de ruedas</span> — the wheelchair</div>
+      <div><span class="term">el páramo</span> — the moor</div>
+      <div><span class="term">sanar</span> — to heal</div>
+      <div><span class="term">el cólera</span> — cholera</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>el jardín secreto</span>
+      <span>la llave escondida</span>
+      <span>Misselthwaite Manor</span>
+      <span>Mary, muy sola y muy triste</span>
+      <span>Colin cree que va a morir</span>
+      <span>la magia del jardín</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cómo cambia Mary desde el principio de la historia hasta el final?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué papel juega el jardín secreto en la recuperación de Colin?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El jardín secreto</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — décimo tercer título bajo la filosofía de narrativa completa.</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Literatura infantil clásica británica — el poder sanador de la naturaleza y la amistad, superar el duelo y el aislamiento, el crecimiento personal, los secretos como símbolo de transformación.</p>
+
+    <h4>Nivel original</h4>
+    <p>El texto fuente de Burnett (1911) es una novela completa y extensa. Esta es una VERSIÓN ABREVIADA/CONDENSADA que conserva el arco argumental completo en una extensión manejable. A1 recibe una simplificación real; B2 se acerca al registro de una traducción clásica al español, con vocabulario de apoyo.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar la transformación de un personaje a través del contacto con la naturaleza y la amistad; describir un lugar secreto y su significado simbólico; expresar causa y efecto entre el aislamiento/soledad y la sanación a través de la conexión con otros.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>el jardín secreto · la llave escondida · Misselthwaite Manor · Mary, muy sola y muy triste · Colin cree que va a morir · la magia del jardín.</p>
+
+    <h4>Pacing CEFR (filosofía de narrativa completa — versión abreviada)</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; se conserva el arco completo condensado a sus escenas clave.<br>
+    <strong>A2:</strong> se añaden detalles descriptivos de Yorkshire y del jardín, y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrativo con más naturalidad.<br>
+    <strong>B2:</strong> registro cercano a una traducción clásica en español, con vocabulario de apoyo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Al inicio de la historia, se menciona que los padres de Mary mueren de cólera en la India — se presenta de forma breve y factual, sin detalle gráfico, similar en peso narrativo a otras historias clásicas que comienzan con la orfandad del protagonista (ej. Colmillo Blanco, Peter Pan). También se menciona que la madre de Colin murió en un accidente en el jardín años atrás, con la misma brevedad. Colin, un niño que ha vivido convencido de que va a morir joven y de que no puede caminar, en realidad no tiene ninguna enfermedad grave: su condición es principalmente producto del miedo y el aislamiento, y se cura casi por completo gracias al ejercicio, el aire libre, y la amistad. No hay contenido sensible adicional significativo.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — novela clásica de la Biblioteca FVR, sin personaje anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>la transformación</em> — cognado natural con "transformation", usado para describir el cambio profundo que experimentan tanto Mary como Colin a lo largo de la historia.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>El jardín secreto ayuda a Mary y a Colin a sanar, tanto por fuera como por dentro. ¿Hay algún lugar (un parque, un jardín, la naturaleza) que te haga sentir mejor cuando estás triste?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Décimo tercer título de la Biblioteca FVR. Versión ABREVIADA de la novela completa de Frances Hodgson Burnett (1911), de dominio público en Estados Unidos. Añadido a solicitud de la maestra junto con El camarón encantado y Bebé y el señor Don Pomposo.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
