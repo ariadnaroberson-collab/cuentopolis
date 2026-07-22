@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Cuadrilla — Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --navy: #26344d; --gold: #c9a24b; --gold-soft: #8a734a; --lamp: #e7b96b;
+    --green: #4c7a5e; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 60px; }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 22px; }
+  header { margin-bottom: 26px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.3rem; }
+  .subtitle { color: var(--parchment-dim); font-size: 0.95rem; margin-top: 8px; font-style: italic; }
+  .group-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-soft); margin: 26px 0 10px; }
+  .list { display: flex; flex-direction: column; gap: 10px; }
+  .ep { display: flex; align-items: center; gap: 18px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; text-decoration: none; color: var(--parchment); transition: border-color 0.15s ease; }
+  .ep.active:hover { border-color: var(--gold); }
+  .ep.soon { opacity: 0.5; border-style: dashed; cursor: default; }
+  .ep-num { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold-soft); min-width: 78px; }
+  .ep-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.05rem; flex: 1; }
+  .ep-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--lamp); white-space: nowrap; }
+  .ep.soon .ep-tag { color: var(--parchment-dim); }
+  .hero-banner {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 26px;
+    min-height: 280px;
+    display: flex;
+    align-items: flex-end;
+    background:
+      linear-gradient(0deg, rgba(23,21,18,0.97) 10%, rgba(23,21,18,0.35) 60%, rgba(23,21,18,0.1) 100%),
+      url('faces/la-cuadrilla.jpg');
+    background-size: cover;
+    background-position: center 30%;
+    padding: 28px 30px;
+  }
+  .hero-banner .eyebrow, .hero-banner h1, .hero-banner .subtitle { position: relative; z-index: 2; }
+  .hero-banner h1 { margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="series-curriculares.html">← Series curriculares</a>
+  <div class="hero-banner">
+    <div>
+      <p class="eyebrow">Secondary · SPANISH_LV_9 / LV_10</p>
+      <h1>La Cuadrilla</h1>
+      <p class="subtitle">Café Formosa, San Antonio — Vale, Emiliano, Fernanda, Ximena, Andrés, Renata y Joaquín.</p>
+    </div>
+  </div>
+
+  <p class="group-label">Secundaria 1 — completo</p>
+  <div class="list">
+    <a class="ep active" href="la_cuadrilla_episodio1_reader_El_primer_dia.html">
+      <span class="ep-num">Episodio 1</span><span class="ep-title">El primer día</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_episodio2_reader_Un_dia_cualquiera.html">
+      <span class="ep-num">Episodio 2</span><span class="ep-title">Un día cualquiera</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_episodio3_reader_El_nuevo_estudiante.html">
+      <span class="ep-num">Episodio 3</span><span class="ep-title">El nuevo estudiante</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_episodio4_reader_Mi_familia_y_mis_amigos.html">
+      <span class="ep-num">Episodio 4</span><span class="ep-title">Mi familia y mis amigos</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_episodio5_reader_Dias_especiales.html">
+      <span class="ep-num">Episodio 5</span><span class="ep-title">Días especiales</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_episodio6_reader_Mi_casa.html">
+      <span class="ep-num">Episodio 6</span><span class="ep-title">Mi casa</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_episodio7_reader_Un_deporte_para_cada_estacion_-_Copy.html">
+      <span class="ep-num">Episodio 7</span><span class="ep-title">Un deporte para cada estación</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_episodio8_reader_Planes_en_comun_-_Copy.html">
+      <span class="ep-num">Episodio 8</span><span class="ep-title">Planes en común</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_episodio9_reader_De_compras_en_el_puesto.html">
+      <span class="ep-num">Episodio 9</span><span class="ep-title">De compras en el puesto</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_episodio10_reader_Escuela_sin_Paredes_-_Copy.html">
+      <span class="ep-num">Episodio 10</span><span class="ep-title">Escuela sin Paredes (final de temporada)</span><span class="ep-tag">Abrir →</span>
+    </a>
+  </div>
+
+  <p class="group-label">Secundaria 2 — completo (final de serie)</p>
+  <div class="list">
+    <a class="ep active" href="la_cuadrilla_S2_episodio1_reader_De_vuelta_a_clases.html">
+      <span class="ep-num">Episodio 1</span><span class="ep-title">De vuelta a clases</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_S2_episodio2_reader_Cuidarnos_un_poco_mas.html">
+      <span class="ep-num">Episodio 2</span><span class="ep-title">Cuidarnos un poco más</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_S2_episodio3_reader_Buscando_el_camino.html">
+      <span class="ep-num">Episodio 3</span><span class="ep-title">Buscando el camino</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_S2_episodio4_reader_Animales_asombrosos.html">
+      <span class="ep-num">Episodio 4</span><span class="ep-title">Animales asombrosos</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_S2_episodio5_reader_Un_visitante_de_Colombia.html">
+      <span class="ep-num">Episodio 5</span><span class="ep-title">Un visitante de Colombia</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_S2_episodio6_reader_La_vida_en_casa.html">
+      <span class="ep-num">Episodio 6</span><span class="ep-title">La vida en casa</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_S2_episodio7_reader_Que_hay_de_nuevo.html">
+      <span class="ep-num">Episodio 7</span><span class="ep-title">¿Qué hay de nuevo?</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_S2_episodio8_reader_Planeando_el_viaje_a_Tikal.html">
+      <span class="ep-num">Episodio 8</span><span class="ep-title">Planeando el viaje a Tikal</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_S2_episodio9_reader_Nos_preocupa.html">
+      <span class="ep-num">Episodio 9</span><span class="ep-title">Nos preocupa</span><span class="ep-tag">Abrir →</span>
+    </a>
+    <a class="ep active" href="la_cuadrilla_S2_episodio10_reader_Diplomaticos_por_un_dia.html" style="border-color: var(--gold-soft);">
+      <span class="ep-num">Episodio 10</span><span class="ep-title">Diplomáticos por un día (final de serie)</span><span class="ep-tag">Abrir →</span>
+    </a>
+  </div>
+</div>
+</body>
+</html>

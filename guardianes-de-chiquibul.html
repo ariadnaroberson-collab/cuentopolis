@@ -27,16 +27,35 @@
   .ep-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.05rem; flex: 1; }
   .ep-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--lamp); white-space: nowrap; }
   .ep.soon .ep-tag { color: var(--parchment-dim); }
+  .hero-banner {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    min-height: 280px;
+    display: flex;
+    align-items: flex-end;
+    background:
+      linear-gradient(0deg, rgba(23,21,18,0.97) 10%, rgba(23,21,18,0.35) 60%, rgba(23,21,18,0.1) 100%),
+      url('faces/guardianes-de-chiquibul.jpg');
+    background-size: cover;
+    background-position: center 30%;
+    padding: 28px 30px;
+  }
+  .hero-banner .eyebrow, .hero-banner h1, .hero-banner .subtitle { position: relative; z-index: 2; }
+  .hero-banner h1 { margin-top: 4px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <a class="back" href="series-curriculares.html">← Series curriculares</a>
-  <header>
-    <p class="eyebrow">Chica y sus Amigos · Temporada 1</p>
-    <h1>Los Guardianes de Chiquibul</h1>
-    <p class="subtitle">15 episodios — el misterio de la Gran Ceiba, un visitante de un país distinto cada capítulo.</p>
-  </header>
+  <div class="hero-banner">
+    <div>
+      <p class="eyebrow">Chica y sus Amigos · Temporada 1</p>
+      <h1>Los Guardianes de Chiquibul</h1>
+      <p class="subtitle">15 episodios — el misterio de la Gran Ceiba, un visitante de un país distinto cada capítulo.</p>
+    </div>
+  </div>
   <div class="list">
     <a class="ep active" href="chica_episodio1_reader_chica_y_sus_amigos.html">
       <span class="ep-num">Episodio 1</span>
