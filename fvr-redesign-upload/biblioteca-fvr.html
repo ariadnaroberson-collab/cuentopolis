@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca FVR — Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#171512;
+    --bg-panel:#1f1c18;
+    --parchment:#f3ecd9;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e7b96b;
+    --green:#3f6b4a;
+    --rust:#a3492e;
+    --line:#3a352c;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg-deep);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+  }
+  a{color:inherit;}
+  header.top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 40px;
+  }
+  .back{
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    color:var(--gold);
+    text-decoration:none;
+  }
+  .logo{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+  }
+  .hero{
+    position:relative;
+    height:72vh;
+    min-height:460px;
+    background:
+      linear-gradient(90deg, rgba(23,21,18,0.97) 12%, rgba(23,21,18,0.6) 50%, rgba(23,21,18,0.08) 100%),
+      linear-gradient(0deg, rgba(23,21,18,1) 0%, rgba(23,21,18,0) 32%),
+      url('covers/farolero_reader.jpg');
+    background-size: auto, auto, cover;
+    background-position: center, center, 60% 35%;
+    display:flex;
+    align-items:flex-end;
+    padding:0 40px 60px;
+  }
+  .hero-content{max-width:560px; position:relative; z-index:2;}
+  .hero-eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+    margin-bottom:12px;
+  }
+  .hero-title{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:2.9rem;
+    line-height:1.08;
+    margin:0 0 16px;
+  }
+  .hero-desc{
+    color:var(--parchment-dim);
+    font-size:1.02rem;
+    line-height:1.6;
+    margin-bottom:26px;
+    max-width:480px;
+  }
+  .hero-actions{display:flex; gap:14px;}
+  .btn-primary{
+    background:var(--gold-soft);
+    color:#171512;
+    border:none;
+    font-family:'Public Sans', sans-serif;
+    font-weight:700;
+    font-size:0.98rem;
+    padding:13px 28px;
+    border-radius:8px;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .btn-secondary{
+    background:rgba(243,236,217,0.1);
+    color:var(--parchment);
+    border:1px solid rgba(243,236,217,0.28);
+    font-family:'Public Sans', sans-serif;
+    font-weight:600;
+    font-size:0.98rem;
+    padding:13px 24px;
+    border-radius:8px;
+    cursor:pointer;
+    text-decoration:none;
+  }
+  main{padding:6px 0 60px;}
+  .row{margin:34px 0;}
+  .row-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    padding:0 40px;
+    margin-bottom:12px;
+  }
+  .row-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.3rem;
+  }
+  .row-sub{
+    font-family:'Space Mono', monospace;
+    font-size:0.72rem;
+    color:var(--gold-soft);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .row-scroll{
+    display:flex;
+    gap:14px;
+    overflow-x:auto;
+    padding:6px 40px 18px;
+    scrollbar-width:thin;
+  }
+  .card{
+    flex:0 0 auto;
+    width:168px;
+    border-radius:10px;
+    overflow:hidden;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    text-decoration:none;
+    display:block;
+    transition:transform .18s ease, border-color .18s ease;
+    position:relative;
+  }
+  .card:hover{ transform:translateY(-5px) scale(1.03); border-color:var(--gold);}
+  .card img{width:100%; height:252px; object-fit:cover; display:block;}
+  .card-placeholder{
+    width:100%; height:252px;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    padding:14px;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:0.98rem;
+    line-height:1.28;
+  }
+  .card-caption{
+    position:absolute;
+    bottom:0; left:0; right:0;
+    padding:9px 9px 7px;
+    background:linear-gradient(0deg, rgba(23,21,18,0.95), rgba(23,21,18,0));
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:0.85rem;
+    line-height:1.2;
+  }
+  .badge-row{position:absolute; top:7px; left:7px; right:7px; display:flex; gap:5px; flex-wrap:wrap;}
+  .badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.58rem;
+    padding:2px 7px;
+    border-radius:20px;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    background:rgba(23,21,18,0.8);
+  }
+  .badge.genre{color:var(--gold-soft); border:1px solid var(--gold-soft);}
+  .badge.age{color:#f0c4b4; border:1px solid var(--rust); background:rgba(163,73,46,0.65);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="back" href="index.html">← Cuentópolis</a>
+  <div class="logo">Biblioteca FVR</div>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Historia original · Biblioteca FVR</div>
+    <h1 class="hero-title">El farolero y la niña de las estrellas</h1>
+    <p class="hero-desc">Un farolero solitario, una niña que dice venir de una estrella muy pequeña, y una pregunta que cambia todo: ¿qué hace que algo — o alguien — sea especial? A2–B1.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="farolero_reader.html">▶ Leer ahora</a>
+      <a class="btn-secondary" href="#novelas">Explorar la biblioteca</a>
+    </div>
+  </div>
+</section>
+
+<main>
+
+  <div class="row" id="novelas">
+    <div class="row-head">
+      <div class="row-title">Novelas clásicas</div>
+      <div class="row-sub">Versión abreviada</div>
+    </div>
+    <div class="row-scroll">
+      <a class="card" href="sombrero_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#4a2a26,#171512);">El sombrero de tres picos</div>
+        <div class="badge-row"><span class="badge age">⚠ Secundaria</span></div>
+      </a>
+      <a class="card" href="peterpan_reader.html">
+        <img src="covers/peterpan_reader.jpg" alt="Peter Pan" style="object-position:40% 40%;">
+        <div class="card-caption">Peter Pan</div>
+      </a>
+      <a class="card" href="colmillo_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#26344D,#171512);">Colmillo Blanco</div>
+      </a>
+      <a class="card" href="alicia_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#3a2a4d,#171512);">Alicia en el país de las maravillas</div>
+      </a>
+      <a class="card" href="oz_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#5c4a1f,#171512);">El mago de Oz</div>
+      </a>
+      <a class="card" href="jardin_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#2f4a2e,#171512);">El jardín secreto</div>
+      </a>
+      <a class="card" href="mujercitas_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#4d2a3a,#171512);">Mujercitas</div>
+        <div class="badge-row"><span class="badge age">⚠ Middle+</span></div>
+      </a>
+      <a class="card" href="pinocho_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#5c3f27,#171512);">Pinocho</div>
+      </a>
+      <a class="card" href="quijote_reader.html">
+        <img src="covers/quijote_reader.jpg" alt="Don Quijote de la Mancha" style="object-position:50% 45%;">
+        <div class="card-caption">Don Quijote de la Mancha</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="row-head">
+      <div class="row-title">Mitos y cuentos clásicos</div>
+      <div class="row-sub">8 historias</div>
+    </div>
+    <div class="row-scroll">
+      <a class="card" href="menique_reader.html">
+        <img src="covers/menique_reader.jpg" alt="Meñique" style="object-position:70% 60%;">
+        <div class="card-caption">Meñique</div>
+      </a>
+      <a class="card" href="camaron_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#26344D,#171512);">El camarón encantado</div>
+      </a>
+      <a class="card" href="bebe_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#5c3f27,#171512);">Bebé y el señor Don Pomposo</div>
+      </a>
+      <a class="card" href="los_dos_principes_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#3a2a4d,#171512);">Los dos príncipes</div>
+      </a>
+      <a class="card" href="minotauro_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#4a2a26,#171512);">El minotauro y el laberinto de Creta</div>
+      </a>
+      <a class="card" href="el_leon_y_el_raton_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#5c4a1f,#171512);">El león y el ratón</div>
+      </a>
+      <a class="card" href="elly_la_remora_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#1f4d4a,#171512);">Elly, la rémora amigable</div>
+      </a>
+      <a class="card" href="tuti_la_oruga_curiosa_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#2f4a2e,#171512);">Tuti, la oruga curiosa</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="row-head">
+      <div class="row-title">Colección Quiroga — Cuentos de la selva</div>
+      <div class="row-sub">Horacio Quiroga</div>
+    </div>
+    <div class="row-scroll">
+      <a class="card" href="cuentos_de_la_selva_reader.html?story=tortuga-gigante">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#1f4d4a,#171512);">La tortuga gigante</div>
+      </a>
+      <a class="card" href="cuentos_de_la_selva_reader.html?story=medias-flamencos">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#1f4d4a,#171512);">Las medias de los flamencos</div>
+      </a>
+      <a class="card" href="cuentos_de_la_selva_reader.html?story=loro-pelado">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#1f4d4a,#171512);">El loro pelado</div>
+      </a>
+      <a class="card" href="cuentos_de_la_selva_reader.html?story=guerra-yacares">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#1f4d4a,#171512);">La guerra de los yacarés</div>
+      </a>
+      <a class="card" href="cuentos_de_la_selva_reader.html?story=gama-ciega">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#1f4d4a,#171512);">La gama ciega</div>
+      </a>
+      <a class="card" href="cuentos_de_la_selva_reader.html?story=coaties-ninos">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#1f4d4a,#171512);">Historia de dos cachorros de coatí y de dos cachorros de hombre</div>
+      </a>
+      <a class="card" href="cuentos_de_la_selva_reader.html?story=paso-yabebiri">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#1f4d4a,#171512);">El paso del Yabebirí</div>
+      </a>
+      <a class="card" href="cuentos_de_la_selva_reader.html?story=abeja-haragana">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#1f4d4a,#171512);">La abeja haragana</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="row-head">
+      <div class="row-title">Fábulas</div>
+      <div class="row-sub">Esopo</div>
+    </div>
+    <div class="row-scroll">
+      <a class="card" href="zorra_y_uvas_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#2f4a2e,#171512);">La zorra y las uvas</div>
+      </a>
+      <a class="card" href="lobo_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#2f4a2e,#171512);">El lobo con piel de oveja</div>
+      </a>
+      <a class="card" href="raton_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#2f4a2e,#171512);">Ratón de campo y ratón de ciudad</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="row-head">
+      <div class="row-title">Poesía</div>
+      <div class="row-sub">1 título</div>
+    </div>
+    <div class="row-scroll">
+      <a class="card" href="mariposa_del_aire_reader.html">
+        <div class="card-placeholder" style="background:linear-gradient(160deg,#5c4a1f,#171512);">Mariposa del aire</div>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+</body>
+</html>
