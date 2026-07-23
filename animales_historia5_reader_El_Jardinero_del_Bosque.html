@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Jardinero del Bosque — Biografía de Animales Asombrosos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Biografía de Animales Asombrosos · Historia 5</div>
+    <h1>El Jardinero del Bosque</h1>
+    <div class="subtitle">La biografía de un tapir centroamericano (danta)</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Soy un tapir. En Centroamérica, me llaman danta. Soy el mamífero terrestre más grande de la región — puedo pesar hasta trescientos kilos.</p>
+        <p>Tengo una nariz larga y flexible, como una pequeña trompa. La uso para agarrar hojas y plantas.</p>
+        <p>Como solo plantas: hojas, ramas, frutas y corteza de árboles.</p>
+        <p>Cuando era bebé, mi piel era de color rojizo, con rayas y puntos blancos. Así, me escondía entre la luz y las sombras del bosque. Ahora, de adulto, mi piel es gris, sin rayas.</p>
+        <p>La gente me llama "el jardinero del bosque." Como muchas frutas, y después, dejo las semillas por todo el bosque. Así, nacen árboles nuevos.</p>
+        <p>Salgo de noche a buscar comida.</p>
+        <p>Mi mamá me tuvo después de trece meses de embarazo — un tiempo muy largo para un animal.</p>
+        <p>Vivo en la Selva Maya, entre Guatemala, México y Belice.</p>
+        <p>Estoy en peligro. La gente destruye mi bosque, y eso es un problema — porque sin mí, el bosque cambia.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Soy un tapir centroamericano. En muchos países de la región me llaman danta o danto. Soy el mamífero terrestre más grande de Centroamérica — puedo pesar entre ciento cincuenta y trescientos kilos.</p>
+        <p>Tengo una característica muy particular: una nariz larga y flexible, casi como una pequeña trompa, que uso para agarrar hojas y ramas mientras como.</p>
+        <p>Mi dieta es completamente herbívora: como hojas, ramas tiernas, frutas y corteza de árboles.</p>
+        <p>Cuando nací, mi piel tenía un color rojizo con rayas y puntos blancos — un patrón que me ayudaba a camuflarme entre la luz que se filtra por las hojas del bosque. Ahora que soy adulto, mi piel es de un gris uniforme, sin ningún patrón.</p>
+        <p>Me conocen como "el jardinero del bosque." Como muchas frutas, y las semillas que no digiero las voy dejando por todo el bosque mientras camino. Así, nacen árboles nuevos en lugares distintos, lejos del árbol original.</p>
+        <p>Salgo principalmente de noche a buscar comida, recorriendo largas distancias por el bosque.</p>
+        <p>Mi mamá me llevó en su vientre durante trece meses — un período de gestación muy largo, incluso más que el de muchos mamíferos grandes.</p>
+        <p>Vivo en la Selva Maya, una región que se extiende entre Guatemala, México y Belice.</p>
+        <p>Actualmente estoy en peligro de extinción. Cuando la gente destruye mi bosque, no solo me afecta a mí — afecta a todo el ecosistema, porque sin mí, muchas plantas dejarían de dispersarse.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un amanecer cualquiera en la Selva Maya, entre Guatemala, México y Belice, salí a buscar comida como hago casi todas las noches, recorriendo largas distancias entre los árboles con mi paso lento pero constante.</p>
+        <p>Soy un tapir centroamericano, conocido en la región como danta o danto, y soy el mamífero terrestre más grande de Mesoamérica — puedo llegar a pesar hasta trescientos kilos, aunque mi cuerpo, robusto y redondeado, no lo aparenta a primera vista.</p>
+        <p>Mi rasgo más distintivo es mi nariz, larga y sorprendentemente flexible, casi como una pequeña trompa, que uso constantemente para agarrar hojas y ramas mientras me alimento. Mi dieta es completamente herbívora — hojas, ramas tiernas, frutas y corteza de árboles componen casi toda mi alimentación diaria.</p>
+        <p>Cuando nací, mi apariencia era muy distinta a la actual: tenía la piel de color rojizo, cubierta de rayas y puntos blancos, un patrón que me ayudaba a camuflarme entre los juegos de luz y sombra del sotobosque. Con el tiempo, ese patrón desapareció por completo, y ahora, como adulto, mi piel es de un gris uniforme.</p>
+        <p>En la región me llaman "el jardinero del bosque," un título que me he ganado por mi papel como dispersor de semillas. Cuando como frutas, muchas semillas pasan por mi cuerpo sin digerirse completamente, y las voy dejando repartidas por el bosque mientras camino — así, nacen árboles nuevos lejos de donde crecía el árbol original.</p>
+        <p>Mi propia existencia comenzó después de un período de gestación de trece meses, uno de los más largos entre los mamíferos de mi tamaño.</p>
+        <p>Lamentablemente, mi especie enfrenta actualmente un serio peligro de extinción. Cuando los humanos destruyen el bosque donde vivo, el daño no se limita a mi población — afecta a todo el ecosistema, ya que sin mí, muchas especies de plantas perderían su principal medio de dispersión.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Al amanecer, en algún rincón de la Selva Maya —territorio compartido entre Guatemala, México y Belice—, emprendí mi recorrido nocturno habitual en busca de alimento, desplazándome entre los árboles con un paso lento pero incesante.</p>
+        <p>Soy un tapir centroamericano, conocido regionalmente como danta o danto, y ostento el título de mamífero terrestre de mayor tamaño en Mesoamérica —puedo alcanzar hasta trescientos kilogramos de peso, cifra que mi cuerpo robusto y de silueta redondeada no revela a primera vista.</p>
+        <p>Mi característica más distintiva radica en mi nariz, prolongada y notablemente flexible, que funciona casi como una pequeña trompa prensil, empleada constantemente para asir hojas y ramas durante mi alimentación. Mi dieta es enteramente herbívora: hojas, brotes tiernos, frutas y corteza arbórea constituyen la totalidad de mi sustento diario.</p>
+        <p>Al nacer, mi apariencia difería radicalmente de la actual: exhibía una coloración rojiza, surcada de rayas y motas blancas, patrón que facilitaba mi camuflaje entre los claroscuros del sotobosque. Con el paso del tiempo, dicho patrón se desvaneció por completo, y actualmente, como adulto, mi pelaje presenta una tonalidad gris uniforme.</p>
+        <p>En la región se me conoce como "el jardinero del bosque," título que he obtenido gracias a mi función como dispersor de semillas. Al consumir frutas, numerosas semillas atraviesan mi organismo sin digerirse completamente, distribuyéndose por el bosque a medida que avanzo —de este modo, surgen nuevos árboles a considerable distancia del ejemplar original.</p>
+        <p>Mi propia existencia se inició tras un período de gestación de trece meses, uno de los más prolongados entre mamíferos de dimensiones comparables.</p>
+        <p>Lamentablemente, mi especie enfrenta actualmente una situación de peligro de extinción considerable. Cuando la actividad humana degrada el bosque que habito, las consecuencias trascienden mi propia población —afectan a todo el ecosistema, dado que, sin mi labor, numerosas especies vegetales perderían su principal vehículo de dispersión.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la danta</span> — regional name for the tapir</div>
+      <div><span class="term">la trompa</span> — trunk (nose)</div>
+      <div><span class="term">herbívoro/a</span> — herbivorous (cognate)</div>
+      <div><span class="term">camuflarse</span> — to camouflage (cognate)</div>
+      <div><span class="term">el/la dispersor(a) de semillas</span> — seed disperser</div>
+      <div><span class="term">digerir</span> — to digest (cognate)</div>
+      <div><span class="term">la gestación</span> — gestation (cognate)</div>
+      <div><span class="term">el ecosistema</span> — ecosystem (cognate)</div>
+      <div><span class="term">extinguirse</span> — to become extinct</div>
+      <div><span class="term">el sotobosque</span> — undergrowth</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>me llaman...</span>
+      <span>puedo pesar hasta...</span>
+      <span>uso mi nariz para...</span>
+      <span>cuando nací...</span>
+      <span>ahora, de adulto...</span>
+      <span>me conocen como...</span>
+      <span>estoy en peligro de...</span>
+      <span>sin mí...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué le llaman "el jardinero del bosque" al tapir?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cómo cambia la apariencia del tapir entre cuando nace y cuando es adulto?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Jardinero del Bosque</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Biografía de Animales Asombrosos → Historia 5</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Ciencias naturales y biología animal — el tapir centroamericano, dispersión de semillas, camuflaje juvenil vs. adulto, conservación de la Selva Maya. Posible apoyo temático a la unidad "Amazing Animals" de La Cuadrilla.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar en primera persona una autobiografía animal; describir un cambio físico entre etapas de vida; explicar un rol ecológico; expresar preocupación por la conservación.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>me llaman... · puedo pesar hasta... · uso mi nariz para... · cuando nací... · ahora, de adulto... · me conocen como... · estoy en peligro de... · sin mí...</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, datos básicos y el cambio de apariencia.<br>
+    <strong>A2:</strong> se añaden detalles biológicos y conectores simples.<br>
+    <strong>B1:</strong> más detalle científico sobre el rol ecológico.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario científico más preciso; cierre reflexivo sobre conservación.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>La amenaza de extinción y la destrucción del hábitat se mencionan de forma factual y apropiada para concientización ambiental, sin imágenes perturbadoras. El peso, la dieta herbívora, el patrón de camuflaje de las crías (rojizo con rayas y puntos blancos, distinto al gris uniforme del adulto), el rol como dispersor de semillas ("jardinero del bosque"), y la gestación de trece meses son datos reales y documentados.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — en este libro no hay personaje visitante; cada animal narra su propia biografía sin anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>ecosistema</em> — cognado natural con "ecosystem", usado para describir el impacto del tapir en su entorno.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Conoces algún otro animal que ayude a su ecosistema de una manera importante, aunque no sea obvia a primera vista?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>La especie de esta narradora coincide con la de Doña Tapir y la Capitana Sofía de [[chica-y-sus-amigos]] — conexión temática intencional entre ambos proyectos, aunque esta narradora es un individuo distinto.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

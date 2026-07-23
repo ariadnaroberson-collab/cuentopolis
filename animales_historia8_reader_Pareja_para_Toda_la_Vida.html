@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pareja para Toda la Vida — Biografía de Animales Asombrosos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Biografía de Animales Asombrosos · Historia 8 (final)</div>
+    <h1>Pareja para Toda la Vida</h1>
+    <div class="subtitle">La biografía de una guacamaya roja</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Soy una guacamaya roja. Vivo en la selva, desde México hasta Perú y Bolivia.</p>
+        <p>Mis plumas son de colores brillantes: rojo, amarillo y azul. Soy muy grande — puedo medir casi un metro, con mi cola larga.</p>
+        <p>Elijo una pareja, y estamos juntos toda la vida. Muchas parejas de guacamayas duran décadas.</p>
+        <p>Soy muy inteligente. Puedo resolver problemas y usar herramientas simples.</p>
+        <p>A veces como frutas que no están maduras. Esas frutas tienen toxinas. Por eso, voy a un lugar especial cerca del río, donde hay arcilla. Como arcilla, y la arcilla absorbe las toxinas de mi comida.</p>
+        <p>Muchas guacamayas van juntas a comer arcilla. Ahí, hacemos mucho ruido y socializamos.</p>
+        <p>Uso mi pata izquierda para sostener la comida. Es como ser zurda.</p>
+        <p>Anido en huecos de árboles altos, como la ceiba. Pongo uno o dos huevos.</p>
+        <p>Mis crías se van del nido después de dos meses, más o menos.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Soy una guacamaya roja, un ave grande y colorida que vive en la selva, desde el sureste de México hasta Perú, Bolivia y el norte de Brasil.</p>
+        <p>Mis plumas combinan colores brillantes: rojo escarlata en la mayor parte del cuerpo, con amarillo y azul en las alas. Puedo medir casi un metro de largo, y más de la mitad de esa longitud es mi cola.</p>
+        <p>Cuando elijo una pareja, permanecemos juntos toda la vida — es común que las parejas de guacamayas duren décadas enteras.</p>
+        <p>Soy considerada una de las aves más inteligentes que existen: puedo resolver acertijos de varios pasos y usar herramientas sencillas.</p>
+        <p>Un comportamiento curioso de mi especie es visitar las "collpas" — lugares cerca de los ríos donde comemos arcilla. Muchas de las frutas y semillas que como no están completamente maduras, y contienen toxinas naturales llamadas alcaloides. La arcilla ayuda a neutralizar esas toxinas en mi cuerpo, funcionando casi como un sistema de desintoxicación natural.</p>
+        <p>Cuando visitamos la collpa, muchas guacamayas nos reunimos juntas, y ahí somos muy ruidosas — nos comunicamos, socializamos y nos acicalamos las plumas unas a otras. Curiosamente, cuando como en los árboles, hago mucho menos ruido.</p>
+        <p>Como la mayoría de las guacamayas, uso mi pata izquierda para sostener la comida mientras me sujeto con la derecha.</p>
+        <p>Anido en huecos naturales de árboles altos, especialmente en ceibas, donde pongo uno o dos huevos por temporada. Mis crías dejan el nido entre los sesenta y cinco y setenta y cinco días después de nacer.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un mediodía cualquiera, mientras volaba en pareja hacia el río, alguien se detuvo a admirar el brillo de mis plumas rojas, amarillas y azules contra el cielo despejado.</p>
+        <p>Soy una guacamaya roja, y habito la selva desde el sureste de México hasta Perú, Bolivia y el norte de Brasil. Puedo medir casi un metro de largo, más de la mitad correspondiente a mi cola larga y afilada.</p>
+        <p>Una de las características más notables de mi especie es la fidelidad de pareja: una vez que elijo compañero, permanecemos juntos durante toda la vida, y no es raro que estas uniones duren décadas completas.</p>
+        <p>También soy conocida por mi inteligencia excepcional. Los científicos han documentado que las guacamayas rojas somos capaces de resolver acertijos complejos de varios pasos y utilizar herramientas rudimentarias para conseguir alimento.</p>
+        <p>Un comportamiento particularmente curioso de mi especie ocurre cuando visitamos las "collpas" — orillas de río expuestas donde comemos arcilla en grandes bandadas. Muchas de las frutas y semillas inmaduras que consumimos contienen alcaloides tóxicos; la arcilla que ingerimos neutraliza esas toxinas en nuestro sistema digestivo, funcionando como un mecanismo natural de desintoxicación que nos permite acceder a alimentos que otros animales no podrían tolerar.</p>
+        <p>Durante estas visitas a la collpa, a diferencia de mi comportamiento silencioso al alimentarme entre los árboles, me vuelvo extremadamente ruidosa, socializando con llamadas y acicalamiento mutuo entre los miembros de la bandada.</p>
+        <p>Anido en cavidades naturales de árboles altos, sobre todo en ceibas, donde suelo poner uno o dos huevos por temporada. Mis crías permanecen en el nido entre sesenta y cinco y setenta y cinco días antes de abandonarlo, y luego pasan un tiempo adicional junto a nosotros antes de independizarse por completo.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un mediodía cualquiera, mientras sobrevolaba en pareja rumbo al río, alguien se detuvo a admirar el resplandor de mis plumas rojas, amarillas y azules recortadas contra un cielo despejado.</p>
+        <p>Soy una guacamaya roja, y habito la selva desde el sureste de México hasta Perú, Bolivia y el extremo norte de Brasil. Puedo alcanzar casi un metro de longitud total, correspondiendo más de la mitad a mi cola prolongada y afilada.</p>
+        <p>Una de las características más notables de mi especie radica en la fidelidad conyugal: una vez seleccionado el compañero, la unión perdura durante toda la vida, prolongándose frecuentemente durante décadas enteras.</p>
+        <p>Asimismo, se me reconoce por una inteligencia excepcional. La comunidad científica ha documentado nuestra capacidad para resolver acertijos de múltiples pasos y emplear herramientas rudimentarias en la obtención de alimento.</p>
+        <p>Un comportamiento particularmente singular de mi especie se manifiesta durante las visitas a las "collpas" —riberas expuestas donde consumimos arcilla en grandes bandadas. Numerosas frutas y semillas inmaduras que integran nuestra dieta contienen alcaloides tóxicos; la arcilla ingerida neutraliza dichas toxinas en nuestro sistema digestivo, funcionando como un mecanismo natural de desintoxicación que nos permite acceder a fuentes alimenticias inaccesibles para especies menos equipadas fisiológicamente.</p>
+        <p>Durante estas visitas a la collpa, contrariamente a mi comportamiento silencioso al alimentarme entre el follaje, me torno considerablemente ruidosa, socializando mediante vocalizaciones y acicalamiento recíproco con el resto de la bandada.</p>
+        <p>Anido en cavidades naturales de árboles de gran altura, particularmente ceibas, donde deposito habitualmente uno o dos huevos por temporada reproductiva. Mis crías permanecen en el nido entre sesenta y cinco y setenta y cinco días antes de abandonarlo, prolongando posteriormente su dependencia parental antes de alcanzar la independencia completa.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la pluma</span> — feather</div>
+      <div><span class="term">la pareja (de por vida)</span> — lifelong mate</div>
+      <div><span class="term">inteligente</span> — intelligent (cognate)</div>
+      <div><span class="term">la collpa</span> — riverbank clay lick</div>
+      <div><span class="term">la toxina</span> — toxin (cognate)</div>
+      <div><span class="term">neutralizar</span> — to neutralize (cognate)</div>
+      <div><span class="term">acicalar(se)</span> — to preen</div>
+      <div><span class="term">anidar</span> — to nest</div>
+      <div><span class="term">la cavidad</span> — cavity (cognate)</div>
+      <div><span class="term">independizarse</span> — to become independent</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>elijo una pareja</span>
+      <span>toda la vida</span>
+      <span>soy considerada...</span>
+      <span>cuando visito...</span>
+      <span>a diferencia de...</span>
+      <span>neutraliza las toxinas</span>
+      <span>pongo uno o dos huevos</span>
+      <span>mis crías se van / permanecen...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué visitan las guacamayas las "collpas", y qué hace la arcilla en su cuerpo?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué significa que una guacamaya "elige pareja para toda la vida"?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Pareja para Toda la Vida</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Biografía de Animales Asombrosos → Historia 8 (última del libro)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Ciencias naturales y biología animal — la guacamaya roja, monogamia animal, inteligencia aviar, comportamiento de geofagia (comer arcilla) como desintoxicación natural. Posible apoyo temático a la unidad "Amazing Animals" de La Cuadrilla.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar en primera persona una autobiografía animal; describir un comportamiento social/de pareja; explicar un proceso biológico (neutralización de toxinas); contrastar comportamientos (a diferencia de...).</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>elijo una pareja · toda la vida · soy considerada... · cuando visito... · a diferencia de... · neutraliza las toxinas · pongo uno o dos huevos · mis crías se van/permanecen...</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, la pareja de por vida y la collpa contadas paso a paso.<br>
+    <strong>A2:</strong> se añade explicación científica de la desintoxicación con arcilla y conectores simples.<br>
+    <strong>B1:</strong> más detalle científico sobre la inteligencia y el comportamiento social.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario científico más preciso.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Ninguno significativo. La monogamia de por vida, la inteligencia documentada (uso de herramientas, resolución de acertijos), el comportamiento de comer arcilla en las "collpas" para neutralizar alcaloides tóxicos de frutas inmaduras, y los datos de anidación (huevos, tiempo en el nido) son datos reales y documentados.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — en este libro no hay personaje visitante; cada animal narra su propia biografía sin anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>inteligente</em> — cognado natural con "intelligent", usado para describir la capacidad cognitiva de la guacamaya.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Qué opinas de que un animal elija una sola pareja para toda la vida? ¿Conoces otros animales que hagan lo mismo?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>La especie de esta narradora coincide con la de Luna, la guacamaya de Yucatán de [[chica-y-sus-amigos]] — conexión temática intencional entre ambos proyectos, aunque esta narradora es un individuo distinto. Última historia del libro "Biografía de animales asombrosos," completando el elenco de 8 animales confirmado al inicio del libro.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

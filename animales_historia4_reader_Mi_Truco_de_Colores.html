@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Truco de Colores — Biografía de Animales Asombrosos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Biografía de Animales Asombrosos · Historia 4</div>
+    <h1>Mi Truco de Colores</h1>
+    <div class="subtitle">La biografía de una rana de ojos rojos del bosque nuboso</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Soy una rana. Vivo en el bosque nuboso de Costa Rica. Tengo los ojos rojos y grandes.</p>
+        <p>De día, duermo. Cierro los ojos y me quedo verde y quieta, como una hoja. Así, los depredadores no me ven.</p>
+        <p>Si algo me molesta mientras duermo, abro los ojos de repente. Mis ojos son rojos y brillantes. También muestro los lados de mi cuerpo — son azules y amarillos.</p>
+        <p>Este cambio rápido asusta al depredador. En ese momento, yo salto y escapo.</p>
+        <p>Salgo de noche. Como insectos.</p>
+        <p>En mi bosque también viven ranas venenosas, de color verde y negro. Pero su veneno no nace con ellas — viene de los insectos que comen, como hormigas y escarabajos venenosos.</p>
+        <p>Las tribus indígenas usaban ese veneno en las puntas de sus flechas. Por eso, a esas ranas les dicen "ranas dardo."</p>
+        <p>Yo no soy venenosa. Mi única defensa es el susto — el cambio de color repentino.</p>
+        <p>Costa Rica tiene casi doscientas especies de anfibios. Vivimos en un país pequeño, pero con mucha vida.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Soy una rana de ojos rojos. Vivo en el bosque nuboso de Costa Rica, entre las hojas grandes y la humedad constante.</p>
+        <p>De día, duermo. Cierro mis ojos rojos, pego mis patas al cuerpo, y me quedo completamente verde y quieta — así parezco una hoja más entre la vegetación. Es mi manera de esconderme de los depredadores mientras descanso.</p>
+        <p>Pero si algo me molesta mientras duermo, tengo un truco sorprendente: abro los ojos de golpe, mostrando su color rojo brillante. Al mismo tiempo, muestro los costados de mi cuerpo, que son de un azul y amarillo intensos, normalmente escondidos.</p>
+        <p>Ese cambio repentino de color se llama "coloración de sobresalto." Confunde al depredador por un segundo — tiempo suficiente para que yo salte y escape hacia la vegetación.</p>
+        <p>Salgo de noche a cazar insectos, como la mayoría de las ranas de mi bosque.</p>
+        <p>En mi mismo hábitat también viven las ranas dardo, de colores verdes y negros muy llamativos. Lo curioso es que su veneno no nace con ellas — lo obtienen de los insectos venenosos que comen, como ciertas hormigas y escarabajos.</p>
+        <p>Las tribus indígenas de la región usaban ese veneno para las puntas de sus flechas de caza — por eso a esas ranas se les llama "ranas dardo" o "ranas flecha."</p>
+        <p>Yo no soy venenosa. Mi única defensa es el susto del color — nada más.</p>
+        <p>Costa Rica alberga casi doscientas especies de anfibios, un número enorme para un país tan pequeño.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Como la mayoría de las ranas de mi especie, paso el día durmiendo entre las hojas del bosque nuboso de Costa Rica, con los ojos rojos cerrados y las patas pegadas al cuerpo, camuflada casi a la perfección entre la vegetación húmeda.</p>
+        <p>Sin embargo, si algo me molesta mientras descanso, tengo una defensa sorprendente que he perfeccionado con el tiempo: abro los ojos de golpe, revelando su rojo intenso, y al mismo tiempo expongo los costados de mi cuerpo, normalmente ocultos, de un azul y amarillo llamativos.</p>
+        <p>Este cambio repentino de color, que los biólogos llaman "coloración de sobresalto," confunde al depredador durante apenas un instante — pero es tiempo suficiente para que yo salte lejos y desaparezca entre las hojas.</p>
+        <p>Por las noches, salgo a cazar insectos, como hacen la mayoría de las ranas nocturnas de mi bosque.</p>
+        <p>En el mismo hábitat donde vivo, también habitan las famosas ranas dardo, de colores verdes y negros intensos. Lo curioso de estas ranas es que no nacen venenosas — obtienen su veneno de los insectos que consumen, principalmente hormigas y escarabajos venenosos que forman parte de su dieta.</p>
+        <p>Durante siglos, las tribus indígenas de la región extraían ese veneno para impregnar las puntas de sus flechas de caza, razón por la cual a esas ranas se les conoce como "ranas dardo" o "ranas flecha."</p>
+        <p>A diferencia de ellas, yo no poseo ningún veneno. Mi única línea de defensa es el susto momentáneo que provoco con mi cambio de color.</p>
+        <p>Costa Rica alberga casi doscientas especies de anfibios diferentes — una cifra sorprendente para un territorio tan reducido, y un reflejo de la extraordinaria biodiversidad de sus bosques.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Como la mayoría de los individuos de mi especie, transcurro el día durmiendo entre el follaje del bosque nuboso costarricense, con los ojos rojos cerrados y las extremidades recogidas contra el cuerpo, camuflada casi a la perfección entre la densa vegetación húmeda.</p>
+        <p>No obstante, si algo perturba mi descanso, despliego una estrategia defensiva que he perfeccionado a lo largo de generaciones: abro los ojos abruptamente, exhibiendo su intenso color rojo, mientras expongo simultáneamente los costados de mi cuerpo —habitualmente ocultos— de un llamativo azul y amarillo.</p>
+        <p>Este cambio cromático repentino, denominado por los biólogos "coloración de sobresalto," desorienta momentáneamente al depredador —un instante que, sin embargo, resulta suficiente para que yo salte y desaparezca entre el follaje circundante.</p>
+        <p>Durante las horas nocturnas, emprendo la caza de insectos, comportamiento compartido por la mayoría de las especies nocturnas que habitan mi bosque.</p>
+        <p>Comparto mi hábitat con las célebres ranas dardo, de coloración verde y negra sumamente llamativa. Un aspecto particularmente curioso de estas ranas radica en que no nacen venenosas —adquieren su toxicidad a través de la dieta, consumiendo hormigas y escarabajos venenosos presentes en su entorno.</p>
+        <p>Durante siglos, las comunidades indígenas de la región extrajeron ese veneno para impregnar las puntas de sus flechas de caza, circunstancia que originó la denominación "rana dardo" o "rana flecha" con la que hoy se las conoce.</p>
+        <p>A diferencia de ellas, carezco por completo de veneno. Mi único mecanismo defensivo reside en el sobresalto momentáneo generado por mi cambio de color.</p>
+        <p>Costa Rica alberga casi doscientas especies de anfibios —una cifra notable para un territorio de dimensiones tan reducidas, testimonio de la excepcional biodiversidad que caracteriza a sus bosques.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el bosque nuboso</span> — cloud forest</div>
+      <div><span class="term">camuflarse</span> — to camouflage (cognate)</div>
+      <div><span class="term">el/la depredador/a</span> — predator (cognate)</div>
+      <div><span class="term">el sobresalto</span> — startle, sudden fright</div>
+      <div><span class="term">venenoso/a</span> — poisonous</div>
+      <div><span class="term">la dieta</span> — diet (cognate)</div>
+      <div><span class="term">la flecha</span> — arrow</div>
+      <div><span class="term">la especie</span> — species (cognate)</div>
+      <div><span class="term">la biodiversidad</span> — biodiversity (cognate)</div>
+      <div><span class="term">exponer</span> — to expose (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>de día / de noche</span>
+      <span>me quedo quieta como...</span>
+      <span>si algo me molesta</span>
+      <span>abro los ojos de golpe</span>
+      <span>mi única defensa es...</span>
+      <span>no nacen...</span>
+      <span>obtienen su veneno de...</span>
+      <span>a diferencia de ellas</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cómo se esconde la rana de ojos rojos durante el día, y qué hace si algo la molesta?</div>
+    <div class="comp-q"><span class="num">2.</span>¿De dónde obtienen su veneno las ranas dardo, y para qué lo usaban las tribus indígenas?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Mi Truco de Colores</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Biografía de Animales Asombrosos → Historia 4</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Ciencias naturales y biología animal — la rana de ojos rojos, camuflaje, coloración de sobresalto, ranas dardo y toxicidad adquirida por dieta. Posible apoyo temático a la unidad "Amazing Animals" de La Cuadrilla.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar en primera persona una autobiografía animal; describir un mecanismo de defensa; explicar una relación causal (obtienen su veneno de...); comparar (a diferencia de ellas).</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>de día/de noche · me quedo quieta como... · si algo me molesta · abro los ojos de golpe · mi única defensa es... · no nacen... · obtienen su veneno de... · a diferencia de ellas.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, el camuflaje y la defensa contados paso a paso.<br>
+    <strong>A2:</strong> se añaden detalles biológicos sobre las ranas dardo y conectores simples.<br>
+    <strong>B1:</strong> más detalle científico y vocabulario preciso.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario científico más avanzado.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>El uso histórico del veneno de las ranas dardo para puntas de flechas de caza se menciona de forma factual y neutral, sin detalles violentos. La coloración de sobresalto de la rana de ojos rojos (Agalychnis callidryas), el camuflaje diurno, y el hecho de que las ranas dardo obtienen su toxicidad de la dieta (no nacen venenosas) son datos reales y documentados.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — en este libro no hay personaje visitante; cada animal narra su propia biografía sin anfitrión.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>biodiversidad</em> — cognado natural con "biodiversity", usado para describir la riqueza de especies de Costa Rica.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Conoces alguna otra manera en que los animales usan el color para protegerse o esconderse? ¿Cuál?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>La especie general (rana arborícola de Costa Rica) se relaciona temáticamente con Sofía, la rana de [[chica-y-sus-amigos]] del bosque nuboso costarricense — conexión temática intencional entre ambos proyectos.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Arepa de Yolanda — La Receta de la Abuela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · La Receta de la Abuela · Historia 3</div>
+    <h1>La Arepa de Yolanda</h1>
+    <div class="subtitle">Una historia de Luruaco, costa Caribe de Colombia</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>La chef Yolanda Pacheco es de Luruaco, en la costa Caribe de Colombia. Es famosa por su arepa de huevo.</p>
+        <p>Yolanda cuenta: "Aprendí a hacer arepa de huevo con mi abuela. Ella tenía un puesto en el pueblo."</p>
+        <p>La arepa de huevo es especial: primero se fríe la masa de maíz. Después, se abre un huequito y se pone un huevo crudo adentro. Se fríe otra vez.</p>
+        <p>Yolanda explica: "El truco es hacer el huequito perfecto. Si es muy grande, el huevo se sale. Si es muy chico, no cabe."</p>
+        <p>De niña, Yolanda practicaba el huequito muchas veces. A veces el huevo se salía todo.</p>
+        <p>Con la práctica, Yolanda aprendió la técnica exacta de su abuela.</p>
+        <p>Ahora, Yolanda tiene su propio restaurante. Sirve la arepa de huevo tradicional, pero también crea versiones nuevas, con carne desmechada adentro.</p>
+        <p>Yolanda dice: "La técnica de mi abuela nunca cambia. Pero el relleno extra, ese sí es mío."</p>
+        <p>Un cliente pregunta: "¿De dónde viene la arepa?"</p>
+        <p>Yolanda responde: "El maíz es un ingrediente de los pueblos indígenas, desde antes de los españoles. Cada región de Colombia tiene su propia arepa — hay más de cuarenta tipos."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>La chef Yolanda Pacheco es de Luruaco, un pueblo de la costa Caribe colombiana, conocido por su famoso Festival de la Arepa de Huevo.</p>
+        <p>"Aprendí a hacer arepa de huevo con mi abuela," cuenta Yolanda. "Ella tenía un puesto de comida en la plaza del pueblo, y desde niña yo la ayudaba después de la escuela."</p>
+        <p>La arepa de huevo tiene una técnica particular: primero se fríe la masa de maíz hasta que se infla un poco. Después, se hace un pequeño corte, se abre un huequito, y se vierte un huevo crudo dentro. Finalmente, se vuelve a freír hasta que el huevo se cocina por completo.</p>
+        <p>"El truco está en el huequito," explica Yolanda. "Si es muy grande, el huevo se sale al freír. Si es muy chico, no cabe nada adentro. Mi abuela tenía el punto exacto."</p>
+        <p>De niña, Yolanda practicó el huequito perfecto muchísimas veces. "Al principio, se me salía todo el huevo del aceite," recuerda, riendo. "Mi abuela me decía: 'Otra vez. La práctica hace al maestro.'"</p>
+        <p>Con el tiempo, Yolanda dominó la técnica exacta de su abuela. Hoy, en su propio restaurante, sirve la arepa de huevo tradicional, pero también experimenta con versiones nuevas — algunas rellenas con carne desmechada, además del huevo.</p>
+        <p>"La técnica de mi abuela nunca cambia," afirma Yolanda. "Pero el relleno extra, ese sí es mío."</p>
+        <p>Cuando un cliente le pregunta por el origen de la arepa, Yolanda responde con orgullo: "El maíz es un ingrediente de los pueblos indígenas de estas tierras, desde mucho antes de que llegaran los españoles. Y cada región de Colombia tiene su propia versión — hay más de cuarenta tipos distintos de arepa en el país."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un viernes de festival, en su puesto de comida en Luruaco, la chef Yolanda Pacheco preparaba arepas de huevo para una fila larga de visitantes, mientras contaba la historia detrás de su técnica.</p>
+        <p>"Aprendí a hacer arepa de huevo con mi abuela," relató, friendo la masa de maíz con movimientos ágiles. "Ella tenía un puesto en la plaza del pueblo, y yo la ayudaba todas las tardes después de la escuela."</p>
+        <p>La preparación de la arepa de huevo seguía un proceso particular: primero se freía la masa de maíz hasta que se inflaba ligeramente; después se hacía un pequeño corte, se abría un huequito, y se vertía un huevo crudo dentro; finalmente, se volvía a freír hasta que el huevo quedaba completamente cocido.</p>
+        <p>"El truco está en el huequito," explicó Yolanda. "Si es muy grande, el huevo se sale al freír. Si es muy chico, no entra nada. Mi abuela tenía el punto exacto, después de años de práctica."</p>
+        <p>Yolanda recordó que, de niña, practicó el huequito perfecto muchísimas veces sin éxito. "Al principio, se me salía todo el huevo al aceite," admitió, riendo ante el recuerdo. "Mi abuela me decía, sin perder la paciencia: 'Otra vez. La práctica hace al maestro.'"</p>
+        <p>Con los años, Yolanda finalmente dominó la técnica exacta de su abuela. Hoy, en su propio restaurante, sirve la versión tradicional, pero también experimenta con opciones nuevas — algunas rellenas con carne desmechada además del huevo.</p>
+        <p>"La técnica de mi abuela nunca cambia," afirmó con convicción. "Pero el relleno extra, ese sí es mío."</p>
+        <p>Cuando uno de los visitantes le preguntó por el origen de la arepa, Yolanda respondió con evidente orgullo: "El maíz es un ingrediente de los pueblos indígenas de estas tierras, desde mucho antes de que llegaran los españoles. Y cada región de Colombia tiene su propia versión — existen más de cuarenta tipos distintos en todo el país."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un viernes de festival, en su puesto de comida en Luruaco, la chef Yolanda Pacheco atendía una extensa fila de visitantes mientras preparaba arepas de huevo con movimientos precisos, relatando de paso la historia detrás de su técnica.</p>
+        <p>"Aprendí a prepararlas con mi abuela," comentó, friendo la masa de maíz con la agilidad de quien lleva años repitiendo el gesto. "Ella tenía un puesto en la plaza del pueblo, y yo la acompañaba cada tarde al salir de la escuela."</p>
+        <p>La elaboración de la arepa de huevo seguía un procedimiento particular: primero se freía la masa de maíz hasta que se inflaba ligeramente; a continuación, se practicaba una pequeña incisión, se abría un orificio, y se vertía un huevo crudo en su interior; finalmente, se volvía a freír hasta que el huevo alcanzaba una cocción completa.</p>
+        <p>"El secreto está en el orificio," explicó Yolanda. "Si es demasiado grande, el huevo se derrama en el aceite. Si es demasiado pequeño, no entra nada. Mi abuela había perfeccionado el punto exacto tras años de práctica."</p>
+        <p>Yolanda recordó que, de niña, ensayó el orificio perfecto incontables veces sin éxito. "Al principio, se me derramaba todo el huevo en el aceite," admitió, entre risas nostálgicas. "Mi abuela me decía, sin perder jamás la paciencia: 'Otra vez. La práctica hace al maestro.'"</p>
+        <p>Con los años, Yolanda terminó dominando con precisión la técnica exacta de su abuela. Hoy, en su propio restaurante, ofrece la versión tradicional, aunque también experimenta con opciones novedosas —algunas rellenas con carne desmechada además del huevo.</p>
+        <p>"La técnica de mi abuela nunca cambia," afirmó con convicción. "Pero el relleno adicional, ese sí es enteramente mío."</p>
+        <p>Cuando uno de los visitantes indagó sobre el origen de la arepa, Yolanda respondió con manifiesto orgullo: "El maíz es un ingrediente de los pueblos indígenas de estas tierras, mucho antes de la llegada española. Y cada región de Colombia desarrolló su propia versión —existen más de cuarenta tipos distintos a lo largo del país."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la arepa</span> — corn cake</div>
+      <div><span class="term">el huequito / el orificio</span> — small hole</div>
+      <div><span class="term">freír</span> — to fry</div>
+      <div><span class="term">la masa (de maíz)</span> — corn dough</div>
+      <div><span class="term">desmechado/a</span> — shredded (meat)</div>
+      <div><span class="term">el truco</span> — trick, technique</div>
+      <div><span class="term">el maestro</span> — master, expert</div>
+      <div><span class="term">verter</span> — to pour</div>
+      <div><span class="term">la práctica</span> — practice (cognate)</div>
+      <div><span class="term">preciso/a</span> — precise (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>aprendí a hacer... con mi abuela</span>
+      <span>el truco está en...</span>
+      <span>otra vez</span>
+      <span>la práctica hace al maestro</span>
+      <span>nunca cambia</span>
+      <span>ese sí es mío</span>
+      <span>desde mucho antes de...</span>
+      <span>más de cuarenta tipos</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cuáles son los pasos para hacer una arepa de huevo?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué le decía la abuela de Yolanda cuando el huevo se le salía?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — La Arepa de Yolanda</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → La Receta de la Abuela → Historia 3</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Gastronomía y tradición cultural — la arepa de huevo, técnica culinaria de precisión, diversidad regional de Colombia, herencia del maíz indígena.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir un proceso culinario técnico paso a paso; narrar un aprendizaje con práctica repetida; expresar qué se mantiene igual y qué cambia; narrar en pasado un evento específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>aprendí a hacer... con mi abuela · el truco está en... · otra vez · la práctica hace al maestro · nunca cambia · ese sí es mío · desde mucho antes de...</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, la técnica contada paso a paso.<br>
+    <strong>A2:</strong> se añade contexto histórico/regional de la arepa y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando una escena específica del festival.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario culinario más preciso; cierre reflexivo sobre tradición e innovación.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Ninguno significativo. La técnica de la arepa de huevo (freír la masa, abrir un orificio, verter huevo crudo, freír de nuevo), el Festival de la Arepa de Huevo en Luruaco, el origen indígena precolombino del maíz, y la existencia de más de cuarenta tipos de arepa en Colombia son datos reales y documentados. Yolanda Pacheco es un personaje ficticio.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Chef Yolanda Pacheco</strong> — chef de Luruaco, costa Caribe colombiana, especialista en arepa de huevo, aprendió la técnica exacta de su abuela. Detalle propio: guarda la primera arepa de huevo "perfecta" que logró hacer de niña — ya no es comestible, pero la conserva como recuerdo.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>preciso</em> — cognado natural con "precise", usado para describir la técnica exacta del huequito.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez fallaste muchas veces antes de lograr algo, como Yolanda con el huequito? ¿Qué te ayudó a seguir intentando?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Camino de Killa — Memorias de pueblos perdidos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --navy:#1f3a5f;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+
+  .photo-gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+    gap:14px;
+  }
+  .photo-gallery figure{
+    margin:0;
+    background:var(--bg-deep);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .photo-gallery img{
+    width:100%;
+    height:150px;
+    object-fit:cover;
+    display:block;
+  }
+  .photo-gallery figcaption{
+    font-family:'Space Mono', monospace;
+    font-size:0.72rem;
+    color:var(--parchment-dim);
+    padding:8px 10px;
+    line-height:1.4;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Memorias de pueblos perdidos · Historia 1</div>
+    <h1>El Camino de Killa</h1>
+    <div class="subtitle">Una historia de las alturas andinas, cerca de Cusco, Perú</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Killa vive en un pueblo pequeño en las montañas de Cusco, Perú. El pueblo está muy alto, cerca del cielo.</p>
+        <p>Cada mañana, Killa se despierta temprano. Su mamá prepara el desayuno: pan y agua de hierbas.</p>
+        <p>Antes de salir, su mamá le dice: "Killa, el camino es largo, pero tú eres fuerte."</p>
+        <p>Killa camina a la escuela. El camino toma una hora y media. Ella camina por senderos de piedra, entre montañas verdes.</p>
+        <p>En el camino, Killa ve llamas. Ve también los andenes — las terrazas de su familia. Su papá cultiva papas y maíz allí.</p>
+        <p>Un día, llueve mucho. El río está muy grande. Killa no puede cruzar el río.</p>
+        <p>Killa piensa. Ella recuerda las palabras de su mamá: "Tú eres fuerte."</p>
+        <p>Killa busca otro camino. Camina por la montaña, un camino más largo.</p>
+        <p>Killa llega tarde a la escuela. Pero llega.</p>
+        <p>La maestra sonríe. Los amigos la saludan: "¡Hola, Killa! ¡Qué bueno verte!"</p>
+        <p>Killa está feliz. Ella aprende matemáticas y lee un libro.</p>
+        <p>Por la tarde, Killa camina a casa. Le cuenta todo a su mamá.</p>
+        <p>Su mamá sonríe: "Estoy orgullosa de ti, Killa."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Killa vive en una comunidad pequeña en las alturas de los Andes, cerca de Cusco, Perú. El pueblo está a más de tres mil metros de altura, entre montañas cubiertas de niebla.</p>
+        <p>Todos los días, Killa se despierta muy temprano, antes de que salga el sol. Su mamá prepara un desayuno sencillo — pan casero y agua de hierbas — mientras Killa se pone su poncho de lana para el frío.</p>
+        <p>Antes de salir, su mamá siempre le repite las mismas palabras: "El camino es largo, pero tú eres más fuerte que el camino." Killa sonríe y sale con su mochila.</p>
+        <p>El camino a la escuela toma una hora y media, porque Killa tiene que caminar por senderos de piedra y subir cuestas empinadas. En el camino, ve llamas pastando y los andenes — las terrazas agrícolas donde su familia cultiva papas y maíz, igual que hacían sus abuelos.</p>
+        <p>Un día de enero, durante la temporada de lluvias, el cielo se oscurece y empieza a llover con fuerza. Cuando Killa llega al río que normalmente cruza sin problema, el agua está alta y rápida. Killa no puede cruzar; es peligroso.</p>
+        <p>Killa se detiene y piensa. Recuerda las palabras de su mamá y decide buscar otro camino, uno más largo, por la parte alta de la montaña.</p>
+        <p>Después de casi tres horas de camino, Killa por fin llega a la escuela, mojada pero decidida. La maestra la recibe con una sonrisa y sus compañeros la saludan con alegría.</p>
+        <p>Ese día, Killa aprende matemáticas y lee un cuento en voz alta. Está cansada, pero feliz, porque llegó.</p>
+        <p>Por la tarde, cuando vuelve a casa, le cuenta todo a su mamá. Su mamá la abraza y le dice: "Estoy muy orgullosa de ti."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un martes de enero, Killa se despertó como todos los días, antes de que saliera el sol. Vivía con su familia en una comunidad pequeña en las alturas de los Andes, cerca de Cusco, a más de tres mil metros sobre el nivel del mar.</p>
+        <p>Esa mañana, mientras se ponía su poncho de lana, su mamá le preparaba el desayuno de siempre: pan casero y agua de hierbas. Antes de salir, su mamá le repitió las palabras que decía cada día: "El camino es largo, pero tú eres más fuerte que el camino."</p>
+        <p>Killa salió con su mochila y comenzó a caminar. Normalmente, el camino a la escuela le tomaba una hora y media, por senderos de piedra entre los andenes donde su familia cultivaba papas y maíz desde hacía generaciones.</p>
+        <p>Pero esa mañana llovía con fuerza — era temporada de lluvias — y cuando Killa llegó al río que siempre cruzaba sin problema, el agua estaba alta, rápida y turbia. No pudo cruzar; habría sido demasiado peligroso.</p>
+        <p>Killa se detuvo un momento. Sintió miedo y también frustración — no quería llegar tarde otra vez. Entonces recordó las palabras de su mamá y decidió tomar el camino largo, el que subía por la parte alta de la montaña.</p>
+        <p>Caminó casi tres horas en total. Llegó empapada, cansada, pero decidida. Cuando entró al salón, la maestra le sonrió y sus compañeros la saludaron con cariño, sin hacerle sentir mal por la tardanza.</p>
+        <p>Esa tarde, mientras caminaba de regreso a casa, Killa pensó en lo mucho que valoraba la escuela — no solo por lo que aprendía, sino porque cada día que llegaba, a pesar de la distancia, sentía que estaba construyendo algo para su futuro.</p>
+        <p>Cuando llegó a casa, le contó todo a su mamá, quien la abrazó fuerte y le dijo: "Estoy muy orgullosa de ti, hija. Cada paso que das vale la pena."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>En la comunidad de Killa, en las alturas andinas cercanas a Cusco, la vida cotidiana seguía un ritmo marcado por la tierra y las estaciones. Su familia, como muchas otras en la región, cultivaba papas y maíz en los antiguos andenes construidos por sus antepasados, y hablaba quechua en casa mientras aprendía español en la escuela — la misma escuela a la que Killa, de diez años, caminaba cada mañana.</p>
+        <p>Aquel martes de enero, en plena temporada de lluvias, Killa se levantó antes del amanecer, como de costumbre. Mientras se abrigaba con su poncho de lana tejido por su abuela, su madre le preparaba el desayuno y le repetía, como cada día, las palabras que se habían convertido en un pequeño ritual entre ambas: "El camino es largo, pero tú eres más fuerte que el camino."</p>
+        <p>Para Killa, esas palabras no eran solo un consejo — eran una herencia, algo que su madre también había escuchado de la suya. En una región donde muchas niñas todavía enfrentan obstáculos para completar su educación, la insistencia de su madre en que fuera a la escuela cada día, sin importar la distancia, era en sí misma un acto de resistencia silenciosa.</p>
+        <p>Esa mañana, sin embargo, la lluvia había hinchado el río que Killa cruzaba habitualmente sin mayor dificultad. Al llegar a la orilla y ver el agua correr turbia y veloz, comprendió que cruzar sería una imprudencia. Sintió, por un instante, la tentación de regresar a casa. Pero recordó las palabras de su madre y optó por el camino alternativo: una ruta más larga y empinada que bordeaba la montaña.</p>
+        <p>Casi tres horas después de haber salido de casa, llegó a la escuela empapada por la lluvia, pero con la misma determinación con la que había salido. La maestra, que conocía bien las dificultades del camino, la recibió sin reproches, y sus compañeros — muchos de los cuales enfrentaban sus propios trayectos difíciles — la saludaron con naturalidad, como quien reconoce un esfuerzo compartido.</p>
+        <p>Esa tarde, de regreso a casa, Killa reflexionó sobre lo que significaba ese esfuerzo diario. No se trataba solo de llegar a tiempo, sino de sostener, día tras día, la posibilidad de un futuro distinto — uno que combinara el orgullo por sus raíces con la oportunidad de estudiar. Cuando finalmente llegó a casa, su madre la abrazó y le dijo, con la voz de quien ha caminado ese mismo camino: "Estoy muy orgullosa de ti, hija. Cada paso que das vale la pena."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Galería</h3>
+    <div class="photo-gallery">
+      <figure>
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vista%20de%20Cusco%2C%20Per%C3%BA%2C%202015-07-31%2C%20DD%2011-17%20PAN.JPG" alt="Cusco, en los Andes peruanos" loading="lazy">
+        <figcaption>Cusco, en los Andes peruanos</figcaption>
+      </figure>
+      <figure>
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Llama%20on%20Machu%20Picchu.jpg" alt="Llama en los Andes peruanos" loading="lazy">
+        <figcaption>Llama en los Andes peruanos</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el pueblo</span> — village (cognate: "populate")</div>
+      <div><span class="term">el sendero</span> — path, trail</div>
+      <div><span class="term">los andenes</span> — agricultural terraces</div>
+      <div><span class="term">cruzar</span> — to cross (cognate: "cross")</div>
+      <div><span class="term">el poncho</span> — woven wool garment</div>
+      <div><span class="term">empapada/o</span> — soaked, drenched</div>
+      <div><span class="term">orgullosa/o</span> — proud</div>
+      <div><span class="term">a pesar de</span> — despite, in spite of</div>
+      <div><span class="term">la herencia</span> — inheritance, legacy (cognate: "heritage")</div>
+      <div><span class="term">la imprudencia</span> — recklessness (cognate: "imprudence")</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>todos los días</span>
+      <span>cada mañana</span>
+      <span>camina / caminaba por...</span>
+      <span>tarda / tardaba en llegar</span>
+      <span>a pesar de...</span>
+      <span>cuando llega / llegó</span>
+      <span>decide / decidió</span>
+      <span>estoy orgullosa de ti</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué obstáculo enfrenta Killa en su camino a la escuela ese día?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cómo la ayudan las palabras de su mamá a tomar una decisión?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Camino de Killa</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Memorias de pueblos perdidos → Historia 1</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Geografía humana y vida cotidiana — rutinas diarias, la familia, el paisaje andino, el valor de la educación.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir rutinas diarias y el paso del tiempo; describir paisaje y clima; expresar dificultad, esfuerzo y superación; narrar en pasado la rutina de un día específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>todos los días / cada mañana · camina/caminaba por... · tarda/tardaba [tiempo] en llegar · a pesar de... · cuando + subjuntivo/indicativo según nivel.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, vocabulario de alta frecuencia, rutina paso a paso.<br>
+    <strong>A2:</strong> se añade descripción de paisaje y clima; conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando un día específico; reflexión de Killa.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; perspectiva familiar/comunitaria; contraste tradición/aspiración.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Pobreza/aislamiento geográfico real → manejado con dignidad, tono de resiliencia y orgullo cultural, no de lástima. Riesgo climático (río crecido) → mencionado con calma; Killa siempre llega segura. No se nombra ninguna comunidad ni familia real específica — es una comunidad compuesta, fiel a patrones documentados de la región de Cusco.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — esta es la primera historia del libro y no introduce un personaje visitante internacional; el enfoque está en la comunidad local.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>aventura</em> — cognado natural, usado para describir el camino diario de Killa como su propia aventura silenciosa.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Qué esfuerzo haces tú cada día para lograr algo importante? ¿Se parece en algo al camino de Killa?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>La protagonista fue revisada de un borrador inicial (niño, "Amaru", sin figura materna) a la versión final (niña, "Killa", con su madre como figura de apoyo recurrente), inspirado temáticamente — no adaptado ni copiado — del cortometraje animado "Picchu" (2022, dir. Amaru Zeas).</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>
