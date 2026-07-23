@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Las Calaveras de Doña Carmela — Entrevistas callejeras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Entrevistas callejeras · Historia 3</div>
+    <h1>Las Calaveras de Doña Carmela</h1>
+    <div class="subtitle">Una historia de Toluca, Estado de México</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Ramón viaja a Toluca, México, cerca de la fecha del Día de Muertos. En Toluca hay una feria muy famosa: la Feria del Alfeñique.</p>
+        <p>En la feria, Ramón encuentra a una mujer que hace calaveras de azúcar. Se llama Doña Carmela.</p>
+        <p>Doña Carmela mezcla azúcar, agua y jugo de limón. Con esta mezcla, llamada alfeñique, hace las calaveras.</p>
+        <p>Ramón pregunta: "¿Por qué hace calaveras de azúcar?"</p>
+        <p>Doña Carmela responde: "Aprendí de mi mamá. Ella aprendió de su mamá. Es una tradición de familia."</p>
+        <p>Doña Carmela explica: "Antes de los españoles, mi pueblo usaba cráneos reales en un altar llamado tzompantli. Después, con el azúcar nuevo, empezamos a hacer calaveras dulces."</p>
+        <p>Las calaveras tienen colores, brillo y a veces un nombre. La gente pone su nombre en la calavera para el altar de un familiar, o para regalar a un amigo.</p>
+        <p>Doña Carmela le da a Ramón una calavera pequeña. "Escribe un nombre," le dice.</p>
+        <p>Ramón escribe su propio nombre en la calavera, con mucho cuidado.</p>
+        <p>Doña Carmela sonríe: "La muerte no es solo triste. También puede ser dulce. Así recordamos con amor."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Ramón viaja a Toluca, en el Estado de México, unas semanas antes del Día de Muertos. Cada año, Toluca celebra la Feria del Alfeñique, un evento famoso donde los artesanos muestran calaveras de azúcar y otras figuras dulces tradicionales.</p>
+        <p>En la feria, Ramón conoce a Doña Carmela, una artesana que trabaja en un taller familiar. Ella mezcla azúcar, agua y jugo de limón para crear el alfeñique, una pasta moldeable que después se seca en moldes con forma de cráneo.</p>
+        <p>"¿Por qué hace calaveras de azúcar, Doña Carmela?" pregunta Ramón, con el teléfono grabando. Ella responde con calma: "Aprendí de mi mamá, y ella de la suya. Llevamos generaciones haciendo esto en la familia."</p>
+        <p>Doña Carmela le cuenta la historia: antes de la llegada de los españoles, su pueblo colocaba cráneos reales en una estructura llamada tzompantli, como parte de rituales importantes. Cuando los españoles trajeron el azúcar de caña, la tradición cambió — los cráneos reales se convirtieron en dulces calaveras de azúcar, coloridas y decoradas.</p>
+        <p>Las calaveras se decoran con colores brillantes, papel metálico y, a veces, un nombre escrito con glaseado. Las familias ponen su propio nombre o el de un familiar fallecido en el altar de muertos, y también las regalan a amigos con su nombre.</p>
+        <p>Doña Carmela le entrega a Ramón una calavera pequeña y sin decorar: "Escribe un nombre — el que tú quieras." Ramón, con cuidado, escribe su propio nombre con glaseado de color.</p>
+        <p>"La muerte no tiene que ser solo tristeza," le explica Doña Carmela mientras observa su trabajo. "Con esto, la recordamos con dulzura y con amor — es nuestra manera de decir que nuestros seres queridos nunca se van del todo."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>A finales de octubre, Ramón llegó a Toluca, en el Estado de México, justo antes de la temporada del Día de Muertos. Cada año, la ciudad celebra la Feria del Alfeñique, un evento donde decenas de familias artesanas exhiben calaveras de azúcar y otras figuras dulces tradicionales, trabajadas durante semanas.</p>
+        <p>Entre los puestos de la feria, Ramón conoció a Doña Carmela, quien llevaba toda la mañana mezclando azúcar, agua y jugo de limón para preparar el alfeñique — una pasta moldeable que, una vez vertida en moldes con forma de cráneo, se dejaba secar antes de decorarla.</p>
+        <p>Cuando Ramón le preguntó por qué se dedicaba a este oficio, Doña Carmela respondió sin dudar: "Aprendí de mi mamá, y ella de la suya. Ya somos varias generaciones en esta familia haciendo lo mismo cada octubre."</p>
+        <p>Le explicó entonces el origen de la tradición: antes de la llegada de los españoles, su pueblo colocaba cráneos reales en una estructura ceremonial llamada tzompantli. Cuando los españoles introdujeron el azúcar de caña, la costumbre se transformó — los cráneos reales se convirtieron en dulces calaveras decoradas, sin perder su significado original.</p>
+        <p>Las calaveras se adornaban con colores vivos, papel metálico y, muchas veces, un nombre escrito con glaseado, ya fuera para colocar en el altar de un familiar fallecido o para regalar a un amigo vivo, como gesto de cariño.</p>
+        <p>Doña Carmela le entregó a Ramón una calavera pequeña, todavía sin decorar. "Escribe un nombre," le dijo, entregándole un cono de glaseado. Ramón, con cuidado, escribió su propio nombre, sorprendido de lo delicado que resultaba el proceso.</p>
+        <p>"La muerte no tiene que ser solo tristeza," reflexionó Doña Carmela mientras observaba el trabajo de Ramón. "Con esto, la recordamos con dulzura. Es nuestra manera de decir que quienes se fueron nunca se van del todo."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>A finales de octubre, en los días previos a la temporada del Día de Muertos, Ramón llegó a Toluca, capital del Estado de México, donde se celebra anualmente la Feria del Alfeñique —un evento en el que decenas de familias artesanas exhiben calaveras de azúcar y otras figuras dulces, resultado de semanas de trabajo minucioso.</p>
+        <p>Entre los puestos de la feria, conoció a Doña Carmela, inmersa en la preparación del alfeñique: una mezcla de azúcar, agua y jugo de limón que, vertida en moldes con forma de cráneo, se dejaba secar antes de recibir su característica decoración colorida.</p>
+        <p>Ante la pregunta de Ramón sobre el origen de su oficio, Doña Carmela respondió con la seguridad de quien repite una historia familiar bien conocida: "Aprendí de mi madre, y ella de la suya. Somos ya varias generaciones dedicadas a esto cada octubre." A continuación, le relató el trasfondo histórico de la tradición: antes de la llegada española, su pueblo colocaba cráneos reales en una estructura ceremonial conocida como tzompantli. Con la introducción del azúcar de caña por parte de los colonizadores, la práctica se transformó, sustituyendo los cráneos reales por representaciones dulces sin que se perdiera su significado ritual original.</p>
+        <p>Las calaveras, explicó, se decoraban con colores vivos, papel metálico y, con frecuencia, un nombre escrito en glaseado —ya fuera destinado al altar de un familiar fallecido, ya fuera pensado como obsequio para una persona viva, en señal de afecto.</p>
+        <p>Doña Carmela le entregó entonces a Ramón una calavera pequeña, aún sin decorar, junto con un cono de glaseado: "Escribe un nombre." Ramón, sorprendido por la delicadeza que exigía el proceso, trazó su propio nombre con cuidado deliberado.</p>
+        <p>"La muerte no tiene por qué representar solamente tristeza," reflexionó Doña Carmela, observando el resultado. "Con esto, la recordamos con dulzura. Es nuestra manera de decir que quienes se fueron nunca se van del todo."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la calavera</span> — skull</div>
+      <div><span class="term">el alfeñique</span> — sugar paste used for the skulls</div>
+      <div><span class="term">el molde</span> — mold</div>
+      <div><span class="term">el glaseado</span> — icing, glaze</div>
+      <div><span class="term">el altar (de muertos)</span> — Day of the Dead altar/offering</div>
+      <div><span class="term">el/la difunto/a</span> — the deceased</div>
+      <div><span class="term">regalar</span> — to give as a gift</div>
+      <div><span class="term">la generación</span> — generation (cognate)</div>
+      <div><span class="term">decorar</span> — to decorate (cognate)</div>
+      <div><span class="term">con dulzura</span> — with sweetness/tenderness</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>aprendí de mi mamá</span>
+      <span>llevamos generaciones...</span>
+      <span>con cuidado</span>
+      <span>escribe un nombre</span>
+      <span>la muerte no tiene que ser solo tristeza</span>
+      <span>nunca se van del todo</span>
+      <span>antes de / después de la llegada de...</span>
+      <span>es nuestra manera de...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué es el alfeñique, y cómo se prepara?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué le cuenta Doña Carmela a Ramón sobre el origen histórico de las calaveras de azúcar?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Las Calaveras de Doña Carmela</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Entrevistas callejeras → Historia 3</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Tradiciones y patrimonio cultural — el Día de Muertos, oficios artesanales familiares, historia prehispánica y colonial de México, simbolismo cultural de la muerte.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar una entrevista y explicar un oficio; expresar herencia familiar (aprendí de mi mamá); narrar un cambio histórico (antes/después de la llegada de...); narrar en pasado un evento específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>aprendí de mi mamá · llevamos generaciones... · con cuidado · escribe un nombre · la muerte no tiene que ser solo tristeza · nunca se van del todo · antes de/después de la llegada de...</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, la entrevista contada paso a paso.<br>
+    <strong>A2:</strong> se añade contexto histórico y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando el encuentro como evento específico.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario histórico más preciso (tzompantli, colonización); cierre reflexivo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Imágenes de calaveras y referencias a la muerte → presentadas exclusivamente dentro de su marco cultural auténtico (Día de Muertos), con el tono festivo y de amor familiar que la tradición mexicana le da — nunca de forma tenebrosa, triste o relacionada con una pérdida personal del lector. El origen prehispánico (tzompantli) se menciona de forma factual y respetuosa, sin detalles gráficos. La Feria del Alfeñique de Toluca, el proceso del alfeñique, y la práctica de personalizar calaveras con nombres son datos reales y documentados. Doña Carmela es un personaje ficticio.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Doña Carmela</strong> — artesana de calaveras de azúcar en un taller familiar de Toluca, cuarta generación en el oficio. Detalle propio: siempre invita a quien la visita a escribir su propio nombre en una calavera antes de irse.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>tradición</em> — cognado natural con "tradition", usado para describir el oficio familiar de Doña Carmela.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Tu familia tiene alguna tradición que se pasa de generación en generación? ¿Cuál es?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

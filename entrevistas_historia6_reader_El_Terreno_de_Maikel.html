@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Terreno de Maikel — Entrevistas callejeras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Entrevistas callejeras · Historia 6</div>
+    <h1>El Terreno de Maikel</h1>
+    <div class="subtitle">Una historia de un barrio de Maracaibo, Venezuela</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Ramón viaja a Maracaibo, Venezuela. Camina por un barrio y escucha gritos y risas.</p>
+        <p>En un terreno vacío, un grupo de niños juega béisbol. Usan un bate de madera vieja y una pelota hecha de cinta.</p>
+        <p>Ramón conoce a Maikel, un niño de doce años. Maikel no tiene guante de béisbol. Usa sus manos.</p>
+        <p>Ramón pregunta: "¿Por qué juegas béisbol, Maikel?"</p>
+        <p>Maikel responde: "El béisbol es el deporte de Venezuela. Mi abuelo jugaba aquí, en este mismo terreno."</p>
+        <p>Maikel dice: "Mi ídolo es Luis Aparicio. Él jugó en las Grandes Ligas de Estados Unidos. Yo quiero jugar allá también."</p>
+        <p>Ramón pregunta: "¿No necesitas guante para jugar bien?"</p>
+        <p>Maikel sonríe: "No necesito guante. Necesito ganas. El sueño es lo importante."</p>
+        <p>Los amigos de Maikel juegan con mucha energía. Corren, gritan, se ríen.</p>
+        <p>Ramón graba el video. Piensa: "El béisbol aquí no es solo un juego. Es una familia."</p>
+        <p>Maikel dice antes de despedirse: "Un día, vas a ver mi nombre en las Grandes Ligas."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Ramón viaja a Maracaibo, en el estado Zulia, Venezuela — la cuna de las Pequeñas Ligas de béisbol del país, fundadas hace más de setenta años. Camina por un barrio y escucha gritos y risas que vienen de un terreno vacío.</p>
+        <p>Allí, un grupo de niños juega béisbol con lo que tienen: un bate de madera gastado y una pelota improvisada, hecha con cinta adhesiva enrollada muchas veces.</p>
+        <p>Ramón conoce a Maikel, de doce años, quien juega sin guante — usa solo las manos para atrapar la pelota. "¿Por qué juegas béisbol, Maikel?" pregunta Ramón, con el teléfono grabando.</p>
+        <p>"El béisbol es el deporte de Venezuela," responde Maikel con orgullo. "Mi abuelo jugaba aquí mismo, en este terreno, cuando era niño. Ahora yo juego en el mismo lugar."</p>
+        <p>Maikel le cuenta que su ídolo es Luis Aparicio, el primer venezolano en el Salón de la Fama del béisbol, quien jugó muchos años en las Grandes Ligas de Estados Unidos. "Yo también quiero jugar allá algún día," dice, con los ojos brillantes.</p>
+        <p>"¿No necesitas un guante para jugar bien?" pregunta Ramón, sorprendido. Maikel se ríe: "No necesito guante. Necesito ganas. El sueño es lo más importante — el equipo llega después."</p>
+        <p>Los amigos de Maikel corren por el terreno, gritando y riendo entre jugada y jugada, sin que la falta de equipo les quite ni un poco de alegría.</p>
+        <p>Ramón graba toda la escena, pensando que ese béisbol de barrio no es solo un juego — es una tradición familiar, transmitida de generación en generación. Antes de despedirse, Maikel le dice, sonriendo: "Un día vas a ver mi nombre en las Grandes Ligas."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un domingo por la tarde, Ramón llegó a un barrio de Maracaibo, en el estado Zulia — la cuna de las Pequeñas Ligas de béisbol de Venezuela, fundadas en 1955 y con más de setenta años de historia. Antes de verlos, ya escuchaba los gritos y risas que venían de un terreno vacío cercano.</p>
+        <p>Al acercarse, encontró a un grupo de niños jugando béisbol con lo que tenían a mano: un bate de madera ya gastado y una pelota improvisada, hecha enrollando cinta adhesiva una y otra vez hasta darle forma.</p>
+        <p>Entre ellos conoció a Maikel, de doce años, quien jugaba sin guante, atrapando la pelota solo con las manos. Cuando Ramón le preguntó por qué jugaba béisbol, Maikel respondió con una seguridad que sorprendió al periodista: "El béisbol es el deporte de Venezuela. Mi abuelo jugaba aquí mismo, en este terreno, cuando era niño. Ahora yo juego en el mismo lugar donde él jugó."</p>
+        <p>Le contó, además, que su ídolo era Luis Aparicio, el primer venezolano en llegar al Salón de la Fama del béisbol, quien había jugado durante años en las Grandes Ligas de Estados Unidos. "Yo también quiero jugar allá algún día," afirmó, sin ninguna duda en la voz.</p>
+        <p>Cuando Ramón le preguntó si no necesitaba un guante para jugar mejor, Maikel se rió con naturalidad: "No necesito guante. Necesito ganas. El sueño es lo más importante — el equipo llega después, cuando puede."</p>
+        <p>Sus amigos seguían corriendo por el terreno, gritando y riendo entre jugada y jugada, sin que la falta de equipo profesional les restara ni un poco de entusiasmo.</p>
+        <p>Esa tarde, Ramón grabó toda la escena, convencido de que aquel béisbol de barrio era mucho más que un simple juego — era una tradición familiar transmitida de generación en generación, sostenida por pura pasión. Antes de despedirse, Maikel le dijo con una sonrisa segura: "Un día vas a ver mi nombre en las Grandes Ligas."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un domingo por la tarde, Ramón llegó a un barrio de Maracaibo, en el estado Zulia —cuna de las Pequeñas Ligas de béisbol venezolanas, fundadas en 1955 y con más de setenta años de trayectoria—, guiado por los gritos y risas que provenían de un terreno vacío cercano.</p>
+        <p>Al aproximarse, encontró a un grupo de niños disputando un partido improvisado con los recursos disponibles: un bate de madera desgastado por el uso y una pelota confeccionada enrollando capas sucesivas de cinta adhesiva hasta lograr una forma esférica aceptable.</p>
+        <p>Entre ellos conoció a Maikel, de doce años, quien jugaba sin guante, atrapando la pelota únicamente con las manos. Ante la pregunta de Ramón sobre su motivación, Maikel respondió con una convicción que sorprendió al periodista: "El béisbol es el deporte de Venezuela. Mi abuelo jugaba precisamente aquí, en este terreno, cuando era niño. Ahora yo juego en el mismo lugar donde él lo hizo."</p>
+        <p>Le explicó, además, que su ídolo era Luis Aparicio, primer venezolano en ingresar al Salón de la Fama del béisbol, con una extensa trayectoria en las Grandes Ligas de Estados Unidos. "Yo también quiero jugar allá algún día," afirmó sin vacilar.</p>
+        <p>Cuando Ramón indagó si la falta de guante no representaba una desventaja considerable, Maikel respondió con naturalidad: "No necesito guante. Necesito ganas. El sueño es lo más importante —el equipo llega después, cuando se puede conseguir."</p>
+        <p>Mientras tanto, sus compañeros continuaban corriendo por el terreno, gritando y celebrando cada jugada, sin que la precariedad del equipamiento disminuyera en absoluto su entusiasmo colectivo.</p>
+        <p>Aquella tarde, Ramón registró toda la escena, convencido de que ese béisbol de barrio trascendía la mera actividad recreativa —constituía una tradición familiar transmitida de generación en generación, sostenida enteramente por la pasión compartida. Antes de despedirse, Maikel le dijo con una sonrisa segura de sí mismo: "Un día vas a ver mi nombre en las Grandes Ligas."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el terreno (vacío)</span> — vacant lot</div>
+      <div><span class="term">el bate</span> — bat</div>
+      <div><span class="term">el guante</span> — glove</div>
+      <div><span class="term">atrapar</span> — to catch</div>
+      <div><span class="term">improvisado/a</span> — improvised (cognate)</div>
+      <div><span class="term">las ganas</span> — desire, drive</div>
+      <div><span class="term">el ídolo</span> — idol (cognate)</div>
+      <div><span class="term">el Salón de la Fama</span> — Hall of Fame</div>
+      <div><span class="term">las Grandes Ligas</span> — the Major Leagues</div>
+      <div><span class="term">la pasión</span> — passion (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>jugaba aquí mismo</span>
+      <span>no necesito... necesito ganas</span>
+      <span>el sueño es lo más importante</span>
+      <span>un día vas a ver mi nombre en...</span>
+      <span>de generación en generación</span>
+      <span>sin que... les quite / restara...</span>
+      <span>con orgullo</span>
+      <span>algún día</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Con qué materiales juegan béisbol Maikel y sus amigos?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Por qué dice Maikel que no necesita guante para jugar?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Terreno de Maikel</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Entrevistas callejeras → Historia 6</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Deporte y tradición cultural — el béisbol como pasión nacional venezolana, la creatividad ante la escasez de recursos, herencia familiar, sueños e ídolos deportivos.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir una actividad con recursos limitados; expresar motivación y sueños a futuro; explicar herencia familiar (mi abuelo jugaba aquí); narrar en pasado un evento específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>jugaba aquí mismo · no necesito... necesito ganas · el sueño es lo más importante · un día vas a ver mi nombre en... · de generación en generación · sin que... les quite/restara...</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, la entrevista contada paso a paso.<br>
+    <strong>A2:</strong> se añade contexto histórico/cultural del béisbol venezolano y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando el encuentro como evento específico.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario más preciso; cierre reflexivo sobre pasión y recursos.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Escasez de recursos/equipo deportivo → manejado con dignidad y alegría, nunca con lástima; el enfoque está en la pasión y la creatividad, no en la carencia. Deliberadamente no se menciona la situación socioeconómica o política más amplia de Venezuela — el foco es exclusivamente la cultura del béisbol de barrio. El béisbol como deporte nacional de facto, las Pequeñas Ligas de Venezuela (fundadas en 1955 en Zulia), y Luis Aparicio como primer venezolano en el Salón de la Fama, son datos reales y documentados. Maikel es un personaje ficticio.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Maikel</strong> — niño de doce años, juega béisbol de barrio sin guante en el mismo terreno donde jugaba su abuelo. Detalle propio: siempre termina una buena jugada señalando al cielo, "para su abuelo."</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>pasión</em> — cognado natural con "passion", usado para describir el amor de Maikel y su comunidad por el béisbol.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez lograste hacer algo divertido con muy pocos recursos, usando tu creatividad? ¿Qué hiciste?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

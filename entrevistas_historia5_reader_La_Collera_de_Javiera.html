@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Collera de Javiera — Entrevistas callejeras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Entrevistas callejeras · Historia 5</div>
+    <h1>La Collera de Javiera</h1>
+    <div class="subtitle">Una historia de un pueblo cerca de Rancagua, Chile</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Ramón viaja a Chile, a un pueblo cerca de Rancagua. Es temporada de rodeo chileno.</p>
+        <p>En la medialuna — el lugar del rodeo — Ramón conoce a Javiera. Ella es huasa y compite con su papá.</p>
+        <p>Javiera y su papá forman una "collera" — un equipo de dos jinetes a caballo.</p>
+        <p>Ramón pregunta: "¿Qué hacen ustedes en el rodeo?"</p>
+        <p>Javiera responde: "Nosotros paramos al novillo contra la pared, con nuestros caballos. Necesitamos trabajar juntos."</p>
+        <p>Javiera usa un chamanto — un poncho tradicional — y su papá una chupalla, un sombrero de paja.</p>
+        <p>Después de la competencia, Javiera dice: "Ahora bailamos cueca. Es el baile nacional de Chile."</p>
+        <p>Javiera le enseña a Ramón los pasos básicos: caminar en círculo y mover un pañuelo en la mano.</p>
+        <p>Ramón pregunta: "¿Por qué el rodeo y la cueca van juntos?"</p>
+        <p>Javiera responde: "Los dos necesitan ritmo y trabajo en equipo. Un buen jinete también es un buen bailarín."</p>
+        <p>Ramón baila cueca con Javiera, un poco torpe pero feliz.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Ramón viaja a un pueblo cerca de Rancagua, Chile, durante la temporada oficial de rodeo chileno, el deporte nacional del país desde 1962.</p>
+        <p>En la medialuna — el ruedo con forma de media luna donde se practica el rodeo — Ramón conoce a Javiera, una joven huasa que compite junto a su papá.</p>
+        <p>Javiera le explica que ella y su papá forman una "collera," un equipo de dos jinetes a caballo que trabajan juntos durante la competencia. "Nosotros paramos al novillo contra la pared acolchada," le cuenta, "con mucha precisión y coordinación entre los dos caballos."</p>
+        <p>Javiera lleva puesto un chamanto, un poncho tejido tradicional, mientras que su papá usa una chupalla, el sombrero de paja característico de los huasos, junto con espuelas.</p>
+        <p>Después de la competencia, Javiera invita a Ramón a quedarse: "Ahora viene la cueca — el baile nacional de Chile. Los ganadores del rodeo siempre terminan bailando." Le enseña los pasos básicos: caminar en semicírculo mientras se mueve un pañuelo en la mano, al ritmo de la música.</p>
+        <p>"¿Por qué van juntos el rodeo y la cueca?" pregunta Ramón, intentando seguir los pasos. "Porque los dos necesitan ritmo, elegancia y trabajo en equipo," responde Javiera, riendo. "Un buen jinete también sabe moverse bien — no es casualidad que compartan la misma fiesta."</p>
+        <p>Ramón termina bailando cueca con Javiera, un poco torpe al principio, pero con una sonrisa enorme — otra costumbre chilena que ahora forma parte de su viaje.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un sábado de octubre, Ramón llegó a un pueblo cerca de Rancagua, Chile, en plena temporada de rodeo chileno, declarado deporte nacional del país desde 1962. El sonido de los caballos y los gritos del público lo guiaron hasta la medialuna, el ruedo característico con forma de media luna donde se desarrolla la competencia.</p>
+        <p>Allí conoció a Javiera, una joven huasa que competía junto a su papá, formando lo que se conoce como una "collera": un equipo de dos jinetes a caballo que trabajan en conjunto durante la prueba.</p>
+        <p>"Nosotros paramos al novillo contra la pared acolchada," le explicó Javiera después de su turno, todavía con la adrenalina de la competencia. "Se necesita mucha precisión — los dos caballos tienen que moverse casi como uno solo."</p>
+        <p>Javiera vestía un chamanto, poncho tejido tradicional de la zona central de Chile, mientras que su papá llevaba la chupalla, el sombrero de paja típico del huaso, además de las espuelas propias de la vestimenta.</p>
+        <p>Terminada la competencia, Javiera invitó a Ramón a quedarse para lo que, según explicó, era una parte inseparable del rodeo: "Ahora viene la cueca, el baile nacional de Chile. Los ganadores siempre terminan bailando." Le enseñó los pasos básicos — caminar en semicírculo mientras se agita un pañuelo en la mano, siguiendo el ritmo de la música.</p>
+        <p>Cuando Ramón le preguntó por qué el rodeo y la cueca estaban tan unidos, Javiera respondió con una sonrisa: "Los dos exigen ritmo, elegancia y trabajo en equipo. No es casualidad — un buen jinete casi siempre es también un buen bailarín."</p>
+        <p>Esa tarde, Ramón terminó bailando cueca junto a Javiera, torpe al principio pero cada vez más cómodo, mientras el video capturaba una costumbre que unía, de forma inesperada, la destreza a caballo con la gracia de un baile.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un sábado de octubre, Ramón llegó a un pueblo cerca de Rancagua, en plena temporada oficial de rodeo chileno —declarado deporte nacional de Chile desde 1962—, guiado por el bullicio de los caballos y el público hasta la medialuna, el característico ruedo semicircular donde se desarrolla la competencia.</p>
+        <p>Allí conoció a Javiera, joven huasa que competía junto a su padre formando una "collera": el equipo tradicional de dos jinetes a caballo que actúan en estrecha coordinación durante la prueba. "Nuestro objetivo es parar al novillo contra la pared acolchada," le explicó tras su participación, todavía agitada por la adrenalina. "Requiere una precisión enorme —los dos caballos deben moverse casi como una sola unidad."</p>
+        <p>Javiera vestía un chamanto, el poncho tejido tradicional de la zona central chilena, mientras su padre lucía la chupalla característica del huaso, complementada con las espuelas propias de la indumentaria ecuestre.</p>
+        <p>Concluida la competencia, Javiera invitó a Ramón a quedarse para lo que, según le explicó, era un componente inseparable del rodeo: "Ahora viene la cueca, el baile nacional. Los ganadores siempre terminan bailando con la Reina del Rodeo, o entre ellos mismos." Le mostró los pasos elementales —el desplazamiento en semicírculo, el pañuelo agitado en la mano, siempre en sincronía con el compás de la música.</p>
+        <p>Cuando Ramón indagó sobre esta conexión entre el rodeo y la cueca, Javiera respondió sin dudar: "Ambas disciplinas exigen ritmo, elegancia y una coordinación casi instintiva. No es coincidencia —un buen jinete suele ser también un buen bailarín; las dos habilidades comparten una misma sensibilidad corporal."</p>
+        <p>Esa tarde, Ramón terminó bailando cueca junto a Javiera, torpe en un principio pero cada vez con más soltura, mientras el video capturaba una tradición que entrelazaba, de manera inesperada pero coherente, la destreza ecuestre con la gracia coreográfica.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la medialuna</span> — half-moon shaped rodeo arena</div>
+      <div><span class="term">el huaso / la huasa</span> — traditional Chilean countryman/-woman</div>
+      <div><span class="term">la collera</span> — pair of riders competing together</div>
+      <div><span class="term">el chamanto</span> — traditional woven poncho</div>
+      <div><span class="term">la chupalla</span> — traditional straw hat</div>
+      <div><span class="term">el novillo</span> — young bull</div>
+      <div><span class="term">atajar</span> — to pin, block</div>
+      <div><span class="term">el pañuelo</span> — handkerchief</div>
+      <div><span class="term">el ritmo</span> — rhythm (cognate)</div>
+      <div><span class="term">la coordinación</span> — coordination (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>forman una collera</span>
+      <span>paramos al novillo</span>
+      <span>necesitan ritmo y trabajo en equipo</span>
+      <span>los ganadores siempre terminan bailando</span>
+      <span>no es casualidad</span>
+      <span>un buen jinete también es un buen bailarín</span>
+      <span>cada vez más cómodo</span>
+      <span>al ritmo de la música</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué es una "collera", y qué hacen Javiera y su papá en la competencia?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Por qué dice Javiera que el rodeo y la cueca van juntos?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — La Collera de Javiera</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Entrevistas callejeras → Historia 5</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Deporte y tradición cultural — el rodeo chileno como deporte nacional, la cultura huasa, la cueca como baile nacional, vínculo familiar en la competencia.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir una competencia y el trabajo en equipo; explicar vestimenta tradicional; establecer una conexión entre dos tradiciones (rodeo y baile); narrar en pasado un evento específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>forman una collera · paramos al novillo · necesitan ritmo y trabajo en equipo · los ganadores siempre terminan bailando · no es casualidad · un buen jinete también es un buen bailarín · cada vez más cómodo.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, la entrevista y el baile contados paso a paso.<br>
+    <strong>A2:</strong> se añade contexto histórico/cultural del rodeo y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando el encuentro como evento específico.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario técnico del rodeo; cierre reflexivo sobre la conexión cuerpo-tradición.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>El rodeo chileno involucra contacto físico con un animal (el novillo). La historia se enfoca deliberadamente en la destreza humana, el trabajo en equipo y la tradición, sin describir a detalle la experiencia del animal. Existe un debate público real en Chile sobre el bienestar animal en esta práctica; se puede mencionar como tema de discusión en clase si el docente lo considera apropiado para su grupo, sin tomar partido en el texto. Los datos sobre la collera, el chamanto, la chupalla, la medialuna y el vínculo histórico entre el rodeo y la cueca son reales y documentados.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Javiera</strong> — joven huasa, compite en collera con su papá, también bailarina de cueca. Detalle propio: siempre le pregunta a cada persona nueva "¿ya sabes bailar cueca?" antes de saludar formalmente.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>coordinación</em> — cognado natural con "coordination", usado para describir tanto el trabajo en equipo de la collera como el baile.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez descubriste que dos actividades muy diferentes en realidad tenían algo importante en común? ¿Cuáles eran?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

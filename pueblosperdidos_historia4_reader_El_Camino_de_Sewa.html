@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Camino de Sewá — Memorias de pueblos perdidos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Memorias de pueblos perdidos · Historia 4</div>
+    <h1>El Camino de Sewá</h1>
+    <div class="subtitle">Una historia de la Sierra Tarahumara, Chihuahua, México</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Sewá vive en un pueblo pequeño en la Sierra Tarahumara, en Chihuahua, México. Su pueblo está en las montañas, cerca de las barrancas.</p>
+        <p>La gente de Sewá es rarámuri. Rarámuri significa "los de los pies ligeros". Ellos caminan y corren distancias muy largas.</p>
+        <p>La escuela de Sewá está lejos. Por eso, Sewá vive en un internado — un albergue — de lunes a viernes.</p>
+        <p>Cada lunes, Sewá y su mamá caminan cuatro horas por la barranca para llegar al internado.</p>
+        <p>Sewá usa huaraches especiales y una falda de colores, ropa tradicional de su pueblo.</p>
+        <p>Un lunes de invierno, hace mucho frío. Hay un poco de hielo en el camino de piedra.</p>
+        <p>Su mamá le dice: "Camina despacio aquí. Pon los pies con cuidado, como te enseñó tu abuela."</p>
+        <p>Sewá camina con cuidado. Ella y su mamá llegan bien al internado.</p>
+        <p>La madre Begonia las recibe: "¡Bienvenida, Sewá! Qué bueno que llegaron seguras."</p>
+        <p>Sewá se despide de su mamá. Va a estar en el internado toda la semana.</p>
+        <p>El viernes, Sewá corre de regreso a casa. Ella es rápida, como su pueblo. Su familia la espera con una sonrisa grande.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Sewá vive en una pequeña ranchería en la Sierra Tarahumara, en el estado de Chihuahua, México, una región de montañas altas y barrancas profundas, como la famosa Barranca del Cobre.</p>
+        <p>La familia de Sewá es rarámuri, un pueblo indígena conocido como "los de los pies ligeros" porque tradicionalmente caminan y corren distancias muy largas por las montañas, subiendo y bajando barrancas todos los días.</p>
+        <p>Como la escuela más cercana está muy lejos de su casa, Sewá vive en un internado — un albergue escolar — de lunes a viernes, y solo regresa a su casa los fines de semana.</p>
+        <p>Cada lunes muy temprano, Sewá y su mamá caminan cerca de cuatro horas por senderos de piedra para llegar al internado. Sewá lleva puesta su ropa tradicional: una falda de colores y huaraches hechos con neumáticos reciclados.</p>
+        <p>Un lunes de invierno, hace mucho más frío de lo normal, y una parte del camino de piedra tiene hielo. Su mamá camina más despacio y le dice: "Pon los pies con cuidado aquí, como te enseñó tu abuela — así caminamos en la sierra cuando hace frío."</p>
+        <p>Sewá sigue el ejemplo de su mamá, paso a paso, y las dos llegan bien al internado, aunque un poco más tarde de lo normal. La madre Begonia, quien dirige el internado, las recibe con calidez: "¡Bienvenida, Sewá! Qué bueno que llegaron seguras a pesar del hielo."</p>
+        <p>Sewá se despide de su mamá con un abrazo y pasa la semana en el internado, aprendiendo español además de su idioma materno, el rarámuri. El viernes, cuando termina la última clase, Sewá corre de regreso a casa por el mismo camino — rápida y segura, como toda su gente — y encuentra a su familia esperándola con una gran sonrisa.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un lunes de enero, en pleno invierno, Sewá se despidió de su papá muy temprano y salió con su mamá hacia el internado donde pasaría la semana estudiando. Vivían en una pequeña ranchería de la Sierra Tarahumara, en Chihuahua, una región de montañas y barrancas profundas donde su pueblo, los rarámuri, había vivido por generaciones.</p>
+        <p>El nombre rarámuri significa "los de los pies ligeros", porque tradicionalmente caminaban y corrían largas distancias por las montañas como parte de su vida diaria. Para Sewá, esto significaba que, como la escuela más cercana quedaba a varias horas de camino, vivía en un internado de lunes a viernes y solo regresaba a casa los fines de semana.</p>
+        <p>Esa mañana, caminaron casi cuatro horas por senderos de piedra entre las barrancas. Sewá llevaba su ropa tradicional — una falda de colores y huaraches hechos con neumáticos reciclados — y sentía el frío del invierno más fuerte de lo normal.</p>
+        <p>A medio camino, notaron que una parte del sendero de piedra tenía hielo. Su mamá, con la experiencia de haber caminado ese mismo camino toda su vida, le dijo: "Pon los pies con cuidado aquí, como te enseñó tu abuela." Sewá siguió sus pasos exactamente, con cuidado, y lograron cruzar la parte helada sin problema.</p>
+        <p>Llegaron al internado un poco más tarde de lo normal, pero seguras. La madre Begonia, quien dirigía el albergue, las recibió con calidez: "¡Bienvenida, Sewá! Qué bueno que llegaron seguras a pesar del hielo."</p>
+        <p>Después de despedirse de su mamá con un fuerte abrazo, Sewá pasó la semana en el internado, estudiando español junto a su idioma materno, el rarámuri. El viernes, en cuanto terminaron las clases, corrió de regreso a casa por el mismo camino — rápida, ligera, como toda su gente — y encontró a su familia esperándola con los brazos abiertos.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>En la Sierra Tarahumara, en el estado mexicano de Chihuahua, la vida del pueblo rarámuri —cuyo nombre significa "los de los pies ligeros"— ha estado históricamente marcada por su relación con un territorio de montañas escarpadas y barrancas profundas, entre ellas la célebre Barranca del Cobre. Caminar y correr largas distancias no es, para ellos, un esfuerzo excepcional, sino una práctica cotidiana heredada de generación en generación.</p>
+        <p>Para Sewá, de nueve años, esa realidad se traducía en una rutina particular: como la escuela más cercana a su ranchería quedaba a varias horas de camino, vivía en un internado escolar de lunes a viernes, y solo regresaba a casa los fines de semana. Aquel lunes de enero, en pleno invierno, se despidió de su padre y emprendió, junto a su madre, la caminata de casi cuatro horas que las separaba del albergue.</p>
+        <p>El frío de esa mañana era más intenso de lo habitual, y una parte del sendero de piedra amaneció cubierta de una fina capa de hielo. Su madre, que conocía cada curva de ese camino desde niña, redujo el paso y le advirtió: "Pon los pies con cuidado aquí, como te enseñó tu abuela" — una instrucción que formaba parte de un conocimiento transmitido oralmente, generación tras generación, sobre cómo moverse con seguridad por la sierra en cualquier estación.</p>
+        <p>Siguiendo con precisión los pasos de su madre, Sewá logró cruzar el tramo helado sin contratiempos. Llegaron al internado con algo de retraso, pero sanas y salvas. La madre Begonia, encargada del albergue, las recibió con calidez, consciente —como todos en la región— de las exigencias que imponía el clima serrano en esa época del año.</p>
+        <p>Tras despedirse de su madre con un abrazo prolongado, Sewá pasó la semana en el internado, alternando el aprendizaje del español con el uso cotidiano de su lengua materna, el rarámuri, entre compañeras que compartían la misma realidad. El viernes, en cuanto terminaron las clases, corrió de regreso a casa por el mismo sendero —ligera, veloz, heredera de una tradición de resistencia física y cultural— y encontró a su familia esperándola, como cada semana, con los brazos abiertos.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la ranchería</span> — small rural settlement</div>
+      <div><span class="term">la barranca</span> — canyon, ravine</div>
+      <div><span class="term">el huarache</span> — traditional sandal</div>
+      <div><span class="term">el internado / el albergue</span> — boarding school</div>
+      <div><span class="term">despedirse</span> — to say goodbye</div>
+      <div><span class="term">ligero/a</span> — light, swift</div>
+      <div><span class="term">la sierra</span> — mountain range</div>
+      <div><span class="term">el hielo</span> — ice</div>
+      <div><span class="term">heredar / heredera</span> — to inherit / heir (cognate: "heredity")</div>
+      <div><span class="term">la resistencia</span> — endurance (cognate: "resistance")</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>de lunes a viernes</span>
+      <span>caminan / caminaban por...</span>
+      <span>pon los pies con cuidado</span>
+      <span>llegan / llegaron seguras</span>
+      <span>se despide / se despidió de...</span>
+      <span>corre / corrió de regreso</span>
+      <span>como toda su gente</span>
+      <span>qué bueno que...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué vive Sewá en un internado de lunes a viernes?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué le enseña su mamá para cruzar la parte helada del camino, y de dónde viene ese conocimiento?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Camino de Sewá</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Memorias de pueblos perdidos → Historia 4</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Geografía humana y vida cotidiana — el internado como modelo educativo en zonas remotas, la familia, el paisaje serrano, herencia cultural, el valor de la educación.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir rutinas semanales (de lunes a viernes); expresar instrucciones/consejos (pon los pies con cuidado); narrar en pasado la rutina de un día específico; expresar despedida y reencuentro.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>de lunes a viernes · caminan/caminaban por... · pon los pies con cuidado · llegan/llegaron seguras · se despide/despidió de... · corre/corrió de regreso · como toda su gente.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, rutina semanal paso a paso.<br>
+    <strong>A2:</strong> se añade descripción del paisaje serrano y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando un día específico; conocimiento transmitido de generación en generación.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; contexto etnográfico rarámuri; tema de herencia cultural y resistencia.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Separación semanal de la familia (internado) → manejado con calidez, enmarcado como rutina normal y positiva, con reencuentro alegre cada viernes — no como abandono. Frío/hielo → manejado con calma, mostrando el conocimiento transmitido por la madre como herramienta de seguridad, no como peligro extremo. La investigación de fondo incluyó reportes reales sobre presencia de grupos armados en algunas zonas de la Sierra Tarahumara — deliberadamente excluido de esta historia por ser inapropiado para el público escolar. No se nombra ninguna familia real específica; "madre Begonia" es un nombre genérico inspirado en el rol real de las religiosas que dirigen varios internados de la región, no una persona identificable.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — el enfoque de esta historia está en la comunidad rarámuri local, sin personaje visitante internacional.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>resistencia</em> — cognado natural con "resistance"/endurance, usado para describir tanto la fortaleza física como cultural del pueblo rarámuri.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez tuviste que estar lejos de tu familia por un tiempo, por la escuela o por otra razón? ¿Cómo se sintió el reencuentro?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

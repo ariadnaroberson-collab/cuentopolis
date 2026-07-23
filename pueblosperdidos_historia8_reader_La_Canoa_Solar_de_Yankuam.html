@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Canoa Solar de Yankuam — Memorias de pueblos perdidos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Memorias de pueblos perdidos · Historia 8</div>
+    <h1>La Canoa Solar de Yankuam</h1>
+    <div class="subtitle">Una historia del territorio achuar, Pastaza, Amazonía ecuatoriana</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Yankuam vive en una comunidad achuar, junto a un río en la selva amazónica de Ecuador. Su comunidad está lejos de todo — solo se puede llegar por el río.</p>
+        <p>Antes, las canoas eran de madera, con remo. Después, las familias usaban canoas con motor de gasolina — las "peque peques."</p>
+        <p>La gasolina cuesta mucho dinero. A veces, la familia de Yankuam no tiene suficiente dinero para el motor. Ese día, Yankuam no puede ir a la escuela.</p>
+        <p>La escuela de Yankuam, la Unidad Educativa Tuna, es la única escuela secundaria para quince comunidades.</p>
+        <p>Hace poco, la comunidad recibió una canoa nueva: una canoa solar. La canoa solar no necesita gasolina — usa energía del sol.</p>
+        <p>Un día, la familia de Yankuam no tiene dinero para gasolina. Pero esta vez, Yankuam no se queda en casa.</p>
+        <p>Yankuam sube a la canoa solar de la comunidad, con otros estudiantes. El capitán dice: "Esta canoa no necesita gasolina. Vamos todos juntos."</p>
+        <p>La canoa viaja despacio y en silencio por el río. Yankuam llega a la escuela a tiempo.</p>
+        <p>Su abuelo, que recuerda cuando las canoas solo tenían remo, le dice esa noche: "El río siempre fue nuestro camino. Ahora también es más justo para todos."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Yankuam vive en una comunidad achuar, junto a un río de la selva amazónica ecuatoriana, en la provincia de Pastaza. Su comunidad está tan aislada que la única manera de llegar o salir es navegando el río.</p>
+        <p>Durante generaciones, las familias achuar usaron canoas de madera con remo para moverse por el territorio. Después llegaron las "peque peques" — canoas con motor a gasolina, más rápidas, pero que dependían de un combustible caro y difícil de conseguir en la selva.</p>
+        <p>La escuela de Yankuam, la Unidad Educativa Tuna, es la única escuela secundaria para unas quince comunidades de la zona, así que muchos estudiantes tienen que viajar en canoa para llegar. El problema era que, cuando la familia de Yankuam no tenía suficiente dinero para la gasolina, ella simplemente se quedaba en casa esos días.</p>
+        <p>Hace poco, sin embargo, la comunidad recibió una canoa solar — un proyecto que trajo la primera embarcación eléctrica alimentada por energía solar a la zona, después de un viaje de varios días desde otro país. La canoa solar no necesita gasolina; funciona con paneles solares y baterías.</p>
+        <p>Un día, la familia de Yankuam de nuevo no tenía dinero para gasolina — algo que antes habría significado faltar a clases. Pero esta vez, Yankuam simplemente subió a la canoa solar comunitaria, junto a otros estudiantes de comunidades cercanas. "Esta canoa no necesita gasolina," le explicó el capitán. "Vamos todos juntos, sin costo."</p>
+        <p>La canoa avanzó despacio y casi en silencio por el río, sin el ruido ni el humo de los motores a gasolina. Yankuam llegó a la escuela a tiempo, por primera vez en varias semanas sin depender del dinero de su familia.</p>
+        <p>Esa noche, su abuelo, que recordaba los tiempos en que las canoas solo tenían remo, le dijo con una sonrisa: "El río siempre fue nuestro camino. Ahora, gracias al sol, también es un camino más justo para todos."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un lunes de mayo, Yankuam se despertó sabiendo que, probablemente, no podría ir a la escuela ese día. Vivía en una comunidad achuar junto a un río de la selva amazónica ecuatoriana, en la provincia de Pastaza, un territorio tan aislado que solo se podía entrar o salir navegando.</p>
+        <p>Durante generaciones, su pueblo había usado canoas de madera con remo para desplazarse por el río. Más tarde llegaron las "peque peques," canoas con motor a gasolina, más rápidas pero costosas de mantener. La escuela de Yankuam, la Unidad Educativa Tuna, era la única secundaria para unas quince comunidades de la región, así que la mayoría de los estudiantes dependían de esas canoas para llegar a clases.</p>
+        <p>El problema era que, cuando su familia no tenía suficiente dinero para comprar gasolina —como ocurría esa mañana—, Yankuam simplemente se quedaba en casa. Ya había pasado varios días así ese mes.</p>
+        <p>Sin embargo, hacía poco, la comunidad había recibido algo nuevo: una canoa solar, resultado de un proyecto que trajo la primera embarcación eléctrica alimentada por energía solar hasta esa parte de la selva, después de un largo viaje desde otro país. A diferencia de las peque peques, la canoa solar no necesitaba gasolina — funcionaba con paneles solares y baterías, y su uso era gratuito para las familias de la comunidad.</p>
+        <p>Esa mañana, en lugar de quedarse en casa, Yankuam caminó hasta el embarcadero y subió a la canoa solar junto a otros estudiantes de comunidades vecinas. El capitán, mientras organizaba a los pasajeros, comentó: "Esta canoa no necesita gasolina. Vamos todos juntos, sin costo para nadie."</p>
+        <p>La canoa avanzó despacio y casi en silencio río abajo, sin el ruido ni el olor a combustible de los motores tradicionales. Por primera vez en semanas, Yankuam llegó a la escuela a tiempo, sin haber dependido del dinero de su familia.</p>
+        <p>Esa noche, su abuelo, que recordaba bien los tiempos en que las únicas canoas eran de remo, le dijo con orgullo: "El río siempre fue nuestro camino, hija. Ahora, gracias al sol, también es un camino más justo para todos."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>En el territorio achuar de la provincia amazónica de Pastaza, en Ecuador, la vida de las comunidades ribereñas ha estado, durante generaciones, indisolublemente ligada al río: la única vía de acceso y salida en una región donde no existen carreteras. Para Yankuam, de once años, esa realidad geográfica se traducía en una dependencia constante de la canoa como medio de transporte hacia la escuela.</p>
+        <p>Su pueblo había pasado, a lo largo de las décadas, por varias etapas tecnológicas: primero las canoas tradicionales de madera, propulsadas a remo; después las llamadas "peque peques," embarcaciones con motor a gasolina que, aunque más veloces, imponían un costo de combustible que no todas las familias podían sostener de manera constante. La escuela de Yankuam, la Unidad Educativa Tuna, funcionaba como el único centro de educación secundaria para unas quince comunidades de la zona, lo cual hacía del transporte fluvial una necesidad ineludible para la mayoría de los estudiantes.</p>
+        <p>Aquel lunes de mayo, como había ocurrido ya varias veces ese mes, la familia de Yankuam no contaba con dinero suficiente para comprar gasolina. En circunstancias normales, esto habría significado, sin más, quedarse en casa. Sin embargo, la comunidad había incorporado recientemente una innovación significativa: una canoa solar, resultado de un proyecto que introdujo la primera embarcación eléctrica de energía solar en la región, tras un extenso viaje logístico desde otro país sudamericano. A diferencia de sus predecesoras, esta embarcación no dependía de combustibles fósiles —funcionaba con paneles solares y un sistema de baterías— y su uso comunitario no representaba costo alguno para las familias.</p>
+        <p>Esa mañana, en lugar de resignarse a faltar a clases, Yankuam se dirigió al embarcadero y abordó la canoa solar junto a otros estudiantes de comunidades vecinas. El capitán, mientras organizaba el embarque, resumió el cambio con sencillez: "Esta canoa no necesita gasolina. Vamos todos juntos, sin costo para nadie."</p>
+        <p>La embarcación avanzó río abajo con una lentitud serena y un silencio notable, ausente del ruido y el olor a combustible característicos de los motores convencionales. Por primera vez en semanas, Yankuam llegó a la escuela puntualmente, sin que el acceso a su educación dependiera de la economía familiar de ese día en particular.</p>
+        <p>Esa noche, su abuelo —quien aún recordaba los tiempos en que el remo era la única tecnología disponible— le habló con una mezcla de nostalgia y esperanza: "El río siempre fue nuestro camino, hija. Ahora, gracias al sol, también es un camino más justo para todos."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la canoa</span> — canoe</div>
+      <div><span class="term">el remo</span> — paddle</div>
+      <div><span class="term">la gasolina / el combustible</span> — gasoline / fuel</div>
+      <div><span class="term">el embarcadero</span> — dock, landing</div>
+      <div><span class="term">río abajo</span> — downriver</div>
+      <div><span class="term">la energía solar</span> — solar energy (cognate)</div>
+      <div><span class="term">gratuito/a</span> — free of charge</div>
+      <div><span class="term">ribereño/a</span> — riverside, riverine</div>
+      <div><span class="term">faltar (a clases)</span> — to miss (class)</div>
+      <div><span class="term">depender de</span> — to depend on</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>depende de...</span>
+      <span>no tiene dinero para...</span>
+      <span>esta canoa no necesita gasolina</span>
+      <span>vamos todos juntos</span>
+      <span>por primera vez en semanas</span>
+      <span>gracias al sol</span>
+      <span>más justo para todos</span>
+      <span>antes... ahora...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué a veces Yankuam no podía ir a la escuela antes de que llegara la canoa solar?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué cambia para la comunidad de Yankuam con la nueva canoa solar?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — La Canoa Solar de Yankuam</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Memorias de pueblos perdidos → Historia 8 (última del libro)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Geografía humana y vida cotidiana — el río como camino, acceso económico a la educación, tecnología sostenible, herencia cultural achuar.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Contrastar pasado y presente (antes/ahora); expresar causa y efecto económico (no tener dinero para...); narrar un cambio comunitario; narrar en pasado la rutina de un día específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>depende de... · no tiene dinero para... · esta canoa no necesita gasolina · vamos todos juntos · por primera vez en semanas · gracias al sol · más justo para todos.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, contraste antes/ahora básico.<br>
+    <strong>A2:</strong> se añade contexto histórico/tecnológico y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando un día específico; la dependencia económica como obstáculo.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; tres etapas tecnológicas (remo, motor, solar); tema de equidad de acceso.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Dificultad económica (falta de dinero para gasolina, ausencias escolares) → manejado con dignidad, resuelto por una solución comunitaria y no por caridad individual ni lástima. Esta historia se basa en un proyecto real y documentado —la "canoa solar" del pueblo achuar en Pastaza, Ecuador (proyecto Kara Solar)— aunque Yankuam y su familia son ficticias. La escuela mencionada, Unidad Educativa Tuna, y su rol como centro educativo para unas quince comunidades, también son datos reales documentados.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — el enfoque de esta historia está en la comunidad achuar local, sin personaje visitante internacional dentro de la trama.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>solar</em> — cognado natural, usado para nombrar el cambio tecnológico central de la historia.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez algo cambió para que fuera más fácil o más justo para todos en tu comunidad? ¿Qué fue?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Esta es la segunda historia del libro (después de la Historia 6, "La Luz de Marisol") centrada en energía solar transformando el acceso a la educación — un hilo temático intencional de la colección "Memorias de pueblos perdidos": la tecnología sostenible como puente hacia la equidad educativa en comunidades remotas de distintos países.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

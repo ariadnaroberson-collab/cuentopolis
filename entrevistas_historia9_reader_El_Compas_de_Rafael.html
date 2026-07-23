@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Compás de Rafael — Entrevistas callejeras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Entrevistas callejeras · Historia 9 (final)</div>
+    <h1>El Compás de Rafael</h1>
+    <div class="subtitle">Una historia de la Zona Colonial, Santo Domingo, República Dominicana</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Ramón viaja a Santo Domingo, República Dominicana. Camina por la Zona Colonial, cerca del Parque Colón.</p>
+        <p>En la calle, un grupo toca perico ripiao — un tipo de merengue. Usan tres instrumentos: la tambora, la güira y el acordeón.</p>
+        <p>¡Ramón ve a Milo Compás otra vez! Es su última parada en este viaje.</p>
+        <p>Ramón conoce a Rafael, el güirero del grupo. Rafael explica: "La tambora es africana. La güira es taína. El acordeón es europeo. Tres culturas, tres instrumentos, una música."</p>
+        <p>Milo pregunta: "¿Y la bachata? ¿Es difícil como el flamenco?"</p>
+        <p>Rafael se ríe: "No, la bachata es más simple. Un paso básico: lado, lado, lado, y un toque con el pie."</p>
+        <p>Milo prueba los pasos. ¡Esta vez, aprende rápido!</p>
+        <p>Milo dice: "¡Por fin! Después del flamenco, esto es fácil."</p>
+        <p>Rafael explica: "La bachata nació en barrios humildes, hace muchos años. Antes, la gente rica no la respetaba. Ahora, todo el mundo la baila."</p>
+        <p>Ramón y Milo bailan bachata juntos en la calle, riendo.</p>
+        <p>Al final del viaje, Ramón piensa en todos los países que visitó. Milo le dice: "Tal vez hacemos un proyecto juntos pronto."</p>
+        <p>Ramón sonríe: "Me encantaría."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Ramón viaja a Santo Domingo, República Dominicana, su última parada en el viaje. Camina por la Zona Colonial, cerca del histórico Parque Colón.</p>
+        <p>En plena calle, un grupo toca perico ripiao, un estilo animado de merengue interpretado con tres instrumentos: la tambora, la güira y el acordeón.</p>
+        <p>¡Ramón se sorprende al ver a Milo Compás otra vez! "Esta es mi última parada también," le dice Milo, sonriendo.</p>
+        <p>Ramón conoce a Rafael, el güirero del grupo, quien le explica el origen de la música: "La tambora es de origen africano. La güira es de origen taíno, el pueblo indígena de la isla. El acordeón llegó de Europa. Tres culturas, tres instrumentos, una sola música: el merengue."</p>
+        <p>Milo, todavía recordando su experiencia con el flamenco en España, pregunta con algo de cautela: "¿Y la bachata? ¿Es tan difícil como el flamenco?"</p>
+        <p>Rafael se ríe: "No, para nada. La bachata tiene un paso básico bastante simple — lado, lado, lado, y un pequeño toque con el pie. Cualquiera lo aprende en minutos."</p>
+        <p>Milo prueba los pasos, y esta vez todo fluye con naturalidad. "¡Por fin!" exclama, riendo. "Después del flamenco, esto se siente como un regalo."</p>
+        <p>Rafael les cuenta que la bachata nació en los barrios más humildes de la isla, en los años sesenta, y que por mucho tiempo la sociedad más adinerada la miró con desprecio. "Hoy, todo el mundo la baila — hasta en otros países," añade con orgullo.</p>
+        <p>Ramón y Milo terminan bailando bachata en plena calle, entre risas. Al cerrar el capítulo de su viaje por Latinoamérica, Ramón reflexiona sobre todo lo que aprendió, país por país. Milo le dice antes de despedirse: "Tal vez hagamos un proyecto juntos pronto." Ramón sonríe: "Me encantaría."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un viernes por la noche, Ramón llegó a Santo Domingo, República Dominicana, en lo que sería su última parada del viaje. Caminó por la Zona Colonial, cerca del histórico Parque Colón, siguiendo el sonido de un grupo que tocaba en plena calle.</p>
+        <p>Se trataba de perico ripiao, un estilo animado de merengue interpretado tradicionalmente con tres instrumentos: la tambora, la güira y el acordeón. Al acercarse, Ramón se sorprendió al ver una cara ya muy conocida entre el público: Milo Compás. "Esta es mi última parada también," le dijo Milo, con una sonrisa amplia.</p>
+        <p>Ramón conoció entonces a Rafael, el güirero del grupo, quien les explicó con orgullo el origen mestizo de la música: "La tambora es de origen africano. La güira, de origen taíno, el pueblo indígena que habitaba la isla. Y el acordeón llegó de Europa. Tres culturas, tres instrumentos, una sola música."</p>
+        <p>Milo, todavía con el recuerdo fresco de su difícil aprendizaje del flamenco en España, preguntó con cierta cautela: "¿Y la bachata? ¿Es tan difícil como el flamenco?" Rafael soltó una carcajada: "Para nada. El paso básico de la bachata es bastante simple — lado, lado, lado, y un pequeño toque con el pie. Cualquiera lo aprende en minutos."</p>
+        <p>Milo probó los pasos, y esta vez todo fluyó con naturalidad, sin la frustración de Sevilla. "¡Por fin!" exclamó, riendo con alivio. "Después del flamenco, esto se siente como un regalo."</p>
+        <p>Rafael les contó que la bachata había nacido en los barrios más humildes de la isla durante los años sesenta, y que por mucho tiempo las clases más adineradas la habían mirado con desprecio, considerándola música "de arrabal." "Hoy," añadió con orgullo, "todo el mundo la baila, hasta en otros países."</p>
+        <p>Ramón y Milo terminaron bailando bachata en plena calle, entre risas compartidas. Mientras cerraba mentalmente el capítulo de su recorrido por Latinoamérica, Ramón se dio cuenta de cuánto había aprendido, historia por historia, país por país. Antes de despedirse, Milo le propuso: "Tal vez hagamos un proyecto juntos pronto." Ramón, sin dudarlo, respondió: "Me encantaría."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un viernes por la noche, Ramón llegó a Santo Domingo, República Dominicana, en lo que constituiría la última parada de su recorrido. Caminó por la Zona Colonial, en las inmediaciones del histórico Parque Colón, guiado por el sonido de un grupo que interpretaba música en plena calle.</p>
+        <p>Se trataba de perico ripiao, variante particularmente animada del merengue, ejecutada tradicionalmente con tres instrumentos: la tambora, la güira y el acordeón. Al aproximarse, Ramón se topó, para su sorpresa, con un rostro ya familiar entre el público: Milo Compás. "Esta es mi última parada también," le confesó Milo, con una sonrisa que delataba cierta nostalgia anticipada.</p>
+        <p>Ramón conoció entonces a Rafael, el güirero del conjunto, quien les explicó con evidente orgullo el origen mestizo de esta música: "La tambora es de raíz africana. La güira, de origen taíno, el pueblo indígena que habitó originalmente la isla. Y el acordeón llegó de Europa. Tres culturas, tres instrumentos, una sola música."</p>
+        <p>Milo, todavía con el recuerdo vívido de su arduo aprendizaje flamenco en Sevilla, preguntó con cierta cautela: "¿Y la bachata? ¿Es tan exigente como el flamenco?" Rafael respondió entre risas: "En absoluto. El paso básico de la bachata es notablemente sencillo —lado, lado, lado, y un breve toque con el pie. Prácticamente cualquiera lo domina en cuestión de minutos."</p>
+        <p>Milo ensayó los pasos, y esta vez todo fluyó con una naturalidad que contrastaba marcadamente con la frustración vivida en España. "¡Por fin!" exclamó, con un alivio genuino. "Después del flamenco, esto se siente casi como un regalo."</p>
+        <p>Rafael les relató que la bachata había surgido en los barrios más humildes de la isla durante la década de 1960, y que durante mucho tiempo las clases sociales más acomodadas la habían relegado, considerándola música "de arrabal." "Hoy," añadió con satisfacción evidente, "se baila en todo el mundo."</p>
+        <p>Ramón y Milo terminaron bailando bachata en plena calle, entre risas compartidas y la mirada curiosa de los transeúntes. Mientras cerraba, casi sin proponérselo, el capítulo de su recorrido por Latinoamérica, Ramón tomó conciencia de la magnitud de lo aprendido, historia tras historia, país tras país. Antes de despedirse, Milo le propuso, con una mirada cómplice: "Tal vez hagamos un proyecto juntos pronto." Ramón, sin vacilar, respondió: "Me encantaría."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la tambora</span> — traditional Dominican drum</div>
+      <div><span class="term">la güira</span> — Taíno-origin metal scraper instrument</div>
+      <div><span class="term">el acordeón</span> — accordion (cognate)</div>
+      <div><span class="term">taíno/a</span> — Taíno (Indigenous Caribbean people)</div>
+      <div><span class="term">humilde</span> — humble</div>
+      <div><span class="term">el desprecio</span> — scorn, disdain</div>
+      <div><span class="term">el toque (con el pie)</span> — tap (with the foot)</div>
+      <div><span class="term">fluir</span> — to flow</div>
+      <div><span class="term">la parada</span> — stop (on a trip)</div>
+      <div><span class="term">el contraste</span> — contrast (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>tres culturas, tres instrumentos</span>
+      <span>lado, lado, lado</span>
+      <span>después de...</span>
+      <span>esto se siente como un regalo</span>
+      <span>nació en los barrios humildes</span>
+      <span>todo el mundo la baila</span>
+      <span>tal vez hagamos... pronto</span>
+      <span>me encantaría</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué representan los tres instrumentos del perico ripiao, según Rafael?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Por qué le resulta tan fácil la bachata a Milo, en comparación con el flamenco?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Compás de Rafael</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Entrevistas callejeras → Historia 9 (última del libro)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Música y tradición cultural — mestizaje cultural en el merengue, historia social de la bachata, cierre reflexivo del viaje de Ramón.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Explicar origen mestizo/mixto de una tradición; comparar dos experiencias de aprendizaje (fácil vs. difícil); narrar un cierre/reflexión de viaje; narrar en pasado un evento específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>tres culturas, tres instrumentos · lado, lado, lado · después de... · esto se siente como un regalo · nació en los barrios humildes · todo el mundo la baila · tal vez hagamos... pronto.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, el encuentro y el baile contados paso a paso.<br>
+    <strong>A2:</strong> se añade contexto histórico de la música y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando el encuentro como evento específico; reflexión de cierre.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario histórico/social más preciso; cierre reflexivo de todo el libro.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Se menciona el desprecio histórico de las clases altas hacia la bachata por su origen humilde — dato real y documentado, presentado como una historia de superación y orgullo cultural, no de resentimiento. El origen mestizo del merengue (tambora africana, güira taína, acordeón europeo), el perico ripiao, y la historia social de la bachata son datos reales y documentados. Rafael es un personaje ficticio.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Rafael</strong> — güirero de un grupo de perico ripiao en la Zona Colonial de Santo Domingo. Detalle propio: enseña un paso de baile distinto a cada persona nueva que conoce, "para que cada quien se lleve algo único."</p>
+    <p><strong>Milo Compás</strong> — tercera y última aparición en este libro. Cierra su arco: después de dominar el casino en Cuba y luchar con el flamenco en España, aquí encuentra en la bachata un balance — un baile accesible que le devuelve la confianza sin quitarle la humildad aprendida en Sevilla.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>contraste</em> — cognado natural con "contrast", usado para describir la diferencia entre la dificultad del flamenco y la sencillez de la bachata.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Piensa en todo lo que Ramón aprendió en su viaje. Si tú pudieras entrevistar a alguien de tu propia comunidad sobre una tradición, ¿a quién elegirías y por qué?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Historia final del libro "Entrevistas callejeras" — completa el elenco de 8 países (Historias 2-9) más el capítulo introductorio (Historia 1). Cierra el arco de tres apariciones de Milo Compás (Cuba → España → República Dominicana) y ofrece un cierre reflexivo abierto para el personaje de Ramón, sin cerrar la puerta a futuros libros o proyectos.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Ronda de Bruno — Entrevistas callejeras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Entrevistas callejeras · Historia 7</div>
+    <h1>La Ronda de Bruno</h1>
+    <div class="subtitle">Una historia de la Rambla de Montevideo, Uruguay</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Ramón viaja a Montevideo, Uruguay. Camina por la Rambla, un paseo largo junto al mar.</p>
+        <p>Ramón ve a un grupo de amigos sentados en círculo. Todos comparten un mate.</p>
+        <p>Ramón conoce a Bruno. Bruno tiene un termo bajo el brazo y prepara el mate con cuidado.</p>
+        <p>Bruno explica: "Ponemos yerba mate en el mate. Después, agua caliente, pero no hirviendo. Y tomamos con la bombilla."</p>
+        <p>Bruno le pasa el mate a Ramón. Ramón toma un poco y dice: "¡Gracias!"</p>
+        <p>Todos se ríen. Bruno explica: "Cuando dices 'gracias,' significa que no quieres más mate. ¡Ahora no te toca otra vez!"</p>
+        <p>Ramón se ríe también: "¡No sabía esa regla!"</p>
+        <p>Bruno explica: "El mate se comparte en ronda. Una persona ceba, y todos toman por turno, con la misma bombilla."</p>
+        <p>Ramón pregunta: "¿Por qué el mate es tan importante en Uruguay?"</p>
+        <p>Bruno responde: "No es solo una bebida. Es una excusa para hablar, para estar juntos. Casi todos los uruguayos caminan con su termo."</p>
+        <p>Ramón se queda un rato más en la ronda, esta vez sin decir "gracias" tan rápido.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Ramón viaja a Montevideo, Uruguay, y camina por la Rambla, el largo paseo junto al río de la Plata donde muchos uruguayos pasan las tardes.</p>
+        <p>Allí ve a un grupo de amigos sentados en círculo, compartiendo un mate. Se acerca y conoce a Bruno, quien tiene un termo bajo el brazo — una imagen típica de cualquier uruguayo, según le explican.</p>
+        <p>Bruno prepara el mate con cuidado: llena el recipiente con yerba mate, inclina un poco la yerba hacia un lado, y vierte agua caliente, pero sin dejar que hierva. Luego coloca la bombilla, la pajilla metálica por donde se toma.</p>
+        <p>Bruno le ofrece el primer mate a Ramón. Él toma un sorbo y dice, educadamente: "¡Gracias!"</p>
+        <p>Todo el grupo se ríe. "Cuando dices 'gracias' al devolver el mate," le explica Bruno, "significa que no quieres más. ¡Ya no te toca otra vuelta!"</p>
+        <p>Ramón se ríe también, sorprendido: "No sabía esa regla — pensé que era simplemente cortesía."</p>
+        <p>Bruno le explica la costumbre: "El mate se comparte en ronda. Una persona ceba — prepara y sirve — y todos los demás toman por turno, con la misma bombilla, sin decir 'gracias' hasta que de verdad no quieran más."</p>
+        <p>"¿Por qué es tan importante el mate en Uruguay?" pregunta Ramón. "No es solo una bebida," responde Bruno. "Es una excusa para hablar, para estar juntos. Casi todos caminamos por la calle con nuestro termo, listos para compartir con quien se cruce."</p>
+        <p>Ramón se queda un buen rato más en la ronda, esta vez tomando su mate en silencio, sin decir "gracias" hasta que realmente termina.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un sábado por la tarde, Ramón llegó a Montevideo, Uruguay, y caminó por la Rambla, el extenso paseo junto al río de la Plata donde generaciones de uruguayos han pasado sus tardes libres. Enseguida notó algo que se repetía en casi todos los grupos: alguien con un termo bajo el brazo.</p>
+        <p>Se acercó a un grupo de amigos sentados en círculo, compartiendo un mate, y conoció a Bruno, quien preparaba la infusión con movimientos que claramente había repetido miles de veces: llenó el recipiente con yerba, inclinó la yerba hacia un lado, y vertió agua caliente —sin dejarla hervir— antes de colocar la bombilla con cuidado.</p>
+        <p>Bruno le pasó el primer mate a Ramón, quien tomó un sorbo y, siguiendo la costumbre que conocía de otros países, dijo educadamente: "¡Gracias!"</p>
+        <p>Todo el grupo soltó una carcajada. "Cuando decís 'gracias' al devolver el mate," le explicó Bruno entre risas, "significa que ya no querés más. ¡Te acabás de sacar de la ronda!"</p>
+        <p>Sorprendido, Ramón se rió también: "No tenía idea de esa regla — pensé que simplemente estaba siendo cortés."</p>
+        <p>Bruno aprovechó para explicarle la costumbre completa: "El mate se comparte en ronda. Una persona ceba —prepara y sirve— y los demás toman por turno, con la misma bombilla, sin decir 'gracias' hasta que de verdad no quieran más."</p>
+        <p>Cuando Ramón preguntó por qué el mate ocupaba un lugar tan central en la cultura uruguaya, Bruno respondió sin dudar: "No es solo una bebida. Es una excusa para hablar, para estar juntos. Casi todos caminamos con nuestro termo, listos para compartir con quien se cruce en el camino."</p>
+        <p>Ramón se quedó un buen rato más en la ronda, esta vez tomando su mate en silencio, cuidándose de no decir "gracias" hasta que de verdad hubiera terminado.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un sábado por la tarde, Ramón llegó a Montevideo y recorrió la Rambla, el extenso paseo costero junto al río de la Plata donde generaciones de uruguayos han transcurrido sus tardes de descanso. Casi de inmediato reparó en un detalle recurrente entre los grupos reunidos allí: alguien siempre llevaba un termo bajo el brazo.</p>
+        <p>Se aproximó a un grupo de amigos sentados en círculo, compartiendo un mate, y conoció a Bruno, quien preparaba la infusión con la soltura de quien ha repetido el gesto incontables veces: llenó el recipiente con yerba, inclinó su contenido hacia un costado, y vertió agua caliente —cuidando que no llegara a hervir— antes de insertar la bombilla con precisión.</p>
+        <p>Bruno le extendió el primer mate a Ramón, quien, siguiendo una costumbre que conocía de otros contextos culturales, tomó un sorbo y respondió con cortesía: "¡Gracias!"</p>
+        <p>El grupo entero estalló en carcajadas. "Cuando decís 'gracias' al devolver el mate," le aclaró Bruno, todavía riendo, "significa que ya no querés más. ¡Te acabás de autoexcluir de la ronda!"</p>
+        <p>Ramón, entre sorprendido y divertido, admitió: "No tenía idea de esa regla — pensé que simplemente estaba siendo educado."</p>
+        <p>Aprovechando el momento, Bruno le explicó la dinámica completa: "El mate se comparte en ronda. Una persona ceba —prepara y sirve— y el resto toma por turno, compartiendo la misma bombilla, sin pronunciar 'gracias' hasta que realmente no se desee más."</p>
+        <p>Ante la pregunta de Ramón sobre la centralidad del mate en la identidad uruguaya, Bruno respondió sin vacilar: "No es simplemente una bebida. Es un pretexto para conversar, para estar juntos. Prácticamente todos caminamos con nuestro termo, dispuestos a compartir con quien se cruce en el camino."</p>
+        <p>Ramón permaneció un buen rato más en la ronda, esta vez bebiendo su mate en silencio, con el cuidado deliberado de no pronunciar "gracias" hasta haber terminado de verdad.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la rambla</span> — waterfront promenade</div>
+      <div><span class="term">el termo</span> — thermos</div>
+      <div><span class="term">la bombilla</span> — metal drinking straw for mate</div>
+      <div><span class="term">la yerba (mate)</span> — mate herb</div>
+      <div><span class="term">cebar</span> — to prepare/pour mate</div>
+      <div><span class="term">la ronda</span> — circle, round</div>
+      <div><span class="term">hervir</span> — to boil</div>
+      <div><span class="term">la infusión</span> — infusion (cognate)</div>
+      <div><span class="term">la cortesía</span> — courtesy (cognate)</div>
+      <div><span class="term">compartir</span> — to share</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>bajo el brazo</span>
+      <span>comparte(n) en ronda</span>
+      <span>no digas "gracias" hasta que...</span>
+      <span>te toca / no te toca</span>
+      <span>es una excusa para...</span>
+      <span>por turno</span>
+      <span>con cuidado</span>
+      <span>listos para compartir</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué error comete Ramón la primera vez que toma mate, y por qué se ríe el grupo?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cómo se prepara y se comparte el mate según Bruno?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — La Ronda de Bruno</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Entrevistas callejeras → Historia 7</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Costumbres sociales y vida cotidiana — el mate como símbolo de identidad uruguaya, reglas de etiqueta cultural, la importancia del compartir.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir un proceso paso a paso (preparar el mate); explicar una regla de etiqueta cultural; expresar sorpresa y humor ante un malentendido cultural; narrar en pasado un evento específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>bajo el brazo · comparte(n) en ronda · no digas "gracias" hasta que... · te toca/no te toca · es una excusa para... · por turno · con cuidado.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, la escena y el malentendido contados paso a paso.<br>
+    <strong>A2:</strong> se añade descripción del proceso de preparación y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando el encuentro como evento específico.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario más preciso; cierre reflexivo sobre la costumbre social.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Ninguno significativo. Historia ligera y humorística centrada en un malentendido cultural inofensivo. La regla de etiqueta de decir "gracias" para indicar que no se desea más mate, el uso del termo y la bombilla, y la "ronda de mate" como práctica social uruguaya, son datos reales y documentados. Bruno es un personaje ficticio.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Bruno</strong> — joven uruguayo que comparte mate con sus amigos en la Rambla todas las tardes. Detalle propio: siempre le explica la regla del "gracias" a cualquier visitante antes de pasarle el primer mate — pero deja que cometan el error primero, para reírse juntos después.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>infusión</em> — cognado natural con "infusion", usado para describir el mate.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez cometiste un error gracioso por no conocer una costumbre de otro lugar? ¿Qué pasó?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

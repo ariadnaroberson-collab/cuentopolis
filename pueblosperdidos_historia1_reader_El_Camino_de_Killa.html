@@ -186,32 +186,6 @@
     border-radius:8px;
     cursor:pointer;
   }
-
-  .photo-gallery{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
-    gap:14px;
-  }
-  .photo-gallery figure{
-    margin:0;
-    background:var(--bg-deep);
-    border:1px solid var(--line);
-    border-radius:10px;
-    overflow:hidden;
-  }
-  .photo-gallery img{
-    width:100%;
-    height:150px;
-    object-fit:cover;
-    display:block;
-  }
-  .photo-gallery figcaption{
-    font-family:'Space Mono', monospace;
-    font-size:0.72rem;
-    color:var(--parchment-dim);
-    padding:8px 10px;
-    line-height:1.4;
-  }
 </style>
 </head>
 <body>
@@ -293,20 +267,6 @@
     </div>
 
   </div>
-
-  <section class="card">
-    <h3>Galería</h3>
-    <div class="photo-gallery">
-      <figure>
-        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Vista%20de%20Cusco%2C%20Per%C3%BA%2C%202015-07-31%2C%20DD%2011-17%20PAN.JPG" alt="Cusco, en los Andes peruanos" loading="lazy">
-        <figcaption>Cusco, en los Andes peruanos</figcaption>
-      </figure>
-      <figure>
-        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Llama%20on%20Machu%20Picchu.jpg" alt="Llama en los Andes peruanos" loading="lazy">
-        <figcaption>Llama en los Andes peruanos</figcaption>
-      </figure>
-    </div>
-  </section>
 
   <section class="card">
     <h3>Glosario</h3>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Viento de Tomás — Memorias de pueblos perdidos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Memorias de pueblos perdidos · Historia 7</div>
+    <h1>El Viento de Tomás</h1>
+    <div class="subtitle">Una historia de la Patagonia rural, Argentina</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Tomás vive en una estancia en la Patagonia, en el sur de Argentina. La estancia está lejos de todo, entre planicies grandes y vientos fuertes.</p>
+        <p>Cada mañana, Tomás busca a su caballo. El caballo se llama Zaino y duerme suelto en el campo.</p>
+        <p>Después, Tomás monta a Zaino y viaja casi una hora a la escuela. La escuela tiene un solo maestro para todos los grados.</p>
+        <p>Un día, hay una tormenta de viento muy fuerte durante la noche. Por la mañana, Zaino no está cerca de la casa.</p>
+        <p>Tomás busca a Zaino por mucho tiempo. El viento es fuerte y frío.</p>
+        <p>Su papá le dice: "Mira cerca del arroyo. Los caballos van ahí cuando hace viento."</p>
+        <p>Tomás camina hasta el arroyo. Encuentra a Zaino.</p>
+        <p>Tomás monta a Zaino y viaja a la escuela, contra el viento.</p>
+        <p>Llega tarde, pero llega. El maestro dice: "Qué bueno que llegaste, Tomás. Sabía que el viento te iba a demorar."</p>
+        <p>Tomás aprende matemáticas con otros estudiantes de diferentes grados, todos en el mismo salón.</p>
+        <p>Por la tarde, Tomás monta a Zaino de regreso a casa. El viento ya no es tan fuerte.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Tomás vive en una estancia en la Patagonia argentina, una región de planicies enormes, montañas lejanas y vientos famosos por su fuerza.</p>
+        <p>Cada mañana, antes de ir a la escuela, Tomás tiene que buscar a su caballo, Zaino, que duerme suelto en el campo junto a otros animales de la familia.</p>
+        <p>Después de encontrarlo y ensillarlo, Tomás monta a Zaino y viaja casi una hora hasta la escuela rural, donde un solo maestro enseña a estudiantes de varios grados en el mismo salón — como en muchas escuelas rurales de la Patagonia.</p>
+        <p>Un día de invierno, hay una tormenta de viento muy fuerte durante la noche. Por la mañana, cuando Tomás sale a buscar a Zaino, el caballo no está donde siempre — el viento debió haberlo espantado más lejos de lo normal.</p>
+        <p>Tomás busca por un buen rato, luchando contra el viento helado. Su papá, que conoce bien el comportamiento de los animales, le dice: "Mira cerca del arroyo. Los caballos van ahí cuando hace viento, para protegerse."</p>
+        <p>Tomás sigue el consejo de su papá y, después de caminar hasta el arroyo, finalmente encuentra a Zaino. Lo ensilla rápidamente y monta, cabalgando contra el viento hacia la escuela.</p>
+        <p>Llega bastante más tarde de lo normal, pero llega. El maestro lo recibe con calma: "Qué bueno que llegaste, Tomás. Sabía que el viento te iba a demorar hoy." Ese día, Tomás aprende matemáticas junto a compañeros de distintos grados, todos compartiendo el mismo salón y el mismo maestro.</p>
+        <p>Por la tarde, cuando el viento finalmente baja un poco, Tomás monta a Zaino de regreso a casa, agradecido de haberlo encontrado a tiempo.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un miércoles de julio, en pleno invierno patagónico, Tomás se levantó antes del amanecer, como todos los días, para buscar a su caballo Zaino antes de ir a la escuela. Vivía en una estancia en el sur de Argentina, en una región de planicies inmensas y vientos tan fuertes que eran casi parte del paisaje mismo.</p>
+        <p>Normalmente, encontrar a Zaino —que dormía suelto en el campo junto a otros animales— no le tomaba más de quince minutos. Pero esa noche había habido una tormenta de viento particularmente fuerte, y cuando Tomás salió esa mañana, el caballo no estaba donde solía estar.</p>
+        <p>Buscó durante casi media hora, luchando contra ráfagas heladas que le dificultaban caminar. Fue entonces cuando su papá, que salió a ayudarlo, le sugirió: "Mira cerca del arroyo. Los caballos van ahí cuando hace viento, para protegerse."</p>
+        <p>Siguiendo el consejo, Tomás caminó hasta el arroyo y, para su alivio, encontró a Zaino refugiado entre unos árboles bajos. Lo ensilló rápidamente y montó, cabalgando casi una hora contra el viento para llegar a la escuela rural, donde un solo maestro atendía a estudiantes de varios grados en un mismo salón.</p>
+        <p>Llegó bastante más tarde de lo habitual, con las mejillas rojas por el frío. El maestro, acostumbrado a las particularidades del clima patagónico, lo recibió sin reproches: "Qué bueno que llegaste, Tomás. Sabía que el viento te iba a demorar hoy." Ese día, Tomás se sentó junto a compañeros de distintas edades y grados, todos aprendiendo juntos en el mismo salón.</p>
+        <p>Por la tarde, cuando el viento por fin amainó un poco, Tomás emprendió el regreso a casa sobre Zaino, pensando en lo mucho que dependía, cada día, tanto de su caballo como de la paciencia de su familia y su maestro.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>En una estancia del sur de la Patagonia argentina —una región definida por sus planicies interminables, sus distancias vastas y unos vientos que los lugareños describen casi como un personaje más del paisaje—, la rutina diaria de Tomás, de diez años, comenzaba antes del amanecer: localizar a su caballo, Zaino, que pasaba las noches suelto en el campo junto al resto de los animales de la familia.</p>
+        <p>Aquel miércoles de julio, en pleno invierno patagónico, una tormenta de viento particularmente intensa había azotado la zona durante la noche. Cuando Tomás salió a buscar a Zaino esa mañana, el caballo no se encontraba en su lugar habitual —el viento, evidentemente, lo había dispersado más lejos de lo acostumbrado.</p>
+        <p>Tras casi media hora de búsqueda, enfrentando ráfagas heladas que dificultaban cada paso, su padre —quien conocía a fondo el comportamiento de los animales en esas condiciones— le ofreció una pista: "Mira cerca del arroyo. Los caballos van ahí cuando hace viento, para protegerse." Siguiendo esa indicación, Tomás localizó finalmente a Zaino refugiado entre la vegetación baja junto al curso de agua.</p>
+        <p>Ensillado el caballo, emprendió el trayecto de casi una hora hacia la escuela rural, cabalgando contra un viento que ponía a prueba tanto su resistencia como su determinación. Al llegar, considerablemente más tarde de lo habitual, el maestro —acostumbrado a que el clima patagónico alterara la rutina de sus alumnos, muchos de los cuales llegaban a caballo desde distintos puntos del campo— lo recibió con comprensión: "Qué bueno que llegaste, Tomás. Sabía que el viento te iba a demorar hoy." Esa jornada, como cada día, Tomás compartió el aula con compañeros de edades y grados distintos, todos bajo la guía de un único docente, en una de las miles de escuelas rurales que sostienen la educación en las zonas más aisladas del país.</p>
+        <p>Esa tarde, mientras cabalgaba de regreso a casa con el viento ya algo más calmo, Tomás reflexionó sobre cuánto dependía, cada día, tanto de la fuerza de Zaino como del conocimiento heredado de su padre y la paciencia constante de su maestro — una red silenciosa de apoyo que hacía posible, contra todo pronóstico, que llegara a aprender.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la estancia</span> — ranch, large rural property</div>
+      <div><span class="term">ensillar</span> — to saddle</div>
+      <div><span class="term">la ráfaga</span> — gust of wind</div>
+      <div><span class="term">el arroyo</span> — stream</div>
+      <div><span class="term">demorar</span> — to delay</div>
+      <div><span class="term">amainar</span> — to die down (wind)</div>
+      <div><span class="term">refugiarse</span> — to take shelter</div>
+      <div><span class="term">multigrado</span> — multi-grade (one classroom, several grades)</div>
+      <div><span class="term">inmenso/a</span> — immense (cognate)</div>
+      <div><span class="term">la planicie</span> — plain, flatland</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>cada mañana</span>
+      <span>busca / buscaba a su caballo</span>
+      <span>monta / montaba a caballo</span>
+      <span>contra el viento</span>
+      <span>llega / llegó tarde, pero llega</span>
+      <span>un solo maestro</span>
+      <span>sabía que... te iba a demorar</span>
+      <span>más lejos de lo normal</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué no encuentra Tomás a Zaino en su lugar de siempre esa mañana?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué consejo le da su papá, y cómo lo ayuda a encontrar el caballo?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Viento de Tomás</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Memorias de pueblos perdidos → Historia 7</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Geografía humana y vida cotidiana — la escuela rural multigrado, el vínculo con los animales de trabajo, el clima patagónico, el valor de la educación.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir rutinas diarias y clima extremo; narrar la búsqueda de algo perdido y su resolución; expresar consejo y seguimiento de consejo; narrar en pasado la rutina de un día específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>cada mañana · busca/buscaba a su caballo · monta/montaba a caballo · contra el viento · llega/llegó tarde, pero llega · un solo maestro · sabía que... te iba a demorar.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, rutina paso a paso.<br>
+    <strong>A2:</strong> se añade descripción del paisaje patagónico y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando un día específico; reflexión de Tomás.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; contexto de la escuela rural multigrado en Argentina; tema de redes de apoyo silenciosas.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Clima extremo (viento fuerte, frío) → manejado con calma; Tomás siempre llega seguro, y la búsqueda del caballo se resuelve con el conocimiento práctico de su padre, no con peligro real. No se nombra ninguna familia real específica ni al niño real cuya historia (recorrer varios kilómetros a caballo en la Patagonia) inspiró esta investigación — esta es una historia compuesta, fiel a patrones documentados de la vida rural patagónica.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — el enfoque de esta historia está en la comunidad rural local, sin personaje visitante internacional.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>inmenso</em> — cognado natural con "immense", usado para describir las planicies patagónicas.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez tuviste que resolver un problema inesperado antes de empezar tu día? ¿Quién te ayudó?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

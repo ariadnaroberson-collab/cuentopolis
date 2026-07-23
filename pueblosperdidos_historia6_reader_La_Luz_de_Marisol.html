@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Luz de Marisol — Memorias de pueblos perdidos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Memorias de pueblos perdidos · Historia 6</div>
+    <h1>La Luz de Marisol</h1>
+    <div class="subtitle">Una historia de Corazón Creek, distrito de Toledo, Belice</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Marisol vive en un pueblo pequeño cerca de Corazón Creek, en el distrito de Toledo, Belice. Su pueblo está en las colinas, lejos de la ciudad.</p>
+        <p>Cada mañana, Marisol camina una hora por un camino en las colinas para llegar a la escuela en Corazón Creek. Otros niños de quince pueblos también caminan a esa escuela.</p>
+        <p>Antes, el pueblo no tenía electricidad. Las familias usaban velas y lámparas de aceite por la noche.</p>
+        <p>Hace unos meses, llegaron paneles solares al pueblo. Ahora hay electricidad todo el día y toda la noche.</p>
+        <p>La abuela de Marisol dice: "Antes, estudiábamos con una vela. Ahora ustedes tienen luz — y también internet."</p>
+        <p>Un día en la escuela, la maestra dice: "Hoy, por primera vez, vamos a usar el internet."</p>
+        <p>Los estudiantes están muy emocionados. Marisol busca información sobre los mayas, su propia cultura.</p>
+        <p>Marisol ve fotos y videos en la computadora. Aprende cosas nuevas sobre su pueblo.</p>
+        <p>Por la tarde, Marisol camina a casa. Le cuenta todo a su abuela.</p>
+        <p>Su abuela sonríe: "El mundo cambia rápido. Me alegra que tú puedas aprender así."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Marisol vive en un pueblo pequeño cerca de Corazón Creek, en el distrito de Toledo, en el sur de Belice — una región de colinas verdes y selva, donde vive principalmente gente maya, mopan y kekchí.</p>
+        <p>Cada mañana, Marisol camina casi una hora por un sendero entre las colinas para llegar a la escuela en Corazón Creek, un pueblo que funciona como centro educativo para estudiantes de unas quince comunidades cercanas.</p>
+        <p>Durante muchos años, ni su pueblo ni la escuela tuvieron electricidad. Las familias usaban velas y lámparas de aceite para alumbrarse por la noche, y estudiar después de la puesta del sol era difícil.</p>
+        <p>Hace unos meses, sin embargo, llegaron paneles solares nuevos al pueblo — un sistema que da electricidad las veinticuatro horas del día. La abuela de Marisol, que recuerda bien los años sin luz, le dice con orgullo: "Antes, estudiábamos con una vela. Ahora ustedes tienen luz — y hasta internet."</p>
+        <p>Un día, la maestra anuncia algo especial: "Hoy, por primera vez, vamos a usar el internet en la escuela." Los estudiantes, emocionados, se reúnen alrededor de las computadoras. Marisol decide buscar información sobre la cultura maya, su propia herencia.</p>
+        <p>Ve fotos, mapas y videos que nunca antes había visto — templos antiguos, tradiciones de otras comunidades mayas, palabras en distintos idiomas mayas. Se siente conectada a algo más grande que su propio pueblo.</p>
+        <p>Por la tarde, cuando camina de regreso a casa, Marisol le cuenta todo a su abuela con entusiasmo. Su abuela la escucha con una sonrisa: "El mundo cambia rápido, hija. Me alegra mucho que tú puedas aprender así."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un martes de marzo, Marisol se despertó como todos los días en su pequeño pueblo cerca de Corazón Creek, en el distrito de Toledo, en el sur de Belice, una región de colinas y selva donde vivían comunidades mayas mopan y kekchí desde hacía generaciones.</p>
+        <p>Como cada mañana, caminó casi una hora por un sendero entre las colinas para llegar a la escuela en Corazón Creek, el pueblo que servía como centro educativo para estudiantes de unas quince comunidades de la zona.</p>
+        <p>Durante casi toda su vida, ni su pueblo ni la escuela habían tenido electricidad. Su familia, como muchas otras, usaba velas y lámparas de aceite para alumbrarse por la noche, lo cual hacía que estudiar después del atardecer fuera difícil y a veces imposible.</p>
+        <p>Pero unos meses atrás, todo había cambiado: llegaron al pueblo paneles solares nuevos, parte de un proyecto que finalmente les dio electricidad las veinticuatro horas del día. Esa mañana, mientras desayunaba, su abuela le repitió algo que decía con frecuencia desde entonces: "Antes, estudiábamos con una vela. Ahora ustedes tienen luz — y hasta internet."</p>
+        <p>Ese día en la escuela, la maestra anunció algo que llevaban semanas esperando: "Hoy, por primera vez, vamos a usar el internet." Los estudiantes se reunieron, emocionados, alrededor de las pocas computadoras del salón. Marisol decidió buscar información sobre la cultura maya —su propia herencia— y descubrió fotografías, mapas y videos que nunca antes había visto: templos antiguos, tradiciones de otras comunidades mayas, palabras en idiomas mayas distintos al suyo.</p>
+        <p>Esa tarde, mientras caminaba de regreso a casa, Marisol sintió que algo había cambiado — no solo en su escuela, sino en la manera en que ella podía imaginar su futuro. Cuando llegó a casa, le contó todo a su abuela con entusiasmo. Su abuela la escuchó con una sonrisa amplia: "El mundo cambia rápido, hija. Me alegra mucho que tú puedas aprender así."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>En el distrito de Toledo, en el extremo sur de Belice, comunidades mayas mopan y kekchí han habitado durante generaciones un territorio de colinas onduladas y selva densa, marcado históricamente por el aislamiento geográfico. Corazón Creek, uno de esos pueblos, funciona desde hace años como centro educativo regional: cada día, estudiantes de unas quince comunidades cercanas —entre ellos Marisol, de diez años— convergen allí para asistir a clases.</p>
+        <p>Aquel martes de marzo, Marisol recorrió, como cada mañana, el sendero de casi una hora entre las colinas que separaba su pueblo de la escuela. Durante la mayor parte de su vida, ni su comunidad ni el plantel escolar habían contado con electricidad; las familias dependían de velas y lámparas de aceite, lo que limitaba considerablemente las horas disponibles para estudiar después del atardecer.</p>
+        <p>Sin embargo, unos meses atrás, la instalación de un nuevo sistema de paneles solares —financiado en parte por una fundación alemana en colaboración con el gobierno beliceño— había transformado esa realidad, proporcionando electricidad constante durante las veinticuatro horas del día. Esa mañana, mientras desayunaba, su abuela, que recordaba bien los años sin luz, le repitió una frase que se había convertido casi en un mantra familiar desde la llegada de los paneles: "Antes, estudiábamos con una vela. Ahora ustedes tienen luz — y hasta internet."</p>
+        <p>Ese día, la maestra anunció una novedad que la escuela llevaba semanas esperando: por primera vez, los estudiantes podrían usar internet en el salón de clases. Marisol, reunida con sus compañeros alrededor de las computadoras recién conectadas, decidió investigar sobre la cultura maya —su propia herencia— y se encontró con fotografías, mapas y videos que ampliaron su comprensión de una identidad que hasta entonces solo conocía a través de las historias de su familia.</p>
+        <p>Esa tarde, mientras regresaba a casa, Marisol reflexionó sobre lo que acababa de vivir: no se trataba solo de una novedad tecnológica, sino de una puerta que se abría hacia posibilidades que, hasta hacía poco, le habían parecido inalcanzables. Al llegar, compartió con su abuela cada detalle de lo que había visto, y esta, con una sonrisa amplia, le respondió: "El mundo cambia rápido, hija. Me alegra mucho que tú puedas aprender así."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la colina</span> — hill</div>
+      <div><span class="term">el sendero</span> — path, trail</div>
+      <div><span class="term">la vela</span> — candle</div>
+      <div><span class="term">la lámpara de aceite</span> — oil lamp</div>
+      <div><span class="term">el panel solar</span> — solar panel</div>
+      <div><span class="term">alumbrarse</span> — to light one's way</div>
+      <div><span class="term">la herencia</span> — heritage (cognate)</div>
+      <div><span class="term">la puesta del sol</span> — sunset</div>
+      <div><span class="term">conectado/a</span> — connected (cognate)</div>
+      <div><span class="term">la tecnología</span> — technology (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>cada mañana</span>
+      <span>camina / caminaba una hora</span>
+      <span>hace unos meses</span>
+      <span>por primera vez</span>
+      <span>antes... ahora...</span>
+      <span>el mundo cambia rápido</span>
+      <span>me alegra que...</span>
+      <span>algo más grande que...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cómo era la vida en el pueblo de Marisol antes de que llegaran los paneles solares?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué hace Marisol la primera vez que usa el internet en la escuela, y qué significa eso para ella?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — La Luz de Marisol</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Memorias de pueblos perdidos → Historia 6</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Geografía humana y vida cotidiana — acceso a la tecnología, transformación comunitaria, la familia, herencia cultural maya, el valor de la educación.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Contrastar pasado y presente (antes/ahora); describir un cambio y su impacto; expresar entusiasmo y orgullo; narrar en pasado la rutina de un día específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>cada mañana · camina/caminaba una hora · hace unos meses · por primera vez · antes... ahora... · el mundo cambia rápido · me alegra que...</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, contraste antes/ahora básico.<br>
+    <strong>A2:</strong> se añade descripción geográfica/cultural y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando un día específico; reflexión de Marisol.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; contexto histórico de la electrificación; tema de identidad y posibilidad.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Pobreza de infraestructura (falta histórica de electricidad) → manejado con dignidad, tono de celebración y esperanza, no de lástima. Corazón Creek es un pueblo real del distrito de Toledo, Belice — a diferencia de las otras historias del libro, esta se basa en un evento real y reciente (documentado en noticias de Belice): la instalación de un sistema solar de 24 horas, financiado por una fundación alemana en colaboración con el gobierno beliceño, que llevó electricidad e internet por primera vez a la escuela que sirve de centro educativo para unas quince comunidades mayas cercanas. La familia de Marisol es ficticia; el contexto del pueblo y la electrificación es real.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>Vacío intencionalmente — el enfoque de esta historia está en la comunidad local de Corazón Creek, sin personaje visitante internacional dentro de la trama.</p>
+
+    <h4>Dato real adicional (para discusión en clase)</h4>
+    <p>Desde 2013, mujeres mayas del distrito de Toledo —incluyendo a Florentina Choco, pionera beliceña capacitada en energía solar en India (Barefoot College)— han ayudado a instalar sistemas solares en varias comunidades remotas del sur de Belice, conectando el tema de la electrificación con el liderazgo comunitario de mujeres indígenas.</p>
+    <p>El sistema solar de Corazón Creek fue desarrollado por Solar Energy Solutions Belize (SESB), dirigida por Silvan Kuffer y Nadja, en colaboración con la Unidad de Energía del Ministerio de Energía de Belice —una unidad creada en 2012 con el apoyo de la Unión Europea— y financiado en gran parte por la fundación alemana cdw Stiftung.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>tecnología</em> — cognado natural con "technology", usado para nombrar el cambio central de la historia.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez usaste algo por primera vez que cambió la forma en que ves el mundo? ¿Qué fue?</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

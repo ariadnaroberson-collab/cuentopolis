@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Son de Don Eusebio — Entrevistas callejeras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Entrevistas callejeras · Historia 2</div>
+    <h1>El Son de Don Eusebio</h1>
+    <div class="subtitle">Una historia de La Habana, Cuba</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Ramón viaja a La Habana, Cuba. Camina por una plaza del centro.</p>
+        <p>En la plaza, un hombre mayor toca la guitarra. Se llama Don Eusebio. Toca son cubano, la música tradicional de Cuba.</p>
+        <p>Ramón le hace una pregunta: "¿Por qué toca son cubano?"</p>
+        <p>Don Eusebio dice: "Aprendí de mi papá, en Santiago de Cuba. El son viene del oriente de la isla."</p>
+        <p>Mientras Ramón graba, un joven llega bailando. Se llama Milo Compás. Milo viaja por el mundo y aprende los bailes de cada país.</p>
+        <p>Milo ve a la gente bailando cerca de la música de Don Eusebio. Milo pregunta: "¿Me enseñan a bailar?"</p>
+        <p>Ramón y Milo tienen una idea: "¡Vamos a grabar juntos!"</p>
+        <p>Ramón entrevista a Don Eusebio. Milo aprende los pasos de baile con la gente de la plaza.</p>
+        <p>Don Eusebio sonríe: "El son no es solo música. También es baile. Las dos cosas van juntas."</p>
+        <p>Ramón y Milo suben el video juntos. El video es un éxito — mucha gente lo ve.</p>
+        <p>Milo dice: "Gracias, Ramón. Mi próximo país es España — voy a aprender flamenco."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Ramón viaja a La Habana, Cuba, su segunda parada en el proyecto de entrevistas callejeras. Camina por una plaza del centro histórico, buscando a alguien interesante para entrevistar.</p>
+        <p>En la plaza, encuentra a un hombre mayor tocando el tres, una guitarra cubana pequeña. Se llama Don Eusebio y toca son cubano, un género musical tradicional que nació en el oriente de la isla — en lugares como Santiago de Cuba, Manzanillo y Guantánamo.</p>
+        <p>Ramón se acerca con su teléfono: "¿Por qué toca son cubano, Don Eusebio?" El músico responde con orgullo: "Aprendí de mi papá, aquí en Santiago. El son mezcla música africana y española. De ahí viajó a toda Cuba, hasta La Habana."</p>
+        <p>Mientras Ramón graba la entrevista, un joven llega bailando entre la gente de la plaza. Se llama Milo Compás, un creador de contenido que viaja por el mundo aprendiendo los bailes tradicionales de cada país que visita.</p>
+        <p>Milo, emocionado por la música, se acerca a un grupo de habaneros que bailan casino —la versión cubana de la salsa— cerca de Don Eusebio. "¿Me enseñan los pasos?" pregunta, sonriendo.</p>
+        <p>Ramón y Milo se reconocen — ambos son creadores de contenido — y se les ocurre una idea: grabar juntos. Ramón sigue entrevistando a Don Eusebio sobre la historia del son, mientras Milo aprende los pasos de baile en tiempo real con los habaneros.</p>
+        <p>"El son no es solo música," explica Don Eusebio mientras toca. "Siempre se bailó también. Las dos cosas van juntas — no se puede separar el ritmo del paso."</p>
+        <p>Al final del día, Ramón y Milo suben el video combinado — entrevista y baile en un solo clip. El video se vuelve un éxito enorme. Antes de despedirse, Milo le dice a Ramón: "Gracias por esto. Mi próximo destino es España — voy a aprender flamenco en Sevilla."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un viernes por la tarde, Ramón llegó a La Habana, Cuba, su segunda parada en el proyecto de entrevistas callejeras que había empezado meses atrás en Costa Rica. Caminó por una plaza del centro histórico, buscando, como siempre, a alguien con una historia interesante que contar.</p>
+        <p>Encontró a un hombre mayor tocando el tres —una pequeña guitarra cubana de seis cuerdas— frente a un grupo de curiosos. Se llamaba Don Eusebio, y tocaba son cubano, un género que había nacido, según le explicó, en el oriente de la isla: Santiago de Cuba, Manzanillo, Guantánamo.</p>
+        <p>Cuando Ramón le preguntó por qué tocaba ese género en particular, Don Eusebio respondió con orgullo: "Aprendí de mi papá, allá en Santiago. El son mezcla música bantú africana y música española — de esa mezcla nació algo completamente nuevo. Desde el oriente viajó por toda la isla, hasta llegar a La Habana."</p>
+        <p>Mientras Ramón grababa la entrevista, notó que un joven se acercaba bailando entre la gente reunida. Era Milo Compás, un creador de contenido conocido por viajar por el mundo aprendiendo los bailes tradicionales de cada país que visitaba.</p>
+        <p>Milo, contagiado por el ritmo, se unió a un grupo de habaneros que bailaban casino —la versión cubana de la salsa— junto a la música de Don Eusebio. "¿Me enseñan los pasos?" preguntó, entre risas, mientras intentaba seguir el compás.</p>
+        <p>Ramón y Milo se reconocieron de inmediato —ambos seguían el trabajo del otro en redes— y decidieron improvisar algo juntos: Ramón continuaría entrevistando a Don Eusebio sobre la historia del son, mientras Milo aprendía los pasos en tiempo real con los bailarines locales.</p>
+        <p>"El son nunca fue solo música," reflexionó Don Eusebio, sin dejar de tocar. "Siempre se bailó también. No se puede separar el ritmo del paso — van juntos, como esos dos ahí." Y señaló, entre risas, a Milo intentando seguir el ritmo.</p>
+        <p>Esa noche, Ramón y Milo subieron el video combinado, mezclando entrevista y baile en un solo clip. El resultado superó las expectativas de ambos. Antes de despedirse, Milo le dijo a Ramón: "Gracias por esto — nunca había aprendido un baile mientras alguien contaba su historia al mismo tiempo. Mi próximo destino es España. Voy a aprender flamenco en Sevilla."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un viernes por la tarde, Ramón llegó a La Habana, Cuba —su segunda parada en el proyecto de entrevistas callejeras que había iniciado meses atrás en Costa Rica— y se adentró en una plaza del centro histórico en busca, como de costumbre, de una historia digna de contar.</p>
+        <p>Allí encontró a un hombre mayor interpretando el tres, la característica guitarra cubana de seis cuerdas dispuestas en tres pares, rodeado de un pequeño grupo de curiosos. Se trataba de Don Eusebio, intérprete de son cubano, un género nacido —según le explicó con evidente orgullo— en el oriente de la isla: Santiago de Cuba, Manzanillo, Guantánamo, territorios donde confluyeron las raíces musicales bantú africanas y españolas antes de expandirse hacia el resto del país, incluida La Habana.</p>
+        <p>Cuando Ramón le preguntó qué lo había llevado a dedicarse a ese género en particular, Don Eusebio respondió sin titubear: "Aprendí de mi padre, allá en Santiago. El son surgió de esa mezcla —bantú y española— y de ahí se convirtió en algo genuinamente cubano, algo que no existía antes en ningún otro lugar."</p>
+        <p>Mientras Ramón grababa la entrevista, reparó en un joven que se aproximaba bailando entre los curiosos: Milo Compás, un creador de contenido reconocido por recorrer el mundo aprendiendo los bailes tradicionales de cada destino que visitaba.</p>
+        <p>Contagiado por el ritmo, Milo se sumó a un grupo de habaneros que bailaban casino —la variante cubana de la salsa— al compás de la música de Don Eusebio. "¿Me enseñan los pasos?", preguntó entre risas, esforzándose por seguir el compás con cierta torpeza inicial.</p>
+        <p>Ramón y Milo se reconocieron de inmediato —cada uno seguía el trabajo del otro en redes sociales— y, casi sin planearlo, decidieron improvisar una colaboración: Ramón continuaría la entrevista sobre la historia del son, mientras Milo aprendía los pasos en tiempo real junto a los bailarines locales, capturando ambos procesos en un mismo video.</p>
+        <p>"El son nunca fue solo música," reflexionó Don Eusebio sin interrumpir su interpretación. "Siempre se bailó también, desde sus orígenes. El ritmo y el paso no se pueden separar —van juntos, como esos dos de ahí." Señaló, con una sonrisa, a Milo intentando dominar el compás.</p>
+        <p>Esa noche, Ramón y Milo publicaron el video combinado, entretejiendo entrevista y aprendizaje de baile en una sola pieza. La repercusión superó ampliamente las expectativas de ambos creadores. Antes de despedirse, Milo comentó: "Gracias por esto — nunca había aprendido un baile mientras alguien narraba su historia al mismo tiempo. Mi próximo destino es España; voy a aprender flamenco en Sevilla."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el tres</span> — small Cuban six-string guitar</div>
+      <div><span class="term">el son (cubano)</span> — traditional Cuban musical genre</div>
+      <div><span class="term">el ritmo</span> — rhythm (cognate)</div>
+      <div><span class="term">el paso (de baile)</span> — dance step</div>
+      <div><span class="term">el compás</span> — beat, musical measure</div>
+      <div><span class="term">el/la habanero/a</span> — person from Havana</div>
+      <div><span class="term">mezclar</span> — to mix, blend</div>
+      <div><span class="term">contagiado/a (por el ritmo)</span> — caught up (in the rhythm)</div>
+      <div><span class="term">seguir el compás</span> — to keep the beat</div>
+      <div><span class="term">auténtico/a</span> — authentic (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>viaja / viajaba a...</span>
+      <span>aprendí de mi papá</span>
+      <span>las dos cosas van juntas</span>
+      <span>se les ocurre / ocurrió una idea</span>
+      <span>en tiempo real</span>
+      <span>mi próximo destino es...</span>
+      <span>nunca había...</span>
+      <span>gracias por esto</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué le explica Don Eusebio a Ramón sobre el origen del son cubano?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cómo se conocen Ramón y Milo, y qué deciden hacer juntos?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Son de Don Eusebio</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Entrevistas callejeras → Historia 2</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Música y tradición cultural — historia del son cubano, la música como identidad, colaboración creativa, geografía de Cuba.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar un encuentro y una entrevista; explicar origen/herencia (aprendí de mi papá); describir una colaboración espontánea; narrar en pasado un evento específico.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>viaja/viajaba a... · aprendí de mi papá · las dos cosas van juntas · se les ocurre/ocurrió una idea · en tiempo real · mi próximo destino es... · nunca había...</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, la entrevista y el encuentro contados paso a paso.<br>
+    <strong>A2:</strong> se añade contexto histórico/geográfico del son cubano y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando el encuentro como evento específico; reflexión de Don Eusebio.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario musical más preciso; cierre con gancho hacia el próximo país (España).</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Ninguno significativo. Historia festiva y cultural, sin temas delicados. El son cubano, su origen en el oriente de la isla (Santiago de Cuba, Manzanillo, Guantánamo) como mezcla de raíces bantú africanas y españolas, y el casino como danza asociada, son datos reales y documentados. Don Eusebio y Milo Compás son personajes ficticios.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Milo Compás</strong> — creador de contenido viajero cuyo proyecto es aprender los bailes tradicionales de cada país que visita. Detalle propio: siempre se une a quien esté bailando cerca de la música, sin importar si sabe los pasos todavía. Próximo destino mencionado: España (flamenco, Sevilla) — posible reaparición en un futuro capítulo de este libro.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>auténtico</em> — cognado natural con "authentic", usado para describir la música tradicional cubana.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez conociste a alguien por casualidad y terminaron haciendo algo juntos? ¿Cómo fue esa experiencia?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Primera aparición de Milo Compás, personaje cruzado (crossover) introducido a pedido del usuario. Queda planteada su posible reaparición en el futuro capítulo de España, dado que anuncia ese destino al final de esta historia.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>
