@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Cuadrilla — Episodio 1: El primer día</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #F2E9D8;
+    --parchment-dim: #E6DAC2;
+    --ink: #2B2018;
+    --lamp-dark: #1A1610;
+    --lamp-panel: #241E16;
+    --lamp-panel-2: #2E2619;
+    --gold: #C9A24B;
+    --gold-bright: #E0BE6E;
+    --navy: #35455E;
+    --teacher-green: #4F7A5C;
+    --teacher-green-bright: #6FA07E;
+    --border-soft: rgba(201, 162, 75, 0.25);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--lamp-dark);
+    background-image:
+      radial-gradient(ellipse 800px 500px at 50% -10%, rgba(224, 190, 110, 0.10), transparent 60%);
+    color: var(--parchment);
+    font-family: 'Public Sans', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  header.top {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .series-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  h1.title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 40px;
+    margin: 0 0 6px;
+    color: var(--parchment);
+  }
+
+  .episode-sub {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 20px;
+    color: var(--gold-bright);
+    margin-bottom: 18px;
+  }
+
+  .pill-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    padding: 5px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+    color: var(--parchment-dim);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .pill.level {
+    color: var(--lamp-dark);
+    background: var(--gold);
+    border-color: var(--gold);
+    font-weight: 700;
+  }
+
+  .paper {
+    background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-dim) 100%);
+    color: var(--ink);
+    border-radius: 6px;
+    padding: 44px 48px;
+    box-shadow:
+      0 30px 60px -20px rgba(0,0,0,0.55),
+      0 0 0 1px rgba(0,0,0,0.06);
+    position: relative;
+  }
+
+  .paper::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--navy));
+    border-radius: 6px 6px 0 0;
+  }
+
+  .intro-block {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #4A3B29;
+    border-left: 3px solid var(--gold);
+    padding-left: 18px;
+    margin-bottom: 30px;
+  }
+
+  .historia {
+    font-family: 'Source Serif 4', serif;
+    font-size: 19px;
+    line-height: 1.85;
+  }
+
+  .historia p { margin: 0 0 18px; }
+  .historia p.dialog { margin-left: 6px; }
+
+  .scene-divider {
+    text-align: center;
+    margin: 28px 0;
+    font-family: 'Space Mono', monospace;
+    color: var(--gold);
+    letter-spacing: 0.3em;
+    font-size: 12px;
+  }
+
+  .glossary-word {
+    color: var(--navy);
+    font-weight: 600;
+    border-bottom: 1px dotted var(--navy);
+    cursor: help;
+  }
+
+  section.panel {
+    margin-top: 30px;
+  }
+
+  h2.panel-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 16px;
+  }
+
+  h2.panel-title .icon { font-size: 20px; }
+
+  .card {
+    background: var(--lamp-panel);
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    padding: 26px 28px;
+  }
+
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 24px;
+  }
+
+  .glossary-item {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 15px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border-soft);
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .glossary-item .es { color: var(--gold-bright); font-weight: 600; }
+  .glossary-item .en { color: var(--parchment-dim); font-style: italic; text-align: right; }
+
+  .word-bank-list {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: var(--parchment);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .word-bank-list li { list-style: none; }
+  .word-bank-list li::before { content: "› "; color: var(--gold); }
+
+  .comp-q {
+    margin-bottom: 20px;
+  }
+  .comp-q:last-child { margin-bottom: 0; }
+
+  .comp-q .q-text {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: var(--parchment);
+  }
+
+  .comp-q textarea {
+    width: 100%;
+    min-height: 60px;
+    background: var(--lamp-panel-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    color: var(--parchment);
+    font-family: 'Public Sans', sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    resize: vertical;
+  }
+  .comp-q textarea:focus {
+    outline: 2px solid var(--gold);
+    outline-offset: 1px;
+  }
+  .comp-q textarea::placeholder {
+    color: var(--parchment-dim);
+    opacity: 0.65;
+  }
+
+  /* Teacher modal trigger */
+  .teacher-trigger-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+
+  .teacher-trigger {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--lamp-dark);
+    background: var(--teacher-green-bright);
+    border: none;
+    border-radius: 999px;
+    padding: 12px 26px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .teacher-trigger:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -6px rgba(111,160,126,0.5); }
+  .teacher-trigger:focus-visible { outline: 2px solid var(--parchment); outline-offset: 2px; }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 8, 5, 0.72);
+    z-index: 50;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px;
+    overflow-y: auto;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--lamp-panel);
+    border: 1px solid var(--teacher-green);
+    border-radius: 12px;
+    max-width: 700px;
+    width: 100%;
+    padding: 32px 34px 40px;
+    color: var(--parchment);
+    position: relative;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    gap: 12px;
+  }
+
+  .modal-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    color: var(--teacher-green-bright);
+    margin: 0;
+  }
+
+  .modal-close {
+    background: none;
+    border: 1px solid var(--border-soft);
+    color: var(--parchment);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.06); }
+
+  .modal h3 {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 26px 0 8px;
+  }
+  .modal h3:first-of-type { margin-top: 0; }
+
+  .modal p, .modal li {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--parchment-dim);
+  }
+  .modal ul { margin: 4px 0; padding-left: 20px; }
+  .modal .note-italic { font-style: italic; opacity: 0.85; }
+
+  .copy-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 12.5px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold-bright);
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    margin-top: 24px;
+  }
+  .copy-btn:hover { background: rgba(201,162,75,0.1); }
+  .copy-btn.copied { border-color: var(--teacher-green-bright); color: var(--teacher-green-bright); }
+
+  .shuffle-btn { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 13.5px; background: var(--teacher-green); color: var(--parchment); border: none; border-radius: 8px; padding: 9px 16px; cursor: pointer; margin: 6px 0 14px; }
+  .shuffle-btn:hover { background: var(--teacher-green-bright); color: var(--lamp-dark); }
+  .activity-card { background: rgba(111,160,126,0.12); border: 1px solid var(--teacher-green); border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
+  .activity-card .cat-tag { font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--teacher-green-bright); margin-bottom: 4px; }
+  .activity-card .act-name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 16px; color: var(--parchment); margin-bottom: 6px; }
+  .activity-card .act-time { font-family: 'Space Mono', monospace; font-size: 11.5px; color: var(--gold-bright); margin-bottom: 6px; }
+  .activity-list-group { margin-bottom: 14px; }
+  .activity-list-group h4 { font-family: 'Public Sans', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gold); margin: 14px 0 6px; }
+  .activity-list-group ul { margin: 0 0 0 4px; padding-left: 18px; }
+  .activity-list-group li { font-size: 13.5px; margin-bottom: 6px; }
+  .activity-list-group li strong { color: var(--parchment); }
+
+  @media (max-width: 600px) {
+    .paper { padding: 30px 24px; }
+    .glossary-grid { grid-template-columns: 1fr; }
+    h1.title { font-size: 30px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="series-eyebrow">Cuentopolis · La Cuadrilla</div>
+    <h1 class="title">El primer día</h1>
+    <div class="episode-sub">Episodio 1 — Language Basics &amp; Greetings</div>
+    <div class="pill-row">
+      <span class="pill level">A2/B1</span>
+      <span class="pill">Secundaria 1</span>
+      <span class="pill">Serie original</span>
+    </div>
+  </header>
+
+  <div class="paper">
+
+    <div class="intro-block">
+      San Antonio es un pueblo pequeño de Belice. Aquí está Escuela San Antonio, con estudiantes de todas las edades. En Secundaria, un grupo de amigos empieza un nuevo año escolar: Vale, Emiliano, Fernanda, Ximena, Andrés y Renata. Y en el salón de español, siempre está Profe Rivera — la misma maestra que muchos de ellos ya conocen de años anteriores.
+    </div>
+
+    <div class="historia">
+      <p>Es el primer día de clases. En el pasillo, los amigos se saludan.</p>
+
+      <p class="dialog">—¡Emiliano! ¿Qué tal el <span class="glossary-word" title="summer">verano</span>? —dice Vale, con una lista de papeles en la mano.</p>
+
+      <p class="dialog">—Bien, bien. <span class="glossary-word" title="relaxed">Relajado</span>. ¿Y tú? —responde Emiliano, sonriendo.</p>
+
+      <p class="dialog">—<span class="glossary-word" title="busy">Ocupada</span>. Ya tengo tres <span class="glossary-word" title="projects">proyectos</span> para este semestre —dice Vale.</p>
+
+      <p class="dialog">—Vale, es el primer día —dice Ximena, un poco seria—. Todavía no hay proyectos.</p>
+
+      <p class="dialog">—¡Nunca es muy pronto para organizar! —responde Vale.</p>
+
+      <p>Andrés camina cerca, con un <span class="glossary-word" title="notebook">cuaderno</span> bajo el brazo. No dice mucho, pero escucha todo. Renata llega corriendo, con pintura todavía en los dedos.</p>
+
+      <p class="dialog">—¡Perdón, perdón! Estaba terminando un dibujo —dice Renata.</p>
+
+      <p>Fernanda camina un poco atrás del grupo. Es nueva en esta escuela este año, y todavía no conoce bien a todos.</p>
+
+      <p class="dialog">—Hola —dice Fernanda, en voz baja.</p>
+
+      <p class="dialog">—¡Hola! Bienvenida —dice Vale—. Este es tu primer año en Secundaria con nosotros, ¿verdad?</p>
+
+      <p class="dialog">—Sí —responde Fernanda—. Antes vivía en la costa. Es diferente aquí.</p>
+
+      <p>En ese momento, Profe Rivera camina hacia ellos.</p>
+
+      <p class="dialog">—¡Buenos días, buenos días! —dice Profe Rivera.</p>
+
+      <p class="dialog">—Buenos días, Profe —dicen todos, con un tono más <span class="glossary-word" title="formal">formal</span>.</p>
+
+      <p>Es interesante: con los amigos, todos dicen "¿qué tal?" y "hola". Pero con Profe Rivera, todos dicen "buenos días" y usan "usted".</p>
+
+      <div class="scene-divider">◆ ◆ ◆</div>
+
+      <p>En el salón, Profe Rivera empieza la clase con una actividad.</p>
+
+      <p class="dialog">—Este año, quiero conocer bien a cada persona —dice Profe Rivera—. Vamos a presentarnos: nombre, de dónde eres, y algo que te gusta.</p>
+
+      <p>Los estudiantes se presentan uno por uno. Cuando le toca a Profe Rivera, ella dice:</p>
+
+      <p class="dialog">—Yo soy de Cuba. Me gusta bailar salsa, y también me gustan las <span class="glossary-word" title="riddles">adivinanzas</span>... ¿cómo se dice "adivinanza" en inglés? Se me olvidó otra vez.</p>
+
+      <p class="dialog">—¡Riddle! —dice Ximena.</p>
+
+      <p class="dialog">—¡Riddle, sí! Gracias —dice Profe Rivera, riendo—. Ven, hasta yo todavía aprendo palabras nuevas. Por eso me gustan tanto los <span class="glossary-word" title="cognates">cognados</span>: "formal" es casi la misma palabra en inglés y en español. Esas son fáciles. "Riddle" no tanto.</p>
+
+      <div class="scene-divider">◆ ◆ ◆</div>
+
+      <p>Después de clases, el grupo camina hasta Café Formosa, su lugar favorito.</p>
+
+      <p class="dialog">—Un bubble tea de taro, por favor —dice Emiliano en el <span class="glossary-word" title="counter">mostrador</span>.</p>
+
+      <p class="dialog">—Yo quiero de mango —dice Renata.</p>
+
+      <p>Se sientan en su mesa de siempre. Vale ya tiene sus papeles otra vez.</p>
+
+      <p class="dialog">—Entonces, para el proyecto de la próxima semana... —empieza Vale.</p>
+
+      <p class="dialog">—Vale —dice Emiliano, sonriendo—. Relájate. Es el primer día.</p>
+
+      <p class="dialog">—Tienes razón —dice Vale, y por un momento, guarda los papeles.</p>
+
+      <p>Fernanda mira su bubble tea, un poco callada, pero contenta. Es un buen primer día, piensa. Diferente a la costa, pero bueno.</p>
+    </div>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">📖</span> Glosario</h2>
+      <div class="card">
+        <div class="glossary-grid">
+          <div class="glossary-item"><span class="es">el verano</span><span class="en">summer</span></div>
+          <div class="glossary-item"><span class="es">relajado/a</span><span class="en">relaxed</span></div>
+          <div class="glossary-item"><span class="es">ocupado/a</span><span class="en">busy</span></div>
+          <div class="glossary-item"><span class="es">el proyecto</span><span class="en">project</span></div>
+          <div class="glossary-item"><span class="es">el cuaderno</span><span class="en">notebook</span></div>
+          <div class="glossary-item"><span class="es">formal</span><span class="en">formal</span></div>
+          <div class="glossary-item"><span class="es">la adivinanza</span><span class="en">riddle</span></div>
+          <div class="glossary-item"><span class="es">el cognado</span><span class="en">cognate</span></div>
+          <div class="glossary-item"><span class="es">el mostrador</span><span class="en">counter</span></div>
+          <div class="glossary-item"><span class="es">la costa</span><span class="en">coast</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">🗂️</span> Banco de palabras</h2>
+      <div class="card">
+        <ul class="word-bank-list">
+          <li>¿Qué tal? / ¿Cómo estás? / ¿Cómo está usted?</li>
+          <li>Me llamo... / Se llama... / Mucho gusto</li>
+          <li>¿De dónde eres? / Soy de...</li>
+          <li>Bien, gracias / Más o menos / Fatal</li>
+          <li>Nos vemos / Hasta luego / Que tengas un buen día</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="icon">✅</span> Comprensión</h2>
+      <div class="card">
+        <div class="comp-q">
+          <div class="q-text">1. ¿Cómo saluda el grupo a Profe Rivera, y cómo se saludan entre ellos? ¿Cuál es la diferencia?</div>
+          <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+        </div>
+        <div class="comp-q">
+          <div class="q-text">2. ¿Qué hace el grupo después de clases, y por qué es importante ese lugar para ellos?</div>
+          <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="teacher-trigger-wrap">
+    <button class="teacher-trigger" onclick="document.getElementById('teacherModal').classList.add('open')">
+      🎓 Notas del maestro
+    </button>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>🎓 Notas del maestro</h2>
+      <button class="modal-close" onclick="document.getElementById('teacherModal').classList.remove('open')" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div id="teacherNotesContent">
+      <h3>Datos básicos</h3>
+      <ul>
+        <li>Serie: La Cuadrilla (Secundaria 1 + Secundaria 2)</li>
+        <li>Unidad curricular: Language Basics &amp; Greetings</li>
+        <li>Nivel objetivo: A2/B1 (nivel puente, sin niveles separados — el episodio se escribe en un solo nivel combinado, siguiendo la convención de Conexiones)</li>
+        <li>Elenco introducido: Vale, Emiliano, Fernanda, Ximena, Andrés, Renata (Joaquín llega en el Episodio 3)</li>
+        <li>Escenario: Escuela San Antonio y Café Formosa</li>
+      </ul>
+
+      <h3>Objetivos lingüísticos</h3>
+      <ul>
+        <li>Saludar y despedirse en contextos formales e informales</li>
+        <li>Presentarse y presentar a otra persona (nombre, origen, edad)</li>
+        <li>Preguntar y responder "¿Cómo estás?" / "¿Cómo está usted?" con variedad de respuestas</li>
+        <li>Reconocer el cambio de registro (tú vs. usted) según el interlocutor</li>
+      </ul>
+
+      <h3>Notas de ritmo (pacing)</h3>
+      <p>Como esta serie usa un solo nivel combinado (A2/B1) por episodio en lugar de los cuatro niveles CEFR completos, se recomienda leer la Historia en voz alta como ritual diario, y usar el contraste formal/informal como hilo conductor para actividades de repaso durante toda la semana.</p>
+
+      <h3>La Palabra del Día</h3>
+      <p><strong>formal</strong> — cognado directo español-inglés, conectado con el contraste formal/informal del episodio.</p>
+
+      <h3>La Reflexión del Mentor (Profe Rivera)</h3>
+      <p>"¿Cambian ustedes su manera de saludar según con quién hablan? ¿Por qué creen que hacemos eso?" — Profe Rivera comparte brevemente cómo ella también ajusta su propio registro entre el salón de clases y una conversación informal, conectando el tema con su propia experiencia como inmigrante aprendiendo inglés.</p>
+
+      <h3>La Pregunta del Día</h3>
+      <p>¿Cuál es tu saludo favorito — uno en español o uno en inglés — y por qué?</p>
+
+      <h3>Huellas del Viajero</h3>
+      <p class="note-italic">Vacío en este episodio (reservado estructuralmente). Joaquín, el estudiante que llega de El Salvador, aparece por primera vez en el Episodio 3 ("Around a City") — su tarjeta de Huellas del Viajero se construirá en ese pasaporte, no en este.</p>
+
+      <h3>Mi Conexión (diario del estudiante)</h3>
+      <ul>
+        <li>¿Con quién usas un saludo más formal en tu vida? ¿Con quién usas uno más informal?</li>
+        <li>Piensa en el primer día de clases de este año. ¿Cómo te sentiste? ¿Se parece a cómo se sintió algún personaje?</li>
+      </ul>
+      <p class="note-italic">Función deferida: sección interactiva de diario no incluida en esta edición Foundation — usar las preguntas de arriba en el cuaderno físico de la clase.</p>
+
+      <h3>Desafío Conexiones</h3>
+      <p>En parejas, graben un video corto (30-45 segundos) mostrando el mismo saludo dos veces: una versión formal (a un adulto/maestro) y una versión informal (a un amigo). Compartan con la clase y discutan qué cambió — palabras, tono, lenguaje corporal.</p>
+      <p class="note-italic">Función deferida: no incluida como actividad interactiva en esta edición Foundation.</p>
+
+      <h3>Conexión Cultural</h3>
+      <p>Breve nota comparando normas de saludo en distintos países hispanohablantes (p. ej. el beso en la mejilla en muchos países latinoamericanos vs. un simple "hola" o apretón de manos), y cómo estas normas pueden variar incluso dentro de Belice según la comunidad.</p>
+
+      <h3>Marcadores de sensibilidad de contenido</h3>
+      <p class="note-italic">Ninguno significativo. Contenido ligero de regreso a clases. Nota: no todos los personajes tienen redes sociales todavía (solo mensajería por iMessage/WhatsApp) — este detalle se maneja de forma neutral/positiva, no como fuente de exclusión o drama.</p>
+
+      <h3>Notas de continuidad</h3>
+      <ul>
+        <li>Establece a Profe Rivera en su rol de maestra de secundaria por primera vez — mismo personaje que en El Club del Barrio, con un tono ligeramente más maduro para hablar con adolescentes.</li>
+        <li>Introduce Café Formosa como el punto de encuentro fijo del grupo (proyectos + bubble tea, no deporte/exploración).</li>
+        <li>Plantea sutilmente las dinámicas de amistad del grupo (energía organizada de Vale, encanto relajado de Emiliano) sin forzar ningún hilo romántico todavía.</li>
+        <li>Joaquín no aparece en este episodio; su llegada está planeada para el Episodio 3.</li>
+      </ul>
+
+      <h3>Funciones deferidas (fast-follow)</h3>
+      <ul>
+        <li>Reader's Theater</li>
+        <li>Story Asking (script de clase)</li>
+        <li>Sección interactiva de Mi Conexión / Desafío Conexiones dentro del reader</li>
+        <li>Audio narrado</li>
+      </ul>
+
+      <h3>🎲 Actividades de bajo prep (para terminar temprano o llenar tiempo)</h3>
+      <button class="shuffle-btn" onclick="shuffleActivity()">🔀 Sugerir una actividad al azar</button>
+      <div id="activityCard"></div>
+
+      <div class="activity-list-group">
+        <h4>Comunicación Interactiva</h4>
+        <ul>
+          <li><strong>Picture Talk</strong> — muestra una imagen y hazle preguntas simples a la clase, repitiendo el vocabulario objetivo. (5-8 min)</li>
+          <li><strong>PQA</strong> (Preguntas Personalizadas y Respuestas) — haz preguntas personales usando las estructuras de la unidad. (5-10 min)</li>
+          <li><strong>Special Person Interviews</strong> — entrevista a un estudiante frente a la clase; los demás escuchan y preguntan. (10-15 min)</li>
+          <li><strong>Card Talk</strong> — los estudiantes traen/dibujan una tarjeta personal; el maestro compara respuestas entre estudiantes. (8-12 min)</li>
+          <li><strong>Weekend Chats</strong> — pregunta qué hicieron el fin de semana, repitiendo estructuras en pasado. (5-10 min)</li>
+          <li><strong>Calendar Talk</strong> — practica fechas y días de la semana con preguntas simples y repetidas. (5 min)</li>
+        </ul>
+        <h4>Narración de Historias</h4>
+        <ul>
+          <li><strong>Story Listening</strong> — narra una historia corta con apoyo visual mientras los estudiantes solo escuchan. (10-15 min)</li>
+          <li><strong>Write and Discuss</strong> — escribe una historia corta en la pizarra con ayuda de la clase, paso a paso. (10-15 min)</li>
+          <li><strong>Movie Talk</strong> — usa un clip corto sin diálogo y narra/pregunta sobre lo que pasa, pausando frecuentemente. (10-20 min)</li>
+        </ul>
+        <h4>Lectura y Escritura</h4>
+        <ul>
+          <li><strong>One Word at a Time</strong> — la clase construye una historia oral entre todos, una palabra a la vez. (5-10 min)</li>
+          <li><strong>Embedded Reading</strong> — usa 2-3 versiones de la Historia en niveles de dificultad creciente, empezando por la más simple. (variable)</li>
+          <li><strong>Volleyball Reading</strong> — los estudiantes turnan leyendo una oración cada uno, "pasando" el texto. (5-10 min)</li>
+          <li><strong>Draw the Sentence</strong> — lee una oración de la Historia; los estudiantes la dibujan rápido y comparan. (5-8 min)</li>
+          <li><strong>Running Dictation</strong> — en parejas, uno lee una oración pegada en la pared y regresa a dictarla al otro. (10-15 min)</li>
+          <li><strong>Dictation with a Twist</strong> — dictado tradicional con un cambio (rápido, en voz baja, con acento) para mantener la atención. (8-10 min)</li>
+        </ul>
+      </div>
+    </div>
+
+    <button class="copy-btn" id="copyBtn" onclick="copyTeacherNotes()">📋 Copiar notas</button>
+  </div>
+</div>
+
+<script>
+  const CI_ACTIVITIES = [
+    { cat: "Comunicación Interactiva", name: "Picture Talk", time: "5-8 min", desc: "Muestra una imagen y hazle preguntas simples a la clase, repitiendo el vocabulario objetivo." },
+    { cat: "Comunicación Interactiva", name: "PQA", time: "5-10 min", desc: "Haz preguntas personales usando las estructuras de la unidad." },
+    { cat: "Comunicación Interactiva", name: "Special Person Interviews", time: "10-15 min", desc: "Entrevista a un estudiante frente a la clase; los demás escuchan y preguntan." },
+    { cat: "Comunicación Interactiva", name: "Card Talk", time: "8-12 min", desc: "Los estudiantes traen/dibujan una tarjeta personal; el maestro compara respuestas." },
+    { cat: "Comunicación Interactiva", name: "Weekend Chats", time: "5-10 min", desc: "Pregunta qué hicieron el fin de semana, repitiendo estructuras en pasado." },
+    { cat: "Comunicación Interactiva", name: "Calendar Talk", time: "5 min", desc: "Practica fechas y días de la semana con preguntas simples y repetidas." },
+    { cat: "Narración de Historias", name: "Story Listening", time: "10-15 min", desc: "Narra una historia corta con apoyo visual mientras los estudiantes solo escuchan." },
+    { cat: "Narración de Historias", name: "Write and Discuss", time: "10-15 min", desc: "Escribe una historia corta en la pizarra con ayuda de la clase, paso a paso." },
+    { cat: "Narración de Historias", name: "Movie Talk", time: "10-20 min", desc: "Usa un clip corto sin diálogo y narra/pregunta sobre lo que pasa, pausando frecuentemente." },
+    { cat: "Lectura y Escritura", name: "One Word at a Time", time: "5-10 min", desc: "La clase construye una historia oral entre todos, una palabra a la vez." },
+    { cat: "Lectura y Escritura", name: "Embedded Reading", time: "variable", desc: "Usa 2-3 versiones de la Historia en niveles de dificultad creciente." },
+    { cat: "Lectura y Escritura", name: "Volleyball Reading", time: "5-10 min", desc: "Los estudiantes turnan leyendo una oración cada uno, \"pasando\" el texto." },
+    { cat: "Lectura y Escritura", name: "Draw the Sentence", time: "5-8 min", desc: "Lee una oración de la Historia; los estudiantes la dibujan rápido y comparan." },
+    { cat: "Lectura y Escritura", name: "Running Dictation", time: "10-15 min", desc: "En parejas, uno lee una oración pegada en la pared y regresa a dictarla al otro." },
+    { cat: "Lectura y Escritura", name: "Dictation with a Twist", time: "8-10 min", desc: "Dictado tradicional con un cambio (rápido, en voz baja, con acento) para mantener la atención." }
+  ];
+
+  function shuffleActivity() {
+    const a = CI_ACTIVITIES[Math.floor(Math.random() * CI_ACTIVITIES.length)];
+    document.getElementById('activityCard').innerHTML = `
+      <div class="activity-card">
+        <div class="cat-tag">${a.cat}</div>
+        <div class="act-name">${a.name}</div>
+        <div class="act-time">⏱ ${a.time}</div>
+        <p style="margin:0;">${a.desc}</p>
+      </div>`;
+  }
+
+  function copyTeacherNotes() {
+    const content = document.getElementById('teacherNotesContent').innerText;
+    navigator.clipboard.writeText(content).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 Copiar notas';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  document.getElementById('teacherModal').addEventListener('click', (e) => {
+    if (e.target.id === 'teacherModal') {
+      e.target.classList.remove('open');
+    }
+  });
+</script>
+
+</body>
+</html>
