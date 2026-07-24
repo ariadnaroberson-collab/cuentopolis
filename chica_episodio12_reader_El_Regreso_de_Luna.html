@@ -361,6 +361,7 @@ let answered = {};
 const savedWords = new Set();
 
 function renderStory(level){
+stopListening();
 currentLevel = level;
 document.getElementById('storyBody').innerHTML = VERSIONS[level].html;
 document.getElementById('storyBody').style.fontSize = fontSize+'px';
@@ -443,11 +444,67 @@ document.getElementById('pageContent').style.filter = btn.classList.contains('on
 btn.textContent = btn.classList.contains('on') ? '☀ Luz brillante' : '🌙 Luz de lámpara';
 }
 
+let currentUtterance = null;
+let spanishVoice = null;
+
+function pickSpanishVoice(){
+  const voices = speechSynthesis.getVoices();
+  spanishVoice = voices.find(v => v.lang === 'es-MX') ||
+                 voices.find(v => v.lang === 'es-US') ||
+                 voices.find(v => v.lang && v.lang.startsWith('es')) ||
+                 null;
+}
+if('speechSynthesis' in window){
+  pickSpanishVoice();
+  speechSynthesis.onvoiceschanged = pickSpanishVoice;
+}
+
+function getStoryPlainText(){
+  const clone = document.getElementById('storyBody').cloneNode(true);
+  clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+  return clone.innerText;
+}
+
+function stopListening(){
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+  listening = false;
+  const btn = document.getElementById('listenBtn');
+  if(btn){
+    btn.classList.remove('playing');
+    btn.textContent = '🔊 Escuchar narración';
+  }
+}
+
 function toggleListen(){
-listening = !listening;
-const btn = document.getElementById('listenBtn');
-btn.classList.toggle('playing', listening);
-btn.textContent = listening ? '⏸ Reproduciendo narración…' : '🔊 Escuchar narración';
+  if(!('speechSynthesis' in window)){
+    alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+    return;
+  }
+  const btn = document.getElementById('listenBtn');
+  if(listening){
+    stopListening();
+    return;
+  }
+  const text = getStoryPlainText();
+  currentUtterance = new SpeechSynthesisUtterance(text);
+  currentUtterance.lang = 'es-MX';
+  currentUtterance.rate = 0.92;
+  currentUtterance.pitch = 1.0;
+  if(spanishVoice) currentUtterance.voice = spanishVoice;
+  currentUtterance.onend = () => {
+    listening = false;
+    btn.classList.remove('playing');
+    btn.textContent = '🔊 Escuchar narración';
+  };
+  currentUtterance.onerror = () => {
+    listening = false;
+    btn.classList.remove('playing');
+    btn.textContent = '🔊 Escuchar narración';
+  };
+  speechSynthesis.speak(currentUtterance);
+  listening = true;
+  btn.classList.add('playing');
+  btn.textContent = '⏸ Detener narración';
 }
 
 function openTeacherNotes(){ document.getElementById('teacherModal').classList.add('open'); }
