@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -566,6 +585,7 @@
   <div class="pill-row">
     <span class="pill">A2/B1 · nivel intermedio</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
@@ -575,7 +595,7 @@
 
       <p>—Es difícil de creer —dice Mateo—. Han pasado tantas cosas.</p>
 
-      <p>—Por eso —dice Profe Rivera—, quiero que hagan algo especial. Un proyecto para dejar antes de irse. Algo para la próxima <span class="vocab-hl">generación</span> de estudiantes.</p>
+      <p>—Por eso —dice Profe Rivera—, quiero que hagan algo especial. Un proyecto para dejar antes de irse. Algo para la próxima <span class="gloss" data-word="generación">generación</span><span class="gloss-tooltip">generation<span class="arrow"></span></span> de estudiantes.</p>
 
       <p>—¿Cómo un... eh... ¿cómo se dice esto en inglés? —pregunta Diego, pensando—. Una persona o un grupo que viene después de nosotros...</p>
 
@@ -583,11 +603,11 @@
 
       <p>—¡Eso es! —dice Profe Rivera—. En español decimos "generación". Ustedes van a dejar algo para la próxima generación.</p>
 
-      <p>—¡Podemos construir algo aquí en Guanacaste Park! —dice Sofía—. Este lugar significa mucho para todos nosotros.</p>
+      <p>—¡Podemos <span class="gloss" data-word="construir">construir</span><span class="gloss-tooltip">to build<span class="arrow"></span></span> algo aquí en Guanacaste Park! —dice Sofía—. Este lugar significa mucho para todos nosotros.</p>
 
-      <p>—Una <span class="vocab-hl">estación de reciclaje</span> —dice Camila—. Así, cada persona que viene al parque puede reciclar fácilmente.</p>
+      <p>—Una <span class="gloss" data-word="estación de reciclaje">estación de reciclaje</span><span class="gloss-tooltip">recycling station<span class="arrow"></span></span> —dice Camila—. Así, cada persona que viene al parque puede reciclar fácilmente.</p>
 
-      <p>—Yo puedo elegir las plantas —dice Diego—. Plantas nativas, buenas para el ecosistema.</p>
+      <p>—Yo puedo elegir las plantas —dice Diego—. Plantas nativas, buenas para el <span class="gloss" data-word="ecosistema">ecosistema</span><span class="gloss-tooltip">ecosystem<span class="arrow"></span></span>.</p>
 
       <p>—Yo organizo todo el plan —dice Mateo, ya escribiendo—. Necesitamos materiales, un horario, y ayuda de todos.</p>
 
@@ -607,7 +627,7 @@
 
       <p>—Siempre —dice Ana Lucía, sonriendo—. Este lugar es parte de nosotros.</p>
 
-      <p>Profe Rivera mira al grupo con orgullo.</p>
+      <p>Profe Rivera mira al grupo con <span class="gloss" data-word="orgullo">orgullo</span><span class="gloss-tooltip">pride<span class="arrow"></span></span>.</p>
 
       <p>—Quiero decirles algo a cada uno de ustedes —dice Profe Rivera—. Mateo, aprendiste a encontrar balance. Sofía, siempre lideras con energía. Diego, tu curiosidad nunca para. Camila, aprendiste a ver más de un lado de las cosas. Y Ana Lucía, tu creatividad va a llevarte lejos.</p>
 
@@ -619,7 +639,7 @@
 
       <p>—¡Todavía nos recuerda! —dice Mateo, sonriendo.</p>
 
-      <p>—Bueno, chicos —dice Profe Rivera—, ustedes van a dejar su <span class="vocab-hl">huella</span> aquí en Guanacaste Park, y también van a dejar su huella en el mundo. Recuerden siempre: no tengan miedo de ser ridículos. Así es como aprendemos, y así es como crecemos.</p>
+      <p>—Bueno, chicos —dice Profe Rivera—, ustedes van a dejar su <span class="gloss" data-word="huella">huella</span><span class="gloss-tooltip">footprint / mark<span class="arrow"></span></span> aquí en Guanacaste Park, y también van a dejar su huella en el mundo. Recuerden siempre: no tengan miedo de ser ridículos. Así es como aprendemos, y así es como crecemos.</p>
 
       <p>El grupo mira su estación de reciclaje nueva, sabiendo que su huella va a quedar en el parque para siempre, y que su amistad va a continuar, sin importar a qué escuela vayan.</p>
     </div>
@@ -902,6 +922,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 

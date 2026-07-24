@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -566,24 +585,25 @@
   <div class="pill-row">
     <span class="pill">A2/B1 · nivel intermedio</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
       <p>Ana Lucía llega a Guanacaste Park con una idea grande.</p>
 
-      <p>—¡Chicos! Quiero organizar un <span class="vocab-hl">desfile de moda</span> para la clase —dice Ana Lucía—. Cada persona puede mostrar su propio estilo.</p>
+      <p>—¡Chicos! Quiero organizar un <span class="gloss" data-word="desfile de moda">desfile de moda</span><span class="gloss-tooltip">fashion show<span class="arrow"></span></span> para la clase —dice Ana Lucía—. Cada persona puede mostrar su propio <span class="gloss" data-word="estilo">estilo</span><span class="gloss-tooltip">style<span class="arrow"></span></span>.</p>
 
       <p>—¿Un desfile? —pregunta Diego—. ¿Cómo funciona?</p>
 
-      <p>—Cada persona camina y muestra su ropa favorita —dice Ana Lucía—. Es una manera de expresar quién eres.</p>
+      <p>—Cada persona camina y muestra su <span class="gloss" data-word="ropa">ropa</span><span class="gloss-tooltip">clothes<span class="arrow"></span></span> favorita —dice Ana Lucía—. Es una manera de <span class="gloss" data-word="expresar">expresar</span><span class="gloss-tooltip">to express<span class="arrow"></span></span> quién eres.</p>
 
-      <p>Sofía sonríe. —Yo puedo mostrar mi ropa <span class="vocab-hl">deportiva</span> —dice Sofía—. Cómoda, práctica, perfecta para correr.</p>
+      <p>Sofía sonríe. —Yo puedo mostrar mi ropa <span class="gloss" data-word="deportiva">deportiva</span><span class="gloss-tooltip">athletic/sporty<span class="arrow"></span></span> —dice Sofía—. Cómoda, práctica, perfecta para correr.</p>
 
-      <p>—Yo prefiero algo simple y cómodo —dice Diego—. No me gusta la ropa complicada. Solo necesito algo práctico para explorar afuera.</p>
+      <p>—Yo prefiero algo simple y <span class="gloss" data-word="cómodo/a">cómodo</span><span class="gloss-tooltip">comfortable<span class="arrow"></span></span> —dice Diego—. No me gusta la ropa complicada. Solo necesito algo práctico para explorar afuera.</p>
 
       <p>Camila levanta su camiseta favorita. —Yo tengo esta camiseta con mi videojuego favorito —dice Camila—. Es mi estilo.</p>
 
-      <p>Mateo piensa un momento. —Yo tengo un chaleco que parece de un campeón de ajedrez —dice Mateo, sonriendo—. <span class="vocab-hl">Elegante</span>, pero simple.</p>
+      <p>Mateo piensa un momento. —Yo tengo un chaleco que parece de un campeón de ajedrez —dice Mateo, sonriendo—. <span class="gloss" data-word="<span class="gloss" data-word="elegante">Elegante</span><span class="gloss-tooltip">elegant<span class="arrow"></span></span>">Elegante</span><span class="gloss-tooltip">elegant<span class="arrow"></span></span>, pero simple.</p>
 
       <p>—¡Me encanta que todos tengan estilos tan diferentes! —dice Ana Lucía—. Eso es lo bonito de la moda.</p>
 
@@ -601,7 +621,7 @@
 
       <p>—¿"Outfit"? —pregunta Mateo.</p>
 
-      <p>—¡Eso es, Mateo! "Outfit" —dice Profe Rivera—. En español decimos "<span class="vocab-hl">atuendo</span>".</p>
+      <p>—¡Eso es, Mateo! "Outfit" —dice Profe Rivera—. En español decimos "<span class="gloss" data-word="atuendo">atuendo</span><span class="gloss-tooltip">outfit<span class="arrow"></span></span>".</p>
 
       <p>—Cada atuendo cuenta algo sobre la persona —dice Ana Lucía.</p>
 
@@ -895,6 +915,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 

@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -566,18 +585,19 @@
   <div class="pill-row">
     <span class="pill">A2/B1 · nivel intermedio</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
       <p>Profe Rivera entra a la clase con una sonrisa grande.</p>
 
-      <p>—Chicos, hoy vamos a tener un <span class="vocab-hl">debate</span> —dice Profe Rivera—. El tema es: ¿la tecnología ayuda o daña el aprendizaje?</p>
+      <p>—Chicos, hoy vamos a tener un <span class="gloss" data-word="debate">debate</span><span class="gloss-tooltip">debate<span class="arrow"></span></span> —dice Profe Rivera—. El tema es: ¿la tecnología ayuda o daña el aprendizaje?</p>
 
       <p>—¡Me encanta este tema! —dice Camila—. Yo puedo empezar. La tecnología nos ayuda mucho. Con una computadora, podemos aprender de todo el mundo.</p>
 
       <p>—Pero, Camila —dice Diego—, a veces la tecnología nos hace pasar demasiado tiempo adentro. Es importante estar afuera también, en la naturaleza.</p>
 
-      <p>—Los dos tienen razón —dice Mateo, pensando—. <span class="vocab-hl">Por un lado</span>, la tecnología nos da mucha información. <span class="vocab-hl">Por otro lado</span>, puede ser una distracción si no tenemos balance.</p>
+      <p>—Los dos tienen razón —dice Mateo, pensando—. <span class="gloss" data-word="<span class="gloss" data-word="por un lado">Por un lado</span><span class="gloss-tooltip">on one hand<span class="arrow"></span></span>">Por un lado</span><span class="gloss-tooltip">on one hand<span class="arrow"></span></span>, la tecnología nos da mucha información. <span class="gloss" data-word="<span class="gloss" data-word="por otro lado">Por otro lado</span><span class="gloss-tooltip">on the other hand<span class="arrow"></span></span>">Por otro lado</span><span class="gloss-tooltip">on the other hand<span class="arrow"></span></span>, puede ser una <span class="gloss" data-word="distracción">distracción</span><span class="gloss-tooltip">distraction<span class="arrow"></span></span> si no tenemos balance.</p>
 
       <p>—Yo uso la tecnología para hacer ejercicio a veces —dice Sofía—. Hay aplicaciones que cuentan mis pasos.</p>
 
@@ -587,19 +607,19 @@
 
       <p>Profe Rivera sonríe. —¿"Artificial intelligence"?</p>
 
-      <p>—¡Eso es! —dice Camila—. En español decimos "<span class="vocab-hl">inteligencia artificial</span>".</p>
+      <p>—¡Eso es! —dice Camila—. En español decimos "<span class="gloss" data-word="inteligencia artificial">inteligencia artificial</span><span class="gloss-tooltip">artificial intelligence<span class="arrow"></span></span>".</p>
 
-      <p>—La inteligencia artificial es un buen ejemplo —dice Profe Rivera—. Puede ayudarnos a aprender más rápido. Pero también debemos pensar con cuidado, no solo confiar en ella.</p>
+      <p>—La inteligencia artificial es un buen ejemplo —dice Profe Rivera—. Puede ayudarnos a aprender más rápido. Pero también debemos pensar con cuidado, no solo <span class="gloss" data-word="confiar">confiar</span><span class="gloss-tooltip">to trust<span class="arrow"></span></span> en ella.</p>
 
       <p>—¿Entonces la tecnología es buena o mala? —pregunta Diego.</p>
 
-      <p>—Ninguna de las dos —dice Profe Rivera—. Una herramienta puede ser buena y mala al mismo tiempo, dependiendo de cómo la usamos.</p>
+      <p>—Ninguna de las dos —dice Profe Rivera—. Una <span class="gloss" data-word="herramienta">herramienta</span><span class="gloss-tooltip">tool<span class="arrow"></span></span> puede ser buena y mala al mismo tiempo, dependiendo de cómo la usamos.</p>
 
       <p>—¿Como un cuchillo? —pregunta Mateo—. Puede cortar comida, o puede ser peligroso.</p>
 
       <p>—Exacto —dice Profe Rivera—. La tecnología es igual. Todo depende del uso.</p>
 
-      <p>—Entonces, tenemos que usar la tecnología con cuidado y con <span class="vocab-hl">balance</span> —dice Sofía.</p>
+      <p>—Entonces, tenemos que usar la tecnología con cuidado y con <span class="gloss" data-word="balance">balance</span><span class="gloss-tooltip">balance<span class="arrow"></span></span> —dice Sofía.</p>
 
       <p>—¡Sí! —dice el grupo.</p>
 
@@ -887,6 +907,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 

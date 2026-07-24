@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -566,6 +585,7 @@
   <div class="pill-row">
     <span class="pill">A2/B1 · nivel intermedio</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
@@ -573,15 +593,15 @@
 
       <p>Mateo llega a Guanacaste Park con un cuaderno lleno de colores.</p>
 
-      <p>—Miren mi horario de estudio —dice Mateo—. Tengo cada minuto planeado. Matemáticas a las tres, Ciencias a las cuatro, Español a las cinco...</p>
+      <p>—Miren mi <span class="gloss" data-word="horario">horario</span><span class="gloss-tooltip">schedule<span class="arrow"></span></span> de estudio —dice Mateo—. Tengo cada minuto planeado. Matemáticas a las tres, Ciencias a las cuatro, Español a las cinco...</p>
 
       <p>—¿Cada minuto? —pregunta Sofía—. Eso parece mucho.</p>
 
-      <p>—Necesito organizar mis <span class="vocab-hl">prioridades</span> —dice Mateo—. Este año, quiero ser perfecto con mis estudios.</p>
+      <p>—Necesito organizar mis <span class="vocab-hl"><span class="gloss" data-word="prioridad">prioridades</span><span class="gloss-tooltip">priority<span class="arrow"></span></span></span> —dice Mateo—. Este año, quiero ser perfecto con mis estudios.</p>
 
       <p>Diego mira el horario de Mateo. —Pero, Mateo, ¿cuándo descansas?</p>
 
-      <p>—No tengo tiempo para descansar —dice Mateo—. Tengo que estudiar todo el tiempo.</p>
+      <p>—No tengo tiempo para <span class="gloss" data-word="descansar">descansar</span><span class="gloss-tooltip">to rest<span class="arrow"></span></span> —dice Mateo—. Tengo que <span class="gloss" data-word="estudiar">estudiar</span><span class="gloss-tooltip">to study<span class="arrow"></span></span> todo el tiempo.</p>
 
       <p>Camila piensa un momento. —Yo estudio diferente —dice Camila—. Uso una aplicación con recompensas, como un juego. Estudio veinte minutos, y después descanso cinco minutos.</p>
 
@@ -603,7 +623,7 @@
 
       <p>—Mateo tiene un horario de estudio perfecto —dice Ana Lucía—. Pero no tiene tiempo para descansar.</p>
 
-      <p>Profe Rivera mira el horario de Mateo. —Mateo, ¿es mejor tener un horario perfecto, o un horario realista? —pregunta Profe Rivera.</p>
+      <p>Profe Rivera mira el horario de Mateo. —Mateo, ¿es mejor tener un horario perfecto, o un horario <span class="gloss" data-word="realista">realista</span><span class="gloss-tooltip">realistic<span class="arrow"></span></span>? —pregunta Profe Rivera.</p>
 
       <p>—No sé —dice Mateo—. Pensé que perfecto era mejor.</p>
 
@@ -611,7 +631,7 @@
 
       <p>Mateo piensa un momento. —Entonces, ¿puedo cambiar mi horario?</p>
 
-      <p>—¡Claro que sí! —dice Profe Rivera—. Cada persona estudia diferente. Lo importante es encontrar lo que funciona para ti, con balance.</p>
+      <p>—¡Claro que sí! —dice Profe Rivera—. Cada persona estudia diferente. Lo importante es encontrar lo que funciona para ti, con <span class="gloss" data-word="balance">balance</span><span class="gloss-tooltip">balance<span class="arrow"></span></span>.</p>
 
       <p>Mateo mira su cuaderno y empieza a borrar algunas cosas.</p>
 
@@ -901,6 +921,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 

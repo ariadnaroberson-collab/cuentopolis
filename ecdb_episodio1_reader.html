@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -564,6 +583,7 @@
   <div class="pill-row">
     <span class="pill">A2 · nivel básico</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
@@ -573,13 +593,13 @@
 
       <p>Hoy es un día especial. Es el primer día de clases.</p>
 
-      <p>Mateo camina a la escuela. Mateo está nervioso. Mateo tiene un papel en la mano. El papel es su <span class="vocab-hl">horario</span>.</p>
+      <p>Mateo camina a la escuela. Mateo está <span class="gloss" data-word="nervioso/a">nervioso</span><span class="gloss-tooltip">nervous<span class="arrow"></span></span>. Mateo tiene un <span class="gloss" data-word="papel">papel</span><span class="gloss-tooltip">paper<span class="arrow"></span></span> en la mano. El papel es su <span class="gloss" data-word="horario">horario</span><span class="gloss-tooltip">schedule<span class="arrow"></span></span>.</p>
 
       <p>—¡Hola, Mateo! —dice Sofía—. ¿Tienes tu horario?</p>
 
       <p>—Sí —dice Mateo—. Tengo mi horario. Pero... no comprendo mi horario.</p>
 
-      <p>Mateo mira el papel. El papel dice: Matemáticas, Ciencias, Español, Arte. Pero Mateo no sabe a qué <span class="vocab-hl">hora</span>. ¡Mateo está muy nervioso!</p>
+      <p>Mateo mira el papel. El papel dice: Matemáticas, Ciencias, Español, Arte. Pero Mateo no sabe a qué <span class="gloss" data-word="hora">hora</span><span class="gloss-tooltip">hour / time<span class="arrow"></span></span>. ¡Mateo está muy nervioso!</p>
 
       <p>Ana Lucía, Diego y Camila llegan también.</p>
 
@@ -591,9 +611,9 @@
 
       <p>Mateo mira el papel otra vez. —¡Sí! ¡Yo también tengo Matemáticas a las ocho! —dice Mateo. Mateo sonríe. Mateo no está tan nervioso ahora.</p>
 
-      <p>Camila mira su propio horario. —Yo tengo un <span class="vocab-hl">recreo</span> a las diez —dice Camila—. ¿Tú tienes un recreo a las diez?</p>
+      <p>Camila mira su propio horario. —Yo tengo un <span class="gloss" data-word="recreo">recreo</span><span class="gloss-tooltip">recess / break<span class="arrow"></span></span> a las diez —dice Camila—. ¿Tú tienes un recreo a las diez?</p>
 
-      <p>—Sí, yo también —dice Mateo—. ¡Tenemos el mismo horario!</p>
+      <p>—Sí, yo también —dice Mateo—. ¡Tenemos el <span class="gloss" data-word="mismo/a">mismo</span><span class="gloss-tooltip">same<span class="arrow"></span></span> horario!</p>
 
       <p>En ese momento, llega Profe Rivera.</p>
 
@@ -609,9 +629,9 @@
 
       <p>Todos ríen también.</p>
 
-      <p>—Bueno —dice Profe Rivera—. Vamos a la <span class="vocab-hl">clase</span>. Recuerden: no tengan miedo de ser ridículos. ¡Así es como aprendemos!</p>
+      <p>—Bueno —dice Profe Rivera—. Vamos a la <span class="gloss" data-word="clase">clase</span><span class="gloss-tooltip">class<span class="arrow"></span></span>. Recuerden: no tengan miedo de ser ridículos. ¡Así es como aprendemos!</p>
 
-      <p>El grupo camina junto por el <span class="vocab-hl">pasillo</span> hacia su primera clase.</p>
+      <p>El grupo camina junto por el <span class="gloss" data-word="pasillo">pasillo</span><span class="gloss-tooltip">hallway<span class="arrow"></span></span> hacia su primera clase.</p>
     </div>
 
     <hr class="divider">
@@ -891,6 +911,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 

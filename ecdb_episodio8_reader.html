@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -564,16 +583,17 @@
   <div class="pill-row">
     <span class="pill">A2 · nivel básico</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
       <p>Profe Rivera entra a la clase con una lista de nombres.</p>
 
-      <p>—Chicos, hoy empezamos un proyecto nuevo —dice Profe Rivera—. Cada persona va a investigar a alguien <span class="vocab-hl">famoso</span>.</p>
+      <p>—Chicos, hoy empezamos un proyecto nuevo —dice Profe Rivera—. Cada persona va a <span class="gloss" data-word="investigar">investigar</span><span class="gloss-tooltip">to research<span class="arrow"></span></span> a alguien <span class="vocab-hl"><span class="gloss" data-word="famoso/a">famoso</span><span class="gloss-tooltip">famous<span class="arrow"></span></span></span>.</p>
 
       <p>—¿Cualquier persona? —pregunta Mateo.</p>
 
-      <p>—Sí —dice Profe Rivera—. Puede ser un <span class="vocab-hl">científico</span>, un <span class="vocab-hl">atleta</span>, un <span class="vocab-hl">astronauta</span>, un <span class="vocab-hl">escritor</span>... alguien que te interesa.</p>
+      <p>—Sí —dice Profe Rivera—. Puede ser un <span class="vocab-hl"><span class="gloss" data-word="científico/a">científico</span><span class="gloss-tooltip">scientist<span class="arrow"></span></span></span>, un <span class="gloss" data-word="atleta">atleta</span><span class="gloss-tooltip">athlete<span class="arrow"></span></span>, un <span class="gloss" data-word="astronauta">astronauta</span><span class="gloss-tooltip">astronaut<span class="arrow"></span></span>, un <span class="vocab-hl"><span class="gloss" data-word="escritor/a">escritor</span><span class="gloss-tooltip">writer<span class="arrow"></span></span></span>... alguien que te interesa.</p>
 
       <p>Mateo piensa un momento. —Voy a investigar a una científica —dice Mateo—. Me gusta cómo piensan los científicos.</p>
 
@@ -595,9 +615,9 @@
 
       <p>—Pero, Camila —dice Ana Lucía—, ¿una persona en línea es tan importante como un científico o un astronauta?</p>
 
-      <p>—No sé —dice Camila—. Pero ella tiene mucha <span class="vocab-hl">influencia</span>. Muchas personas la ven y aprenden de ella.</p>
+      <p>—No sé —dice Camila—. Pero ella tiene mucha <span class="gloss" data-word="influencia">influencia</span><span class="gloss-tooltip">influence<span class="arrow"></span></span>. Muchas personas la ven y aprenden de ella.</p>
 
-      <p>Profe Rivera piensa un momento. —Es una buena pregunta —dice Profe Rivera—. ¿Qué hace que una persona sea <span class="vocab-hl">digna de admiración</span>? ¿Tiene que ser famosa en la historia, o puede ser alguien de hoy?</p>
+      <p>Profe Rivera piensa un momento. —Es una buena pregunta —dice Profe Rivera—. ¿Qué hace que una persona sea <span class="vocab-hl">digna de <span class="gloss" data-word="admiración">admiración</span><span class="gloss-tooltip">admiration<span class="arrow"></span></span></span>? ¿Tiene que ser famosa en la historia, o puede ser alguien de hoy?</p>
 
       <p>—Los dos pueden tener influencia —dice Mateo—. Solo es diferente.</p>
 
@@ -891,6 +911,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 

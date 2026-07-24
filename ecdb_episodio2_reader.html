@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -564,20 +583,21 @@
   <div class="pill-row">
     <span class="pill">A2 · nivel básico</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
       <p>Es sábado. <span class="vocab-hl">Sofía</span> llega a Guanacaste Park con una pelota.</p>
 
-      <p>—¡Hola, chicos! —dice Sofía—. Hoy hay un <span class="vocab-hl">partido</span> de fútbol en el parque. ¡Vamos a jugar!</p>
+      <p>—¡Hola, chicos! —dice Sofía—. Hoy hay un <span class="gloss" data-word="partido">partido</span><span class="gloss-tooltip">game / match<span class="arrow"></span></span> de fútbol en el parque. ¡Vamos a jugar!</p>
 
-      <p>—<span class="vocab-hl">Me gusta</span> el fútbol —dice Mateo—. Es divertido.</p>
+      <p>—<span class="gloss" data-word="<span class="gloss" data-word="me gusta">Me gusta</span><span class="gloss-tooltip">I like<span class="arrow"></span></span>">Me gusta</span><span class="gloss-tooltip">I like<span class="arrow"></span></span> el fútbol —dice Mateo—. Es divertido.</p>
 
-      <p>Pero Diego no está feliz. —Sofía, hoy no puedo jugar fútbol —dice Diego—. Hoy tengo mi <span class="vocab-hl">campaña</span> de Dungeons &amp; Dragons. Es a las dos.</p>
+      <p>Pero Diego no está feliz. —Sofía, hoy no puedo jugar fútbol —dice Diego—. Hoy tengo mi <span class="gloss" data-word="campaña">campaña</span><span class="gloss-tooltip">campaign<span class="arrow"></span></span> de Dungeons &amp; Dragons. Es a las dos.</p>
 
       <p>—¿A las dos? —pregunta Sofía—. ¡El partido también es a las dos!</p>
 
-      <p>Camila mira su horario. —Yo tengo <span class="vocab-hl">interés</span> en los dos —dice Camila—. Me gusta el fútbol, pero también me interesa la campaña de Diego.</p>
+      <p>Camila mira su horario. —Yo tengo <span class="vocab-hl">interés</span> en los dos —dice Camila—. Me gusta el fútbol, pero también <span class="gloss" data-word="me interesa">me interesa</span><span class="gloss-tooltip">I'm interested in<span class="arrow"></span></span> la campaña de Diego.</p>
 
       <p>Ana Lucía tiene una idea. —¿Por qué no hacemos las dos cosas? —dice Ana Lucía—. Primero el partido, y después la campaña.</p>
 
@@ -585,7 +605,7 @@
 
       <p>—Sí, pero... —dice Diego—. La campaña necesita tiempo. No es rápida.</p>
 
-      <p>—Podemos jugar fútbol por una <span class="vocab-hl">hora</span> —dice Mateo—. Después, tenemos tiempo para D&amp;D.</p>
+      <p>—Podemos jugar fútbol por una <span class="gloss" data-word="hora">hora</span><span class="gloss-tooltip">hour<span class="arrow"></span></span> —dice Mateo—. Después, tenemos tiempo para D&amp;D.</p>
 
       <p>Diego piensa un momento. —Está bien —dice Diego, sonriendo—. ¡Una hora de fútbol, y después D&amp;D!</p>
 
@@ -597,7 +617,7 @@
 
       <p>—No, no es robótica —dice Diego, riendo—. Es Dungeons &amp; Dragons.</p>
 
-      <p>—¡Ah! —dice Profe Rivera—. Pero <span class="vocab-hl">robótica</span>... esa palabra es fácil. "Robótica" y "robotics" son casi la misma palabra. ¡Un cognado!</p>
+      <p>—¡Ah! —dice Profe Rivera—. Pero <span class="gloss" data-word="robótica">robótica</span><span class="gloss-tooltip">robotics<span class="arrow"></span></span>... esa palabra es fácil. "Robótica" y "robotics" son casi la misma palabra. ¡Un <span class="gloss" data-word="cognado">cognado</span><span class="gloss-tooltip">cognate<span class="arrow"></span></span>!</p>
 
       <p>—¿Qué es un cognado? —pregunta Mateo.</p>
 
@@ -888,6 +908,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 

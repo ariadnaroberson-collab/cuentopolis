@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -566,20 +585,21 @@
   <div class="pill-row">
     <span class="pill">A2/B1 · nivel intermedio</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
       <p>Es lunes por la tarde. El grupo está en Guanacaste Park, cada quien haciendo algo diferente.</p>
 
-      <p>Sofía corre alrededor del parque. —¡Correr me ayuda a sentirme bien! —dice Sofía—. Hago <span class="vocab-hl">deporte</span> casi todos los días.</p>
+      <p>Sofía corre alrededor del parque. —¡Correr me ayuda a sentirme bien! —dice Sofía—. Hago <span class="gloss" data-word="deporte">deporte</span><span class="gloss-tooltip">sport<span class="arrow"></span></span> casi todos los días.</p>
 
-      <p>Ana Lucía se pone crema en las manos. —Yo tengo mi <span class="vocab-hl">rutina de cuidado personal</span> —dice Ana Lucía—. Me ayuda a relajarme después de un día largo.</p>
+      <p>Ana Lucía se pone crema en las manos. —Yo tengo mi <span class="vocab-hl"><span class="gloss" data-word="rutina">rutina</span><span class="gloss-tooltip">routine<span class="arrow"></span></span> de cuidado personal</span> —dice Ana Lucía—. Me ayuda a relajarme después de un día largo.</p>
 
       <p>Diego está sentado bajo un árbol, mirando el cielo. —Yo necesito tiempo al aire libre —dice Diego—. Estar afuera me ayuda a pensar con calma.</p>
 
-      <p>Camila mira su teléfono, jugando un videojuego. —Yo juego videojuegos —dice Camila—. Pero también camino un poco cada hora. Es importante <span class="vocab-hl">moverse</span>.</p>
+      <p>Camila mira su teléfono, jugando un videojuego. —Yo juego videojuegos —dice Camila—. Pero también camino un poco cada hora. Es importante <span class="gloss" data-word="moverse">moverse</span><span class="gloss-tooltip">to move (oneself)<span class="arrow"></span></span>.</p>
 
-      <p>Mateo llega con su cuaderno, pero esta vez no está tan organizado como antes. —Estoy tratando de encontrar <span class="vocab-hl">balance</span> —dice Mateo—. Un poco de estudio, un poco de descanso, un poco de tiempo con ustedes.</p>
+      <p>Mateo llega con su cuaderno, pero esta vez no está tan organizado como antes. —Estoy tratando de encontrar <span class="gloss" data-word="balance">balance</span><span class="gloss-tooltip">balance<span class="arrow"></span></span> —dice Mateo—. Un poco de estudio, un poco de <span class="gloss" data-word="descanso">descanso</span><span class="gloss-tooltip">rest<span class="arrow"></span></span>, un poco de tiempo con ustedes.</p>
 
       <p>—¡Qué bien, Mateo! —dice Sofía—. Se nota el cambio.</p>
 
@@ -593,11 +613,11 @@
 
       <p>—¿"Well-being"? —pregunta Diego.</p>
 
-      <p>—¡Eso es, Diego! "Well-being" —dice Profe Rivera—. En español decimos "<span class="vocab-hl">bienestar</span>".</p>
+      <p>—¡Eso es, Diego! "Well-being" —dice Profe Rivera—. En español decimos "<span class="gloss" data-word="bienestar">bienestar</span><span class="gloss-tooltip">well-being<span class="arrow"></span></span>".</p>
 
       <p>—¿Bienestar es solo el cuerpo? —pregunta Mateo.</p>
 
-      <p>—No —dice Profe Rivera—. El bienestar incluye el cuerpo Y la <span class="vocab-hl">mente</span>. ¿Recuerdan cuando hablamos de la dieta balanceada el año pasado?</p>
+      <p>—No —dice Profe Rivera—. El bienestar incluye el cuerpo Y la <span class="gloss" data-word="mente">mente</span><span class="gloss-tooltip">mind<span class="arrow"></span></span>. ¿Recuerdan cuando hablamos de la dieta balanceada el año pasado?</p>
 
       <p>—¡Sí! —dice Camila—. Con las meriendas en el picnic.</p>
 
@@ -891,6 +911,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 

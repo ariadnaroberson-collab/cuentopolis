@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -564,16 +583,17 @@
   <div class="pill-row">
     <span class="pill">A2 · nivel básico</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
-      <p>Es una tarde de sábado. Diego camina hacia el <span class="vocab-hl">río</span> en Guanacaste Park.</p>
+      <p>Es una tarde de sábado. Diego camina hacia el <span class="gloss" data-word="río">río</span><span class="gloss-tooltip">river<span class="arrow"></span></span> en Guanacaste Park.</p>
 
       <p>—¡Vengan, chicos! —dice Diego—. Quiero explorar el río hoy.</p>
 
       <p>El grupo camina hacia el agua. El río está tranquilo. Hay árboles grandes cerca del agua.</p>
 
-      <p>—Miren las <span class="vocab-hl">montañas</span> —dice Diego, señalando—. Están muy lejos, pero se ven grandes.</p>
+      <p>—Miren las <span class="gloss" data-word="montañas">montañas</span><span class="gloss-tooltip">mountains<span class="arrow"></span></span> —dice Diego, señalando—. Están muy lejos, pero se ven grandes.</p>
 
       <p>—¿Cómo se llaman esas montañas? —pregunta Mateo.</p>
 
@@ -583,7 +603,7 @@
 
       <p>—¡Qué bonito! —dice Sofía—. Nunca vi un pájaro así.</p>
 
-      <p>Diego mira el pájaro con atención. —Es parte de un <span class="vocab-hl">ecosistema</span> —dice Diego—. El río, los árboles, y los animales, todo está conectado.</p>
+      <p>Diego mira el pájaro con atención. —Es parte de un <span class="gloss" data-word="ecosistema">ecosistema</span><span class="gloss-tooltip">ecosystem<span class="arrow"></span></span> —dice Diego—. El río, los árboles, y los animales, todo está conectado.</p>
 
       <p>En ese momento, llega Profe Rivera.</p>
 
@@ -591,19 +611,19 @@
 
       <p>—Exploramos el río —dice Ana Lucía—. Miramos las montañas, los árboles, el agua... todo el... eh... ¿cómo se dice esto en inglés?</p>
 
-      <p>Profe Rivera piensa un momento. —Es como... todo lo que ves en la naturaleza... las montañas, el río, los árboles, todo junto...</p>
+      <p>Profe Rivera piensa un momento. —Es como... todo lo que ves en la <span class="gloss" data-word="naturaleza">naturaleza</span><span class="gloss-tooltip">nature<span class="arrow"></span></span>... las montañas, el río, los árboles, todo junto...</p>
 
       <p>—¿"Landscape"? —pregunta Mateo.</p>
 
-      <p>—¡Eso es, Mateo! "Landscape". Gracias —dice Profe Rivera, sonriendo—. En español, decimos "<span class="vocab-hl">paisaje</span>".</p>
+      <p>—¡Eso es, Mateo! "Landscape". Gracias —dice Profe Rivera, sonriendo—. En español, decimos "<span class="gloss" data-word="paisaje">paisaje</span><span class="gloss-tooltip">landscape<span class="arrow"></span></span>".</p>
 
       <p>—Este paisaje es muy bonito —dice Ana Lucía.</p>
 
-      <p>—Sí —dice Profe Rivera—. Y hay paisajes similares en otras partes de nuestro país. Las <span class="vocab-hl">Montañas Mayas</span>, por ejemplo, tienen ríos y bosques también.</p>
+      <p>—Sí —dice Profe Rivera—. Y hay paisajes similares en otras partes de nuestro país. Las <span class="vocab-hl">Montañas Mayas</span>, por ejemplo, tienen ríos y <span class="gloss" data-word="bosque">bosques</span><span class="gloss-tooltip">forest<span class="arrow"></span></span> también.</p>
 
       <p>—¿Son similares a Guanacaste Park? —pregunta Diego.</p>
 
-      <p>—Sí, un poco —dice Profe Rivera—. Pero cada paisaje es único. Por eso es importante protegerlos.</p>
+      <p>—Sí, un poco —dice Profe Rivera—. Pero cada paisaje es <span class="gloss" data-word="único/a">único</span><span class="gloss-tooltip">unique<span class="arrow"></span></span>. Por eso es importante <span class="gloss" data-word="proteger">protegerlos</span><span class="gloss-tooltip">to protect<span class="arrow"></span></span>.</p>
 
       <p>El grupo mira el río y las montañas en silencio, apreciando el paisaje.</p>
     </div>
@@ -889,6 +909,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 

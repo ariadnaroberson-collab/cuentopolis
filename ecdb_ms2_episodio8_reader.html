@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -566,6 +585,7 @@
   <div class="pill-row">
     <span class="pill">A2/B1 · nivel intermedio</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
@@ -573,9 +593,9 @@
 
       <p>—Chicos, hoy vamos a hablar de <span class="vocab-hl">modelos a seguir</span> —dice Profe Rivera—. Y van a escribir una entrevista imaginaria con esa persona.</p>
 
-      <p>—¿Puede ser cualquier tipo de modelo a seguir? —pregunta Diego.</p>
+      <p>—¿Puede ser cualquier tipo de <span class="gloss" data-word="modelo a seguir">modelo a seguir</span><span class="gloss-tooltip">role model<span class="arrow"></span></span>? —pregunta Diego.</p>
 
-      <p>—Sí —dice Profe Rivera—. Puede ser un <span class="vocab-hl">activista</span>, un atleta, un artista, o alguien más.</p>
+      <p>—Sí —dice Profe Rivera—. Puede ser un <span class="gloss" data-word="activista">activista</span><span class="gloss-tooltip">activist<span class="arrow"></span></span>, un atleta, un artista, o alguien más.</p>
 
       <p>—Mi modelo a seguir es una activista ambiental —dice Diego—. Ella trabaja para proteger los bosques.</p>
 
@@ -589,7 +609,7 @@
 
       <p>—¿Todavía la admiras? —pregunta Ana Lucía.</p>
 
-      <p>—Sí —dice Camila—. Pero ahora entiendo mejor por qué. Ella usa su plataforma para enseñar cosas útiles, no solo para entretener. Eso es una <span class="vocab-hl">influencia positiva</span>.</p>
+      <p>—Sí —dice Camila—. Pero ahora entiendo mejor por qué. Ella usa su plataforma para enseñar cosas útiles, no solo para entretener. Eso es una <span class="gloss" data-word="influencia positiva">influencia positiva</span><span class="gloss-tooltip">positive influence<span class="arrow"></span></span>.</p>
 
       <p>—Es una buena observación, Camila —dice Profe Rivera—. No toda influencia en línea es igual. Algunas personas usan su plataforma para ayudar a otros. Otras la usan de una manera diferente, menos positiva.</p>
 
@@ -603,11 +623,11 @@
 
       <p>—¿"Footprint"? —pregunta Mateo.</p>
 
-      <p>—¡Eso es! —dice Profe Rivera—. En español usamos la misma palabra para los dos: "<span class="vocab-hl">huella</span>". Una huella física, o una huella digital.</p>
+      <p>—¡Eso es! —dice Profe Rivera—. En español usamos la misma palabra para los dos: "<span class="gloss" data-word="huella">huella</span><span class="gloss-tooltip">footprint / mark<span class="arrow"></span></span>". Una huella física, o una huella digital.</p>
 
       <p>—¿Las dos funcionan igual? —pregunta Sofía.</p>
 
-      <p>—Un poco —dice Profe Rivera—. Una huella en la arena desaparece con el tiempo. Pero una <span class="vocab-hl">huella digital</span> es diferente. Es muy difícil borrarla por completo. El modelo a seguir de Camila usa su plataforma para ayudar a otros. Por eso, su huella digital es positiva. Pero otras personas publican cosas malas. Esa huella digital también permanece.</p>
+      <p>—Un poco —dice Profe Rivera—. Una huella en la arena desaparece con el tiempo. Pero una <span class="gloss" data-word="huella digital">huella digital</span><span class="gloss-tooltip">digital footprint<span class="arrow"></span></span> es diferente. Es muy difícil borrarla por completo. El modelo a seguir de Camila usa su plataforma para ayudar a otros. Por eso, su huella digital es positiva. Pero otras personas publican cosas malas. Esa huella digital también permanece.</p>
 
       <p>—Entonces tenemos que pensar bien en qué huella queremos dejar, física o digital —dice Camila.</p>
 
@@ -897,6 +917,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 

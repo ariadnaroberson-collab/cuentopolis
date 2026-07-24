@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -564,18 +583,19 @@
   <div class="pill-row">
     <span class="pill">A2 · nivel básico</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
       <p>Ana Lucía llega a <span class="vocab-hl">Guanacaste Park</span> muy emocionada.</p>
 
-      <p>—¡Chicos! —dice Ana Lucía—. Este fin de semana mi familia celebra <span class="vocab-hl">Diwali</span>. Decoramos la casa con luces de colores, comemos dulces especiales, y toda la familia viene. Es <span class="vocab-hl">tradición</span> para nosotros.</p>
+      <p>—¡Chicos! —dice Ana Lucía—. Este fin de semana mi familia celebra <span class="gloss" data-word="Diwali">Diwali</span><span class="gloss-tooltip">festival of lights (Hindu tradition)<span class="arrow"></span></span>. Decoramos la casa con luces de colores, comemos dulces especiales, y toda la familia viene. Es <span class="gloss" data-word="tradición">tradición</span><span class="gloss-tooltip">tradition<span class="arrow"></span></span> para nosotros.</p>
 
-      <p>—¡Qué bonito! —dice Mateo—. En mi familia, celebramos el <span class="vocab-hl">Día de los Muertos</span>. Ponemos flores y fotos de la familia en una mesa especial. Es tradición para nosotros también.</p>
+      <p>—¡Qué bonito! —dice Mateo—. En mi familia, celebramos el <span class="gloss" data-word="Día de los Muertos">Día de los Muertos</span><span class="gloss-tooltip">Day of the Dead (honoring family)<span class="arrow"></span></span>. Ponemos flores y fotos de la familia en una mesa especial. Es tradición para nosotros también.</p>
 
-      <p>—En mi casa celebramos el <span class="vocab-hl">Año Nuevo Chino</span> —dice Camila—. Cocinamos juntos, y los niños reciben sobres rojos. Es tradición para nosotros.</p>
+      <p>—En mi casa celebramos el <span class="gloss" data-word="Año Nuevo Chino">Año Nuevo Chino</span><span class="gloss-tooltip">Chinese New Year<span class="arrow"></span></span> —dice Camila—. Cocinamos juntos, y los niños reciben sobres rojos. Es tradición para nosotros.</p>
 
-      <p>Sofía sonríe. —Mi familia no tiene una tradición cultural así —dice Sofía—. Pero cada cuatro años, toda la familia se reúne para ver el <span class="vocab-hl">Mundial</span>. ¡Es una tradición también, aunque diferente!</p>
+      <p>Sofía sonríe. —Mi familia no tiene una tradición cultural así —dice Sofía—. Pero cada cuatro años, toda la familia se reúne para ver el <span class="gloss" data-word="Mundial">Mundial</span><span class="gloss-tooltip">World Cup<span class="arrow"></span></span>. ¡Es una tradición también, aunque diferente!</p>
 
       <p>—En mi familia contamos historias en <span class="vocab-hl">Nochevieja</span> —dice Diego—. No es una tradición cultural, pero es especial para nosotros.</p>
 
@@ -589,11 +609,11 @@
 
       <p>Camila piensa un momento. —"Tradición"... se parece mucho a "tradition" en inglés.</p>
 
-      <p>—¡Exacto, Camila! —dice Profe Rivera, sonriendo—. Otro cognado. Y hablando de tradiciones... ¿saben qué celebración es universal, pero diferente en cada país?</p>
+      <p>—¡Exacto, Camila! —dice Profe Rivera, sonriendo—. Otro cognado. Y hablando de tradiciones... ¿saben qué <span class="gloss" data-word="celebración">celebración</span><span class="gloss-tooltip">celebration<span class="arrow"></span></span> es universal, pero diferente en cada país?</p>
 
       <p>—¿Cuál? —pregunta Diego.</p>
 
-      <p>—¡El <span class="vocab-hl">cumpleaños</span>! —dice Profe Rivera—. En México, no hay cumpleaños sin <span class="vocab-hl">piñata</span>. En otros países, no hay cumpleaños sin pastel. Y en otros países, los cumpleaños son un gran show con magos y payasos, ¡casi como un circo!</p>
+      <p>—¡El <span class="gloss" data-word="cumpleaños">cumpleaños</span><span class="gloss-tooltip">birthday<span class="arrow"></span></span>! —dice Profe Rivera—. En México, no hay cumpleaños sin <span class="gloss" data-word="piñata">piñata</span><span class="gloss-tooltip">piñata<span class="arrow"></span></span>. En otros países, no hay cumpleaños sin pastel. Y en otros países, los cumpleaños son un gran show con magos y payasos, ¡casi como un circo!</p>
 
       <p>—¡Qué interesante! —dice Ana Lucía—. Entonces, ¿vienen a mi celebración de Diwali este fin de semana?</p>
 
@@ -883,6 +903,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 

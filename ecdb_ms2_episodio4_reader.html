@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -566,20 +585,21 @@
   <div class="pill-row">
     <span class="pill">A2/B1 · nivel intermedio</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
-      <p>Todo el pueblo de San Antonio está ocupado. Hay <span class="vocab-hl">decoraciones</span> en las calles, y todos preparan el festival del Día de la Independencia.</p>
+      <p>Todo el pueblo de San Antonio está ocupado. Hay <span class="gloss" data-word="decoraciones">decoraciones</span><span class="gloss-tooltip">decorations<span class="arrow"></span></span> en las calles, y todos preparan el <span class="gloss" data-word="festival">festival</span><span class="gloss-tooltip">festival<span class="arrow"></span></span> del Día de la Independencia.</p>
 
-      <p>—¡Miren cuántas decoraciones! —dice Ana Lucía—. Banderas de todos los colores.</p>
+      <p>—¡Miren cuántas decoraciones! —dice Ana Lucía—. <span class="gloss" data-word="bandera">Banderas</span><span class="gloss-tooltip">flag<span class="arrow"></span></span> de todos los colores.</p>
 
-      <p>—Cada color de la bandera tiene un <span class="vocab-hl">significado</span> —dice Mateo—. El azul representa el mar y el cielo. El rojo representa el coraje. El blanco representa la paz.</p>
+      <p>—Cada color de la bandera tiene un <span class="gloss" data-word="significado">significado</span><span class="gloss-tooltip">meaning<span class="arrow"></span></span> —dice Mateo—. El azul representa el mar y el cielo. El rojo representa el coraje. El blanco representa la paz.</p>
 
       <p>—¿Cómo sabes tanto? —pregunta Sofía.</p>
 
-      <p>—Lo aprendí en la escuela —dice Mateo—. Hace muchos años, nuestro país se <span class="vocab-hl">independizó</span>. Por eso celebramos cada año.</p>
+      <p>—Lo aprendí en la escuela —dice Mateo—. Hace muchos años, nuestro país se <span class="gloss" data-word="independizó">independizó</span><span class="gloss-tooltip">became independent<span class="arrow"></span></span>. Por eso celebramos cada año.</p>
 
-      <p>Diego ayuda a poner las decoraciones. —Es increíble pensar en toda la <span class="vocab-hl">historia</span> detrás de un solo día —dice Diego.</p>
+      <p>Diego ayuda a poner las decoraciones. —Es increíble pensar en toda la <span class="gloss" data-word="historia">historia</span><span class="gloss-tooltip">history<span class="arrow"></span></span> detrás de un solo día —dice Diego.</p>
 
       <p>Camila toma fotos con una cámara para el periódico de la escuela. —Quiero mostrar esta celebración a todos —dice Camila.</p>
 
@@ -593,7 +613,7 @@
 
       <p>—¿"Pride"? —pregunta Sofía.</p>
 
-      <p>—¡Eso es, Sofía! "Pride" —dice Profe Rivera—. En español decimos "<span class="vocab-hl">orgullo</span>".</p>
+      <p>—¡Eso es, Sofía! "Pride" —dice Profe Rivera—. En español decimos "<span class="gloss" data-word="orgullo">orgullo</span><span class="gloss-tooltip">pride<span class="arrow"></span></span>".</p>
 
       <p>—¿Cuba también tiene un festival de independencia? —pregunta Mateo.</p>
 
@@ -601,7 +621,7 @@
 
       <p>—Entonces, ¿todos los países tienen un festival así? —pregunta Diego.</p>
 
-      <p>—Muchos sí —dice Profe Rivera—. Y cada uno tiene su propia historia, sus propios <span class="vocab-hl">símbolos</span>, y su propio orgullo.</p>
+      <p>—Muchos sí —dice Profe Rivera—. Y cada uno tiene su propia historia, sus propios <span class="gloss" data-word="símbolos">símbolos</span><span class="gloss-tooltip">symbols<span class="arrow"></span></span>, y su propio orgullo.</p>
 
       <p>El grupo termina de poner las últimas decoraciones, mirando el pueblo lleno de color.</p>
 
@@ -891,6 +911,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 

@@ -125,6 +125,25 @@
     color: var(--gold);
   }
 
+
+  .gloss{border-bottom:2px dotted var(--gold-bright);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(201,154,74,0.22);}
+  .gloss-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-dark-2);color:var(--parchment);border:1px solid var(--rule);border-radius:8px;
+    padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+  }
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--bg-dark-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid var(--rule);
+    background:rgba(201,154,74,0.08);color:var(--parchment);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:6px 0 0;
+  }
+  .listen-btn:hover{background:rgba(201,154,74,0.16);}
+  .listen-btn.playing{background:var(--gold);color:#26160a;border-color:var(--gold);}
+
   .vocab-hl {
     background: rgba(201, 154, 74, 0.22);
     border-bottom: 2px solid var(--gold);
@@ -564,24 +583,25 @@
   <div class="pill-row">
     <span class="pill">A2 · nivel básico</span>
   </div>
+  <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
 
   <article class="page">
     <div class="historia">
       <p>Es un sábado bonito en <span class="vocab-hl">Guanacaste Park</span>. El grupo hace un picnic cerca del río.</p>
 
-      <p>—¡Tengo mi <span class="vocab-hl">merienda</span>! —dice Ana Lucía. Ana Lucía abre su bolsa. Tiene galletas de colores y un jugo dulce.</p>
+      <p>—¡Tengo mi <span class="gloss" data-word="merienda">merienda</span><span class="gloss-tooltip">snack<span class="arrow"></span></span>! —dice Ana Lucía. Ana Lucía abre su bolsa. Tiene galletas de colores y un jugo dulce.</p>
 
       <p>—¡Qué rico! —dice Ana Lucía—. Me gusta mucho.</p>
 
-      <p>Sofía mira su propia merienda. —Yo tengo algo diferente —dice Sofía. Sofía tiene pollo, huevos y agua—. Me gusta comer <span class="vocab-hl">proteína</span>.</p>
+      <p>Sofía mira su propia merienda. —Yo tengo algo diferente —dice Sofía. Sofía tiene pollo, huevos y agua—. Me gusta comer <span class="gloss" data-word="proteína">proteína</span><span class="gloss-tooltip">protein<span class="arrow"></span></span>.</p>
 
       <p>—¿Proteína? —pregunta Ana Lucía—. Mi merienda es más divertida.</p>
 
-      <p>—Pero mi merienda es más <span class="vocab-hl">saludable</span> —dice Sofía.</p>
+      <p>—Pero mi merienda es más <span class="gloss" data-word="saludable">saludable</span><span class="gloss-tooltip">healthy<span class="arrow"></span></span> —dice Sofía.</p>
 
-      <p>Diego abre su bolsa. Diego tiene frutas: mango, banana y naranja. —Yo tengo frutas —dice Diego—. Las frutas tienen <span class="vocab-hl">vitaminas</span>.</p>
+      <p>Diego abre su bolsa. Diego tiene frutas: mango, banana y naranja. —Yo tengo frutas —dice Diego—. Las frutas tienen <span class="gloss" data-word="vitaminas">vitaminas</span><span class="gloss-tooltip">vitamins<span class="arrow"></span></span>.</p>
 
-      <p>Camila tiene verduras: zanahorias y tomates. —Y yo tengo verduras —dice Camila—. Las verduras también son importantes.</p>
+      <p>Camila tiene <span class="gloss" data-word="verduras">verduras</span><span class="gloss-tooltip">vegetables<span class="arrow"></span></span>: zanahorias y tomates. —Y yo tengo verduras —dice Camila—. Las verduras también son importantes.</p>
 
       <p>—Entonces, ¿qué merienda es la mejor? —pregunta Mateo. Mateo tiene pan y queso.</p>
 
@@ -599,7 +619,7 @@
 
       <p>—Pero, Profe, ¿cuál merienda es mejor? —pregunta Ana Lucía otra vez.</p>
 
-      <p>—No hay una sola respuesta —dice Profe Rivera—. Las galletas de Ana Lucía, la proteína de Sofía, las frutas de Diego, las verduras de Camila, el pan de Mateo... todo puede ser parte de una dieta <span class="vocab-hl">balanceada</span>. Lo importante es tener variedad.</p>
+      <p>—No hay una sola respuesta —dice Profe Rivera—. Las galletas de Ana Lucía, la proteína de Sofía, las frutas de Diego, las verduras de Camila, el pan de Mateo... todo puede ser parte de una dieta <span class="gloss" data-word="balanceada">balanceada</span><span class="gloss-tooltip">balanced<span class="arrow"></span></span>. Lo importante es tener <span class="gloss" data-word="variedad">variedad</span><span class="gloss-tooltip">variety<span class="arrow"></span></span>.</p>
 
       <p>Mateo piensa un momento. —"Balanceada"... ¡se parece a "balanced" en inglés!</p>
 
@@ -611,7 +631,7 @@
 
       <p>El grupo mira sus meriendas diferentes.</p>
 
-      <p>—Entonces... ¿podemos compartir? —pregunta Diego, sonriendo.</p>
+      <p>—Entonces... ¿podemos <span class="gloss" data-word="compartir">compartir</span><span class="gloss-tooltip">to share<span class="arrow"></span></span>? —pregunta Diego, sonriendo.</p>
 
       <p>—¡Sí! —dicen todos.</p>
 
@@ -899,6 +919,53 @@
 
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') document.getElementById('teacher-modal').classList.remove('open');
+  });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    const clone = document.querySelector('.historia').cloneNode(true);
+    clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
+    return clone.innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.gloss')){
+      e.target.closest('.gloss').classList.toggle('tapped');
+    }
   });
 </script>
 
