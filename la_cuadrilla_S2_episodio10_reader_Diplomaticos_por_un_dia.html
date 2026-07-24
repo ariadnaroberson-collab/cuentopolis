@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>La Cuadrilla — Episodio 6: Mi casa</title>
+<title>La Cuadrilla — Secundaria 2, Episodio 10: Diplomáticos por un día</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
@@ -25,14 +25,16 @@
   .pill-row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
   .pill { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.05em; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--border-soft); color: var(--parchment-dim); background: rgba(255,255,255,0.03); }
   .pill.level { color: var(--lamp-dark); background: var(--gold); border-color: var(--gold); font-weight: 700; }
+  .pill.finale { color: var(--lamp-dark); background: var(--teacher-green-bright); border-color: var(--teacher-green-bright); font-weight: 700; }
   .paper { background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-dim) 100%); color: var(--ink); border-radius: 6px; padding: 44px 48px; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,0,0,0.06); position: relative; }
   .paper::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--gold), var(--navy)); border-radius: 6px 6px 0 0; }
   .historia { font-family: 'Source Serif 4', serif; font-size: 19px; line-height: 1.85; }
   .historia p { margin: 0 0 18px; }
   .historia p.dialog { margin-left: 6px; }
-  .board-line { font-family: 'Space Mono', monospace; background: var(--lamp-panel); color: var(--gold-bright); border: 1px dashed var(--gold); border-radius: 6px; padding: 14px 18px; margin: 0 0 18px; font-size: 15px; line-height: 1.6; }
-  .scene-divider { text-align: center; margin: 28px 0; font-family: 'Space Mono', monospace; color: var(--gold); letter-spacing: 0.3em; font-size: 12px; }
+  .future-word { color: var(--navy); font-weight: 600; border-bottom: 2px dotted var(--gold); cursor: help; }
   .glossary-word { color: var(--navy); font-weight: 600; border-bottom: 1px dotted var(--navy); cursor: help; }
+  .scene-divider { text-align: center; margin: 28px 0; font-family: 'Space Mono', monospace; color: var(--gold); letter-spacing: 0.3em; font-size: 12px; }
+  .chat-bubble { font-family: 'Space Mono', monospace; background: var(--lamp-panel); color: var(--gold-bright); border-radius: 12px; padding: 12px 16px; margin: 0 0 18px; font-size: 15px; line-height: 1.6; max-width: 85%; border: 1px solid var(--gold); }
   section.panel { margin-top: 30px; }
   h2.panel-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 22px; color: var(--navy); display: flex; align-items: center; gap: 10px; margin: 0 0 16px; }
   h2.panel-title .icon { font-size: 20px; }
@@ -81,6 +83,7 @@
   .activity-list-group ul { margin: 0 0 0 4px; padding-left: 18px; }
   .activity-list-group li { font-size: 13.5px; margin-bottom: 6px; }
   .activity-list-group li strong { color: var(--parchment); }
+  .series-close { text-align: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border-soft); font-family: 'Fraunces', serif; font-style: italic; color: var(--gold-bright); font-size: 17px; }
   @media (max-width: 600px) { .paper { padding: 30px 24px; } .glossary-grid { grid-template-columns: 1fr; } h1.title { font-size: 30px; } }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
@@ -97,84 +100,122 @@
 <div class="wrap">
 
   <header class="top">
-    <div class="series-eyebrow">Cuentopolis · La Cuadrilla</div>
-    <h1 class="title">Mi casa</h1>
-    <div class="episode-sub">Episodio 6 — My House</div>
+    <div class="series-eyebrow">Cuentopolis · La Cuadrilla · Secundaria 2</div>
+    <h1 class="title">Diplomáticos por un día</h1>
+    <div class="episode-sub">Episodio 10 — Work and Travel</div>
     <div class="pill-row">
-      <span class="pill level">A2/B1</span>
-      <span class="pill">Secundaria 1</span>
-      <span class="pill">Serie original</span>
+      <span class="pill level">B1</span>
+      <span class="pill">Secundaria 2</span>
+      <span class="pill finale">★ Final de Serie</span>
     </div>
     <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
   </header>
 
   <div class="paper">
     <div class="historia">
-      <p>En la clase de español, Profe Rivera escribe en el pizarrón:</p>
+      <p>Es la mañana de la salida. Todo el <span class="glossary-word" title="proud">año</span>, el grupo se preparó en el club de <span class="glossary-word" title="to debate">debate</span> para este día: el Modelo de Naciones Unidas, en Monterrey, México.</p>
 
-      <div class="board-line">Hay... en mi casa. Está <span class="glossary-word" title="on top of">encima de</span> / <span class="glossary-word" title="underneath">debajo de</span> / <span class="glossary-word" title="comfortable">al</span> lado de...</div>
+      <p>En el patio de la escuela, los estudiantes de primaria están esperando con carteles y confeti.</p>
 
-      <p class="dialog">—Hoy, dibujen un plano simple de su casa —dice Profe Rivera—. Después, escriban 3 o 4 oraciones sobre las <span class="glossary-word" title="room">habitaciones</span>.</p>
+      <p>—¡Buena suerte! —gritan, agitando sus carteles: <em>"¡Vayan bien, diplomáticos!"</em></p>
 
-      <p>Todos dibujan. Vale dibuja su casa con mucho detalle.</p>
+      <p>Vale, Emiliano, Fernanda, Ximena, Andrés, Renata, y Joaquín caminan entre el confeti, vestidos con trajes formales. Parecen diplomáticos de verdad.</p>
 
-      <p class="dialog">—En mi casa, hay tres <span class="glossary-word" title="rooms">habitaciones</span> —dice Vale—. Mi cuarto está <span class="glossary-word" title="next to">al lado de</span> la cocina.</p>
+      <p class="dialog">—Nunca pensé que me sentiría tan diferente en un traje —dice Emiliano, ajustándose la <span class="glossary-word" title="necktie">corbata</span>.</p>
+
+      <p class="dialog">—Te queda bien —dice Vale, sonriendo.</p>
+
+      <p>Profe Rivera los espera con las maletas listas.</p>
+
+      <p class="dialog">—¿Todos tienen su pasaporte, su ropa, y sus notas para el debate? —pregunta ella.</p>
+
+      <p class="dialog">—Sí, Profe —responden todos, casi al mismo tiempo.</p>
+
+      <p class="dialog">—Entonces, vamos —dice Profe Rivera—. Hoy, ustedes van a representar países que no son el suyo. Van a debatir problemas del mundo. Va a ser un día largo, pero <span class="glossary-word" title="unforgettable">inolvidable</span>.</p>
 
       <div class="scene-divider">◆ ◆ ◆</div>
 
-      <p>Después de clases, el grupo tiene un problema.</p>
+      <p>Toman el nuevo tren que va de Chetumal a Cancún. Todos miran por la ventana, emocionados.</p>
 
-      <p class="dialog">—No puedo ir a Café Formosa hoy —dice Ximena—. Tengo que estar en el puesto de mi familia.</p>
+      <p class="dialog">—<span class="future-word" title="representaremos = we will represent (future tense)">Representaremos</span> a Francia —dice Vale, revisando sus notas—. <span class="future-word" title="debatiremos = we will debate (future tense)">Debatiremos</span> sobre el cambio climático.</p>
 
-      <p class="dialog">—¿Podemos ir contigo? —pregunta Fernanda.</p>
+      <p class="dialog">—Yo represento a Japón —dice Andrés, tranquilo como siempre—. <span class="future-word" title="debatiré = I will debate (future tense)">Debatiré</span> sobre tecnología y educación.</p>
 
-      <p>Ximena piensa un momento.</p>
+      <p class="dialog">—Yo soy Brasil —dice Emiliano, sonriendo—. Vamos a debatir sobre economía. No sé mucho de economía, pero <span class="future-word" title="aprenderé = I will learn (future tense)">aprenderé</span> rápido.</p>
 
-      <p class="dialog">—Está bien —dice ella—. Pueden venir a mi casa. Está al lado del puesto.</p>
+      <p>Desde Cancún, vuelan a Monterrey.</p>
 
-      <p>Todos van a la casa de Ximena. Es una casa pequeña, con un <span class="glossary-word" title="small garden"><span class="glossary-word" title="garden">jardín</span> pequeño</span> también.</p>
+      <p class="dialog">—<span class="future-word" title="viajaremos = we will travel (future tense)">Viajaremos</span> en tren y en avión, todo en un solo día —dice Joaquín, mirando por la ventana del avión—. <span class="future-word" title="será = will be (future tense)">Será</span> una gran aventura.</p>
 
-      <p class="dialog">—Bienvenidos a mi casa —dice Ximena, un poco nerviosa.</p>
+      <p>Ximena está callada, mirando las nubes.</p>
 
-      <p class="dialog">—Es muy bonita —dice Vale.</p>
+      <p class="dialog">—¿Estás bien? —pregunta Fernanda.</p>
 
-      <p>La mamá de Ximena sale de la cocina.</p>
+      <p class="dialog">—Sí —dice Ximena, pensando en Tikal—. ¿Recuerdan que hace solo unos meses fue nuestro primer viaje juntos fuera de Belice, cuando fuimos a Tikal? Y ahora, este viaje también. Qué gran año escolar. Este ha sido un año de muchos primeros para mí.</p>
 
-      <p class="dialog">—¡Hola! ¿Amigos de Ximena? —dice ella—. Siéntense, siéntense. Voy a traerles algo de comer.</p>
+      <p class="dialog">—Para todos nosotros —dice Fernanda, sonriendo.</p>
 
-      <p class="dialog">—No es necesario —dice Ximena—. Ellos no...</p>
+      <div class="scene-divider">◆ ◆ ◆</div>
 
-      <p class="dialog">—¡Claro que sí es necesario! —dice su mamá, riendo.</p>
+      <p>Después del Modelo de Naciones Unidas —horas de debate, de hablar en público, de <span class="glossary-word" title="to defend (an idea)">defender</span> ideas que no eran las suyas— el grupo se sienta juntos, cansado pero feliz, esperando el vuelo de regreso.</p>
 
-      <p>La mamá de Ximena trae panes y jugo para todos.</p>
+      <p>El teléfono de Fernanda vibra. Es un mensaje de grupo.</p>
 
-      <p class="dialog">—Gracias, señora —dice Vale, sorprendida—. Es muy <span class="glossary-word" title="kind">amable</span>.</p>
+      <p class="dialog">—Es Santiago —dice ella, sonriendo—. El de Colombia, ¿se acuerdan?</p>
 
-      <p class="dialog">—En esta casa, siempre hay comida para los amigos —dice la mamá de Ximena.</p>
+      <p class="dialog">—¿Todavía hablan con él? —pregunta Renata.</p>
 
-      <p>Vale mira alrededor. La casa es simple, pero hay algo cálido en ella.</p>
+      <p class="dialog">—Claro —dice Fernanda—. Seguimos en contacto por WhatsApp desde que se fue.</p>
 
-      <p class="dialog">—Ximena, tu casa es muy cómoda —dice Vale.</p>
+      <p>Lee el mensaje en voz alta:</p>
 
-      <p class="dialog">—Gracias —dice Ximena, sonriendo un poco—. No es grande, pero es mi <span class="glossary-word" title="home">hogar</span>.</p>
+      <div class="chat-bubble">"¡Vos van a estar increíbles! Buena suerte en el Modelo de Naciones Unidas. Los extraño, che."</div>
 
-      <p class="dialog">—Eso es lo importante —dice Andrés, callado como siempre, pero sincero.</p>
+      <p>Todos sonríen.</p>
 
-      <p>Todos comen y hablan en el jardín pequeño de Ximena, mientras el sol empieza a bajar.</p>
+      <p class="dialog">—Todavía dice "vos" —dice Vale, riendo.</p>
+
+      <p class="dialog">—Nunca va a cambiar eso —dice Joaquín.</p>
+
+      <p>Fernanda escribe una respuesta rápida antes de guardar el teléfono.</p>
+
+      <p class="dialog">—Cuando los conocí, apenas podían presentarse en español —dice Profe Rivera, mirándolos—. Ahora, acaban de debatir problemas del mundo, en su segundo idioma, vestidos como diplomáticos. Estoy profundamente orgullosa de cada uno de ustedes.</p>
+
+      <p>Nadie dice nada por un momento. Es un silencio cómodo, lleno de todo lo que han vivido juntos.</p>
+
+      <p class="dialog">—¿Recuerdan el primer día, en Café Formosa? —pregunta Vale, finalmente—. Yo con mis papeles, organizándolo todo.</p>
+
+      <p class="dialog">—Y yo diciendo que relajaras un poco —dice Emiliano, riendo.</p>
+
+      <p class="dialog">—Y yo, nuevo, sin conocer a nadie —dice Joaquín.</p>
+
+      <p class="dialog">—Y yo, todavía aprendiendo a <span class="glossary-word" title="to trust">confiar</span> en el grupo —dice Fernanda, mirando a Joaquín por un momento más largo de lo normal.</p>
+
+      <p class="dialog">—Y yo, sin tiempo para nada más que el puesto de mi familia —dice Ximena—. Ahora, aquí estoy, en México, hablando de política internacional.</p>
+
+      <p>Andrés sonríe, callado, escribiendo algo rápido en su cuaderno — quizás para el periódico, quizás solo para él.</p>
+
+      <p>Renata mira al grupo, dibujando mentalmente el momento para recordarlo después.</p>
+
+      <p class="dialog">—Han cambiado mucho —dice Profe Rivera—. Y todavía tienen mucho camino por delante. Pero hoy, celebremos esto.</p>
+
+      <p>El grupo brinda con agua de las botellas del avión, riendo, porque no hay bubble tea a esta altura — pero da igual. Están juntos, y eso es suficiente.</p>
+
+      <p>Afuera, el cielo empieza a oscurecer sobre México, mientras el avión los lleva de regreso a casa, a Belice, a Café Formosa, a todo lo que todavía les espera — y a los amigos, cercanos y lejanos, que siguen siendo parte de su historia.</p>
     </div>
 
     <section class="panel">
       <h2 class="panel-title"><span class="icon">📖</span> Glosario</h2>
       <div class="card">
         <div class="glossary-grid">
-          <div class="glossary-item"><span class="es">la habitación</span><span class="en">room</span></div>
-          <div class="glossary-item"><span class="es">el jardín</span><span class="en">garden</span></div>
-          <div class="glossary-item"><span class="es">cómodo/a</span><span class="en">comfortable</span></div>
-          <div class="glossary-item"><span class="es">el hogar</span><span class="en">home</span></div>
-          <div class="glossary-item"><span class="es">encima de</span><span class="en">on top of</span></div>
-          <div class="glossary-item"><span class="es">debajo de</span><span class="en">underneath</span></div>
-          <div class="glossary-item"><span class="es">al lado de</span><span class="en">next to</span></div>
-          <div class="glossary-item"><span class="es">amable</span><span class="en">kind</span></div>
+          <div class="glossary-item"><span class="es">el delegado / la delegada</span><span class="en">delegate</span></div>
+          <div class="glossary-item"><span class="es">el comité</span><span class="en">committee</span></div>
+          <div class="glossary-item"><span class="es">debatir</span><span class="en">to debate</span></div>
+          <div class="glossary-item"><span class="es">la corbata</span><span class="en">necktie</span></div>
+          <div class="glossary-item"><span class="es">defender (una idea)</span><span class="en">to defend (an idea)</span></div>
+          <div class="glossary-item"><span class="es">orgulloso/a</span><span class="en">proud</span></div>
+          <div class="glossary-item"><span class="es">confiar</span><span class="en">to trust</span></div>
+          <div class="glossary-item"><span class="es">inolvidable</span><span class="en">unforgettable</span></div>
         </div>
       </div>
     </section>
@@ -183,10 +224,10 @@
       <h2 class="panel-title"><span class="icon">🗂️</span> Banco de palabras</h2>
       <div class="card">
         <ul class="word-bank-list">
-          <li>Hay... en mi casa</li>
-          <li>Encima de / debajo de / al lado de / entre</li>
-          <li>Mi casa tiene... habitaciones</li>
-          <li>Bienvenidos a mi casa</li>
+          <li>Representaremos a...</li>
+          <li>Debatiremos sobre...</li>
+          <li>Viajaremos en tren y en avión</li>
+          <li>Será una gran aventura</li>
         </ul>
       </div>
     </section>
@@ -195,15 +236,17 @@
       <h2 class="panel-title"><span class="icon">✅</span> Comprensión</h2>
       <div class="card">
         <div class="comp-q">
-          <div class="q-text">1. ¿Por qué el grupo se reúne en la casa de Ximena en vez de Café Formosa?</div>
+          <div class="q-text">1. ¿Cómo se despiden de la escuela antes de salir de viaje?</div>
           <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
         </div>
         <div class="comp-q">
-          <div class="q-text">2. ¿Qué hace la mamá de Ximena cuando llegan los amigos?</div>
+          <div class="q-text">2. ¿Qué dice Profe Rivera sobre cómo ha cambiado el grupo desde que los conoció?</div>
           <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
         </div>
       </div>
     </section>
+
+    <div class="series-close">— Fin de La Cuadrilla —</div>
   </div>
 
   <div class="teacher-trigger-wrap">
@@ -224,65 +267,69 @@
     <div id="teacherNotesContent">
       <h3>Datos básicos</h3>
       <ul>
-        <li>Serie: La Cuadrilla (Secundaria 1 + Secundaria 2)</li>
-        <li>Unidad curricular: My House</li>
-        <li>Nivel objetivo: A2/B1</li>
-        <li>Elenco: Vale, Emiliano, Fernanda, Ximena, Andrés, Renata, Joaquín</li>
-        <li>Escenario: clase de español, casa de Ximena</li>
+        <li>Serie: La Cuadrilla — Secundaria 2 — <strong>EPISODIO FINAL DE LA SERIE</strong></li>
+        <li>Unidad curricular: Work and Travel</li>
+        <li>Nivel objetivo: B1</li>
+        <li>Elenco: Vale, Emiliano, Fernanda, Ximena, Andrés, Renata, Joaquín (elenco completo)</li>
+        <li>Escenario: Escuela San Antonio, tren Chetumal-Cancún, aeropuerto, Monterrey, México</li>
       </ul>
 
       <h3>Actividad real de clase (idéntica a la Historia)</h3>
       <div class="highlight-box">
-        <p style="margin:0;">Cada estudiante dibuja un plano simple de su casa (o de una casa imaginaria) y escribe 3-4 oraciones usando "Hay... en mi casa" y preposiciones (encima de, debajo de, al lado de, entre). Comparten con un compañero.</p>
+        <p style="margin:0;">Cada estudiante escribe y dice 2-3 oraciones en futuro verdadero sobre su papel en el Modelo de Naciones Unidas, usando "Representaremos a...", "Debatiremos sobre...", "Viajaremos en...". Esta ES la primera producción activa del futuro en la serie (después de la exposición receptiva del Episodio 8).</p>
       </div>
 
       <h3>Objetivos lingüísticos</h3>
       <ul>
-        <li>Describir las habitaciones y partes de una casa</li>
-        <li>Usar "hay" para expresar existencia</li>
-        <li>Usar preposiciones de lugar</li>
+        <li>Producir el futuro verdadero por primera vez de forma activa</li>
+        <li>Vocabulario de viajes internacionales y diplomacia</li>
+        <li>Narrar una despedida y un viaje usando presente y futuro combinados</li>
       </ul>
 
       <h3>La Palabra del Día</h3>
-      <p><strong>modesto/a</strong> — cercano al cognado inglés "modest"; conecta con el tema de la casa de Ximena.</p>
+      <p><strong>el delegado / la delegada</strong> — cercano al cognado inglés "delegate".</p>
 
       <h3>La Reflexión del Mentor (Profe Rivera)</h3>
-      <p>"Una casa no tiene que ser grande para ser un hogar lleno de amor. A veces las casas más simples son las más cálidas."</p>
+      <p>"Cuando los conocí, apenas podían presentarse en español. Ahora, van a debatir problemas del mundo, en su segundo idioma, vestidos como diplomáticos. Estoy profundamente orgullosa de cada uno de ustedes." (Esta línea aparece directamente en la Historia.)</p>
 
       <h3>La Pregunta del Día</h3>
-      <p>¿Cuál es tu lugar favorito en tu casa? ¿Por qué?</p>
+      <p>Piensa en quién eras al principio de este curso. ¿Cómo has cambiado?</p>
 
       <h3>Huellas del Viajero</h3>
-      <p class="note-italic">Vacío en este episodio (episodio centrado en el hogar de un personaje ya establecido, no en un visitante nuevo).</p>
+      <p class="note-italic">Vacío en este episodio (episodio centrado en un viaje del elenco ya establecido, no en un visitante nuevo).</p>
 
       <h3>Mi Conexión (diario del estudiante)</h3>
       <ul>
-        <li>Dibuja un plano simple de tu casa y descríbelo con al menos 3 oraciones.</li>
-        <li>¿Alguna vez una comida o un gesto pequeño en la casa de alguien te hizo sentir bienvenido/a? Descríbelo.</li>
+        <li>Escribe 2-3 oraciones en futuro sobre algo que planeas lograr el próximo año.</li>
+        <li>Mirando hacia atrás en todo el curso, ¿cuál fue tu momento favorito, y por qué?</li>
       </ul>
 
       <h3>Desafío Conexiones</h3>
-      <p>En parejas, entrevístense sobre "el lugar favorito de tu casa" y presenten la respuesta de su compañero/a a la clase.</p>
+      <p>Investiguen un país que no conocen bien y preparen 3 datos interesantes para "representarlo" brevemente frente a la clase, como en un Modelo de Naciones Unidas.</p>
       <p class="note-italic">Función deferida: no incluida como actividad interactiva en esta edición Foundation.</p>
 
       <h3>Conexión Cultural</h3>
-      <p>Nota breve sobre cómo las tradiciones de hospitalidad varían entre culturas — en muchas comunidades de Belice y Centroamérica, ofrecer comida a un invitado es una muestra fundamental de respeto y bienvenida, sin importar el tamaño de la casa.</p>
+      <p>Nota breve sobre qué es un Modelo de Naciones Unidas (MUN) y su valor educativo real, y sobre el nuevo tren Maya que conecta Chetumal con Cancún.</p>
 
       <h3>Marcadores de sensibilidad de contenido</h3>
-      <p class="note-italic">Ninguno significativo. La modestia de la casa de Ximena se presenta con calidez y respeto, nunca con lástima o comparación negativa.</p>
+      <p class="note-italic">Ninguno significativo. Episodio de cierre positivo y emotivo, centrado en logro y crecimiento.</p>
 
-      <h3>Notas de continuidad</h3>
+      <h3>Notas de continuidad — cierre de serie</h3>
       <ul>
-        <li>Primera vez que el grupo ve la casa de Ximena — profundiza su personaje más allá de "práctica/escéptica".</li>
-        <li>Refuerza el vínculo de trabajo familiar de Ximena (establecido en el Episodio 2).</li>
-        <li>Todas las escenas de clase con Profe Rivera ocurren únicamente en su clase de español.</li>
+        <li><strong>EPISODIO FINAL DE LA SERIE LA CUADRILLA</strong> — cierre de Secundaria 2 y de la serie completa.</li>
+        <li>Primera producción activa (no solo receptiva) del futuro verdadero — pago lingüístico directo del Episodio 8.</li>
+        <li>Referencia breve, no dramatizada, al viaje de Ximena a Tikal (planeado en el Episodio 8) como ya ocurrido antes en el año.</li>
+        <li>Santiago (Episodio 5) reaparece por mensaje de texto — confirma que la amistad continuó más allá de su episodio.</li>
+        <li>Reflexión de cierre de serie: el grupo mira hacia atrás desde el Episodio 1 de Secundaria 1 hasta este momento, con Profe Rivera expresando orgullo genuino.</li>
+        <li>Ningún hilo romántico se resuelve de forma forzada o definitiva — se dejan en un lugar significativo pero abierto (especialmente Fernanda/Joaquín, con una mirada más larga de lo normal).</li>
+        <li>Todas las escenas de clase con Profe Rivera ocurren únicamente en su clase de español; el resto del episodio ocurre fuera del aula.</li>
       </ul>
 
       <h3>Funciones deferidas (fast-follow)</h3>
       <ul>
         <li>Reader's Theater</li>
         <li>Story Asking (script de clase)</li>
-        <li>Sección interactiva de Mi Conexión / Desafío Conexiones dentro del reader</li>
+        <li>Sección interactiva de Mi Conexión dentro del reader</li>
         <li>Audio narrado</li>
       </ul>
 

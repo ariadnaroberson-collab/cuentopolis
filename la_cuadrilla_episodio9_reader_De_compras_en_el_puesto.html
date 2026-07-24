@@ -83,6 +83,14 @@
   .activity-list-group li strong { color: var(--parchment); }
   @media (max-width: 600px) { .paper { padding: 30px 24px; } .glossary-grid { grid-template-columns: 1fr; } h1.title { font-size: 30px; } }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid rgba(0,0,0,0.15);
+    background:rgba(0,0,0,0.04);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:10px 0 0;color:inherit;
+  }
+  .listen-btn:hover{background:rgba(0,0,0,0.08);}
+  .listen-btn.playing{background:var(--navy);color:#fff;border-color:var(--navy);}
 </style>
 </head>
 <body>
@@ -97,19 +105,20 @@
       <span class="pill">Secundaria 1</span>
       <span class="pill">Serie original</span>
     </div>
+    <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
   </header>
 
   <div class="paper">
     <div class="historia">
       <p>En la clase de español, Profe Rivera escribe en el pizarrón:</p>
 
-      <div class="board-line">¿Cuánto cuesta...? / Quisiera comprar... / Es muy caro / Es barato</div>
+      <div class="board-line">¿Cuánto cuesta...? / Quisiera comprar... / Es muy <span class="glossary-word" title="expensive">caro</span> / Es <span class="glossary-word" title="cheap">barato</span></div>
 
       <p class="dialog">—Hoy, en parejas, practiquen comprar y vender —dice Profe Rivera—. Usen números y precios.</p>
 
       <p>Después de clases, el grupo tiene un plan diferente.</p>
 
-      <p class="dialog">—Vamos al puesto de Ximena —dice Vale—. Pero esta vez, de compras de verdad.</p>
+      <p class="dialog">—Vamos <span class="glossary-word" title="proud">al</span> puesto de Ximena —dice Vale—. Pero esta vez, de compras de verdad.</p>
 
       <div class="scene-divider">◆ ◆ ◆</div>
 
@@ -117,7 +126,7 @@
 
       <p class="dialog">—Bienvenidos —dice Ximena, sonriendo con confianza—. ¿Qué buscan?</p>
 
-      <p>Renata mira unas <span class="glossary-word" title="bracelets">pulseras</span>.</p>
+      <p>Renata mira unas <span class="glossary-word" title="bracelets"><span class="glossary-word" title="bracelet">pulseras</span></span>.</p>
 
       <p class="dialog">—¿Cuánto cuesta esta? —pregunta Renata.</p>
 
@@ -127,7 +136,7 @@
 
       <p class="dialog">—Ya te lo hice —dice Ximena, riendo—. Está bien, ocho.</p>
 
-      <p>Emiliano mira unos <span class="glossary-word" title="woven keychains">llaveros tejidos</span>.</p>
+      <p>Emiliano mira unos <span class="glossary-word" title="woven keychains"><span class="glossary-word" title="keychain">llaveros</span> <span class="glossary-word" title="woven">tejidos</span></span>.</p>
 
       <p class="dialog">—Quisiera comprar este llavero —dice él—. ¿Cuánto cuesta?</p>
 
@@ -141,7 +150,7 @@
 
       <p class="dialog">—Ximena, sabes mucho de esto —dice Vale.</p>
 
-      <p class="dialog">—Trabajo aquí desde niña —dice Ximena—. Conozco cada precio, cada cliente.</p>
+      <p class="dialog">—Trabajo aquí desde niña —dice Ximena—. Conozco cada precio, cada <span class="glossary-word" title="customer">cliente</span>.</p>
 
       <p class="dialog">—Es como otra clase —dice Andrés—. Pero tú eres la maestra aquí.</p>
 
@@ -368,6 +377,46 @@
   document.getElementById('teacherModal').addEventListener('click', (e) => {
     if (e.target.id === 'teacherModal') { e.target.classList.remove('open'); }
   });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    return document.querySelector('.historia').innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
 </script>
 
 </body>

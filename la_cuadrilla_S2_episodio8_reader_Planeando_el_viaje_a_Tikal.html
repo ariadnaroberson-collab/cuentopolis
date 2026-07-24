@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>La Cuadrilla — Episodio 6: Mi casa</title>
+<title>La Cuadrilla — Secundaria 2, Episodio 8: Planeando el viaje a Tikal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
@@ -33,6 +33,7 @@
   .board-line { font-family: 'Space Mono', monospace; background: var(--lamp-panel); color: var(--gold-bright); border: 1px dashed var(--gold); border-radius: 6px; padding: 14px 18px; margin: 0 0 18px; font-size: 15px; line-height: 1.6; }
   .scene-divider { text-align: center; margin: 28px 0; font-family: 'Space Mono', monospace; color: var(--gold); letter-spacing: 0.3em; font-size: 12px; }
   .glossary-word { color: var(--navy); font-weight: 600; border-bottom: 1px dotted var(--navy); cursor: help; }
+  .future-word { color: var(--navy); font-weight: 600; border-bottom: 2px dotted var(--gold); cursor: help; }
   section.panel { margin-top: 30px; }
   h2.panel-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 22px; color: var(--navy); display: flex; align-items: center; gap: 10px; margin: 0 0 16px; }
   h2.panel-title .icon { font-size: 20px; }
@@ -67,6 +68,7 @@
   .modal ul { margin: 4px 0; padding-left: 20px; }
   .modal .note-italic { font-style: italic; opacity: 0.85; }
   .modal .highlight-box { background: rgba(111,160,126,0.12); border: 1px solid var(--teacher-green); border-radius: 8px; padding: 12px 14px; margin: 8px 0; }
+  .modal .warn-box { background: rgba(201,162,75,0.12); border: 1px solid var(--gold); border-radius: 8px; padding: 12px 14px; margin: 8px 0; }
   .copy-btn { font-family: 'Space Mono', monospace; font-size: 12.5px; background: transparent; border: 1px solid var(--gold); color: var(--gold-bright); border-radius: 8px; padding: 8px 14px; cursor: pointer; margin-top: 24px; }
   .copy-btn:hover { background: rgba(201,162,75,0.1); }
   .copy-btn.copied { border-color: var(--teacher-green-bright); color: var(--teacher-green-bright); }
@@ -97,12 +99,12 @@
 <div class="wrap">
 
   <header class="top">
-    <div class="series-eyebrow">Cuentopolis · La Cuadrilla</div>
-    <h1 class="title">Mi casa</h1>
-    <div class="episode-sub">Episodio 6 — My House</div>
+    <div class="series-eyebrow">Cuentopolis · La Cuadrilla · Secundaria 2</div>
+    <h1 class="title">Planeando el viaje a Tikal</h1>
+    <div class="episode-sub">Episodio 8 — Planning a Trip</div>
     <div class="pill-row">
-      <span class="pill level">A2/B1</span>
-      <span class="pill">Secundaria 1</span>
+      <span class="pill level">B1</span>
+      <span class="pill">Secundaria 2</span>
       <span class="pill">Serie original</span>
     </div>
     <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
@@ -110,71 +112,67 @@
 
   <div class="paper">
     <div class="historia">
-      <p>En la clase de español, Profe Rivera escribe en el pizarrón:</p>
+      <p>En la clase de español, Profe Rivera tiene noticias emocionantes.</p>
 
-      <div class="board-line">Hay... en mi casa. Está <span class="glossary-word" title="on top of">encima de</span> / <span class="glossary-word" title="underneath">debajo de</span> / <span class="glossary-word" title="comfortable">al</span> lado de...</div>
+      <p class="dialog">—Clase, este semestre, vamos a viajar a Tikal, en Guatemala —dice ella—. <span class="future-word" title="será = will be (future tense, receptive only)">Será</span> un viaje <span class="glossary-word" title="unforgettable">inolvidable</span>.</p>
 
-      <p class="dialog">—Hoy, dibujen un plano simple de su casa —dice Profe Rivera—. Después, escriban 3 o 4 oraciones sobre las <span class="glossary-word" title="room">habitaciones</span>.</p>
+      <p>Todos reaccionan con emoción.</p>
 
-      <p>Todos dibujan. Vale dibuja su casa con mucho detalle.</p>
+      <p class="dialog">—¿Cruzamos al otro lado de la <span class="glossary-word" title="border">frontera</span>? —pregunta Emiliano.</p>
 
-      <p class="dialog">—En mi casa, hay tres <span class="glossary-word" title="rooms">habitaciones</span> —dice Vale—. Mi cuarto está <span class="glossary-word" title="next to">al lado de</span> la cocina.</p>
+      <p class="dialog">—Sí. <span class="future-word" title="cruzaremos = we will cross (future tense, receptive only)">Cruzaremos</span> la frontera juntos, en autobús —dice Profe Rivera—. Hoy, vamos a planear el viaje.</p>
+
+      <p>Escribe en el pizarrón:</p>
+
+      <div class="board-line">Primero vamos a... Después vamos a... Finalmente vamos a...</div>
+
+      <p class="dialog">—Organicemos el <span class="glossary-word" title="itinerary">itinerario</span> —dice Profe Rivera—. ¿Qué hacemos primero?</p>
+
+      <p class="dialog">—Primero vamos a cruzar la frontera —dice Vale, ya escribiendo.</p>
+
+      <p class="dialog">—Después vamos a visitar las <span class="glossary-word" title="ruins">ruinas</span> —dice Joaquín.</p>
+
+      <p class="dialog">—Finalmente vamos a comer en el pueblo cerca de Tikal —añade Renata—. Espero que tengan algo rico.</p>
+
+      <p class="dialog">—Seguramente sí —dice Profe Rivera, riendo—. <span class="future-word" title="visitaremos = we will visit (future tense, receptive only)">Visitaremos</span> las ruinas por la mañana, cuando hace menos calor.</p>
+
+      <p class="dialog">—Ahora, hablemos de qué vamos a necesitar —dice Profe Rivera—. ¿Qué llevamos?</p>
+
+      <p class="dialog">—Vamos a necesitar el <span class="glossary-word" title="passport">pasaporte</span> —dice Fernanda.</p>
+
+      <p class="dialog">—Vamos a necesitar agua, mucha agua —dice Andrés.</p>
+
+      <p class="dialog">—Y <span class="glossary-word" title="sunscreen">protector solar</span> —añade Renata—. El sol en las ruinas va a ser fuerte.</p>
 
       <div class="scene-divider">◆ ◆ ◆</div>
 
-      <p>Después de clases, el grupo tiene un problema.</p>
+      <p>Ximena ha estado callada, escuchando todo con atención especial.</p>
 
-      <p class="dialog">—No puedo ir a Café Formosa hoy —dice Ximena—. Tengo que estar en el puesto de mi familia.</p>
+      <p class="dialog">—¿Estás bien, Ximena? —pregunta Fernanda.</p>
 
-      <p class="dialog">—¿Podemos ir contigo? —pregunta Fernanda.</p>
+      <p class="dialog">—Sí —dice Ximena, despacio—. Es que... mi familia es maya. Nunca he visto un sitio como Tikal en persona. Solo en fotos, en libros.</p>
 
-      <p>Ximena piensa un momento.</p>
+      <p class="dialog">—Va a ser especial para ti, entonces —dice Vale.</p>
 
-      <p class="dialog">—Está bien —dice ella—. Pueden venir a mi casa. Está al lado del puesto.</p>
+      <p class="dialog">—Sí —dice Ximena, sonriendo un poco—. Muy especial.</p>
 
-      <p>Todos van a la casa de Ximena. Es una casa pequeña, con un <span class="glossary-word" title="small garden"><span class="glossary-word" title="garden">jardín</span> pequeño</span> también.</p>
+      <p class="dialog">—Este viaje va a conectar a muchos de ustedes con historias mucho más antiguas que nosotros —dice Profe Rivera—. Planear <span class="glossary-word" title="in advance">con anticipación</span> es la mitad de la emoción.</p>
 
-      <p class="dialog">—Bienvenidos a mi casa —dice Ximena, un poco nerviosa.</p>
-
-      <p class="dialog">—Es muy bonita —dice Vale.</p>
-
-      <p>La mamá de Ximena sale de la cocina.</p>
-
-      <p class="dialog">—¡Hola! ¿Amigos de Ximena? —dice ella—. Siéntense, siéntense. Voy a traerles algo de comer.</p>
-
-      <p class="dialog">—No es necesario —dice Ximena—. Ellos no...</p>
-
-      <p class="dialog">—¡Claro que sí es necesario! —dice su mamá, riendo.</p>
-
-      <p>La mamá de Ximena trae panes y jugo para todos.</p>
-
-      <p class="dialog">—Gracias, señora —dice Vale, sorprendida—. Es muy <span class="glossary-word" title="kind">amable</span>.</p>
-
-      <p class="dialog">—En esta casa, siempre hay comida para los amigos —dice la mamá de Ximena.</p>
-
-      <p>Vale mira alrededor. La casa es simple, pero hay algo cálido en ella.</p>
-
-      <p class="dialog">—Ximena, tu casa es muy cómoda —dice Vale.</p>
-
-      <p class="dialog">—Gracias —dice Ximena, sonriendo un poco—. No es grande, pero es mi <span class="glossary-word" title="home">hogar</span>.</p>
-
-      <p class="dialog">—Eso es lo importante —dice Andrés, callado como siempre, pero sincero.</p>
-
-      <p>Todos comen y hablan en el jardín pequeño de Ximena, mientras el sol empieza a bajar.</p>
+      <p>El grupo termina la clase con el itinerario completo, y con Ximena pensando, en silencio, en lo que va a sentir al fin al <span class="glossary-word" title="to step on/set foot">pisar</span> un lugar que siempre fue parte de su historia, pero nunca de su experiencia.</p>
     </div>
 
     <section class="panel">
       <h2 class="panel-title"><span class="icon">📖</span> Glosario</h2>
       <div class="card">
         <div class="glossary-grid">
-          <div class="glossary-item"><span class="es">la habitación</span><span class="en">room</span></div>
-          <div class="glossary-item"><span class="es">el jardín</span><span class="en">garden</span></div>
-          <div class="glossary-item"><span class="es">cómodo/a</span><span class="en">comfortable</span></div>
-          <div class="glossary-item"><span class="es">el hogar</span><span class="en">home</span></div>
-          <div class="glossary-item"><span class="es">encima de</span><span class="en">on top of</span></div>
-          <div class="glossary-item"><span class="es">debajo de</span><span class="en">underneath</span></div>
-          <div class="glossary-item"><span class="es">al lado de</span><span class="en">next to</span></div>
-          <div class="glossary-item"><span class="es">amable</span><span class="en">kind</span></div>
+          <div class="glossary-item"><span class="es">la frontera</span><span class="en">border</span></div>
+          <div class="glossary-item"><span class="es">el itinerario</span><span class="en">itinerary</span></div>
+          <div class="glossary-item"><span class="es">las ruinas</span><span class="en">ruins</span></div>
+          <div class="glossary-item"><span class="es">el pasaporte</span><span class="en">passport</span></div>
+          <div class="glossary-item"><span class="es">el protector solar</span><span class="en">sunscreen</span></div>
+          <div class="glossary-item"><span class="es">pisar</span><span class="en">to step on/set foot</span></div>
+          <div class="glossary-item"><span class="es">inolvidable</span><span class="en">unforgettable</span></div>
+          <div class="glossary-item"><span class="es">con anticipación</span><span class="en">in advance</span></div>
         </div>
       </div>
     </section>
@@ -183,10 +181,10 @@
       <h2 class="panel-title"><span class="icon">🗂️</span> Banco de palabras</h2>
       <div class="card">
         <ul class="word-bank-list">
-          <li>Hay... en mi casa</li>
-          <li>Encima de / debajo de / al lado de / entre</li>
-          <li>Mi casa tiene... habitaciones</li>
-          <li>Bienvenidos a mi casa</li>
+          <li>Primero vamos a... / Después vamos a... / Finalmente vamos a...</li>
+          <li>Vamos a necesitar...</li>
+          <li>Vamos a cruzar la frontera</li>
+          <li>¿Qué vamos a llevar?</li>
         </ul>
       </div>
     </section>
@@ -195,11 +193,11 @@
       <h2 class="panel-title"><span class="icon">✅</span> Comprensión</h2>
       <div class="card">
         <div class="comp-q">
-          <div class="q-text">1. ¿Por qué el grupo se reúne en la casa de Ximena en vez de Café Formosa?</div>
+          <div class="q-text">1. ¿Qué necesitan llevar para cruzar la frontera?</div>
           <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
         </div>
         <div class="comp-q">
-          <div class="q-text">2. ¿Qué hace la mamá de Ximena cuando llegan los amigos?</div>
+          <div class="q-text">2. ¿Cómo se siente Ximena sobre el viaje, y por qué?</div>
           <textarea placeholder="Escribe tu respuesta aquí..."></textarea>
         </div>
       </div>
@@ -222,59 +220,68 @@
     </div>
 
     <div id="teacherNotesContent">
+      <h3>⚠️ Nota de andamiaje (scaffolding) — importante</h3>
+      <div class="warn-box">
+        <p style="margin:0 0 8px;">Esta es la <strong>primera exposición</strong> de los estudiantes al futuro. Para no sobrecargar la clase:</p>
+        <p style="margin:0 0 8px;"><strong>Producción:</strong> solo "vamos a + infinitivo" (ya tienen base desde S1 Ep8).</p>
+        <p style="margin:0;"><strong>Receptiva únicamente:</strong> el futuro verdadero aparece solo en el discurso de Profe Rivera (marcado en el texto con subrayado dorado) — NO se pide a los estudiantes que lo produzcan todavía.</p>
+      </div>
+
       <h3>Datos básicos</h3>
       <ul>
-        <li>Serie: La Cuadrilla (Secundaria 1 + Secundaria 2)</li>
-        <li>Unidad curricular: My House</li>
-        <li>Nivel objetivo: A2/B1</li>
+        <li>Serie: La Cuadrilla — Secundaria 2</li>
+        <li>Unidad curricular: Planning a Trip</li>
+        <li>Nivel objetivo: B1</li>
         <li>Elenco: Vale, Emiliano, Fernanda, Ximena, Andrés, Renata, Joaquín</li>
-        <li>Escenario: clase de español, casa de Ximena</li>
+        <li>Escenario: clase de español</li>
       </ul>
 
-      <h3>Actividad real de clase (idéntica a la Historia)</h3>
+      <h3>Actividad real de clase (idéntica a la Historia) — paso a paso</h3>
       <div class="highlight-box">
-        <p style="margin:0;">Cada estudiante dibuja un plano simple de su casa (o de una casa imaginaria) y escribe 3-4 oraciones usando "Hay... en mi casa" y preposiciones (encima de, debajo de, al lado de, entre). Comparten con un compañero.</p>
+        <p style="margin:0 0 8px;"><strong>Paso 1:</strong> Profe Rivera escribe "Primero vamos a... Después vamos a... Finalmente vamos a..." Los estudiantes construyen un itinerario simple en orden.</p>
+        <p style="margin:0;"><strong>Paso 2:</strong> Ronda separada con "Vamos a necesitar..." para una lista de empaque.</p>
       </div>
 
       <h3>Objetivos lingüísticos</h3>
       <ul>
-        <li>Describir las habitaciones y partes de una casa</li>
-        <li>Usar "hay" para expresar existencia</li>
-        <li>Usar preposiciones de lugar</li>
+        <li>Producir "vamos a + infinitivo" para planear un viaje paso a paso</li>
+        <li>Reconocer (sin producir) el futuro verdadero por exposición oral de Profe Rivera</li>
+        <li>Vocabulario de viajes internacionales</li>
       </ul>
 
       <h3>La Palabra del Día</h3>
-      <p><strong>modesto/a</strong> — cercano al cognado inglés "modest"; conecta con el tema de la casa de Ximena.</p>
+      <p><strong>la frontera</strong> — palabra clave del episodio.</p>
 
       <h3>La Reflexión del Mentor (Profe Rivera)</h3>
-      <p>"Una casa no tiene que ser grande para ser un hogar lleno de amor. A veces las casas más simples son las más cálidas."</p>
+      <p>"A veces, planear algo con anticipación es la mitad de la emoción. Este viaje va a conectar a muchos de ustedes con historias mucho más antiguas que nosotros."</p>
 
       <h3>La Pregunta del Día</h3>
-      <p>¿Cuál es tu lugar favorito en tu casa? ¿Por qué?</p>
+      <p>Si pudieras viajar a cualquier lugar, ¿a dónde irías, y qué necesitarías llevar?</p>
 
       <h3>Huellas del Viajero</h3>
-      <p class="note-italic">Vacío en este episodio (episodio centrado en el hogar de un personaje ya establecido, no en un visitante nuevo).</p>
+      <p class="note-italic">Vacío en este episodio (episodio de planeación; el viaje en sí queda para un episodio futuro).</p>
 
       <h3>Mi Conexión (diario del estudiante)</h3>
       <ul>
-        <li>Dibuja un plano simple de tu casa y descríbelo con al menos 3 oraciones.</li>
-        <li>¿Alguna vez una comida o un gesto pequeño en la casa de alguien te hizo sentir bienvenido/a? Descríbelo.</li>
+        <li>Escribe un itinerario simple para un viaje que te gustaría hacer, usando "vamos a + infinitivo".</li>
+        <li>¿Qué esperas sentir al visitar un lugar histórico importante para tu propia cultura o familia?</li>
       </ul>
 
       <h3>Desafío Conexiones</h3>
-      <p>En parejas, entrevístense sobre "el lugar favorito de tu casa" y presenten la respuesta de su compañero/a a la clase.</p>
+      <p>En parejas, investiguen un dato interesante sobre Tikal y compártanlo con la clase.</p>
       <p class="note-italic">Función deferida: no incluida como actividad interactiva en esta edición Foundation.</p>
 
       <h3>Conexión Cultural</h3>
-      <p>Nota breve sobre cómo las tradiciones de hospitalidad varían entre culturas — en muchas comunidades de Belice y Centroamérica, ofrecer comida a un invitado es una muestra fundamental de respeto y bienvenida, sin importar el tamaño de la casa.</p>
+      <p>Nota breve sobre Tikal como uno de los sitios arqueológicos mayas más importantes de Centroamérica, ubicado en Guatemala, cerca de la frontera con Belice.</p>
 
       <h3>Marcadores de sensibilidad de contenido</h3>
-      <p class="note-italic">Ninguno significativo. La modestia de la casa de Ximena se presenta con calidez y respeto, nunca con lástima o comparación negativa.</p>
+      <p class="note-italic">Ninguno significativo.</p>
 
       <h3>Notas de continuidad</h3>
       <ul>
-        <li>Primera vez que el grupo ve la casa de Ximena — profundiza su personaje más allá de "práctica/escéptica".</li>
-        <li>Refuerza el vínculo de trabajo familiar de Ximena (establecido en el Episodio 2).</li>
+        <li>Profundiza la herencia maya de Ximena más allá del contexto familiar/comercial ya mostrado.</li>
+        <li>Episodio de planeación únicamente; el viaje real a Tikal queda reservado para un futuro episodio (posible final de temporada).</li>
+        <li>Primera exposición de la serie al futuro verdadero (solo receptiva) — sienta las bases para una introducción formal más adelante.</li>
         <li>Todas las escenas de clase con Profe Rivera ocurren únicamente en su clase de español.</li>
       </ul>
 
@@ -282,7 +289,7 @@
       <ul>
         <li>Reader's Theater</li>
         <li>Story Asking (script de clase)</li>
-        <li>Sección interactiva de Mi Conexión / Desafío Conexiones dentro del reader</li>
+        <li>Sección interactiva de Mi Conexión dentro del reader</li>
         <li>Audio narrado</li>
       </ul>
 

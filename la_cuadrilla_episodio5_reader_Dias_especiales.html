@@ -83,6 +83,14 @@
   .activity-list-group li strong { color: var(--parchment); }
   @media (max-width: 600px) { .paper { padding: 30px 24px; } .glossary-grid { grid-template-columns: 1fr; } h1.title { font-size: 30px; } }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:20px;border:1px solid rgba(0,0,0,0.15);
+    background:rgba(0,0,0,0.04);font-family:'Public Sans',sans-serif;font-size:13px;
+    cursor:pointer;margin:10px 0 0;color:inherit;
+  }
+  .listen-btn:hover{background:rgba(0,0,0,0.08);}
+  .listen-btn.playing{background:var(--navy);color:#fff;border-color:var(--navy);}
 </style>
 </head>
 <body>
@@ -97,6 +105,7 @@
       <span class="pill">Secundaria 1</span>
       <span class="pill">Serie original</span>
     </div>
+    <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
   </header>
 
   <div class="paper">
@@ -105,17 +114,17 @@
 
       <div class="board-line">Mi día especial es... / Celebramos con...</div>
 
-      <p class="dialog">—Hoy, compartan sobre un día especial para su familia o su cultura —dice Profe Rivera.</p>
+      <p class="dialog">—Hoy, <span class="glossary-word" title="to share">compartan</span> sobre un día especial para su familia o su cultura —dice Profe Rivera.</p>
 
       <p>Fernanda levanta la mano. No es común que ella hable primero.</p>
 
-      <p class="dialog">—Mi día especial es el Día de Garífuna —dice Fernanda—. Es el 19 de noviembre. Celebramos con <span class="glossary-word" title="drums">tambores</span> y baile.</p>
+      <p class="dialog">—Mi día especial es el Día de Garífuna —dice Fernanda—. Es el 19 de noviembre. Celebramos con <span class="glossary-word" title="drums"><span class="glossary-word" title="drum">tambores</span></span> y baile.</p>
 
       <p class="dialog">—Cuéntanos más —dice Profe Rivera.</p>
 
-      <p class="dialog">—Es un día muy importante para mi comunidad —dice Fernanda—. Celebramos la llegada de nuestros <span class="glossary-word" title="ancestors">ancestros</span> a Belice. Comemos hudut, un plato con pescado y coco. Y tocamos tambores todo el día.</p>
+      <p class="dialog">—Es un día muy importante para mi comunidad —dice Fernanda—. Celebramos la llegada de nuestros <span class="glossary-word" title="ancestors"><span class="glossary-word" title="ancestor">ancestros</span></span> a Belice. Comemos hudut, un plato con pescado y coco. Y tocamos tambores todo el día.</p>
 
-      <p class="dialog">—Suena hermoso —dice Vale.</p>
+      <p class="dialog">—Suena <span class="glossary-word" title="beautiful">hermoso</span> —dice Vale.</p>
 
       <p>Fernanda sonríe. Es una sonrisa grande, diferente a las sonrisas pequeñas de siempre.</p>
 
@@ -123,7 +132,7 @@
 
       <p>Joaquín también quiere compartir.</p>
 
-      <p class="dialog">—En mi pueblo, en El Salvador, celebramos un festival en agosto —dice Joaquín—. Hay música, comida, y <span class="glossary-word" title="processions">procesiones</span> en las calles. Es muy importante para nosotros también.</p>
+      <p class="dialog">—En mi pueblo, en El Salvador, celebramos un festival en agosto —dice Joaquín—. Hay música, comida, y <span class="glossary-word" title="processions"><span class="glossary-word" title="procession">procesiones</span></span> en las calles. Es muy importante para nosotros también.</p>
 
       <p class="dialog">—¿Es difícil explicar tu cultura a personas que no la conocen? —pregunta Profe Rivera.</p>
 
@@ -135,9 +144,9 @@
 
       <p>Renata también comparte.</p>
 
-      <p class="dialog">—En Inglaterra, celebramos Bonfire Night —dice ella—. Hacemos fuegos artificiales y fogatas. Es divertido, pero no es tan importante como el Día de Garífuna o el festival de Joaquín.</p>
+      <p class="dialog">—En Inglaterra, celebramos Bonfire Night —dice ella—. Hacemos <span class="glossary-word" title="fireworks">fuegos artificiales</span> y <span class="glossary-word" title="bonfire">fogatas</span>. Es divertido, pero no es tan importante como el Día de Garífuna o el festival de Joaquín.</p>
 
-      <p class="dialog">—Todas las tradiciones son importantes —dice Profe Rivera—. Grandes o pequeñas.</p>
+      <p class="dialog">—Todas las <span class="glossary-word" title="tradition">tradiciones</span> son importantes —dice Profe Rivera—. Grandes o pequeñas.</p>
 
       <div class="scene-divider">◆ ◆ ◆</div>
 
@@ -364,6 +373,46 @@
   document.getElementById('teacherModal').addEventListener('click', (e) => {
     if (e.target.id === 'teacherModal') { e.target.classList.remove('open'); }
   });
+
+  let listening = false;
+  let currentUtterance = null;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function getStoryPlainText(){
+    return document.querySelector('.historia').innerText;
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    const btn = document.getElementById('listenBtn');
+    if(listening){
+      speechSynthesis.cancel();
+      listening = false;
+      btn.classList.remove('playing');
+      btn.textContent = '🔊 Escuchar narración';
+      return;
+    }
+    const text = getStoryPlainText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'es-MX';
+    currentUtterance.rate = 0.92;
+    if(spanishVoice) currentUtterance.voice = spanishVoice;
+    currentUtterance.onend = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    currentUtterance.onerror = () => { listening = false; btn.classList.remove('playing'); btn.textContent = '🔊 Escuchar narración'; };
+    speechSynthesis.speak(currentUtterance);
+    listening = true;
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
 </script>
 
 </body>
