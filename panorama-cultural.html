@@ -12,59 +12,90 @@
     --green: #4c7a5e; --border: #3a352c;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 60px; }
-  .wrap { max-width: 780px; margin: 0 auto; }
-  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 22px; }
-  header { margin-bottom: 26px; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding-bottom: 60px; }
+  .back-bar { max-width: 1100px; margin: 0 auto; padding: 24px 20px 0; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; }
+
+  .hero { position: relative; width: 100%; height: 320px; margin-top: 18px; overflow: hidden; }
+  .hero img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; filter: brightness(0.55); }
+  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(23,21,18,0) 0%, rgba(23,21,18,0.4) 60%, var(--bg) 100%); }
+  .hero-text { position: absolute; left: 0; right: 0; bottom: 0; max-width: 1100px; margin: 0 auto; padding: 0 20px 26px; z-index: 2; }
   .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
-  h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.3rem; }
-  .subtitle { color: var(--parchment-dim); font-size: 0.95rem; margin-top: 8px; font-style: italic; }
-  .list { display: flex; flex-direction: column; gap: 10px; margin-top: 26px; }
-  .book { display: flex; align-items: center; gap: 18px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; text-decoration: none; color: var(--parchment); transition: border-color 0.15s ease; }
-  .book.active:hover { border-color: var(--gold); }
-  .book.soon { opacity: 0.5; border-style: dashed; cursor: default; }
-  .book-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.15rem; flex: 1; }
-  .book-desc { font-size: 0.85rem; color: var(--parchment-dim); margin-top: 3px; }
-  .book-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--lamp); white-space: nowrap; }
-  .book.soon .book-tag { color: var(--parchment-dim); }
+  h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.4rem; }
+  .subtitle { color: var(--parchment-dim); font-size: 0.95rem; margin-top: 8px; font-style: italic; max-width: 620px; }
+
+  .shelf { max-width: 1100px; margin: 40px auto 0; padding: 0 20px; }
+  .shelf-row { display: flex; gap: 22px; overflow-x: auto; padding: 6px 2px 14px; scrollbar-width: thin; scrollbar-color: var(--gold-soft) transparent; }
+  .shelf-row::-webkit-scrollbar { height: 8px; }
+  .shelf-row::-webkit-scrollbar-thumb { background: var(--gold-soft); border-radius: 6px; }
+
+  .card { flex: 0 0 240px; text-decoration: none; color: var(--parchment); border-radius: 12px; overflow: hidden; background: var(--bg-panel); border: 1px solid var(--border); transition: transform 0.18s ease, border-color 0.18s ease; }
+  .card.active:hover { transform: translateY(-4px); border-color: var(--gold); }
+  .card.soon { opacity: 0.45; cursor: default; }
+  .card-img-wrap { position: relative; width: 100%; height: 150px; }
+  .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .card-tag { position: absolute; top: 10px; right: 10px; font-family: 'Space Mono', monospace; font-size: 10px; background: rgba(23,21,18,0.75); color: var(--lamp); padding: 3px 8px; border-radius: 20px; }
+  .card.soon .card-tag { color: var(--parchment-dim); }
+  .card-body { padding: 14px 16px 18px; }
+  .card-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.05rem; margin-bottom: 5px; line-height: 1.25; }
+  .card-desc { font-size: 0.78rem; color: var(--parchment-dim); line-height: 1.4; }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="back-bar">
   <a class="back" href="index.html">← Cuentópolis</a>
-  <header>
+</div>
+
+<div class="hero">
+  <img src="covers/hero-panorama-cultural.jpg" alt="Panorama Cultural">
+  <div class="hero-text">
     <p class="eyebrow">Apoyo curricular</p>
     <h1>Panorama Cultural</h1>
     <p class="subtitle">4 libros, historias independientes conectadas por un tema — para apoyo curricular o FVR.</p>
-  </header>
-  <div class="list">
-    <a class="book active" href="memorias-de-pueblos-perdidos.html">
-      <div>
-        <div class="book-title">Memorias de pueblos perdidos</div>
-        <p class="book-desc">8 historias — niños en lugares hermosos y de difícil acceso</p>
+  </div>
+</div>
+
+<div class="shelf">
+  <div class="shelf-row">
+    <a class="card active" href="memorias-de-pueblos-perdidos.html">
+      <div class="card-img-wrap">
+        <img src="covers/memorias-de-pueblos-perdidos.jpg" alt="Memorias de pueblos perdidos">
+        <span class="card-tag">Abrir →</span>
       </div>
-      <span class="book-tag">Abrir →</span>
+      <div class="card-body">
+        <div class="card-title">Memorias de pueblos perdidos</div>
+        <p class="card-desc">8 historias — niños en lugares hermosos y de difícil acceso</p>
+      </div>
     </a>
-    <a class="book soon" tabindex="0" aria-label="Entrevistas callejeras — próximamente">
-      <div>
-        <div class="book-title">Entrevistas callejeras</div>
-        <p class="book-desc">9 historias — Ramón Estevez entrevista por Latinoamérica</p>
+    <a class="card active" href="entrevistas-callejeras.html">
+      <div class="card-img-wrap">
+        <img src="covers/entrevistas-callejeras.jpg" alt="Entrevistas callejeras">
+        <span class="card-tag">Abrir →</span>
       </div>
-      <span class="book-tag">✎ Próximamente</span>
+      <div class="card-body">
+        <div class="card-title">Entrevistas callejeras</div>
+        <p class="card-desc">9 historias — Ramón Estevez entrevista por Latinoamérica</p>
+      </div>
     </a>
-    <a class="book soon" tabindex="0" aria-label="La Receta de la Abuela — próximamente">
-      <div>
-        <div class="book-title">La Receta de la Abuela</div>
-        <p class="book-desc">8 historias — chefs y la receta familiar que los hizo famosos</p>
+    <a class="card active" href="la-receta-de-la-abuela.html">
+      <div class="card-img-wrap">
+        <img src="covers/la-receta-de-la-abuela.jpg" alt="La Receta de la Abuela">
+        <span class="card-tag">Abrir →</span>
       </div>
-      <span class="book-tag">✎ Próximamente</span>
+      <div class="card-body">
+        <div class="card-title">La Receta de la Abuela</div>
+        <p class="card-desc">8 historias — chefs y la receta familiar que los hizo famosos</p>
+      </div>
     </a>
-    <a class="book soon" tabindex="0" aria-label="Biografía de animales asombrosos — próximamente">
-      <div>
-        <div class="book-title">Biografía de animales asombrosos</div>
-        <p class="book-desc">8 historias — animales narrando su propia biografía</p>
+    <a class="card active" href="animales-asombrosos.html">
+      <div class="card-img-wrap">
+        <img src="covers/animales-asombrosos.jpg" alt="Biografía de animales asombrosos">
+        <span class="card-tag">Abrir →</span>
       </div>
-      <span class="book-tag">✎ Próximamente</span>
+      <div class="card-body">
+        <div class="card-title">Biografía de animales asombrosos</div>
+        <p class="card-desc">8 historias — animales narrando su propia biografía</p>
+      </div>
     </a>
   </div>
 </div>

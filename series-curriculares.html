@@ -12,52 +12,78 @@
     --green: #4c7a5e; --border: #3a352c;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 60px; }
-  .wrap { max-width: 780px; margin: 0 auto; }
-  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 22px; }
-  header { margin-bottom: 30px; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding-bottom: 60px; }
+  .back-bar { max-width: 1100px; margin: 0 auto; padding: 24px 20px 0; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; }
+
+  .hero { position: relative; width: 100%; height: 320px; margin-top: 18px; overflow: hidden; }
+  .hero img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; display: block; filter: brightness(0.55); }
+  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(23,21,18,0) 0%, rgba(23,21,18,0.4) 60%, var(--bg) 100%); }
+  .hero-text { position: absolute; left: 0; right: 0; bottom: 0; max-width: 1100px; margin: 0 auto; padding: 0 20px 26px; z-index: 2; }
   .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
   h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.6rem; }
-  .subtitle { color: var(--parchment-dim); font-size: 0.95rem; margin-top: 8px; font-style: italic; }
-  .list { display: flex; flex-direction: column; gap: 14px; margin-top: 30px; }
-  .ser { display: flex; align-items: center; gap: 18px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; text-decoration: none; color: var(--parchment); transition: border-color 0.15s ease; }
-  .ser.active:hover { border-color: var(--gold); }
-  .ser.soon { opacity: 0.55; border-style: dashed; cursor: default; }
-  .ser-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.25rem; flex: 1; }
-  .ser-desc { font-size: 0.85rem; color: var(--parchment-dim); margin-top: 4px; }
-  .ser-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--lamp); white-space: nowrap; }
-  .ser.soon .ser-tag { color: var(--parchment-dim); }
+  .subtitle { color: var(--parchment-dim); font-size: 0.95rem; margin-top: 8px; font-style: italic; max-width: 620px; }
+
+  .shelf { max-width: 1100px; margin: 40px auto 0; padding: 0 20px; }
+  .shelf-row { display: flex; gap: 22px; overflow-x: auto; padding: 6px 2px 14px; scrollbar-width: thin; scrollbar-color: var(--gold-soft) transparent; }
+  .shelf-row::-webkit-scrollbar { height: 8px; }
+  .shelf-row::-webkit-scrollbar-thumb { background: var(--gold-soft); border-radius: 6px; }
+
+  .card { flex: 0 0 260px; text-decoration: none; color: var(--parchment); border-radius: 12px; overflow: hidden; background: var(--bg-panel); border: 1px solid var(--border); transition: transform 0.18s ease, border-color 0.18s ease; }
+  .card.active:hover { transform: translateY(-4px); border-color: var(--gold); }
+  .card-img-wrap { position: relative; width: 100%; height: 160px; }
+  .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .card-tag { position: absolute; top: 10px; right: 10px; font-family: 'Space Mono', monospace; font-size: 10px; background: rgba(23,21,18,0.75); color: var(--lamp); padding: 3px 8px; border-radius: 20px; }
+  .card-body { padding: 14px 16px 18px; }
+  .card-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.1rem; margin-bottom: 5px; line-height: 1.25; }
+  .card-desc { font-size: 0.78rem; color: var(--parchment-dim); line-height: 1.4; }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="back-bar">
   <a class="back" href="index.html">← Cuentópolis</a>
-  <header>
+</div>
+
+<div class="hero">
+  <img src="covers/hero-series-curriculares.jpg" alt="Series curriculares">
+  <div class="hero-text">
     <p class="eyebrow">Series curriculares</p>
     <h1>La secuencia de clase</h1>
     <p class="subtitle">Las tres series originales que guían la instrucción diaria, una por banda de grado.</p>
-  </header>
-  <div class="list">
-    <a class="ser active" href="guardianes-de-chiquibul.html">
-      <div>
-        <div class="ser-title">Los Guardianes de Chiquibul</div>
-        <p class="ser-desc">Chica y sus Amigos · Temporada 1 · 15 episodios · Elementary</p>
+  </div>
+</div>
+
+<div class="shelf">
+  <div class="shelf-row">
+    <a class="card active" href="guardianes-de-chiquibul.html">
+      <div class="card-img-wrap">
+        <img src="covers/guardianes-de-chiquibul.jpg" alt="Los Guardianes de Chiquibul">
+        <span class="card-tag">Abrir →</span>
       </div>
-      <span class="ser-tag">Abrir →</span>
+      <div class="card-body">
+        <div class="card-title">Los Guardianes de Chiquibul</div>
+        <p class="card-desc">Chica y sus Amigos · Temporada 1 · 15 episodios · Elementary</p>
+      </div>
     </a>
-    <a class="ser active" href="club-del-barrio.html">
-      <div>
-        <div class="ser-title">El Club del Barrio</div>
-        <p class="ser-desc">18 de 18 episodios (MS1 + MS2) · Middle School</p>
+    <a class="card active" href="club-del-barrio.html">
+      <div class="card-img-wrap">
+        <img src="covers/club-del-barrio.jpg" alt="El Club del Barrio">
+        <span class="card-tag">Abrir →</span>
       </div>
-      <span class="ser-tag">Abrir →</span>
+      <div class="card-body">
+        <div class="card-title">El Club del Barrio</div>
+        <p class="card-desc">18 de 18 episodios (MS1 + MS2) · Middle School</p>
+      </div>
     </a>
-    <a class="ser active" href="la-cuadrilla.html">
-      <div>
-        <div class="ser-title">La Cuadrilla</div>
-        <p class="ser-desc">20 de 20 episodios completo · Secondary</p>
+    <a class="card active" href="la-cuadrilla.html">
+      <div class="card-img-wrap">
+        <img src="covers/la-cuadrilla.jpg" alt="La Cuadrilla">
+        <span class="card-tag">Abrir →</span>
       </div>
-      <span class="ser-tag">Abrir →</span>
+      <div class="card-body">
+        <div class="card-title">La Cuadrilla</div>
+        <p class="card-desc">20 de 20 episodios completo · Secondary</p>
+      </div>
     </a>
   </div>
 </div>
