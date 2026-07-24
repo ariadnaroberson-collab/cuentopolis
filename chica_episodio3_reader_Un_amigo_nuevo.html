@@ -195,6 +195,7 @@
 <!-- LEVEL SWITCHER -->
 <div class="level-strip">
   <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill" data-level="Nivel A" onclick="setReaderLevel('Nivel A', this)">Nivel A</div>
   <div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
   <div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
   <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
@@ -215,21 +216,7 @@
         <div class="comp-title">Chequeo rápido</div>
         <div class="comp-sub">Responde para marcar este episodio como completado.</div>
 
-        <div class="comp-q">1. ¿Por qué Toño participa tan poco cuando llega a la selva?</div>
-        <div class="comp-options" id="q1opts">
-          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque piensa que es mejor que los demás.</button>
-          <button class="comp-opt" onclick="answer(this,true,'q1')">Porque tiene miedo de que se burlen de él, como en su antigua escuela.</button>
-          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque no entiende lo que dicen los demás.</button>
-        </div>
-        <div class="comp-result" id="q1result">¡Exacto! Lo que parecía orgullo era, en realidad, miedo.</div>
-
-        <div class="comp-q">2. ¿Qué aprende Bruno al final del episodio?</div>
-        <div class="comp-options" id="q2opts">
-          <button class="comp-opt" onclick="answer(this,false,'q2')">Que debe evitar a los animales nuevos.</button>
-          <button class="comp-opt" onclick="answer(this,true,'q2')">Que él también ha tenido miedo de no tener amigos, y que ser sincero ayuda a conectar con otros.</button>
-          <button class="comp-opt" onclick="answer(this,false,'q2')">Que Toño es el animal más fuerte de la selva.</button>
-        </div>
-        <div class="comp-result" id="q2result">Así es — Bruno se sincera por primera vez, y descubre que compartir el miedo también une al grupo.</div>
+        <div id="compContainer"></div>
 
         <div class="finish-bar">
           <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
@@ -336,8 +323,48 @@
 <script>
 /* ---------------- CONTENT AT FOUR LEVELS ---------------- */
 const VERSIONS = {
+  'Nivel A': {
+    time:'2 min',
+    comp: [
+{q:"1. ¿Cómo se siente Toño al principio?", options:[{text:"😊 Feliz",correct:false},{text:"😨 Con miedo",correct:true},{text:"😴 Cansado",correct:false}], result:"Sí — Toño tiene miedo, no está enojado."},
+{q:"2. ¿Qué comparte Bruno con el grupo?", options:[{text:"🎨 Un dibujo",correct:false},{text:"💭 Un miedo",correct:true},{text:"🍎 Una fruta",correct:false}], result:"Correcto — Bruno dice que tenía miedo de no tener amigos."}
+],
+    html: `
+      <p>El bosque está callado hoy. No hay viento.</p>
+      <p>Chica llega a la escuela. —¡Buenos días!</p>
+      <p>Un armadillo pequeño no dice nada. Mira el suelo. Tiene una <span class="gloss" data-word="mochila">mochila</span><span class="gloss-tooltip">una bolsa para llevar cosas<span class="arrow"></span></span>.</p>
+      <p>Chica se acerca. —Hola. Me llamo Chica. ¿Y tú?</p>
+      <p>—Me llamo Toño.</p>
+      <h3>Toño está callado</h3>
+      <p>Don Pico hace juegos. Todos hablan y ríen.</p>
+      <p>Toño no habla. Mira desde lejos.</p>
+      <p>Chica dice: —Creo que Toño está triste.</p>
+      <h3>Bruno dice algo</h3>
+      <p>Bruno mira a Toño. —¿Por qué no juegas?</p>
+      <p>Toño no dice nada. Camina al bosque, triste.</p>
+      <h3>La verdad de Toño</h3>
+      <p>Chica corre. —¡Espera!</p>
+      <p>Toño tiene lágrimas. —No estoy enojado. Tengo miedo.</p>
+      <p>—En mi escuela antes, no eran buenos conmigo. Ahora hablo poco.</p>
+      <p>Chica comprende. No era orgullo. Era miedo.</p>
+      <h3>Un círculo de amigos</h3>
+      <p>Chica dice: —Hoy vamos a escuchar.</p>
+      <p>Arlo dice: —Yo tengo miedo de la oscuridad.</p>
+      <p>Nico dice: —Yo tenía miedo de mudarme.</p>
+      <p>Bruno habla bajito. —Yo tenía miedo de no tener amigos.</p>
+      <p>Todos miran a Bruno. Es <span class="gloss" data-word="sincero">sincero</span><span class="gloss-tooltip">dice la verdad<span class="arrow"></span></span>.</p>
+      <p>Toño sonríe. Esta vez, de verdad.</p>
+      <h3>Don Pico habla</h3>
+      <p>Don Pico dice: —Hoy aprendimos algo importante. No siempre vemos cómo se sienten los demás.</p>
+      <p>Todos están callados. Bruno también.</p>
+`
+  },
   A1: {
     time:'3 min',
+    comp: [
+{q:"1. ¿Por qué Toño participa tan poco cuando llega a la selva?", options:[{text:"Porque piensa que es mejor que los demás.",correct:false},{text:"Porque tiene miedo de que se burlen de él, como en su antigua escuela.",correct:true},{text:"Porque no entiende lo que dicen los demás.",correct:false}], result:"¡Exacto! Lo que parecía orgullo era, en realidad, miedo."},
+{q:"2. ¿Qué aprende Bruno al final del episodio?", options:[{text:"Que debe evitar a los animales nuevos.",correct:false},{text:"Que él también ha tenido miedo de no tener amigos, y que ser sincero ayuda a conectar con otros.",correct:true},{text:"Que Toño es el animal más fuerte de la selva.",correct:false}], result:"Así es — Bruno se sincera por primera vez, y descubre que compartir el miedo también une al grupo."}
+],
     html: `
       <p>El bosque está silencioso esa mañana. No hay viento. Los pájaros cantan poco.</p>
       <p>Chica llega a la Escuela del Tucán. —¡Buenos días! Todos responden.</p>
@@ -368,6 +395,10 @@ const VERSIONS = {
   },
   A2: {
     time:'4 min',
+    comp: [
+{q:"1. ¿Por qué Toño participa tan poco cuando llega a la selva?", options:[{text:"Porque piensa que es mejor que los demás.",correct:false},{text:"Porque tiene miedo de que se burlen de él, como en su antigua escuela.",correct:true},{text:"Porque no entiende lo que dicen los demás.",correct:false}], result:"¡Exacto! Lo que parecía orgullo era, en realidad, miedo."},
+{q:"2. ¿Qué aprende Bruno al final del episodio?", options:[{text:"Que debe evitar a los animales nuevos.",correct:false},{text:"Que él también ha tenido miedo de no tener amigos, y que ser sincero ayuda a conectar con otros.",correct:true},{text:"Que Toño es el animal más fuerte de la selva.",correct:false}], result:"Así es — Bruno se sincera por primera vez, y descubre que compartir el miedo también une al grupo."}
+],
     html: `
       <p>El bosque parece diferente esa mañana. No hay viento. Los pájaros cantan muy poco. Hasta el río corre más despacio.</p>
       <p>Chica llega saltando entre las ramas de la Escuela del Tucán. —¡Buenos días! Todos responden. Pero alguien no dice nada.</p>
@@ -396,6 +427,10 @@ const VERSIONS = {
   },
   B1: {
     time:'6 min',
+    comp: [
+{q:"1. ¿Por qué Toño participa tan poco cuando llega a la selva?", options:[{text:"Porque piensa que es mejor que los demás.",correct:false},{text:"Porque tiene miedo de que se burlen de él, como en su antigua escuela.",correct:true},{text:"Porque no entiende lo que dicen los demás.",correct:false}], result:"¡Exacto! Lo que parecía orgullo era, en realidad, miedo."},
+{q:"2. ¿Qué aprende Bruno al final del episodio?", options:[{text:"Que debe evitar a los animales nuevos.",correct:false},{text:"Que él también ha tenido miedo de no tener amigos, y que ser sincero ayuda a conectar con otros.",correct:true},{text:"Que Toño es el animal más fuerte de la selva.",correct:false}], result:"Así es — Bruno se sincera por primera vez, y descubre que compartir el miedo también une al grupo."}
+],
     html: `
       <p>El bosque parece diferente esa mañana. No hay viento, los pájaros cantan muy poco y hasta el río parece correr más despacio.</p>
       <p>Chica llega a la Escuela del Tucán saltando entre las ramas. —¡Buenos días! —grita. Todos responden, pero alguien no dice nada.</p>
@@ -424,6 +459,10 @@ const VERSIONS = {
   },
   B2: {
     time:'8 min',
+    comp: [
+{q:"1. ¿Por qué Toño participa tan poco cuando llega a la selva?", options:[{text:"Porque piensa que es mejor que los demás.",correct:false},{text:"Porque tiene miedo de que se burlen de él, como en su antigua escuela.",correct:true},{text:"Porque no entiende lo que dicen los demás.",correct:false}], result:"¡Exacto! Lo que parecía orgullo era, en realidad, miedo."},
+{q:"2. ¿Qué aprende Bruno al final del episodio?", options:[{text:"Que debe evitar a los animales nuevos.",correct:false},{text:"Que él también ha tenido miedo de no tener amigos, y que ser sincero ayuda a conectar con otros.",correct:true},{text:"Que Toño es el animal más fuerte de la selva.",correct:false}], result:"Así es — Bruno se sincera por primera vez, y descubre que compartir el miedo también une al grupo."}
+],
     html: `
       <p>Después de que Nico comienza a sentirse parte de Chiquibul, el bosque parece diferente una mañana. No hay viento. Los pájaros cantan muy poco. Hasta el río parece correr más despacio.</p>
       <p>Chica llega a la Escuela del Tucán saltando entre las ramas. —¡Buenos días! Todos responden. Pero alguien no dice nada.</p>
@@ -457,6 +496,7 @@ let fontSize = 18;
 let glossOn = true;
 let listening = false;
 let currentLevel = 'A1';
+let answered = {};
 const savedWords = new Set();
 
 function renderStory(level){
@@ -467,7 +507,39 @@ function renderStory(level){
   document.getElementById('railLevel').textContent = level;
   document.getElementById('railTime').textContent = VERSIONS[level].time;
   applyGlossState();
+  renderComp(level);
   buildWordBank();
+}
+
+function renderComp(level){
+  answered = {};
+  const container = document.getElementById('compContainer');
+  container.innerHTML = '';
+  VERSIONS[level].comp.forEach((item, i)=>{
+    const qid = 'q'+i;
+    const qDiv = document.createElement('div');
+    qDiv.className='comp-q';
+    qDiv.textContent = item.q;
+    container.appendChild(qDiv);
+    const optsDiv = document.createElement('div');
+    optsDiv.className='comp-options';
+    optsDiv.id = qid+'opts';
+    item.options.forEach(opt=>{
+      const btn = document.createElement('button');
+      btn.className='comp-opt';
+      btn.textContent = opt.text;
+      btn.onclick = ()=>answer(btn, opt.correct, qid);
+      optsDiv.appendChild(btn);
+    });
+    container.appendChild(optsDiv);
+    const resultDiv = document.createElement('div');
+    resultDiv.className='comp-result';
+    resultDiv.id = qid+'result';
+    resultDiv.textContent = item.result;
+    container.appendChild(resultDiv);
+  });
+  document.getElementById('finishBtn').textContent = '✓ Marcar como completado';
+  document.getElementById('finishBtn').style.background = '';
 }
 
 function setReaderLevel(level, el){
@@ -543,7 +615,9 @@ function buildWordBank(){
   words.forEach(w=>{
     const word = w.dataset.word;
     if(seen.has(word)) return; seen.add(word);
-    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const tooltip = w.nextElementSibling;
+    if(!tooltip || !tooltip.classList.contains('gloss-tooltip')) return;
+    const def = tooltip.firstChild.textContent;
     const row = document.createElement('div');
     row.className='word-chip';
     row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
@@ -557,7 +631,7 @@ function toggleSaveWord(word, btn){
 }
 
 /* ---------------- COMPREHENSION ---------------- */
-const answered = {};
+
 function answer(btn, isCorrect, qid){
   if(answered[qid]) return;
   answered[qid]=true;
@@ -565,13 +639,14 @@ function answer(btn, isCorrect, qid){
   opts.forEach(o=>o.disabled=true);
   btn.classList.add(isCorrect?'correct':'incorrect');
   if(!isCorrect){
-    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+    opts.forEach((o,i)=>{ if(VERSIONS[currentLevel].comp[qid.replace('q','')].options[i].correct) o.classList.add('correct'); });
   }
   document.getElementById(qid+'result').style.display='block';
 }
 function finishStory(){
-  if(Object.keys(answered).length < 2){
-    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+  const totalQ = VERSIONS[currentLevel].comp.length;
+  if(Object.keys(answered).length < totalQ){
+    alert('Responde las preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
     return;
   }
   document.getElementById('finishBtn').textContent = '✓ ¡Completado!';

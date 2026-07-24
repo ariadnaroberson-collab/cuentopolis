@@ -3,310 +3,515 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Episodio 15: La Gran Fiesta de Chiquibul — Cuentópolis</title>
+<title>La Gran Fiesta de Chiquibul — Lector de Cuentópolis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #14151c; --bg-panel: #1c1e29; --parchment: #f3e9c9; --parchment-dim: #cfc4a0;
-    --navy: #1b2a4a; --gold: #c9a227; --gold-soft: #e6cf7a; --green: #4a7c59; --green-soft: #6fae82; --ink: #2a2416;
-    --lamp-glow: radial-gradient(ellipse at 50% -10%, rgba(230,207,122,0.14), transparent 60%);
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); background-image: var(--lamp-glow); color: var(--parchment); font-family: 'Public Sans', sans-serif; line-height: 1.5; min-height: 100vh; }
-  .wrap { max-width: 820px; margin: 0 auto; padding: 32px 20px 80px; }
-  header.top { text-align: center; margin-bottom: 24px; }
-  .brand { font-family: 'Space Mono', monospace; letter-spacing: 0.2em; font-size: 12px; color: var(--gold-soft); text-transform: uppercase; }
-  .series { font-family: 'Public Sans', sans-serif; font-style: italic; color: var(--parchment-dim); font-size: 14px; margin-top: 4px; }
-  .finale-badge { display: inline-block; margin-top: 10px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; background: rgba(74,124,89,0.2); color: var(--green-soft); border: 1px solid var(--green-soft); padding: 4px 14px; border-radius: 999px; text-transform: uppercase; }
-  h1.title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 34px; margin: 14px 0 6px; color: var(--parchment); }
-  .level-bar { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 20px 0 28px; }
-  .pill { font-family: 'Space Mono', monospace; font-size: 13px; padding: 8px 18px; border-radius: 999px; border: 1px solid var(--gold); color: var(--gold-soft); background: transparent; cursor: pointer; transition: all 0.15s ease; }
-  .pill:hover { background: rgba(201,162,39,0.12); }
-  .pill.active { background: var(--gold); color: var(--ink); font-weight: 700; }
-  .story-panel { background: var(--bg-panel); border: 1px solid rgba(201,162,39,0.25); border-radius: 14px; padding: 30px 32px; box-shadow: 0 8px 30px rgba(0,0,0,0.35); }
-  .story-panel p { font-family: 'Source Serif 4', serif; font-size: 19px; color: #f6efd8; margin: 0 0 16px; }
-  .story-panel p:last-child { margin-bottom: 0; }
-  .level-tag { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--parchment-dim); margin-bottom: 14px; display: block; }
-  section.block { margin-top: 34px; }
-  h2.block-title { font-family: 'Fraunces', serif; font-size: 20px; color: var(--gold-soft); border-bottom: 1px solid rgba(201,162,39,0.3); padding-bottom: 8px; margin-bottom: 14px; }
-  .glossary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
-  .glossary-item { font-family: 'Public Sans', sans-serif; font-size: 15px; padding: 8px 0; border-bottom: 1px dashed rgba(243,233,201,0.15); }
-  .glossary-item b { color: var(--gold-soft); font-weight: 600; }
-  .word-bank { display: flex; flex-wrap: wrap; gap: 10px; }
-  .word-chip { font-family: 'Space Mono', monospace; font-size: 13px; background: rgba(201,162,39,0.1); border: 1px solid rgba(201,162,39,0.35); color: var(--gold-soft); padding: 6px 14px; border-radius: 8px; }
-  .comp-q { background: rgba(255,255,255,0.03); border-left: 3px solid var(--gold); padding: 12px 16px; margin-bottom: 12px; font-family: 'Public Sans', sans-serif; font-size: 15px; }
-  .huellas-empty { font-family: 'Public Sans', sans-serif; font-style: italic; color: var(--parchment-dim); font-size: 14px; border: 1px dashed rgba(243,233,201,0.25); border-radius: 10px; padding: 16px; }
-  .palabra-card { display: flex; align-items: center; gap: 16px; background: rgba(201,162,39,0.08); border: 1px solid rgba(201,162,39,0.3); border-radius: 10px; padding: 16px 20px; }
-  .palabra-word { font-family: 'Fraunces', serif; font-size: 24px; color: var(--gold-soft); }
-  .hook-card { background: rgba(74,124,89,0.1); border: 1px solid var(--green-soft); border-radius: 10px; padding: 18px 20px; font-family: 'Public Sans', sans-serif; font-size: 15px; color: #dff2e4; }
-  .hook-card .tag { display: block; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--green-soft); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-  .footer-actions { text-align: center; margin-top: 40px; }
-  .maestro-btn { font-family: 'Public Sans', sans-serif; font-weight: 600; font-size: 15px; background: var(--green); color: #eafff0; border: none; padding: 14px 26px; border-radius: 999px; cursor: pointer; box-shadow: 0 4px 16px rgba(74,124,89,0.4); transition: background 0.15s ease; }
-  .maestro-btn:hover { background: var(--green-soft); }
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 50; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: #1a1c22; border: 1px solid var(--green-soft); border-radius: 16px; max-width: 700px; width: 100%; padding: 30px 32px 34px; color: var(--parchment); }
-  .modal h2 { font-family: 'Fraunces', serif; color: var(--green-soft); margin-top: 0; }
-  .modal h3 { font-family: 'Public Sans', sans-serif; font-size: 15px; color: var(--gold-soft); margin: 22px 0 8px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .modal p, .modal li { font-family: 'Public Sans', sans-serif; font-size: 14.5px; color: #e7e2cf; line-height: 1.55; }
-  .modal ul { margin: 0; padding-left: 20px; }
-  .modal-close { float: right; background: none; border: 1px solid rgba(243,233,201,0.3); color: var(--parchment); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-family: 'Public Sans', sans-serif; }
-  .copy-btn { font-family: 'Space Mono', monospace; font-size: 13px; background: var(--gold); color: var(--ink); border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer; margin-top: 20px; }
-  .copy-confirm { font-family: 'Public Sans', sans-serif; font-size: 13px; color: var(--green-soft); margin-left: 10px; }
-  @media (max-width: 560px) { .glossary-grid { grid-template-columns: 1fr; } .story-panel { padding: 22px 18px; } h1.title { font-size: 26px; } }
+:root{
+--ink:#0c1024; --ink-2:#12172e; --ink-3:#1a2040;
+--lamp:#e8a94c; --lamp-dim:#c98a34; --coral:#e8735c;
+--parchment:#f3e9d6; --parchment-dim:#e4d6b8; --page:#faf3e4;
+--slate:#8891a8; --slate-dim:#5c6480;
+--leaf:#5fa876; --leaf-dim:#3d7d55;
+--line: rgba(232,169,76,0.16);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--ink);color:var(--parchment);font-family:'Public Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+h1,h2,h3{font-family:'Fraunces',serif;}
+.mono{font-family:'Space Mono',monospace;}
+a{color:inherit;}
+button{font-family:'Public Sans',sans-serif;cursor:pointer;}
+.toolbar{
+position:sticky;top:0;z-index:40;
+display:flex;align-items:center;gap:16px;padding:12px 24px;
+background:rgba(9,12,26,0.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+flex-wrap:wrap;
+}
+.back-link{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--slate);border:1px solid var(--line);padding:7px 12px;border-radius:20px;background:rgba(255,255,255,0.03);}
+.back-link:hover{color:var(--parchment);border-color:var(--lamp-dim);}
+.toolbar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;}
+.toolbar-series{font-size:11px;color:var(--slate);}
+.toolbar-level{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:1.5px solid var(--lamp);color:var(--lamp);border-radius:5px;padding:2px 7px;}
+.toolbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.tool-btn{
+display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);
+background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;transition:background .15s, border-color .15s;
+}
+.tool-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--lamp-dim);}
+.tool-btn.on{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+.tool-btn.teacher{border-color:var(--leaf-dim);color:var(--leaf);}
+.tool-btn.teacher:hover{background:rgba(95,168,118,0.12);}
+.font-controls{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+.font-controls button{background:rgba(255,255,255,0.03);color:var(--parchment);border:none;padding:8px 12px;font-size:13px;}
+.font-controls button:hover{background:rgba(255,255,255,0.1);}
+.font-controls .divider{width:1px;background:var(--line);align-self:stretch;}
+.progress-rail{height:3px;background:var(--ink-3);position:sticky;top:57px;z-index:39;}
+.progress-rail-fill{height:100%;background:linear-gradient(90deg,var(--lamp),var(--coral));width:0%;transition:width .1s linear;}
+.level-strip{display:flex;align-items:center;gap:10px;justify-content:center;padding:18px 24px 4px;flex-wrap:wrap;}
+.level-strip-label{font-size:12.5px;color:var(--slate);}
+.level-pill{
+font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:6px 13px;border-radius:20px;
+border:1.5px solid var(--line);color:var(--slate);background:rgba(255,255,255,0.03);
+}
+.level-pill:hover{border-color:var(--lamp-dim);color:var(--parchment);}
+.level-pill.active{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+.reader-layout{display:flex;justify-content:center;gap:28px;padding:20px 24px 80px;max-width:1180px;margin:0 auto;}
+.page-wrap{flex:1 1 680px;max-width:680px;}
+.page{
+background:var(--page);color:#2c2412;border-radius:14px;padding:44px 52px;box-shadow:0 30px 60px rgba(0,0,0,0.4);
+font-family:'Source Serif 4', serif; line-height:1.85; position:relative;
+}
+.page::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--lamp),var(--coral));border-radius:14px 14px 0 0;}
+.story-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lamp-dim);margin-bottom:6px;}
+.story-heading{font-family:'Fraunces',serif;font-size:30px;margin:0 0 6px;color:#241d0e;}
+.story-subheading{font-family:'Public Sans',sans-serif;font-size:13.5px;color:#8a7a52;margin-bottom:22px;font-weight:600;}
+.story-body p{margin:0 0 20px;}
+.story-body h3{font-size:17px;color:#5c4a1f;margin:26px 0 12px;font-family:'Fraunces',serif;}
+.gloss{border-bottom:2px dotted var(--coral);cursor:help;position:relative;color:#241d0e;font-weight:600;}
+.gloss:hover, .gloss.tapped{background:rgba(232,115,92,0.16);}
+.gloss-tooltip{
+display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+background:var(--ink-2);color:var(--parchment);border:1px solid var(--line);border-radius:8px;
+padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:13px;line-height:1.4;white-space:nowrap;
+box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;
+}
+.gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink-2);}
+.gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+.comp-check{margin-top:8px;padding-top:28px;border-top:1px dashed var(--parchment-dim);}
+.comp-title{font-family:'Fraunces',serif;font-size:19px;margin:0 0 4px;color:#241d0e;}
+.comp-sub{font-family:'Public Sans',sans-serif;font-size:13px;color:#6b5e42;margin-bottom:18px;}
+.comp-q{font-family:'Public Sans',sans-serif;font-size:14.5px;font-weight:600;color:#241d0e;margin-bottom:10px;}
+.comp-options{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
+.comp-opt{
+font-family:'Public Sans',sans-serif;text-align:left;padding:10px 14px;border-radius:8px;border:1.5px solid #d8cba3;
+background:#fffaf0;font-size:13.5px;color:#3a3120;
+}
+.comp-opt:hover{border-color:var(--coral);}
+.comp-opt.correct{background:#dff1e2;border-color:#6fae7a;}
+.comp-opt.incorrect{background:#f6dcd6;border-color:var(--coral);}
+.comp-result{display:none;font-family:'Public Sans',sans-serif;font-size:13.5px;color:#4b6b4f;margin-top:-10px;margin-bottom:16px;}
+.finish-bar{display:flex;align-items:center;gap:14px;margin-top:24px;flex-wrap:wrap;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:transform .12s;}
+.btn:active{transform:scale(0.97);}
+.btn-primary{background:var(--lamp);color:#26160a;}
+.btn-primary:hover{background:#f0b768;}
+.btn-outline{background:transparent;border:1.5px solid #c9b98a;color:#4a3f26;}
+.side-rail{flex:0 0 250px;display:flex;flex-direction:column;gap:16px;}
+.rail-card{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:16px;}
+.rail-title{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:10px;font-weight:600;display:flex;align-items:center;gap:6px;}
+.word-chip{
+display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:7px 0;
+border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.word-chip:last-child{border-bottom:none;}
+.word-en{color:var(--parchment);font-weight:600;}
+.word-def{color:var(--slate);font-size:11.5px;}
+.save-word{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--slate);font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.save-word.saved{background:var(--coral);border-color:var(--coral);color:#2a0f0a;}
+.rail-meta-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--slate);padding:5px 0;}
+.rail-meta-row b{color:var(--parchment);font-weight:600;}
+.listen-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;}
+.listen-btn:hover{border-color:var(--lamp-dim);}
+.listen-btn.playing{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+.traveler-card{background:linear-gradient(160deg, rgba(95,168,118,0.14), rgba(95,168,118,0.03));border-color:rgba(95,168,118,0.3);}
+.traveler-name{font-family:'Fraunces',serif;font-size:17px;color:var(--parchment);margin-bottom:2px;}
+.traveler-tag{font-size:11.5px;color:var(--leaf);margin-bottom:10px;font-weight:600;}
+.traveler-row{display:flex;gap:8px;font-size:12px;color:var(--slate);padding:4px 0;line-height:1.4;}
+.traveler-row .lbl{flex:0 0 76px;color:var(--leaf);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px;padding-top:1px;}
+.traveler-note{margin-top:10px;padding-top:10px;border-top:1px solid rgba(95,168,118,0.2);font-size:11px;color:var(--slate-dim);font-style:italic;}
+.forest-word{font-family:'Fraunces',serif;font-style:italic;font-size:21px;color:var(--lamp);margin-bottom:4px;}
+.forest-word-def{font-size:12.5px;color:var(--slate);margin-bottom:14px;}
+.pico-q{font-size:13px;color:var(--parchment);line-height:1.55;padding:12px;background:rgba(232,169,76,0.06);border-radius:8px;border-left:3px solid var(--lamp);font-style:italic;}
+.modal-overlay{position:fixed;inset:0;background:rgba(6,8,18,0.78);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;max-width:600px;width:100%;max-height:86vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.6);}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--ink-2);}
+.modal-head h3{margin:0;font-size:16.5px;color:var(--leaf);}
+.modal-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);color:var(--parchment);font-size:13px;}
+.modal-body{padding:20px 22px 26px;font-size:13.5px;line-height:1.7;color:#c9cfe0;}
+.modal-body h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--leaf);margin:18px 0 6px;}
+.modal-body h4:first-child{margin-top:0;}
+.modal-body ul{margin:4px 0;padding-left:20px;}
+.flag-box{background:rgba(232,115,92,0.08);border:1px solid rgba(232,115,92,0.25);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#e3b3a6;margin-top:6px;}
+@media(max-width:920px){
+.reader-layout{flex-direction:column-reverse;align-items:center;}
+.side-rail{flex:none;width:100%;max-width:680px;flex-direction:row;overflow-x:auto;}
+.rail-card{min-width:220px;}
+.page{padding:30px 22px;}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="toolbar">
+<a class="back-link" href="index.html">← Biblioteca</a>
+<div>
+<div class="toolbar-title">La Gran Fiesta de Chiquibul</div>
+<div class="toolbar-series">Chica y sus Amigos · Ep. 15</div>
+</div>
+<span class="toolbar-level" id="toolbarLevel">A1</span>
+<div class="toolbar-right">
+<div class="font-controls">
+<button onclick="changeFont(-1)" title="Texto más pequeño">A−</button>
+<div class="divider"></div>
+<button onclick="changeFont(1)" title="Texto más grande">A+</button>
+</div>
+<button class="tool-btn" id="glossToggle" onclick="toggleGloss()">🔤 Glosario: Activado</button>
+<button class="tool-btn" id="nightToggle" onclick="toggleNight()">🌙 Luz de lámpara</button>
+<button class="tool-btn teacher" onclick="openTeacherNotes()">🎓 Notas del maestro</button>
+</div>
+</div>
+<div class="progress-rail"><div class="progress-rail-fill" id="progressFill"></div></div>
 
-  <header class="top">
-    <div class="brand">Cuentópolis</div>
-    <div class="series">Chica y sus Amigos · Temporada 1: Los Guardianes de Chiquibul</div>
-    <h1 class="title">Episodio 15: La Gran Fiesta de Chiquibul</h1>
-    <span class="finale-badge">✨ Final de Temporada 1</span>
-  </header>
-
-  <div class="level-bar" id="levelBar">
-    <button class="pill active" data-level="A1">A1</button>
-    <button class="pill" data-level="A2">A2</button>
-    <button class="pill" data-level="B1">B1</button>
-    <button class="pill" data-level="B2">B2</button>
-  </div>
-
-  <div class="story-panel">
-    <span class="level-tag" id="levelTag">Nivel A1 · presente, oraciones cortas y repetitivas</span>
-    <div id="storyText"></div>
-  </div>
-
-  <section class="block">
-    <h2 class="block-title">📖 Glosario</h2>
-    <div class="glossary-grid">
-      <div class="glossary-item"><b>la fiesta</b> — party, celebration</div>
-      <div class="glossary-item"><b>celebrar</b> — to celebrate</div>
-      <div class="glossary-item"><b>la marimba</b> — marimba (instrument)</div>
-      <div class="glossary-item"><b>bailar</b> — to dance</div>
-      <div class="glossary-item"><b>el paso doble</b> — paso doble (a dance)</div>
-      <div class="glossary-item"><b>el ritmo</b> — rhythm</div>
-      <div class="glossary-item"><b>compartir</b> — to share</div>
-      <div class="glossary-item"><b>la tradición</b> — tradition</div>
-      <div class="glossary-item"><b>juntos/as</b> — together</div>
-      <div class="glossary-item"><b>la aventura</b> — adventure</div>
-    </div>
-  </section>
-
-  <section class="block">
-    <h2 class="block-title">🍃 Banco de Palabras</h2>
-    <div class="word-bank">
-      <span class="word-chip">celebrar</span>
-      <span class="word-chip">marimba</span>
-      <span class="word-chip">bailar</span>
-      <span class="word-chip">música</span>
-      <span class="word-chip">comunidad</span>
-      <span class="word-chip">compartir</span>
-      <span class="word-chip">alegría</span>
-      <span class="word-chip">tradición</span>
-      <span class="word-chip">amigos</span>
-      <span class="word-chip">aventura</span>
-    </div>
-  </section>
-
-  <section class="block">
-    <h2 class="block-title">🌎 Huellas del Viajero</h2>
-    <div class="huellas-empty">
-      Sin visitante nuevo — este episodio reúne a todos los visitantes ya conocidos de la temporada
-      para la celebración final: Toño, Luna, Lucía, Sofía la rana, Valentina, Mateo,
-      la Doctora Alma, la Capitana Sofía y Nico.
-    </div>
-  </section>
-
-  <section class="block">
-    <h2 class="block-title">🌱 La Palabra del Bosque</h2>
-    <div class="palabra-card">
-      <div class="palabra-word">Comunidad</div>
-      <div style="font-family:'Public Sans',sans-serif; font-size:14px; color:var(--parchment-dim);">
-        Cognado con "community" en inglés — la palabra que cierra toda la temporada.
-      </div>
-    </div>
-  </section>
-
-  <section class="block">
-    <h2 class="block-title">❓ Comprobación de Comprensión</h2>
-    <div class="comp-q">1. ¿Por qué organiza Chiquibul una gran fiesta al final de la temporada?</div>
-    <div class="comp-q">2. ¿Qué dice Luna al final que deja la puerta abierta para más aventuras?</div>
-  </section>
-
-  <section class="block">
-    <h2 class="block-title">🦜 La Pregunta de Don Pico</h2>
-    <div class="comp-q" style="border-left-color: var(--green-soft); font-style: italic;">
-      "De todas las Palabras del Bosque que aprendiste esta temporada, ¿cuál sientes que representa mejor quién eres tú?"
-    </div>
-  </section>
-
-  <section class="block">
-    <h2 class="block-title">🔮 Un Adelanto...</h2>
-    <div class="hook-card">
-      <span class="tag">Gancho de Temporada 2</span>
-      Luna dice que su abuela también hablaba de otros árboles, en otros lugares, que guardan otras historias. ¿Será verdad? Los Guardianes de Chiquibul no lo saben todavía... pero algo les dice que esta no es la última aventura.
-    </div>
-  </section>
-
-  <div class="footer-actions">
-    <button class="maestro-btn" onclick="document.getElementById('modalOverlay').classList.add('open')">🎓 Notas del maestro</button>
-  </div>
-
+<div class="level-strip">
+<span class="level-strip-label">Leyendo en:</span>
+<div class="level-pill" data-level="Nivel A" onclick="setReaderLevel('Nivel A', this)">Nivel A</div>
+<div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
+<div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
+<div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
+<div class="level-pill" data-level="B2" onclick="setReaderLevel('B2', this)">B2</div>
+<span class="level-strip-label" style="margin-left:6px;">— mismo cuento, tu ritmo</span>
 </div>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">Cerrar ✕</button>
-    <h2>🎓 Notas del maestro — Episodio 15 (Final de Temporada)</h2>
+<div class="reader-layout">
+<div class="page-wrap">
+<div class="page" id="pageContent">
+<div class="story-eyebrow">Temporada 1 · Los Guardianes de Chiquibul</div>
+<h1 class="story-heading">La Gran Fiesta de Chiquibul</h1>
+<div class="story-subheading">Episodio 15 — Celebración y cierre de temporada</div>
+<div class="story-body" id="storyBody"></div>
 
-    <h3>Información general</h3>
-    <p><b>Unidad curricular:</b> Las celebraciones · La música · Los bailes · Las tradiciones · La comunidad<br>
-    <b>Nivel original:</b> B2 (autoría original Cuentópolis, basado en el borrador inicial del maestro)<br>
-    <b>Posición en la temporada:</b> Episodio 15 de 15 — FINAL DE TEMPORADA</p>
+<div class="comp-check">
+<div class="comp-title">Chequeo rápido</div>
+<div class="comp-sub">Responde para marcar este episodio como completado.</div>
+<div id="compContainer"></div>
+<div class="finish-bar">
+<button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
+<button class="btn btn-outline" onclick="alert('Volviendo a la biblioteca — tu progreso se guarda en Sigue leyendo.')">Guardar y salir</button>
+</div>
+</div>
+</div>
+</div>
 
-    <h3>Objetivos lingüísticos</h3>
-    <ul>
-      <li>Describir una celebración: música, baile, comida, decoración</li>
-      <li>Hablar de tradiciones compartidas entre distintas culturas</li>
-      <li>Usar vocabulario de invitación y agradecimiento en un contexto festivo</li>
-      <li>Expresar alegría y cierre emocional</li>
-    </ul>
+<div class="side-rail">
+<div class="rail-card">
+<button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
+</div>
+<div class="rail-card">
+<div class="rail-title">Datos del episodio</div>
+<div class="rail-meta-row"><span>Nivel</span><b id="railLevel">A1</b></div>
+<div class="rail-meta-row"><span>Tiempo de lectura</span><b id="railTime">3 min</b></div>
+<div class="rail-meta-row"><span>Lugar</span><b>Selva de Chiquibul</b></div>
+<div class="rail-meta-row"><span>Tema</span><b>Celebración, comunidad</b></div>
+</div>
+<div class="rail-card traveler-card"><div class="rail-title">🐾 Huellas del Viajero</div><div class="traveler-note">Este episodio no presenta un nuevo visitante.</div></div>
+<div class="rail-card">
+<div class="rail-title">🌳 La Palabra del Bosque</div>
+<div class="forest-word">Comunidad</div>
+<div class="forest-word-def">Un grupo de personas (o animales) que se apoyan y comparten juntos.</div>
+<div class="rail-title" style="margin-top:14px;">🦜 La Pregunta de Don Pico</div>
+<div class="pico-q">"De todas las Palabras del Bosque que aprendiste esta temporada, ¿cuál sientes que representa mejor quién eres tú?"</div>
+</div>
+<div class="rail-card">
+<div class="rail-title">Banco de palabras — este episodio</div>
+<div id="wordBank"></div>
+</div>
+</div>
+</div>
 
-    <h3>Notas de ritmo por nivel CEFR</h3>
-    <ul>
-      <li><b>A1:</b> presente, oraciones cortas sobre la fiesta, la música y el baile.</li>
-      <li><b>A2:</b> oraciones conectadas describiendo qué trae cada visitante y por qué.</li>
-      <li><b>B1:</b> narración más completa de la fiesta con diálogo entre personajes.</li>
-      <li><b>B2:</b> registro cercano al original, escena final reflexiva, gancho de Temporada 2 presentado con sutileza.</li>
-    </ul>
-
-    <h3>Señales de sensibilidad de contenido</h3>
-    <p>Episodio sin contenido sensible — celebración positiva de cierre. Los bailes y tradiciones (incluyendo la marimba y el paso doble) se presentan como una mezcla alegre y espontánea entre amigos, no como representación exhaustiva o exclusiva de una sola cultura.</p>
-
-    <h3>Notas de continuidad</h3>
-    <ul>
-      <li>Todos los visitantes son personajes ya establecidos — ninguno es nuevo.</li>
-      <li>El gancho de Temporada 2 se introduce con sutileza a través de Luna, coherente con su papel de puente cultural desde el Episodio 12.</li>
-      <li>Este episodio cierra formalmente la Temporada 1 — el misterio de la Gran Ceiba queda resuelto; solo se deja abierta la posibilidad de nuevas historias.</li>
-      <li>Diario de los Guardianes y Misión del Guardián permanecen diferidos como posibles fast-follow features.</li>
-    </ul>
-
-    <h3>Arco final (Episodios 11–15) — completo</h3>
-    <p>Ep. 11 (pista) → Ep. 12 (investigación) → Ep. 13 (obstáculo) → Ep. 14 (revelación) → Ep. 15 (celebración + gancho de Temporada 2). Con este episodio, la Temporada 1 de Chica y sus Amigos queda oficialmente completa: 15 episodios, Foundation edition, de principio a fin.</p>
-
-    <button class="copy-btn" onclick="copyNotes()">📋 Copiar notas</button>
-    <span class="copy-confirm" id="copyConfirm" style="display:none;">¡Copiado!</span>
-  </div>
+<div class="modal-overlay" id="teacherModal" onclick="if(event.target===this) closeTeacherNotes()">
+<div class="modal">
+<div class="modal-head"><h3>🎓 Notas del maestro — Episodio 15</h3><button class="modal-close" onclick="closeTeacherNotes()">✕</button></div>
+<div class="modal-body">
+<h4>Unidad curricular</h4>
+<div>Celebración y cierre de temporada · Episodio 15 de 15 — FINAL DE TEMPORADA</div>
+<h4>Nivel A — nota especial</h4>
+<div>Nivel nuevo (2026) para K-2. Mismo argumento, vocabulario reducido; preguntas de comprensión con apoyo de emoji.</div>
+<h4>Objetivos lingüísticos</h4>
+<ul>
+<li>Describir una celebración y música/baile de distintas culturas</li>
+<li>Repasar el arco narrativo completo de la temporada</li>
+</ul>
+<h4>Temas de preguntas de comprensión</h4>
+<ul>
+<li>¿Por qué organizan la fiesta? (cierre narrativo)</li>
+<li>¿Qué dice Luna al final? (gancho para la próxima temporada)</li>
+</ul>
+<h4>Notas de continuidad</h4>
+<ul>
+<li>Reúne a todos los visitantes de Huellas del Viajero de la temporada para la celebración final.</li>
+<li>Cierra el arco de la Gran Ceiba mientras deja una pista abierta (otros árboles guardianes) para futuras temporadas.</li>
+</ul>
+</div>
+</div>
 </div>
 
 <script>
-  const stories = {
-    A1: {
-      tag: "Nivel A1 · presente, oraciones cortas y repetitivas",
-      text: [
-        "Chiquibul organiza una gran fiesta. Es una celebración para la Gran Ceiba.",
-        "Todos los amigos se quedan un día más: Toño, Luna, Lucía, Sofía, Valentina, Mateo, la Doctora Alma, la Capitana Sofía y Nico.",
-        "Cada amigo trae algo especial de su país: comida, música, historias.",
-        "Empieza a sonar la marimba. La música es alegre.",
-        "Poco a poco, todos empiezan a bailar juntos.",
-        "\u2014¡En mi país bailamos así! \u2014dice Mateo, riendo.",
-        "\u2014¡Y en el mío, así! \u2014dice Valentina.",
-        "De repente, todos intentan bailar un paso doble al ritmo de la marimba. ¡Es muy divertido!",
-        "Chica mira a todos sus amigos bailando juntos y sonríe.",
-        "\u2014Esta fiesta es para la Gran Ceiba \u2014dice\u2014. Ella guarda todas nuestras historias.",
-        "Al final de la noche, Luna dice algo interesante:",
-        "\u2014Mi abuela también hablaba de otros árboles como la Gran Ceiba. En otros lugares.",
-        "\u2014¿De verdad? \u2014pregunta Teo, muy curioso.",
-        "Nadie sabe la respuesta todavía. Pero todos sienten que esta no es la última aventura."
-      ]
-    },
-    A2: {
-      tag: "Nivel A2 · presente con conectores, tono festivo",
-      text: [
-        "Con el misterio de la Gran Ceiba resuelto, Chiquibul organizó una gran fiesta para celebrar juntos.",
-        "Todos los amigos de la temporada decidieron quedarse un día más: Toño, Luna, Lucía, Sofía la rana, Valentina, Mateo, la Doctora Alma, la Capitana Sofía y Nico.",
-        "Cada uno trajo algo especial de su propia tierra \u2014comida, música, historias\u2014 para compartir con todos.",
-        "Cuando empezó a sonar la marimba, poco a poco todos se animaron a bailar juntos.",
-        "\u2014¡En mi país bailamos así! \u2014dijo Mateo, riendo mientras movía los brazos.",
-        "\u2014¡Y en el mío, así! \u2014respondió Valentina, mostrando sus propios pasos.",
-        "Entre risas, todos intentaron bailar un paso doble al ritmo de la marimba, mezclando pasos que ninguno conocía muy bien, pero que igual disfrutaron mucho.",
-        "Chica observó a todos sus amigos bailando juntos, felices, y sonrió con el corazón lleno.",
-        "\u2014Esta fiesta es para la Gran Ceiba \u2014dijo\u2014, porque ella ha guardado todas nuestras historias.",
-        "Cuando la música empezaba a apagarse, Luna dijo algo que hizo pensar a todos:",
-        "\u2014Mi abuela también contaba que hay otros árboles como la Gran Ceiba, en otros lugares, guardando otras historias.",
-        "\u2014¿Será verdad? \u2014preguntó Teo, con los ojos muy abiertos.",
-        "Nadie tenía la respuesta todavía, pero todos sintieron, sin decirlo, que esta no era la última aventura de los Guardianes de Chiquibul."
-      ]
-    },
-    B1: {
-      tag: "Nivel B1 · narración completa, tono celebratorio",
-      text: [
-        "Con el misterio de la Gran Ceiba finalmente resuelto, Chiquibul decidió celebrar de la mejor manera posible: con una gran fiesta para todos.",
-        "Ninguno de los amigos que habían llegado durante la temporada quiso irse todavía. Toño, Luna, Lucía, Sofía la rana, Valentina, Mateo, la Doctora Alma, la Capitana Sofía y Nico se quedaron un día más, cada uno con algo especial de su propia tierra para compartir: comida, música, historias que nunca habían contado antes.",
-        "Cuando el sonido de la marimba empezó a llenar el claro del bosque, algo mágico ocurrió: poco a poco, sin que nadie lo planeara, todos se animaron a bailar juntos.",
-        "\u2014¡En mi país bailamos así! \u2014exclamó Mateo, moviéndose con entusiasmo al ritmo de la música.",
-        "\u2014¡Y en el mío, así! \u2014respondió Valentina, mostrando pasos completamente distintos.",
-        "Entre risas y torpezas compartidas, el grupo entero terminó intentando un paso doble al ritmo de la marimba \u2014una mezcla poco ortodoxa, pero llena de alegría genuina.",
-        "Chica observó la escena por un momento: todos sus amigos, de lugares tan distintos, bailando juntos bajo las ramas de la Gran Ceiba.",
-        "\u2014Esta fiesta es para ella \u2014dijo finalmente, en voz alta para que todos la oyeran\u2014. Porque ha guardado, con paciencia, cada una de nuestras historias.",
-        "Cuando la música empezaba a apagarse y el cansancio feliz se instalaba en el grupo, Luna se acercó a Chica con una expresión pensativa.",
-        "\u2014Mi abuela también me contaba algo más \u2014dijo en voz baja\u2014. Que hay otros árboles, como la Gran Ceiba, en otros lugares del mundo. Guardando otras historias.",
-        "\u2014¿Será verdad? \u2014preguntó Teo, que había alcanzado a escuchar.",
-        "Nadie supo qué responder. Pero mientras las últimas notas de la marimba se apagaban entre los árboles, todos sintieron, sin necesidad de decirlo en voz alta, que la historia de los Guardianes de Chiquibul apenas estaba comenzando."
-      ]
-    },
-    B2: {
-      tag: "Nivel B2 · registro cercano al original, cierre reflexivo",
-      text: [
-        "Con el misterio de la Gran Ceiba finalmente resuelto, Chiquibul hizo lo único que parecía adecuado: celebrar, y celebrar en grande.",
-        "Ninguno de los amigos reunidos durante la temporada quiso marcharse todavía. Toño, Luna, Lucía, Sofía la rana, Valentina, Mateo, la Doctora Alma, la Capitana Sofía y Nico se quedaron un día más, cada uno con un fragmento de su propia tierra para ofrecer al grupo: un plato, una canción, una historia que nunca antes habían contado.",
-        "Cuando el sonido de la marimba empezó a llenar el claro del bosque \u2014esa madera que vibraba como si el árbol mismo respirara al ritmo de la música\u2014, ocurrió algo que nadie había planeado: poco a poco, sin ceremonia ni anuncio, todos se encontraron bailando juntos.",
-        "\u2014¡En mi país bailamos así! \u2014exclamó Mateo, dejándose llevar por el ritmo con una soltura contagiosa.",
-        "\u2014¡Y en el mío, así! \u2014respondió Valentina, trazando pasos completamente distintos, mientras el grupo entero reía ante la mezcla imposible de estilos.",
-        "Entre torpezas compartidas y carcajadas genuinas, el grupo terminó intentando, entre todos, un paso doble al ritmo de la marimba \u2014una combinación que probablemente ningún maestro de baile habría aprobado, pero que llevaba dentro algo mucho más valioso que la perfección: la alegría simple de estar juntos.",
-        "Chica se detuvo un instante para observar la escena entera: amigos de lugares tan distintos, bailando bajo las ramas centenarias de la Gran Ceiba, como si el árbol mismo los estuviera abrazando a todos por igual.",
-        "\u2014Esta fiesta es para ella \u2014dijo finalmente, con una voz que llegó a todos los oídos, incluso por encima de la música\u2014. Porque ha guardado, con una paciencia que ninguno de nosotros podría igualar, cada una de nuestras historias.",
-        "Cuando la música empezó, por fin, a apagarse, y un cansancio dulce se instaló sobre el grupo, Luna se acercó a Chica con una expresión que mezclaba nostalgia y algo parecido al asombro.",
-        "\u2014Mi abuela me contaba algo más \u2014dijo, casi en un susurro, como si compartiera un secreto que apenas empezaba a entender ella misma\u2014. Que existen otros árboles, en otros lugares del mundo, tan antiguos y silenciosos como la Gran Ceiba. Guardando, a su manera, otras historias.",
-        "\u2014¿Será verdad? \u2014preguntó Teo, que había alcanzado a escuchar, con los ojos abiertos de par en par.",
-        "Nadie tuvo una respuesta. Pero mientras las últimas notas de la marimba se disolvían entre las hojas y el silencio volvía, lentamente, a instalarse sobre Chiquibul, todos supieron, sin necesidad de una sola palabra, que aquella no era una despedida.",
-        "Era, apenas, el principio de algo mucho más grande."
-      ]
-    }
-  };
-
-  function renderLevel(level) {
-    const data = stories[level];
-    document.getElementById('levelTag').textContent = data.tag;
-    document.getElementById('storyText').innerHTML = data.text.map(p => `<p>${p}</p>`).join('');
-    document.querySelectorAll('.pill').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.level === level);
-    });
+const VERSIONS = {
+  'Nivel A': {
+    time:'2 min',
+    comp: [
+{q:"1. ¿Por qué hacen una fiesta?", options:[{text:"🎉 Para celebrar juntos",correct:true},{text:"🎂 Es un cumpleaños",correct:false},{text:"📚 Empiezan las clases",correct:false}], result:"Sí — celebran el misterio resuelto juntos."},
+{q:"2. ¿Qué instrumento suena en la fiesta?", options:[{text:"🎵 La marimba",correct:true},{text:"🎸 La guitarra",correct:false},{text:"🥁 El tambor",correct:false}], result:"Correcto — todos bailan al ritmo de la marimba."}
+],
+    html: `
+      <p>Chiquibul hace una gran fiesta. Es una <span class="gloss" data-word="celebración">celebración</span><span class="gloss-tooltip">una fiesta especial<span class="arrow"></span></span> para la Gran Ceiba.</p>
+      <p>Todos los amigos se quedan: Toño, Luna, Lucía, Sofía, Valentina, Mateo, la doctora Alma, la capitana Sofía y Nico.</p>
+      <p>Cada amigo trae algo especial de su país.</p>
+      <p>Suena la marimba. La música es alegre.</p>
+      <p>Todos bailan juntos.</p>
+      <p>—¡En mi país bailamos así! —dice Mateo.</p>
+      <p>—¡Y en el mío, así! —dice Valentina.</p>
+      <p>Chica mira a todos y sonríe.</p>
+      <p>—Esta fiesta es para la Gran Ceiba —dice—. Ella guarda nuestras historias.</p>
+      <p>Luna dice: —Mi abuela hablaba de otros árboles como este. En otros lugares.</p>
+      <p>—¿De verdad? —pregunta Teo.</p>
+      <p>Todos sienten que hay más aventuras por venir.</p>
+`
+  },
+  A1: {
+    time:'3 min',
+    comp: [
+{q:"1. ¿Por qué organiza Chiquibul una gran fiesta?", options:[{text:"Para celebrar el misterio resuelto",correct:true},{text:"Es el cumpleaños de Chica",correct:false},{text:"Empieza el verano",correct:false}], result:"Sí — celebran juntos ahora que el misterio de la Gran Ceiba está resuelto."},
+{q:"2. ¿Qué dice Luna al final?", options:[{text:"Que hay otros árboles como la Gran Ceiba",correct:true},{text:"Que tiene que irse para siempre",correct:false},{text:"Que no le gustó la fiesta",correct:false}], result:"Correcto — Luna dice que puede haber más árboles guardianes en otros lugares, dejando la puerta abierta a nuevas aventuras."}
+],
+    html: `
+      <p>Chiquibul organiza una gran fiesta. Es una <span class="gloss" data-word="celebración">celebración</span><span class="gloss-tooltip">una fiesta especial<span class="arrow"></span></span> para la Gran Ceiba.</p>
+      <p>Todos los amigos se quedan un día más: Toño, Luna, Lucía, Sofía, Valentina, Mateo, la Doctora Alma, la Capitana Sofía y Nico.</p>
+      <p>Cada amigo trae algo especial de su país: comida, música, historias.</p>
+      <p>Empieza a sonar la marimba. La música es alegre.</p>
+      <p>Poco a poco, todos empiezan a bailar juntos.</p>
+      <p>—¡En mi país bailamos así! —dice Mateo, riendo.</p>
+      <p>—¡Y en el mío, así! —dice Valentina.</p>
+      <p>De repente, todos intentan bailar un paso doble al ritmo de la marimba. ¡Es muy divertido!</p>
+      <p>Chica mira a todos sus amigos bailando juntos y sonríe.</p>
+      <p>—Esta fiesta es para la Gran Ceiba —dice—. Ella guarda todas nuestras historias.</p>
+      <p>Al final de la noche, Luna dice algo interesante:</p>
+      <p>—Mi abuela también hablaba de otros árboles como la Gran Ceiba. En otros lugares.</p>
+      <p>—¿De verdad? —pregunta Teo, muy curioso.</p>
+      <p>Nadie sabe la respuesta todavía. Pero todos sienten que esta no es la última aventura.</p>
+`
+  },
+  A2: {
+    time:'4 min',
+    comp: [
+{q:"1. ¿Por qué organiza Chiquibul una gran fiesta?", options:[{text:"Para celebrar el misterio resuelto",correct:true},{text:"Es el cumpleaños de Chica",correct:false},{text:"Empieza el verano",correct:false}], result:"Sí — celebran juntos ahora que el misterio de la Gran Ceiba está resuelto."},
+{q:"2. ¿Qué dice Luna al final?", options:[{text:"Que hay otros árboles como la Gran Ceiba",correct:true},{text:"Que tiene que irse para siempre",correct:false},{text:"Que no le gustó la fiesta",correct:false}], result:"Correcto — Luna dice que puede haber más árboles guardianes en otros lugares, dejando la puerta abierta a nuevas aventuras."}
+],
+    html: `
+      <p>Con el misterio de la Gran Ceiba resuelto, Chiquibul organizó una gran fiesta para celebrar juntos.</p>
+      <p>Todos los amigos de la temporada decidieron quedarse un día más: Toño, Luna, Lucía, Sofía la rana, Valentina, Mateo, la Doctora Alma, la Capitana Sofía y Nico.</p>
+      <p>Cada uno trajo algo especial de su propia tierra —comida, música, historias— para compartir con todos.</p>
+      <p>Cuando empezó a sonar la marimba, poco a poco todos se animaron a bailar juntos.</p>
+      <p>—¡En mi país bailamos así! —dijo Mateo, riendo mientras movía los brazos.</p>
+      <p>—¡Y en el mío, así! —respondió Valentina, mostrando sus propios pasos.</p>
+      <p>Entre risas, todos intentaron bailar un paso doble al ritmo de la marimba, mezclando pasos que ninguno conocía muy bien, pero que igual disfrutaron mucho.</p>
+      <p>Chica observó a todos sus amigos bailando juntos, felices, y sonrió con el corazón lleno.</p>
+      <p>—Esta fiesta es para la Gran Ceiba —dijo—, porque ella ha guardado todas nuestras historias.</p>
+      <p>Cuando la música empezaba a apagarse, Luna dijo algo que hizo pensar a todos:</p>
+      <p>—Mi abuela también contaba que hay otros árboles como la Gran Ceiba, en otros lugares, guardando otras historias.</p>
+      <p>—¿Será verdad? —preguntó Teo, con los ojos muy abiertos.</p>
+      <p>Nadie tenía la respuesta todavía, pero todos sintieron, sin decirlo, que esta no era la última aventura de los Guardianes de Chiquibul.</p>
+`
+  },
+  B1: {
+    time:'5 min',
+    comp: [
+{q:"1. ¿Por qué organiza Chiquibul una gran fiesta?", options:[{text:"Para celebrar el misterio resuelto",correct:true},{text:"Es el cumpleaños de Chica",correct:false},{text:"Empieza el verano",correct:false}], result:"Sí — celebran juntos ahora que el misterio de la Gran Ceiba está resuelto."},
+{q:"2. ¿Qué dice Luna al final?", options:[{text:"Que hay otros árboles como la Gran Ceiba",correct:true},{text:"Que tiene que irse para siempre",correct:false},{text:"Que no le gustó la fiesta",correct:false}], result:"Correcto — Luna dice que puede haber más árboles guardianes en otros lugares, dejando la puerta abierta a nuevas aventuras."}
+],
+    html: `
+      <p>Con el misterio de la Gran Ceiba finalmente resuelto, Chiquibul decidió celebrar de la mejor manera posible: con una gran fiesta para todos.</p>
+      <p>Ninguno de los amigos que habían llegado durante la temporada quiso irse todavía. Toño, Luna, Lucía, Sofía la rana, Valentina, Mateo, la Doctora Alma, la Capitana Sofía y Nico se quedaron un día más, cada uno con algo especial de su propia tierra para compartir: comida, música, historias que nunca habían contado antes.</p>
+      <p>Cuando el sonido de la marimba empezó a llenar el claro del bosque, algo mágico ocurrió: poco a poco, sin que nadie lo planeara, todos se animaron a bailar juntos.</p>
+      <p>—¡En mi país bailamos así! —exclamó Mateo, moviéndose con entusiasmo al ritmo de la música.</p>
+      <p>—¡Y en el mío, así! —respondió Valentina, mostrando pasos completamente distintos.</p>
+      <p>Entre risas y torpezas compartidas, el grupo entero terminó intentando un paso doble al ritmo de la marimba —una mezcla poco ortodoxa, pero llena de alegría genuina.</p>
+      <p>Chica observó la escena por un momento: todos sus amigos, de lugares tan distintos, bailando juntos bajo las ramas de la Gran Ceiba.</p>
+      <p>—Esta fiesta es para ella —dijo finalmente, en voz alta para que todos la oyeran—. Porque ha guardado, con paciencia, cada una de nuestras historias.</p>
+      <p>Cuando la música empezaba a apagarse y el cansancio feliz se instalaba en el grupo, Luna se acercó a Chica con una expresión pensativa.</p>
+      <p>—Mi abuela también me contaba algo más —dijo en voz baja—. Que hay otros árboles, como la Gran Ceiba, en otros lugares del mundo. Guardando otras historias.</p>
+      <p>—¿Será verdad? —preguntó Teo, que había alcanzado a escuchar.</p>
+      <p>Nadie supo qué responder. Pero mientras las últimas notas de la marimba se apagaban entre los árboles, todos sintieron, sin necesidad de decirlo en voz alta, que la historia de los Guardianes de Chiquibul apenas estaba comenzando.</p>
+`
+  },
+  B2: {
+    time:'6 min',
+    comp: [
+{q:"1. ¿Por qué organiza Chiquibul una gran fiesta?", options:[{text:"Para celebrar el misterio resuelto",correct:true},{text:"Es el cumpleaños de Chica",correct:false},{text:"Empieza el verano",correct:false}], result:"Sí — celebran juntos ahora que el misterio de la Gran Ceiba está resuelto."},
+{q:"2. ¿Qué dice Luna al final?", options:[{text:"Que hay otros árboles como la Gran Ceiba",correct:true},{text:"Que tiene que irse para siempre",correct:false},{text:"Que no le gustó la fiesta",correct:false}], result:"Correcto — Luna dice que puede haber más árboles guardianes en otros lugares, dejando la puerta abierta a nuevas aventuras."}
+],
+    html: `
+      <p>Con el misterio de la Gran Ceiba finalmente resuelto, Chiquibul hizo lo único que parecía adecuado: celebrar, y celebrar en grande.</p>
+      <p>Ninguno de los amigos reunidos durante la temporada quiso marcharse todavía. Toño, Luna, Lucía, Sofía la rana, Valentina, Mateo, la Doctora Alma, la Capitana Sofía y Nico se quedaron un día más, cada uno con un fragmento de su propia tierra para ofrecer al grupo: un plato, una canción, una historia que nunca antes habían contado.</p>
+      <p>Cuando el sonido de la marimba empezó a llenar el claro del bosque —esa madera que vibraba como si el árbol mismo respirara al ritmo de la música—, ocurrió algo que nadie había planeado: poco a poco, sin ceremonia ni anuncio, todos se encontraron bailando juntos.</p>
+      <p>—¡En mi país bailamos así! —exclamó Mateo, dejándose llevar por el ritmo con una soltura contagiosa.</p>
+      <p>—¡Y en el mío, así! —respondió Valentina, trazando pasos completamente distintos, mientras el grupo entero reía ante la mezcla imposible de estilos.</p>
+      <p>Entre torpezas compartidas y carcajadas genuinas, el grupo terminó intentando, entre todos, un paso doble al ritmo de la marimba —una combinación que probablemente ningún maestro de baile habría aprobado, pero que llevaba dentro algo mucho más valioso que la perfección: la alegría simple de estar juntos.</p>
+      <p>Chica se detuvo un instante para observar la escena entera: amigos de lugares tan distintos, bailando bajo las ramas centenarias de la Gran Ceiba, como si el árbol mismo los estuviera abrazando a todos por igual.</p>
+      <p>—Esta fiesta es para ella —dijo finalmente, con una voz que llegó a todos los oídos, incluso por encima de la música—. Porque ha guardado, con una paciencia que ninguno de nosotros podría igualar, cada una de nuestras historias.</p>
+      <p>Cuando la música empezó, por fin, a apagarse, y un cansancio dulce se instaló sobre el grupo, Luna se acercó a Chica con una expresión que mezclaba nostalgia y algo parecido al asombro.</p>
+      <p>—Mi abuela me contaba algo más —dijo, casi en un susurro, como si compartiera un secreto que apenas empezaba a entender ella misma—. Que existen otros árboles, en otros lugares del mundo, tan antiguos y silenciosos como la Gran Ceiba. Guardando, a su manera, otras historias.</p>
+      <p>—¿Será verdad? —preguntó Teo, que había alcanzado a escuchar, con los ojos abiertos de par en par.</p>
+      <p>Nadie tuvo una respuesta. Pero mientras las últimas notas de la marimba se disolvían entre las hojas y el silencio volvía, lentamente, a instalarse sobre Chiquibul, todos supieron, sin necesidad de una sola palabra, que aquella no era una despedida.</p>
+      <p>Era, apenas, el principio de algo mucho más grande.</p>
+`
   }
+};
 
-  document.querySelectorAll('.pill').forEach(btn => {
-    btn.addEventListener('click', () => renderLevel(btn.dataset.level));
-  });
+let fontSize = 18;
+let glossOn = true;
+let listening = false;
+let currentLevel = 'A1';
+let answered = {};
+const savedWords = new Set();
 
-  renderLevel('A1');
+function renderStory(level){
+currentLevel = level;
+document.getElementById('storyBody').innerHTML = VERSIONS[level].html;
+document.getElementById('storyBody').style.fontSize = fontSize+'px';
+document.getElementById('toolbarLevel').textContent = level;
+document.getElementById('railLevel').textContent = level;
+document.getElementById('railTime').textContent = VERSIONS[level].time;
+applyGlossState();
+renderComp(level);
+buildWordBank();
+}
 
-  function copyNotes() {
-    const modalText = document.querySelector('.modal').innerText;
-    const cleaned = modalText.replace('Cerrar ✕', '').replace('📋 Copiar notas', '').trim();
-    const ta = document.createElement('textarea');
-    ta.value = cleaned;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    const confirm = document.getElementById('copyConfirm');
-    confirm.style.display = 'inline';
-    setTimeout(() => confirm.style.display = 'none', 2000);
-  }
+function renderComp(level){
+answered = {};
+const container = document.getElementById('compContainer');
+container.innerHTML = '';
+VERSIONS[level].comp.forEach((item, i)=>{
+const qid = 'q'+i;
+const qDiv = document.createElement('div');
+qDiv.className='comp-q';
+qDiv.textContent = item.q;
+container.appendChild(qDiv);
+const optsDiv = document.createElement('div');
+optsDiv.className='comp-options';
+optsDiv.id = qid+'opts';
+item.options.forEach(opt=>{
+const btn = document.createElement('button');
+btn.className='comp-opt';
+btn.textContent = opt.text;
+btn.onclick = ()=>answer(btn, opt.correct, qid);
+optsDiv.appendChild(btn);
+});
+container.appendChild(optsDiv);
+const resultDiv = document.createElement('div');
+resultDiv.className='comp-result';
+resultDiv.id = qid+'result';
+resultDiv.textContent = item.result;
+container.appendChild(resultDiv);
+});
+document.getElementById('finishBtn').textContent = '✓ Marcar como completado';
+document.getElementById('finishBtn').style.background = '';
+}
+
+function setReaderLevel(level, el){
+document.querySelectorAll('.level-pill').forEach(p=>p.classList.remove('active'));
+el.classList.add('active');
+renderStory(level);
+}
+
+function changeFont(delta){
+fontSize = Math.min(24, Math.max(14, fontSize+delta*2));
+document.getElementById('storyBody').style.fontSize = fontSize+'px';
+}
+
+function toggleGloss(){
+glossOn = !glossOn;
+document.getElementById('glossToggle').textContent = glossOn ? '🔤 Glosario: Activado' : '🔤 Glosario: Desactivado';
+document.getElementById('glossToggle').classList.toggle('on', glossOn);
+applyGlossState();
+}
+
+function applyGlossState(){
+document.querySelectorAll('.gloss').forEach(g=>{
+g.style.borderBottomColor = glossOn ? 'var(--coral)' : 'transparent';
+g.style.cursor = glossOn ? 'help' : 'text';
+g.style.fontWeight = glossOn ? '600' : '400';
+if(!glossOn) g.classList.remove('tapped');
+});
+}
+
+document.addEventListener('click', e=>{
+if(e.target.closest('.gloss') && glossOn){
+e.target.closest('.gloss').classList.toggle('tapped');
+}
+});
+
+function toggleNight(){
+const btn = document.getElementById('nightToggle');
+btn.classList.toggle('on');
+document.getElementById('pageContent').style.filter = btn.classList.contains('on') ? 'invert(1) hue-rotate(180deg)' : 'none';
+btn.textContent = btn.classList.contains('on') ? '☀ Luz brillante' : '🌙 Luz de lámpara';
+}
+
+function toggleListen(){
+listening = !listening;
+const btn = document.getElementById('listenBtn');
+btn.classList.toggle('playing', listening);
+btn.textContent = listening ? '⏸ Reproduciendo narración…' : '🔊 Escuchar narración';
+}
+
+function openTeacherNotes(){ document.getElementById('teacherModal').classList.add('open'); }
+function closeTeacherNotes(){ document.getElementById('teacherModal').classList.remove('open'); }
+
+function buildWordBank(){
+const words = [...document.querySelectorAll('.gloss')];
+const seen = new Set();
+const bank = document.getElementById('wordBank');
+bank.innerHTML = '';
+words.forEach(w=>{
+const word = w.dataset.word;
+if(seen.has(word)) return; seen.add(word);
+const tooltip = w.nextElementSibling;
+if(!tooltip || !tooltip.classList.contains('gloss-tooltip')) return;
+const def = tooltip.firstChild.textContent;
+const row = document.createElement('div');
+row.className='word-chip';
+row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
+<button class="save-word ${savedWords.has(word)?'saved':''}" onclick="toggleSaveWord('${word}', this)">${savedWords.has(word)?'✓':'+'}</button>`;
+bank.appendChild(row);
+});
+}
+
+function toggleSaveWord(word, btn){
+if(savedWords.has(word)){ savedWords.delete(word); btn.classList.remove('saved'); btn.textContent='+'; }
+else { savedWords.add(word); btn.classList.add('saved'); btn.textContent='✓'; }
+}
+
+function answer(btn, isCorrect, qid){
+if(answered[qid]) return;
+answered[qid]=true;
+const opts = btn.parentElement.querySelectorAll('.comp-opt');
+opts.forEach(o=>o.disabled=true);
+btn.classList.add(isCorrect?'correct':'incorrect');
+if(!isCorrect){
+opts.forEach((o,i)=>{ if(VERSIONS[currentLevel].comp[qid.replace('q','')].options[i].correct) o.classList.add('correct'); });
+}
+document.getElementById(qid+'result').style.display='block';
+}
+
+function finishStory(){
+const totalQ = VERSIONS[currentLevel].comp.length;
+if(Object.keys(answered).length < totalQ){
+alert('Responde las preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+return;
+}
+document.getElementById('finishBtn').textContent = '✓ ¡Completado!';
+document.getElementById('finishBtn').style.background = '#6fae7a';
+setTimeout(()=> alert('¡Buena lectura! Este episodio ahora aparece 100% completo en tu estante, y tu maestra puede ver tus resultados de comprensión.'), 300);
+}
+
+window.addEventListener('scroll', ()=>{
+const h = document.documentElement;
+const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+document.getElementById('progressFill').style.width = Math.min(100,scrolled)+'%';
+});
+
+renderStory('A1');
 </script>
 </body>
 </html>

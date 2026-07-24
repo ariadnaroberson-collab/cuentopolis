@@ -195,6 +195,7 @@
 <!-- LEVEL SWITCHER -->
 <div class="level-strip">
   <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill" data-level="Nivel A" onclick="setReaderLevel('Nivel A', this)">Nivel A</div>
   <div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
   <div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
   <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
@@ -215,21 +216,7 @@
         <div class="comp-title">Chequeo rápido</div>
         <div class="comp-sub">Responde para marcar este episodio como completado.</div>
 
-        <div class="comp-q">1. ¿Por qué Bruno decide aprender solo, sin el grupo?</div>
-        <div class="comp-options" id="q1opts">
-          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque Don Pico lo castiga.</button>
-          <button class="comp-opt" onclick="answer(this,true,'q1')">Porque cree que ya sabe todo lo que necesita y no necesita una escuela.</button>
-          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque los demás no lo dejan participar.</button>
-        </div>
-        <div class="comp-result" id="q1result">¡Exacto! Bruno piensa que aprender solo será fácil — hasta que se pierde en el bosque.</div>
-
-        <div class="comp-q">2. Al final del día, ¿qué escribe Bruno en el Diario de los Guardianes?</div>
-        <div class="comp-options" id="q2opts">
-          <button class="comp-opt" onclick="answer(this,false,'q2')">Que la escuela es una pérdida de tiempo.</button>
-          <button class="comp-opt" onclick="answer(this,true,'q2')">Que pedir ayuda también es una forma de aprender.</button>
-          <button class="comp-opt" onclick="answer(this,false,'q2')">Que prefiere explorar solo, sin amigos.</button>
-        </div>
-        <div class="comp-result" id="q2result">Así es — Bruno descubre que aprender con otros no es debilidad, es una forma de crecer.</div>
+        <div id="compContainer"></div>
 
         <div class="finish-bar">
           <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
@@ -338,8 +325,47 @@
 <script>
 /* ---------------- CONTENT AT FOUR LEVELS ---------------- */
 const VERSIONS = {
+  'Nivel A': {
+    time:'2 min',
+    comp: [
+{q:"1. ¿Por qué Bruno se va solo?", options:[{text:"🎒 Busca su mochila",correct:false},{text:"💪 Cree que ya sabe todo",correct:true},{text:"😴 Tiene sueño",correct:false}], result:"Sí — Bruno cree que no necesita a nadie."},
+{q:"2. ¿Quién ayuda a Bruno a regresar?", options:[{text:"🦝 Nico",correct:true},{text:"🐸 Sofía",correct:false},{text:"🦜 Don Pico",correct:false}], result:"Correcto — Nico ayuda a Bruno a encontrar el camino."}
+],
+    html: `
+      <p>Los animales llegan a la escuela. Algunos llevan mochilas. Otros llevan cuadernos.</p>
+      <p>Teo lleva una canasta. —¿Traes libros? —No, traigo mi almuerzo. Todos ríen.</p>
+      <p>Don Pico llega. —¡Bienvenidos! ¿Qué significa aprender?</p>
+      <p>—Leer. —Escribir. —Contar. —Escuchar.</p>
+      <p>Don Pico sonríe. —Todas son correctas. Hoy la selva también es una maestra.</p>
+      <h3>La mochila misteriosa</h3>
+      <p>Don Pico pone una mochila grande. —Cada equipo recibe objetos.</p>
+      <p>Hay una <span class="gloss" data-word="lupa">lupa</span><span class="gloss-tooltip">un objeto para ver cosas pequeñas más grandes<span class="arrow"></span></span>, una cuerda, y otras cosas.</p>
+      <h3>Bruno se va</h3>
+      <p>Bruno cruza los brazos. —No necesito una escuela. Ya sé todo.</p>
+      <p>Don Pico dice: —Entonces hoy aprenderás solo.</p>
+      <p>Bruno camina hacia el bosque, solo.</p>
+      <h3>Una estudiante nueva</h3>
+      <p>Llega una rana pequeña. —Perdón. Me llamo Sofía. Vengo de Costa Rica.</p>
+      <p>—En mi escuela, salíamos a mirar pájaros.</p>
+      <p>Don Pico sonríe. —Ya sabes algo importante.</p>
+      <h3>Bruno necesita ayuda</h3>
+      <p>Bruno camina solo. Todo parece igual. No sabe cómo regresar.</p>
+      <p>—Creo que necesito ayuda.</p>
+      <p>Llega Nico. Sonríe. —Ven. Yo conozco el camino.</p>
+      <p>—¿Cómo aprendiste? —pregunta Bruno.</p>
+      <p>—Porque alguien me enseñó. Ahora te enseño a ti.</p>
+      <p>Bruno entiende: pedir ayuda no es malo. Es una forma de aprender.</p>
+      <h3>El Diario de los Guardianes</h3>
+      <p>Don Pico reúne a todos. Cada uno dibuja algo especial.</p>
+      <p>Bruno escribe: "Hoy aprendí que pedir ayuda también es aprender."</p>
+`
+  },
   A1: {
     time:'3 min',
+    comp: [
+{q:"1. ¿Por qué Bruno decide aprender solo, sin el grupo?", options:[{text:"Porque Don Pico lo castiga.",correct:false},{text:"Porque cree que ya sabe todo lo que necesita y no necesita una escuela.",correct:true},{text:"Porque los demás no lo dejan participar.",correct:false}], result:"¡Exacto! Bruno piensa que aprender solo será fácil — hasta que se pierde en el bosque."},
+{q:"2. Al final del día, ¿qué escribe Bruno en el Diario de los Guardianes?", options:[{text:"Que la escuela es una pérdida de tiempo.",correct:false},{text:"Que pedir ayuda también es una forma de aprender.",correct:true},{text:"Que prefiere explorar solo, sin amigos.",correct:false}], result:"Así es — Bruno descubre que aprender con otros no es debilidad, es una forma de crecer."}
+],
     html: `
       <p>Los animales llegan a la escuela. Algunos llevan mochilas de hojas. Otros llevan cuadernos.</p>
       <p>Teo lleva una canasta. —¿Traes libros? —pregunta Nico. —No... Traigo mi almuerzo. Todos ríen.</p>
@@ -372,6 +398,10 @@ const VERSIONS = {
   },
   A2: {
     time:'4 min',
+    comp: [
+{q:"1. ¿Por qué Bruno decide aprender solo, sin el grupo?", options:[{text:"Porque Don Pico lo castiga.",correct:false},{text:"Porque cree que ya sabe todo lo que necesita y no necesita una escuela.",correct:true},{text:"Porque los demás no lo dejan participar.",correct:false}], result:"¡Exacto! Bruno piensa que aprender solo será fácil — hasta que se pierde en el bosque."},
+{q:"2. Al final del día, ¿qué escribe Bruno en el Diario de los Guardianes?", options:[{text:"Que la escuela es una pérdida de tiempo.",correct:false},{text:"Que pedir ayuda también es una forma de aprender.",correct:true},{text:"Que prefiere explorar solo, sin amigos.",correct:false}], result:"Así es — Bruno descubre que aprender con otros no es debilidad, es una forma de crecer."}
+],
     html: `
       <p>El sol apenas ilumina las hojas cuando los animales comienzan a llegar. Algunos llevan mochilas hechas con hojas de palma. Otros cargan cuadernos de corteza reciclada.</p>
       <p>Teo lleva una canasta. —¿Trajiste libros? —pregunta Nico. —No... Traje mi almuerzo. Nunca se sabe cuándo da hambre. Todos ríen.</p>
@@ -411,6 +441,10 @@ const VERSIONS = {
   },
   B1: {
     time:'6 min',
+    comp: [
+{q:"1. ¿Por qué Bruno decide aprender solo, sin el grupo?", options:[{text:"Porque Don Pico lo castiga.",correct:false},{text:"Porque cree que ya sabe todo lo que necesita y no necesita una escuela.",correct:true},{text:"Porque los demás no lo dejan participar.",correct:false}], result:"¡Exacto! Bruno piensa que aprender solo será fácil — hasta que se pierde en el bosque."},
+{q:"2. Al final del día, ¿qué escribe Bruno en el Diario de los Guardianes?", options:[{text:"Que la escuela es una pérdida de tiempo.",correct:false},{text:"Que pedir ayuda también es una forma de aprender.",correct:true},{text:"Que prefiere explorar solo, sin amigos.",correct:false}], result:"Así es — Bruno descubre que aprender con otros no es debilidad, es una forma de crecer."}
+],
     html: `
       <p>El sol apenas iluminaba las hojas cuando los animales comenzaron a llegar. Algunos llevaban mochilas hechas con hojas de palma. Otros cargaban pequeños cuadernos fabricados con corteza reciclada.</p>
       <p>Teo llevaba una canasta. —¿Trajiste libros? —preguntó Nico. —No... Traje mi almuerzo. Nunca se sabe cuándo da hambre. Todos rieron.</p>
@@ -450,6 +484,10 @@ const VERSIONS = {
   },
   B2: {
     time:'8 min',
+    comp: [
+{q:"1. ¿Por qué Bruno decide aprender solo, sin el grupo?", options:[{text:"Porque Don Pico lo castiga.",correct:false},{text:"Porque cree que ya sabe todo lo que necesita y no necesita una escuela.",correct:true},{text:"Porque los demás no lo dejan participar.",correct:false}], result:"¡Exacto! Bruno piensa que aprender solo será fácil — hasta que se pierde en el bosque."},
+{q:"2. Al final del día, ¿qué escribe Bruno en el Diario de los Guardianes?", options:[{text:"Que la escuela es una pérdida de tiempo.",correct:false},{text:"Que pedir ayuda también es una forma de aprender.",correct:true},{text:"Que prefiere explorar solo, sin amigos.",correct:false}], result:"Así es — Bruno descubre que aprender con otros no es debilidad, es una forma de crecer."}
+],
     html: `
       <p>El sol apenas iluminaba las hojas cuando los animales comenzaron a llegar. Algunos llevaban mochilas hechas con hojas de palma. Otros cargaban pequeños cuadernos fabricados con corteza reciclada. Teo llevaba una canasta.</p>
       <p>—¿Trajiste libros? —preguntó Nico. —No... Traje mi almuerzo. Nunca se sabe cuándo da hambre. Todos rieron.</p>
@@ -495,6 +533,7 @@ let fontSize = 18;
 let glossOn = true;
 let listening = false;
 let currentLevel = 'A1';
+let answered = {};
 const savedWords = new Set();
 
 function renderStory(level){
@@ -505,7 +544,39 @@ function renderStory(level){
   document.getElementById('railLevel').textContent = level;
   document.getElementById('railTime').textContent = VERSIONS[level].time;
   applyGlossState();
+  renderComp(level);
   buildWordBank();
+}
+
+function renderComp(level){
+  answered = {};
+  const container = document.getElementById('compContainer');
+  container.innerHTML = '';
+  VERSIONS[level].comp.forEach((item, i)=>{
+    const qid = 'q'+i;
+    const qDiv = document.createElement('div');
+    qDiv.className='comp-q';
+    qDiv.textContent = item.q;
+    container.appendChild(qDiv);
+    const optsDiv = document.createElement('div');
+    optsDiv.className='comp-options';
+    optsDiv.id = qid+'opts';
+    item.options.forEach(opt=>{
+      const btn = document.createElement('button');
+      btn.className='comp-opt';
+      btn.textContent = opt.text;
+      btn.onclick = ()=>answer(btn, opt.correct, qid);
+      optsDiv.appendChild(btn);
+    });
+    container.appendChild(optsDiv);
+    const resultDiv = document.createElement('div');
+    resultDiv.className='comp-result';
+    resultDiv.id = qid+'result';
+    resultDiv.textContent = item.result;
+    container.appendChild(resultDiv);
+  });
+  document.getElementById('finishBtn').textContent = '✓ Marcar como completado';
+  document.getElementById('finishBtn').style.background = '';
 }
 
 function setReaderLevel(level, el){
@@ -581,7 +652,9 @@ function buildWordBank(){
   words.forEach(w=>{
     const word = w.dataset.word;
     if(seen.has(word)) return; seen.add(word);
-    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const tooltip = w.nextElementSibling;
+    if(!tooltip || !tooltip.classList.contains('gloss-tooltip')) return;
+    const def = tooltip.firstChild.textContent;
     const row = document.createElement('div');
     row.className='word-chip';
     row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
@@ -595,7 +668,7 @@ function toggleSaveWord(word, btn){
 }
 
 /* ---------------- COMPREHENSION ---------------- */
-const answered = {};
+
 function answer(btn, isCorrect, qid){
   if(answered[qid]) return;
   answered[qid]=true;
@@ -603,13 +676,14 @@ function answer(btn, isCorrect, qid){
   opts.forEach(o=>o.disabled=true);
   btn.classList.add(isCorrect?'correct':'incorrect');
   if(!isCorrect){
-    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+    opts.forEach((o,i)=>{ if(VERSIONS[currentLevel].comp[qid.replace('q','')].options[i].correct) o.classList.add('correct'); });
   }
   document.getElementById(qid+'result').style.display='block';
 }
 function finishStory(){
-  if(Object.keys(answered).length < 2){
-    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+  const totalQ = VERSIONS[currentLevel].comp.length;
+  if(Object.keys(answered).length < totalQ){
+    alert('Responde las preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
     return;
   }
   document.getElementById('finishBtn').textContent = '✓ ¡Completado!';

@@ -195,6 +195,7 @@
 <!-- LEVEL SWITCHER -->
 <div class="level-strip">
   <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill" data-level="Nivel A" onclick="setReaderLevel('Nivel A', this)">Nivel A</div>
   <div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
   <div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
   <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
@@ -215,21 +216,7 @@
         <div class="comp-title">Chequeo rápido</div>
         <div class="comp-sub">Responde para marcar este episodio como completado.</div>
 
-        <div class="comp-q">1. ¿Por qué Teo se enferma durante la caminata?</div>
-        <div class="comp-options" id="q1opts">
-          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque camina demasiado rápido.</button>
-          <button class="comp-opt" onclick="answer(this,true,'q1')">Porque prueba un fruto desconocido sin preguntar primero.</button>
-          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque no lleva suficiente agua.</button>
-        </div>
-        <div class="comp-result" id="q1result">¡Exacto! Teo aprende que hay que preguntar antes de comer algo que no conoce.</div>
-
-        <div class="comp-q">2. ¿Qué siente Bruno mientras Teo está en la clínica, aunque no quiere admitirlo?</div>
-        <div class="comp-options" id="q2opts">
-          <button class="comp-opt" onclick="answer(this,false,'q2')">Está aburrido y quiere irse.</button>
-          <button class="comp-opt" onclick="answer(this,true,'q2')">Está preocupado por Teo, porque le importa como amigo.</button>
-          <button class="comp-opt" onclick="answer(this,false,'q2')">Está enojado con Teo por interrumpir la caminata.</button>
-        </div>
-        <div class="comp-result" id="q2result">Así es — Chica le hace notar que preocuparse por un amigo es, en sí, una muestra de buena amistad.</div>
+        <div id="compContainer"></div>
 
         <div class="finish-bar">
           <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
@@ -337,8 +324,46 @@
 <script>
 /* ---------------- CONTENT AT FOUR LEVELS ---------------- */
 const VERSIONS = {
+  'Nivel A': {
+    time:'2 min',
+    comp: [
+{q:"1. ¿Por qué le duele el estómago a Teo?", options:[{text:"🍊 Comió una fruta sin preguntar",correct:true},{text:"💧 Bebió mucha agua",correct:false},{text:"🏃 Corrió mucho",correct:false}], result:"Sí — Teo comió una fruta nueva sin preguntar primero."},
+{q:"2. ¿Quién es la doctora Alma?", options:[{text:"🐒 Una mona",correct:false},{text:"🐦 Una colibrí",correct:true},{text:"🦎 Un lagarto",correct:false}], result:"Correcto — la doctora Alma es una colibrí."}
+],
+    html: `
+      <p>Es una mañana perfecta para explorar. Los Guardianes preparan sus mochilas.</p>
+      <p>—¿Todos trajeron agua? —¡Sí! —¿Frutas? —¡Sí!</p>
+      <p>Teo mira un árbol. —¿Qué haces? —pregunta Chica. —Creo que encontré el desayuno.</p>
+      <p>Hay frutas redondas y anaranjadas. —Nunca las vi. Deben ser ricas.</p>
+      <p>Teo come la fruta rápido.</p>
+      <h3>Algo no anda bien</h3>
+      <p>—Creo que me siento raro. Me duele el estómago.</p>
+      <p>Iggy dice: —Debemos llevarlo a la clínica.</p>
+      <h3>La Clínica del Colibrí</h3>
+      <p>La clínica es pequeña. Una colibrí sale sonriendo. —Buenos días. Soy la doctora Alma. ¿Qué pasó?</p>
+      <p>Chica explica todo. La doctora mira la fruta. —No es mala, pero duele el estómago si no está madura.</p>
+      <p>Teo dice: —Debí preguntar antes de comer.</p>
+      <h3>La doctora Alma</h3>
+      <p>La doctora prepara un té de hierbas para Teo.</p>
+      <p>Nico ve fotos. —¿Dónde es eso? —En Colombia. Mi abuelo era médico también.</p>
+      <h3>Bruno está preocupado</h3>
+      <p>Bruno está sentado afuera, callado. Chica sale. —¿Estás bien?</p>
+      <p>—Me preocupé por Teo. No quería que nadie lo notara.</p>
+      <p>Chica sonríe. —Eso significa que eres un buen amigo.</p>
+      <h3>Teo se siente mejor</h3>
+      <p>Teo descansa y bebe agua. Se siente mejor.</p>
+      <p>—Doctora, ¿cuál es la mejor medicina?</p>
+      <p>—Dormir bien. Comer sano. Y preguntar antes de comer algo nuevo.</p>
+      <h3>Una caja antigua</h3>
+      <p>Chica ve una caja de madera vieja. Tiene una espiral: la misma marca.</p>
+`
+  },
   A1: {
     time:'3 min',
+    comp: [
+{q:"1. ¿Por qué Teo se enferma durante la caminata?", options:[{text:"Porque camina demasiado rápido.",correct:false},{text:"Porque prueba un fruto desconocido sin preguntar primero.",correct:true},{text:"Porque no lleva suficiente agua.",correct:false}], result:"¡Exacto! Teo aprende que hay que preguntar antes de comer algo que no conoce."},
+{q:"2. ¿Qué siente Bruno mientras Teo está en la clínica, aunque no quiere admitirlo?", options:[{text:"Está aburrido y quiere irse.",correct:false},{text:"Está preocupado por Teo, porque le importa como amigo.",correct:true},{text:"Está enojado con Teo por interrumpir la caminata.",correct:false}], result:"Así es — Chica le hace notar que preocuparse por un amigo es, en sí, una muestra de buena amistad."}
+],
     html: `
       <p>Es una mañana perfecta para explorar. Los Guardianes preparan sus mochilas.</p>
       <p>—¿Todos trajeron agua? —pregunta Don Pico. —¡Sí! —¿Frutas? —¡Sí! —¿Protector contra mosquitos? Todos dicen que sí. Excepto Teo.</p>
@@ -372,6 +397,10 @@ const VERSIONS = {
   },
   A2: {
     time:'4 min',
+    comp: [
+{q:"1. ¿Por qué Teo se enferma durante la caminata?", options:[{text:"Porque camina demasiado rápido.",correct:false},{text:"Porque prueba un fruto desconocido sin preguntar primero.",correct:true},{text:"Porque no lleva suficiente agua.",correct:false}], result:"¡Exacto! Teo aprende que hay que preguntar antes de comer algo que no conoce."},
+{q:"2. ¿Qué siente Bruno mientras Teo está en la clínica, aunque no quiere admitirlo?", options:[{text:"Está aburrido y quiere irse.",correct:false},{text:"Está preocupado por Teo, porque le importa como amigo.",correct:true},{text:"Está enojado con Teo por interrumpir la caminata.",correct:false}], result:"Así es — Chica le hace notar que preocuparse por un amigo es, en sí, una muestra de buena amistad."}
+],
     html: `
       <p>Es una mañana perfecta para explorar. El aire huele a lluvia. Los Guardianes preparan sus mochilas.</p>
       <p>—¿Todos trajeron agua? —pregunta Don Pico. —¡Sí! —respondieron. —¿Frutas? —¡Sí! —¿Protector contra mosquitos? Todos responden que sí. Excepto Teo.</p>
@@ -407,6 +436,10 @@ const VERSIONS = {
   },
   B1: {
     time:'6 min',
+    comp: [
+{q:"1. ¿Por qué Teo se enferma durante la caminata?", options:[{text:"Porque camina demasiado rápido.",correct:false},{text:"Porque prueba un fruto desconocido sin preguntar primero.",correct:true},{text:"Porque no lleva suficiente agua.",correct:false}], result:"¡Exacto! Teo aprende que hay que preguntar antes de comer algo que no conoce."},
+{q:"2. ¿Qué siente Bruno mientras Teo está en la clínica, aunque no quiere admitirlo?", options:[{text:"Está aburrido y quiere irse.",correct:false},{text:"Está preocupado por Teo, porque le importa como amigo.",correct:true},{text:"Está enojado con Teo por interrumpir la caminata.",correct:false}], result:"Así es — Chica le hace notar que preocuparse por un amigo es, en sí, una muestra de buena amistad."}
+],
     html: `
       <p>Era una mañana perfecta para explorar. El aire olía a lluvia. Los Guardianes preparaban sus mochilas.</p>
       <p>—¿Todos trajeron agua? —preguntó Don Pico. —¡Sí! —respondieron. —¿Frutas? —¡Sí! —¿Protector contra mosquitos? Todos respondieron que sí. Excepto Teo.</p>
@@ -442,6 +475,10 @@ const VERSIONS = {
   },
   B2: {
     time:'8 min',
+    comp: [
+{q:"1. ¿Por qué Teo se enferma durante la caminata?", options:[{text:"Porque camina demasiado rápido.",correct:false},{text:"Porque prueba un fruto desconocido sin preguntar primero.",correct:true},{text:"Porque no lleva suficiente agua.",correct:false}], result:"¡Exacto! Teo aprende que hay que preguntar antes de comer algo que no conoce."},
+{q:"2. ¿Qué siente Bruno mientras Teo está en la clínica, aunque no quiere admitirlo?", options:[{text:"Está aburrido y quiere irse.",correct:false},{text:"Está preocupado por Teo, porque le importa como amigo.",correct:true},{text:"Está enojado con Teo por interrumpir la caminata.",correct:false}], result:"Así es — Chica le hace notar que preocuparse por un amigo es, en sí, una muestra de buena amistad."}
+],
     html: `
       <p>Era una mañana perfecta para explorar. El aire olía a lluvia. Los Guardianes preparaban sus mochilas.</p>
       <p>—¿Todos trajeron agua? —preguntó Don Pico. —¡Sí! —respondieron. —¿Frutas? —¡Sí! —¿Protector contra mosquitos? Todos respondieron que sí. Excepto Teo.</p>
@@ -486,6 +523,7 @@ let fontSize = 18;
 let glossOn = true;
 let listening = false;
 let currentLevel = 'A1';
+let answered = {};
 const savedWords = new Set();
 
 function renderStory(level){
@@ -496,7 +534,39 @@ function renderStory(level){
   document.getElementById('railLevel').textContent = level;
   document.getElementById('railTime').textContent = VERSIONS[level].time;
   applyGlossState();
+  renderComp(level);
   buildWordBank();
+}
+
+function renderComp(level){
+  answered = {};
+  const container = document.getElementById('compContainer');
+  container.innerHTML = '';
+  VERSIONS[level].comp.forEach((item, i)=>{
+    const qid = 'q'+i;
+    const qDiv = document.createElement('div');
+    qDiv.className='comp-q';
+    qDiv.textContent = item.q;
+    container.appendChild(qDiv);
+    const optsDiv = document.createElement('div');
+    optsDiv.className='comp-options';
+    optsDiv.id = qid+'opts';
+    item.options.forEach(opt=>{
+      const btn = document.createElement('button');
+      btn.className='comp-opt';
+      btn.textContent = opt.text;
+      btn.onclick = ()=>answer(btn, opt.correct, qid);
+      optsDiv.appendChild(btn);
+    });
+    container.appendChild(optsDiv);
+    const resultDiv = document.createElement('div');
+    resultDiv.className='comp-result';
+    resultDiv.id = qid+'result';
+    resultDiv.textContent = item.result;
+    container.appendChild(resultDiv);
+  });
+  document.getElementById('finishBtn').textContent = '✓ Marcar como completado';
+  document.getElementById('finishBtn').style.background = '';
 }
 
 function setReaderLevel(level, el){
@@ -572,7 +642,9 @@ function buildWordBank(){
   words.forEach(w=>{
     const word = w.dataset.word;
     if(seen.has(word)) return; seen.add(word);
-    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const tooltip = w.nextElementSibling;
+    if(!tooltip || !tooltip.classList.contains('gloss-tooltip')) return;
+    const def = tooltip.firstChild.textContent;
     const row = document.createElement('div');
     row.className='word-chip';
     row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
@@ -586,7 +658,7 @@ function toggleSaveWord(word, btn){
 }
 
 /* ---------------- COMPREHENSION ---------------- */
-const answered = {};
+
 function answer(btn, isCorrect, qid){
   if(answered[qid]) return;
   answered[qid]=true;
@@ -594,13 +666,14 @@ function answer(btn, isCorrect, qid){
   opts.forEach(o=>o.disabled=true);
   btn.classList.add(isCorrect?'correct':'incorrect');
   if(!isCorrect){
-    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+    opts.forEach((o,i)=>{ if(VERSIONS[currentLevel].comp[qid.replace('q','')].options[i].correct) o.classList.add('correct'); });
   }
   document.getElementById(qid+'result').style.display='block';
 }
 function finishStory(){
-  if(Object.keys(answered).length < 2){
-    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+  const totalQ = VERSIONS[currentLevel].comp.length;
+  if(Object.keys(answered).length < totalQ){
+    alert('Responde las preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
     return;
   }
   document.getElementById('finishBtn').textContent = '✓ ¡Completado!';

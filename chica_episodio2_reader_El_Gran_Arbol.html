@@ -191,6 +191,7 @@
 <!-- LEVEL SWITCHER -->
 <div class="level-strip">
   <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill" data-level="Nivel A" onclick="setReaderLevel('Nivel A', this)">Nivel A</div>
   <div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
   <div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
   <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
@@ -211,21 +212,7 @@
         <div class="comp-title">Chequeo rápido</div>
         <div class="comp-sub">Responde para marcar este episodio como completado.</div>
 
-        <div class="comp-q">1. ¿Por qué Bruno cubre las flores, piedras y hojas con barro?</div>
-        <div class="comp-options" id="q1opts">
-          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque quiere jugar con barro.</button>
-          <button class="comp-opt" onclick="answer(this,true,'q1')">Porque cree que el bosque sería más bonito si todo fuera de un solo color.</button>
-          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque Don Pico se lo pide.</button>
-        </div>
-        <div class="comp-result" id="q1result">¡Exacto! Bruno cree que la uniformidad sería más bonita — pero pronto descubre que se equivoca.</div>
-
-        <div class="comp-q">2. Al final, ¿qué comprende Bruno sobre la selva?</div>
-        <div class="comp-options" id="q2opts">
-          <button class="comp-opt" onclick="answer(this,false,'q2')">Que el verde es el mejor color de todos.</button>
-          <button class="comp-opt" onclick="answer(this,true,'q2')">Que la selva es hermosa porque cada color tiene su propio lugar.</button>
-          <button class="comp-opt" onclick="answer(this,false,'q2')">Que debe esconder mejor el barro la próxima vez.</button>
-        </div>
-        <div class="comp-result" id="q2result">Así es — Bruno aprende que la diversidad, no la uniformidad, es lo que hace especial al bosque.</div>
+        <div id="compContainer"></div>
 
         <div class="finish-bar">
           <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
@@ -311,8 +298,56 @@
 <script>
 /* ---------------- CONTENT AT FOUR LEVELS ---------------- */
 const VERSIONS = {
+  'Nivel A': {
+    time:'2 min',
+    comp: [
+{q:"1. ¿Qué cubre Bruno con barro?", options:[{text:"🌸 Las flores",correct:true},{text:"🦜 Los pájaros",correct:false},{text:"🌳 El árbol grande",correct:false}], result:"¡Sí! Bruno cubre las flores y las piedras con barro."},
+{q:"2. ¿Qué aprende Bruno?", options:[{text:"🌈 Todos los colores son bonitos",correct:true},{text:"🟢 Solo el verde es bonito",correct:false},{text:"😴 Nada",correct:false}], result:"Correcto — a Bruno le gustan todos los colores del bosque."}
+],
+    html: `
+      <p>Sale el sol. Los animales van a la escuela.</p>
+      <p>—Hoy no hay clases —dice Don Pico—. Vamos a caminar.</p>
+      <p>Todos están felices. Caminan por el bosque.</p>
+      <p>Ven un árbol muy grande. Se llama <span class="gloss" data-word="Gran Ceiba">Gran Ceiba</span><span class="gloss-tooltip">un árbol muy viejo y muy grande<span class="arrow"></span></span>.</p>
+      <p>Nico mira el árbol. —¡Muy grande!</p>
+      <p>—Sí. Es muy viejo —dice Don Pico.</p>
+      <h3>Un juego de colores</h3>
+      <p>Don Pico dice: —Busquen un color. No toquen las flores.</p>
+      <p>Mora ve flores moradas. —¡Me gusta el morado!</p>
+      <p>Iggy ve un lagarto verde. —¡Como yo!</p>
+      <p>Teo ve fruta amarilla. —¡Rica!</p>
+      <p>Nico ve un pájaro rojo. —¡Muchos colores!</p>
+      <p>Chica sonríe. —Me gusta mirar cosas nuevas.</p>
+      <h3>Bruno tiene una idea</h3>
+      <p>Bruno mira el bosque. No está feliz.</p>
+      <p>—Muchos colores. Yo quiero solo verde.</p>
+      <p>Bruno toma <span class="gloss" data-word="barro">barro</span><span class="gloss-tooltip">tierra con agua<span class="arrow"></span></span>. Cubre las flores rojas. Cubre las piedras amarillas.</p>
+      <p>Bruno sonríe. —¡Mucho mejor!</p>
+      <h3>Los colores no están</h3>
+      <p>Los amigos regresan.</p>
+      <p>Mora mira las flores. —No son bonitas.</p>
+      <p>Nico busca las piedras. —¿Dónde están?</p>
+      <p>Teo mira la fruta. —¡Tiene barro!</p>
+      <p>Don Pico mira. —Yo sé qué pasó.</p>
+      <p>Bruno baja la cabeza. —Quería todo igual.</p>
+      <p>Chica dice: —Bruno, el bosque es bonito con todos los colores.</p>
+      <p>Bruno mira otra vez. Ve las mariposas. Ve el río azul.</p>
+      <p>—Creo que... me equivoqué.</p>
+      <p>Todos limpian juntos. Los colores regresan.</p>
+      <h3>Una marca en el árbol</h3>
+      <p>Chica toca el árbol. Hay un dibujo: una espiral.</p>
+      <p>—¿Qué es esto?</p>
+      <p>Don Pico no dice nada.</p>
+      <p>El dibujo desaparece poco a poco.</p>
+      <p>—Qué extraño...</p>
+`
+  },
   A1: {
     time:'3 min',
+    comp: [
+{q:"1. ¿Por qué Bruno cubre las flores, piedras y hojas con barro?", options:[{text:"Porque quiere jugar con barro.",correct:false},{text:"Porque cree que el bosque sería más bonito si todo fuera de un solo color.",correct:true},{text:"Porque Don Pico se lo pide.",correct:false}], result:"¡Exacto! Bruno cree que la uniformidad sería más bonita — pero pronto descubre que se equivoca."},
+{q:"2. Al final, ¿qué comprende Bruno sobre la selva?", options:[{text:"Que el verde es el mejor color de todos.",correct:false},{text:"Que la selva es hermosa porque cada color tiene su propio lugar.",correct:true},{text:"Que debe esconder mejor el barro la próxima vez.",correct:false}], result:"Así es — Bruno aprende que la diversidad, no la uniformidad, es lo que hace especial al bosque."}
+],
     html: `
       <p>El sol brilla en la selva de Chiquibul. Los animales llegan a la Escuela del Tucán. Don Pico los espera con una sonrisa.</p>
       <p>—Hoy no hay clases aquí —dice Don Pico—. Vamos de excursión.</p>
@@ -356,6 +391,10 @@ const VERSIONS = {
   },
   A2: {
     time:'4 min',
+    comp: [
+{q:"1. ¿Por qué Bruno cubre las flores, piedras y hojas con barro?", options:[{text:"Porque quiere jugar con barro.",correct:false},{text:"Porque cree que el bosque sería más bonito si todo fuera de un solo color.",correct:true},{text:"Porque Don Pico se lo pide.",correct:false}], result:"¡Exacto! Bruno cree que la uniformidad sería más bonita — pero pronto descubre que se equivoca."},
+{q:"2. Al final, ¿qué comprende Bruno sobre la selva?", options:[{text:"Que el verde es el mejor color de todos.",correct:false},{text:"Que la selva es hermosa porque cada color tiene su propio lugar.",correct:true},{text:"Que debe esconder mejor el barro la próxima vez.",correct:false}], result:"Así es — Bruno aprende que la diversidad, no la uniformidad, es lo que hace especial al bosque."}
+],
     html: `
       <p>El sol brilla sobre la selva de Chiquibul. Los animales llegan temprano a la Escuela del Tucán, y Don Pico los espera con una gran sonrisa.</p>
       <p>—Hoy no tendremos clases aquí —dice—. Vamos de excursión.</p>
@@ -398,6 +437,10 @@ const VERSIONS = {
   },
   B1: {
     time:'6 min',
+    comp: [
+{q:"1. ¿Por qué Bruno cubre las flores, piedras y hojas con barro?", options:[{text:"Porque quiere jugar con barro.",correct:false},{text:"Porque cree que el bosque sería más bonito si todo fuera de un solo color.",correct:true},{text:"Porque Don Pico se lo pide.",correct:false}], result:"¡Exacto! Bruno cree que la uniformidad sería más bonita — pero pronto descubre que se equivoca."},
+{q:"2. Al final, ¿qué comprende Bruno sobre la selva?", options:[{text:"Que el verde es el mejor color de todos.",correct:false},{text:"Que la selva es hermosa porque cada color tiene su propio lugar.",correct:true},{text:"Que debe esconder mejor el barro la próxima vez.",correct:false}], result:"Así es — Bruno aprende que la diversidad, no la uniformidad, es lo que hace especial al bosque."}
+],
     html: `
       <p>Una semana después de conocer a Nico, el sol vuelve a iluminar la selva de Chiquibul. Los animales llegan temprano a la Escuela del Tucán, donde Don Pico los espera con una gran sonrisa.</p>
       <p>—Hoy no tendremos clases aquí —dice—. Vamos de excursión.</p>
@@ -440,6 +483,10 @@ const VERSIONS = {
   },
   B2: {
     time:'8 min',
+    comp: [
+{q:"1. ¿Por qué Bruno cubre las flores, piedras y hojas con barro?", options:[{text:"Porque quiere jugar con barro.",correct:false},{text:"Porque cree que el bosque sería más bonito si todo fuera de un solo color.",correct:true},{text:"Porque Don Pico se lo pide.",correct:false}], result:"¡Exacto! Bruno cree que la uniformidad sería más bonita — pero pronto descubre que se equivoca."},
+{q:"2. Al final, ¿qué comprende Bruno sobre la selva?", options:[{text:"Que el verde es el mejor color de todos.",correct:false},{text:"Que la selva es hermosa porque cada color tiene su propio lugar.",correct:true},{text:"Que debe esconder mejor el barro la próxima vez.",correct:false}], result:"Así es — Bruno aprende que la diversidad, no la uniformidad, es lo que hace especial al bosque."}
+],
     html: `
       <p>Una semana después de conocer a Nico, el sol vuelve a iluminar la selva de Chiquibul.</p>
       <p>Los animales llegan temprano a la Escuela del Tucán. Don Pico los espera con una gran sonrisa.</p>
@@ -487,6 +534,7 @@ let fontSize = 18;
 let glossOn = true;
 let listening = false;
 let currentLevel = 'A1';
+let answered = {};
 const savedWords = new Set();
 
 function renderStory(level){
@@ -497,7 +545,39 @@ function renderStory(level){
   document.getElementById('railLevel').textContent = level;
   document.getElementById('railTime').textContent = VERSIONS[level].time;
   applyGlossState();
+  renderComp(level);
   buildWordBank();
+}
+
+function renderComp(level){
+  answered = {};
+  const container = document.getElementById('compContainer');
+  container.innerHTML = '';
+  VERSIONS[level].comp.forEach((item, i)=>{
+    const qid = 'q'+i;
+    const qDiv = document.createElement('div');
+    qDiv.className='comp-q';
+    qDiv.textContent = item.q;
+    container.appendChild(qDiv);
+    const optsDiv = document.createElement('div');
+    optsDiv.className='comp-options';
+    optsDiv.id = qid+'opts';
+    item.options.forEach(opt=>{
+      const btn = document.createElement('button');
+      btn.className='comp-opt';
+      btn.textContent = opt.text;
+      btn.onclick = ()=>answer(btn, opt.correct, qid);
+      optsDiv.appendChild(btn);
+    });
+    container.appendChild(optsDiv);
+    const resultDiv = document.createElement('div');
+    resultDiv.className='comp-result';
+    resultDiv.id = qid+'result';
+    resultDiv.textContent = item.result;
+    container.appendChild(resultDiv);
+  });
+  document.getElementById('finishBtn').textContent = '✓ Marcar como completado';
+  document.getElementById('finishBtn').style.background = '';
 }
 
 function setReaderLevel(level, el){
@@ -556,7 +636,9 @@ function buildWordBank(){
   words.forEach(w=>{
     const word = w.dataset.word;
     if(seen.has(word)) return; seen.add(word);
-    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const tooltip = w.nextElementSibling;
+    if(!tooltip || !tooltip.classList.contains('gloss-tooltip')) return;
+    const def = tooltip.firstChild.textContent;
     const row = document.createElement('div');
     row.className='word-chip';
     row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
@@ -570,7 +652,7 @@ function toggleSaveWord(word, btn){
 }
 
 /* ---------------- COMPREHENSION ---------------- */
-const answered = {};
+
 function answer(btn, isCorrect, qid){
   if(answered[qid]) return;
   answered[qid]=true;
@@ -578,13 +660,14 @@ function answer(btn, isCorrect, qid){
   opts.forEach(o=>o.disabled=true);
   btn.classList.add(isCorrect?'correct':'incorrect');
   if(!isCorrect){
-    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+    opts.forEach((o,i)=>{ if(VERSIONS[currentLevel].comp[qid.replace('q','')].options[i].correct) o.classList.add('correct'); });
   }
   document.getElementById(qid+'result').style.display='block';
 }
 function finishStory(){
-  if(Object.keys(answered).length < 2){
-    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+  const totalQ = VERSIONS[currentLevel].comp.length;
+  if(Object.keys(answered).length < totalQ){
+    alert('Responde las preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
     return;
   }
   document.getElementById('finishBtn').textContent = '✓ ¡Completado!';

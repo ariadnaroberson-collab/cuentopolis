@@ -195,6 +195,7 @@
 <!-- LEVEL SWITCHER -->
 <div class="level-strip">
   <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill" data-level="Nivel A" onclick="setReaderLevel('Nivel A', this)">Nivel A</div>
   <div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
   <div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
   <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
@@ -215,21 +216,7 @@
         <div class="comp-title">Chequeo rápido</div>
         <div class="comp-sub">Responde para marcar este episodio como completado.</div>
 
-        <div class="comp-q">1. Cuando ven el humo, ¿qué instrucción da Don Pico primero?</div>
-        <div class="comp-options" id="q1opts">
-          <button class="comp-opt" onclick="answer(this,false,'q1')">Que todos corran en direcciones diferentes.</button>
-          <button class="comp-opt" onclick="answer(this,true,'q1')">Que nadie corra, que se mantengan juntos, y que Chica cuente a todos los Guardianes.</button>
-          <button class="comp-opt" onclick="answer(this,false,'q1')">Que intenten apagar el fuego ellos mismos.</button>
-        </div>
-        <div class="comp-result" id="q1result">¡Exacto! Mantener la calma y contar a todos es el primer paso — no intentar apagarlo solos.</div>
-
-        <div class="comp-q">2. Según Capitana Sofía, ¿por qué colaboran los bomberos forestales de varios países?</div>
-        <div class="comp-options" id="q2opts">
-          <button class="comp-opt" onclick="answer(this,false,'q2')">Porque Belice no tiene suficientes bomberos propios.</button>
-          <button class="comp-opt" onclick="answer(this,true,'q2')">Porque la Selva Maya es un solo ecosistema compartido, y el humo no conoce fronteras.</button>
-          <button class="comp-opt" onclick="answer(this,false,'q2')">Porque es una regla del gobierno.</button>
-        </div>
-        <div class="comp-result" id="q2result">Así es — los animales, los árboles y el humo no saben dónde termina un país y empieza otro.</div>
+        <div id="compContainer"></div>
 
         <div class="finish-bar">
           <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
@@ -339,8 +326,45 @@
 <script>
 /* ---------------- CONTENT AT FOUR LEVELS ---------------- */
 const VERSIONS = {
+  'Nivel A': {
+    time:'2 min',
+    comp: [
+{q:"1. ¿Qué hacen los Guardianes cuando ven el humo?", options:[{text:"🏃 Corren solos",correct:false},{text:"🤝 Se quedan juntos y calmados",correct:true},{text:"😢 Lloran",correct:false}], result:"Sí — Don Pico les pide quedarse juntos y con calma."},
+{q:"2. ¿Qué rescata Bruno?", options:[{text:"🐦 Un tucán pequeño",correct:true},{text:"🐒 Un mono",correct:false},{text:"🐸 Una rana",correct:false}], result:"Correcto — Bruno rescata a un tucán pequeño del nido."}
+],
+    html: `
+      <p>Esa mañana, las hojas están secas. El río tiene menos agua.</p>
+      <p>—Guardianes —dice Don Pico con calma—. Hoy vamos a tener cuidado.</p>
+      <p>Los estudiantes limpian un camino para las familias.</p>
+      <h3>Un olor extraño</h3>
+      <p>Iggy levanta la cabeza. —¿Huelen eso? Hay humo entre los árboles.</p>
+      <p>—¡Fuego! —dice Nico.</p>
+      <p>Don Pico habla con calma. —Nadie corra. Todos juntos. Chica, cuenta a los Guardianes.</p>
+      <p>—Uno, dos, tres... Todos están aquí.</p>
+      <h3>Los Guardianes ayudan</h3>
+      <p>Don Pico dice: —No apagamos el fuego solos. Avisamos a quienes saben hacerlo.</p>
+      <p>Chica organiza al grupo. Nico y Mora llevan agua. Teo reparte agua para todos.</p>
+      <h3>Llegan los bomberos</h3>
+      <p>Llega un camión. Una tapir grande con casco amarillo dice: —Soy la capitana Sofía. ¿Todos están bien?</p>
+      <p>Don Pico dice: —Sí. Los Guardianes se quedaron calmados.</p>
+      <p>La capitana sonríe. —Eso ya ayuda mucho.</p>
+      <h3>Bruno ayuda</h3>
+      <p>Mora ve una rama. —¡Un nido! Hay un tucán pequeño allí.</p>
+      <p>Bruno conoce ese camino. Sube con cuidado. Toma el nido. Lo lleva a un lugar seguro.</p>
+      <p>La capitana dice: —Eso fue muy valiente.</p>
+      <p>Bruno dice: —No quería que el tucán estuviera solo.</p>
+      <h3>Después del fuego</h3>
+      <p>El fuego ya está controlado. La capitana reúne a todos.</p>
+      <p>—Hoy hicieron algo importante. Se quedaron calmados y trabajaron juntos.</p>
+      <p>Don Pico dice: —Ser valiente no es no tener miedo. Es hacer lo correcto con miedo.</p>
+`
+  },
   A1: {
     time:'3 min',
+    comp: [
+{q:"1. Cuando ven el humo, ¿qué instrucción da Don Pico primero?", options:[{text:"Que todos corran en direcciones diferentes.",correct:false},{text:"Que nadie corra, que se mantengan juntos, y que Chica cuente a todos los Guardianes.",correct:true},{text:"Que intenten apagar el fuego ellos mismos.",correct:false}], result:"¡Exacto! Mantener la calma y contar a todos es el primer paso — no intentar apagarlo solos."},
+{q:"2. Según Capitana Sofía, ¿por qué colaboran los bomberos forestales de varios países?", options:[{text:"Porque Belice no tiene suficientes bomberos propios.",correct:false},{text:"Porque la Selva Maya es un solo ecosistema compartido, y el humo no conoce fronteras.",correct:true},{text:"Porque es una regla del gobierno.",correct:false}], result:"Así es — los animales, los árboles y el humo no saben dónde termina un país y empieza otro."}
+],
     html: `
       <p>Esa mañana, Don Pico mira las hojas antes de la clase. Están secas. El río tiene menos agua.</p>
       <p>—Guardianes —dice con calma—. Hoy debemos ser cuidadosos. En la estación seca, un pequeño error puede ser un gran problema.</p>
@@ -366,6 +390,10 @@ const VERSIONS = {
   },
   A2: {
     time:'4 min',
+    comp: [
+{q:"1. Cuando ven el humo, ¿qué instrucción da Don Pico primero?", options:[{text:"Que todos corran en direcciones diferentes.",correct:false},{text:"Que nadie corra, que se mantengan juntos, y que Chica cuente a todos los Guardianes.",correct:true},{text:"Que intenten apagar el fuego ellos mismos.",correct:false}], result:"¡Exacto! Mantener la calma y contar a todos es el primer paso — no intentar apagarlo solos."},
+{q:"2. Según Capitana Sofía, ¿por qué colaboran los bomberos forestales de varios países?", options:[{text:"Porque Belice no tiene suficientes bomberos propios.",correct:false},{text:"Porque la Selva Maya es un solo ecosistema compartido, y el humo no conoce fronteras.",correct:true},{text:"Porque es una regla del gobierno.",correct:false}], result:"Así es — los animales, los árboles y el humo no saben dónde termina un país y empieza otro."}
+],
     html: `
       <p>Aquella mañana, Don Pico observa las hojas antes de comenzar la clase. Crujen bajo sus patas. El río lleva menos agua que de costumbre.</p>
       <p>—Guardianes —dice con calma—. Hoy debemos ser especialmente cuidadosos. Durante la estación seca, un pequeño descuido puede convertirse en un gran problema.</p>
@@ -394,6 +422,10 @@ const VERSIONS = {
   },
   B1: {
     time:'6 min',
+    comp: [
+{q:"1. Cuando ven el humo, ¿qué instrucción da Don Pico primero?", options:[{text:"Que todos corran en direcciones diferentes.",correct:false},{text:"Que nadie corra, que se mantengan juntos, y que Chica cuente a todos los Guardianes.",correct:true},{text:"Que intenten apagar el fuego ellos mismos.",correct:false}], result:"¡Exacto! Mantener la calma y contar a todos es el primer paso — no intentar apagarlo solos."},
+{q:"2. Según Capitana Sofía, ¿por qué colaboran los bomberos forestales de varios países?", options:[{text:"Porque Belice no tiene suficientes bomberos propios.",correct:false},{text:"Porque la Selva Maya es un solo ecosistema compartido, y el humo no conoce fronteras.",correct:true},{text:"Porque es una regla del gobierno.",correct:false}], result:"Así es — los animales, los árboles y el humo no saben dónde termina un país y empieza otro."}
+],
     html: `
       <p>Aquella mañana, Don Pico observó las hojas antes de comenzar la clase. Crujían bajo sus patas. El río llevaba menos agua que de costumbre.</p>
       <p>—Guardianes —dijo con calma—. Hoy debemos ser especialmente cuidadosos. Durante la estación seca, un pequeño descuido puede convertirse en un gran problema.</p>
@@ -422,6 +454,10 @@ const VERSIONS = {
   },
   B2: {
     time:'8 min',
+    comp: [
+{q:"1. Cuando ven el humo, ¿qué instrucción da Don Pico primero?", options:[{text:"Que todos corran en direcciones diferentes.",correct:false},{text:"Que nadie corra, que se mantengan juntos, y que Chica cuente a todos los Guardianes.",correct:true},{text:"Que intenten apagar el fuego ellos mismos.",correct:false}], result:"¡Exacto! Mantener la calma y contar a todos es el primer paso — no intentar apagarlo solos."},
+{q:"2. Según Capitana Sofía, ¿por qué colaboran los bomberos forestales de varios países?", options:[{text:"Porque Belice no tiene suficientes bomberos propios.",correct:false},{text:"Porque la Selva Maya es un solo ecosistema compartido, y el humo no conoce fronteras.",correct:true},{text:"Porque es una regla del gobierno.",correct:false}], result:"Así es — los animales, los árboles y el humo no saben dónde termina un país y empieza otro."}
+],
     html: `
       <p>Aquella mañana, Don Pico observó las hojas antes de comenzar la clase.</p>
       <p>Crujían bajo sus patas. El río llevaba menos agua que de costumbre.</p>
@@ -461,6 +497,7 @@ let fontSize = 18;
 let glossOn = true;
 let listening = false;
 let currentLevel = 'A1';
+let answered = {};
 const savedWords = new Set();
 
 function renderStory(level){
@@ -471,7 +508,39 @@ function renderStory(level){
   document.getElementById('railLevel').textContent = level;
   document.getElementById('railTime').textContent = VERSIONS[level].time;
   applyGlossState();
+  renderComp(level);
   buildWordBank();
+}
+
+function renderComp(level){
+  answered = {};
+  const container = document.getElementById('compContainer');
+  container.innerHTML = '';
+  VERSIONS[level].comp.forEach((item, i)=>{
+    const qid = 'q'+i;
+    const qDiv = document.createElement('div');
+    qDiv.className='comp-q';
+    qDiv.textContent = item.q;
+    container.appendChild(qDiv);
+    const optsDiv = document.createElement('div');
+    optsDiv.className='comp-options';
+    optsDiv.id = qid+'opts';
+    item.options.forEach(opt=>{
+      const btn = document.createElement('button');
+      btn.className='comp-opt';
+      btn.textContent = opt.text;
+      btn.onclick = ()=>answer(btn, opt.correct, qid);
+      optsDiv.appendChild(btn);
+    });
+    container.appendChild(optsDiv);
+    const resultDiv = document.createElement('div');
+    resultDiv.className='comp-result';
+    resultDiv.id = qid+'result';
+    resultDiv.textContent = item.result;
+    container.appendChild(resultDiv);
+  });
+  document.getElementById('finishBtn').textContent = '✓ Marcar como completado';
+  document.getElementById('finishBtn').style.background = '';
 }
 
 function setReaderLevel(level, el){
@@ -547,7 +616,9 @@ function buildWordBank(){
   words.forEach(w=>{
     const word = w.dataset.word;
     if(seen.has(word)) return; seen.add(word);
-    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const tooltip = w.nextElementSibling;
+    if(!tooltip || !tooltip.classList.contains('gloss-tooltip')) return;
+    const def = tooltip.firstChild.textContent;
     const row = document.createElement('div');
     row.className='word-chip';
     row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
@@ -561,7 +632,7 @@ function toggleSaveWord(word, btn){
 }
 
 /* ---------------- COMPREHENSION ---------------- */
-const answered = {};
+
 function answer(btn, isCorrect, qid){
   if(answered[qid]) return;
   answered[qid]=true;
@@ -569,13 +640,14 @@ function answer(btn, isCorrect, qid){
   opts.forEach(o=>o.disabled=true);
   btn.classList.add(isCorrect?'correct':'incorrect');
   if(!isCorrect){
-    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+    opts.forEach((o,i)=>{ if(VERSIONS[currentLevel].comp[qid.replace('q','')].options[i].correct) o.classList.add('correct'); });
   }
   document.getElementById(qid+'result').style.display='block';
 }
 function finishStory(){
-  if(Object.keys(answered).length < 2){
-    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+  const totalQ = VERSIONS[currentLevel].comp.length;
+  if(Object.keys(answered).length < totalQ){
+    alert('Responde las preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
     return;
   }
   document.getElementById('finishBtn').textContent = '✓ ¡Completado!';

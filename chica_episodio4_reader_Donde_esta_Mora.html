@@ -195,6 +195,7 @@
 <!-- LEVEL SWITCHER -->
 <div class="level-strip">
   <span class="level-strip-label">Leyendo en:</span>
+  <div class="level-pill" data-level="Nivel A" onclick="setReaderLevel('Nivel A', this)">Nivel A</div>
   <div class="level-pill active" data-level="A1" onclick="setReaderLevel('A1', this)">A1</div>
   <div class="level-pill" data-level="A2" onclick="setReaderLevel('A2', this)">A2</div>
   <div class="level-pill" data-level="B1" onclick="setReaderLevel('B1', this)">B1</div>
@@ -215,21 +216,7 @@
         <div class="comp-title">Chequeo rápido</div>
         <div class="comp-sub">Responde para marcar este episodio como completado.</div>
 
-        <div class="comp-q">1. Cuando por fin encuentran a Mora, ¿por qué se había quedado en el jardín escondido?</div>
-        <div class="comp-options" id="q1opts">
-          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque se perdió y no sabía cómo volver.</button>
-          <button class="comp-opt" onclick="answer(this,true,'q1')">Porque encontró una orquídea débil y quiso ayudarla a florecer antes del festival.</button>
-          <button class="comp-opt" onclick="answer(this,false,'q1')">Porque quería explorar sola, sin avisar a nadie.</button>
-        </div>
-        <div class="comp-result" id="q1result">¡Exacto! Mora no estaba perdida — se quedó para cuidar una flor que la necesitaba.</div>
-
-        <div class="comp-q">2. ¿Quién es Luna, y qué comparte con el grupo?</div>
-        <div class="comp-options" id="q2opts">
-          <button class="comp-opt" onclick="answer(this,false,'q2')">Una guacamaya que siempre ha vivido en Chiquibul y no conoce otros lugares.</button>
-          <button class="comp-opt" onclick="answer(this,true,'q2')">Una guacamaya que visita a sus abuelos desde Yucatán, México, y comparte historias de cenotes y flamencos.</button>
-          <button class="comp-opt" onclick="answer(this,false,'q2')">Una mariposa que ayuda a Mora a cuidar flores.</button>
-        </div>
-        <div class="comp-result" id="q2result">Así es — Luna conecta a Chiquibul con Yucatán, y les muestra a los amigos un lugar nuevo sin salir de casa.</div>
+        <div id="compContainer"></div>
 
         <div class="finish-bar">
           <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
@@ -333,8 +320,45 @@
 <script>
 /* ---------------- CONTENT AT FOUR LEVELS ---------------- */
 const VERSIONS = {
+  'Nivel A': {
+    time:'2 min',
+    comp: [
+{q:"1. ¿Por qué Mora no llega al festival?", options:[{text:"😴 Está durmiendo",correct:false},{text:"🌸 Ayuda a una flor débil",correct:true},{text:"🏠 Está en casa",correct:false}], result:"Sí — Mora cuida una orquídea débil."},
+{q:"2. ¿De dónde viene Luna?", options:[{text:"🇲🇽 México",correct:true},{text:"🇬🇹 Guatemala",correct:false},{text:"🇨🇷 Costa Rica",correct:false}], result:"Correcto — Luna viene de México a visitar a sus abuelos."}
+],
+    html: `
+      <p>Hoy es el Festival de las Flores. Todos están felices. Los pájaros vuelan. Las abejas trabajan.</p>
+      <p>—¿Dónde está Mora? —pregunta Chica. Mora siempre llega primero.</p>
+      <p>Nico mira el mapa. —Mora va al río a buscar flores.</p>
+      <p>—Vamos —dice Chica.</p>
+      <h3>Una amiga nueva</h3>
+      <p>En el camino, escuchan una voz. —¡Hola! Una guacamaya baja de un árbol.</p>
+      <p>—¿Buscan a alguien? —Sí, buscamos a Mora —dice Chica.</p>
+      <p>—Me llamo Luna. Vengo de México a ver a mis abuelos.</p>
+      <p>—¡Bienvenida! —dice Chica.</p>
+      <p>Luna mira un camino. —Veo una mariposa azul allí.</p>
+      <h3>El camino</h3>
+      <p>—Vamos por aquí —dice Nico. Caminan. Cruzan el río. Van a la izquierda.</p>
+      <h3>El jardín escondido</h3>
+      <p>Cruzan un puente. Hay muchas flores. Hay muchas mariposas.</p>
+      <p>Allí está Mora. Cuida una <span class="gloss" data-word="orquídea">orquídea</span><span class="gloss-tooltip">una flor especial<span class="arrow"></span></span> pequeña.</p>
+      <p>—¡Mora! —grita Chica.</p>
+      <p>—¡Hola! —dice Mora—. Esta flor está débil. Quiero ayudarla.</p>
+      <p>La flor abre. Es de color morado. Nadie ve un color así antes.</p>
+      <h3>Una marca en una roca</h3>
+      <p>Bruno mira una roca. —¿Qué es esto?</p>
+      <p>Chica ve una espiral. Es el mismo dibujo del árbol grande.</p>
+      <p>Don Pico llega. Mira la marca. —Hace mucho tiempo no veo esto...</p>
+      <h3>Don Pico habla</h3>
+      <p>Don Pico dice: —Hoy buscaron a una amiga. Pedir ayuda también es bueno.</p>
+`
+  },
   A1: {
     time:'3 min',
+    comp: [
+{q:"1. Cuando por fin encuentran a Mora, ¿por qué se había quedado en el jardín escondido?", options:[{text:"Porque se perdió y no sabía cómo volver.",correct:false},{text:"Porque encontró una orquídea débil y quiso ayudarla a florecer antes del festival.",correct:true},{text:"Porque quería explorar sola, sin avisar a nadie.",correct:false}], result:"¡Exacto! Mora no estaba perdida — se quedó para cuidar una flor que la necesitaba."},
+{q:"2. ¿Quién es Luna, y qué comparte con el grupo?", options:[{text:"Una guacamaya que siempre ha vivido en Chiquibul y no conoce otros lugares.",correct:false},{text:"Una guacamaya que visita a sus abuelos desde Yucatán, México, y comparte historias de cenotes y flamencos.",correct:true},{text:"Una mariposa que ayuda a Mora a cuidar flores.",correct:false}], result:"Así es — Luna conecta a Chiquibul con Yucatán, y les muestra a los amigos un lugar nuevo sin salir de casa."}
+],
     html: `
       <p>Hoy es el Festival de las Flores en Chiquibul. Todos están felices. Los colibríes vuelan de flor en flor. Las abejas trabajan mucho. Los monos hacen guirnaldas.</p>
       <p>—¿Dónde está Mora? —pregunta Chica. Mora siempre llega primero, pero hoy no está.</p>
@@ -362,6 +386,10 @@ const VERSIONS = {
   },
   A2: {
     time:'4 min',
+    comp: [
+{q:"1. Cuando por fin encuentran a Mora, ¿por qué se había quedado en el jardín escondido?", options:[{text:"Porque se perdió y no sabía cómo volver.",correct:false},{text:"Porque encontró una orquídea débil y quiso ayudarla a florecer antes del festival.",correct:true},{text:"Porque quería explorar sola, sin avisar a nadie.",correct:false}], result:"¡Exacto! Mora no estaba perdida — se quedó para cuidar una flor que la necesitaba."},
+{q:"2. ¿Quién es Luna, y qué comparte con el grupo?", options:[{text:"Una guacamaya que siempre ha vivido en Chiquibul y no conoce otros lugares.",correct:false},{text:"Una guacamaya que visita a sus abuelos desde Yucatán, México, y comparte historias de cenotes y flamencos.",correct:true},{text:"Una mariposa que ayuda a Mora a cuidar flores.",correct:false}], result:"Así es — Luna conecta a Chiquibul con Yucatán, y les muestra a los amigos un lugar nuevo sin salir de casa."}
+],
     html: `
       <p>Toda la selva está llena de emoción. Los colibríes van de una flor a otra. Las abejas trabajan sin descanso. Los monos cuelgan guirnaldas hechas con hojas y lianas. Teo prepara jugo de frutas para todos.</p>
       <p>Hoy se celebra el Festival de las Flores, una tradición muy querida en Chiquibul.</p>
@@ -393,6 +421,10 @@ const VERSIONS = {
   },
   B1: {
     time:'6 min',
+    comp: [
+{q:"1. Cuando por fin encuentran a Mora, ¿por qué se había quedado en el jardín escondido?", options:[{text:"Porque se perdió y no sabía cómo volver.",correct:false},{text:"Porque encontró una orquídea débil y quiso ayudarla a florecer antes del festival.",correct:true},{text:"Porque quería explorar sola, sin avisar a nadie.",correct:false}], result:"¡Exacto! Mora no estaba perdida — se quedó para cuidar una flor que la necesitaba."},
+{q:"2. ¿Quién es Luna, y qué comparte con el grupo?", options:[{text:"Una guacamaya que siempre ha vivido en Chiquibul y no conoce otros lugares.",correct:false},{text:"Una guacamaya que visita a sus abuelos desde Yucatán, México, y comparte historias de cenotes y flamencos.",correct:true},{text:"Una mariposa que ayuda a Mora a cuidar flores.",correct:false}], result:"Así es — Luna conecta a Chiquibul con Yucatán, y les muestra a los amigos un lugar nuevo sin salir de casa."}
+],
     html: `
       <p>Toda la selva estaba llena de emoción. Los colibríes iban de una flor a otra. Las abejas trabajaban sin descanso. Los monos colgaban guirnaldas hechas con hojas y lianas, y Teo preparaba jugo de frutas para todos.</p>
       <p>Ese día se celebraba el Festival de las Flores, una tradición muy querida en Chiquibul.</p>
@@ -424,6 +456,10 @@ const VERSIONS = {
   },
   B2: {
     time:'8 min',
+    comp: [
+{q:"1. Cuando por fin encuentran a Mora, ¿por qué se había quedado en el jardín escondido?", options:[{text:"Porque se perdió y no sabía cómo volver.",correct:false},{text:"Porque encontró una orquídea débil y quiso ayudarla a florecer antes del festival.",correct:true},{text:"Porque quería explorar sola, sin avisar a nadie.",correct:false}], result:"¡Exacto! Mora no estaba perdida — se quedó para cuidar una flor que la necesitaba."},
+{q:"2. ¿Quién es Luna, y qué comparte con el grupo?", options:[{text:"Una guacamaya que siempre ha vivido en Chiquibul y no conoce otros lugares.",correct:false},{text:"Una guacamaya que visita a sus abuelos desde Yucatán, México, y comparte historias de cenotes y flamencos.",correct:true},{text:"Una mariposa que ayuda a Mora a cuidar flores.",correct:false}], result:"Así es — Luna conecta a Chiquibul con Yucatán, y les muestra a los amigos un lugar nuevo sin salir de casa."}
+],
     html: `
       <p>Toda la selva estaba llena de emoción. Los colibríes iban de una flor a otra. Las abejas trabajaban sin descanso. Los monos colgaban guirnaldas hechas con hojas y lianas. Teo preparaba jugo de frutas para todos.</p>
       <p>Ese día se celebraba el Festival de las Flores, una tradición muy querida en Chiquibul.</p>
@@ -462,6 +498,7 @@ let fontSize = 18;
 let glossOn = true;
 let listening = false;
 let currentLevel = 'A1';
+let answered = {};
 const savedWords = new Set();
 
 function renderStory(level){
@@ -472,7 +509,39 @@ function renderStory(level){
   document.getElementById('railLevel').textContent = level;
   document.getElementById('railTime').textContent = VERSIONS[level].time;
   applyGlossState();
+  renderComp(level);
   buildWordBank();
+}
+
+function renderComp(level){
+  answered = {};
+  const container = document.getElementById('compContainer');
+  container.innerHTML = '';
+  VERSIONS[level].comp.forEach((item, i)=>{
+    const qid = 'q'+i;
+    const qDiv = document.createElement('div');
+    qDiv.className='comp-q';
+    qDiv.textContent = item.q;
+    container.appendChild(qDiv);
+    const optsDiv = document.createElement('div');
+    optsDiv.className='comp-options';
+    optsDiv.id = qid+'opts';
+    item.options.forEach(opt=>{
+      const btn = document.createElement('button');
+      btn.className='comp-opt';
+      btn.textContent = opt.text;
+      btn.onclick = ()=>answer(btn, opt.correct, qid);
+      optsDiv.appendChild(btn);
+    });
+    container.appendChild(optsDiv);
+    const resultDiv = document.createElement('div');
+    resultDiv.className='comp-result';
+    resultDiv.id = qid+'result';
+    resultDiv.textContent = item.result;
+    container.appendChild(resultDiv);
+  });
+  document.getElementById('finishBtn').textContent = '✓ Marcar como completado';
+  document.getElementById('finishBtn').style.background = '';
 }
 
 function setReaderLevel(level, el){
@@ -548,7 +617,9 @@ function buildWordBank(){
   words.forEach(w=>{
     const word = w.dataset.word;
     if(seen.has(word)) return; seen.add(word);
-    const def = w.querySelector('.gloss-tooltip').firstChild.textContent;
+    const tooltip = w.nextElementSibling;
+    if(!tooltip || !tooltip.classList.contains('gloss-tooltip')) return;
+    const def = tooltip.firstChild.textContent;
     const row = document.createElement('div');
     row.className='word-chip';
     row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${def}</div></div>
@@ -562,7 +633,7 @@ function toggleSaveWord(word, btn){
 }
 
 /* ---------------- COMPREHENSION ---------------- */
-const answered = {};
+
 function answer(btn, isCorrect, qid){
   if(answered[qid]) return;
   answered[qid]=true;
@@ -570,13 +641,14 @@ function answer(btn, isCorrect, qid){
   opts.forEach(o=>o.disabled=true);
   btn.classList.add(isCorrect?'correct':'incorrect');
   if(!isCorrect){
-    opts.forEach(o=>{ if(o.onclick.toString().includes('true')) o.classList.add('correct'); });
+    opts.forEach((o,i)=>{ if(VERSIONS[currentLevel].comp[qid.replace('q','')].options[i].correct) o.classList.add('correct'); });
   }
   document.getElementById(qid+'result').style.display='block';
 }
 function finishStory(){
-  if(Object.keys(answered).length < 2){
-    alert('Responde las dos preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
+  const totalQ = VERSIONS[currentLevel].comp.length;
+  if(Object.keys(answered).length < totalQ){
+    alert('Responde las preguntas del chequeo rápido primero — solo toma unos segundos y ayuda a tu maestra a ver tu comprensión.');
     return;
   }
   document.getElementById('finishBtn').textContent = '✓ ¡Completado!';
