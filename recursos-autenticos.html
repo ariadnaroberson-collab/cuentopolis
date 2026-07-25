@@ -78,6 +78,30 @@
     <div id="menusGrid"></div>
   </div>
 
+  <div class="section" id="folletos">
+    <div class="section-head">
+      <div class="section-title">📄 Folletos</div>
+      <div class="section-count" id="folletosCount">0 recursos</div>
+    </div>
+    <div id="folletosGrid"></div>
+  </div>
+
+  <div class="section" id="boletos">
+    <div class="section-head">
+      <div class="section-title">🎫 Boletos</div>
+      <div class="section-count" id="boletosCount">0 recursos</div>
+    </div>
+    <div id="boletosGrid"></div>
+  </div>
+
+  <div class="section" id="anuncios">
+    <div class="section-head">
+      <div class="section-title">📢 Anuncios y Carteles</div>
+      <div class="section-count" id="anunciosCount">0 recursos</div>
+    </div>
+    <div id="anunciosGrid"></div>
+  </div>
+
 </div>
 
 <div class="lightbox-overlay" id="lightbox" onclick="if(event.target===this) closeLightbox()">
@@ -93,7 +117,10 @@
   // Each category is a simple array of {img, caption, sub} objects.
   // To add a new item: add an entry here (or ask Claude to do it for you) — no other code changes needed.
   const GALLERIES = {
-    menus: []
+    menus: [],
+    folletos: [],
+    boletos: [],
+    anuncios: []
   };
 
   function renderGallery(key, gridId, countId) {
@@ -106,7 +133,7 @@
       grid.innerHTML = `
         <div class="empty-state">
           <div class="empty-icon">📋</div>
-          <div class="empty-text">Todavía no hay menús aquí. ¡Pronto se agregarán ejemplos reales de restaurantes del mundo hispano!</div>
+          <div class="empty-text">Todavía no hay recursos aquí. ¡Pronto se agregarán ejemplos reales del mundo hispano!</div>
         </div>`;
       return;
     }
@@ -136,6 +163,9 @@
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
   renderGallery('menus', 'menusGrid', 'menusCount');
+  renderGallery('folletos', 'folletosGrid', 'folletosCount');
+  renderGallery('boletos', 'boletosGrid', 'boletosCount');
+  renderGallery('anuncios', 'anunciosGrid', 'anunciosCount');
 </script>
 </body>
 </html>
