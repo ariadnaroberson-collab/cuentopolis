@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Zapaticos de Rosa — Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --page: #faf3e4; --gold: #c9a24b; --lamp: #e7b96b; --coral: #e8735c; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 70px; }
+  .wrap { max-width: 700px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 22px; }
+  .back:hover { color: var(--lamp); }
+
+  .info-box { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; margin-bottom: 24px; }
+  .info-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .info-text { font-size: 0.85rem; color: var(--parchment-dim); line-height: 1.55; }
+
+  .page {
+    background: var(--page); color: #2c2412; border-radius: 14px; padding: 44px 48px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4); position: relative; font-family: 'Source Serif 4', serif; line-height: 1.85;
+  }
+  .page::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, var(--gold), var(--coral)); border-radius: 14px 14px 0 0;
+  }
+  .story-eyebrow { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: #b8934a; margin-bottom: 6px; }
+  .story-title { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 700; color: #241d0e; margin-bottom: 22px; }
+  .story-text p { margin: 0 0 18px; font-size: 17px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <div class="info-box">
+    <div class="info-label">Sobre este cuento</div>
+    <div class="info-text">"Los zapaticos de rosa" es un poema narrativo de José Martí, publicado en 1889 en "La Edad de Oro" — una revista que Martí escribió especialmente para niños. Esta es una versión adaptada en prosa, contando la misma historia con palabras más sencillas.</div>
+  </div>
+
+  <article class="page">
+    <div class="story-eyebrow">Adaptación · basado en el poema de José Martí</div>
+    <h1 class="story-title">Los Zapaticos de Rosa</h1>
+    <div class="story-text">
+      <p>Pilar era una niña que vivía cerca del mar. Un domingo, su mamá la llevó a caminar por la playa. Pilar llevaba puesto un vestido nuevo y unos zapaticos de color rosa, recién comprados, que le encantaban.</p>
+      <p>Mientras caminaban, Pilar vio a otra niña sentada sola en la arena. Esa niña estaba enferma y muy pobre. No tenía zapatos, y su ropa estaba vieja y rota. A pesar de eso, sonrió cuando Pilar se acercó a saludarla.</p>
+      <p>Pilar se quedó pensando en la niña todo el camino. Sentía que quería ayudarla, pero no sabía cómo.</p>
+      <p>Un momento después, mientras su mamá miraba el mar, Pilar corrió de regreso hacia donde estaba la niña enferma. Se quitó sus zapaticos de color rosa — los que tanto le gustaban — y se los dio.</p>
+      <p>—Toma —le dijo Pilar—. Son para ti.</p>
+      <p>La niña, sorprendida, se puso los zapaticos y sonrió como no había sonreído en mucho tiempo.</p>
+      <p>Cuando la mamá de Pilar volvió y vio que su hija no tenía zapatos, se preocupó. —Pilar, ¿dónde están tus zapaticos? —le preguntó.</p>
+      <p>Pilar no dijo nada al principio. Pero cuando su mamá entendió lo que había pasado, no se enojó. Al contrario: abrazó a Pilar con mucho orgullo.</p>
+      <p>Esa noche, mientras Pilar dormía, su mamá pensó en lo que su hija había hecho. No había sido un gran gesto para el mundo — solo un par de zapatos. Pero para la niña de la playa, había sido un regalo enorme.</p>
+    </div>
+  </article>
+</div>
+</body>
+</html>

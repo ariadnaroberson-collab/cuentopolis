@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Muralla — Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --page: #faf3e4; --gold: #c9a24b; --lamp: #e7b96b; --coral: #e8735c; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 70px; }
+  .wrap { max-width: 700px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 22px; }
+  .back:hover { color: var(--lamp); }
+
+  .info-box { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; margin-bottom: 24px; }
+  .info-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .info-text { font-size: 0.85rem; color: var(--parchment-dim); line-height: 1.55; }
+
+  .page {
+    background: var(--page); color: #2c2412; border-radius: 14px; padding: 44px 48px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4); position: relative; font-family: 'Source Serif 4', serif; line-height: 1.85;
+  }
+  .page::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, var(--gold), var(--coral)); border-radius: 14px 14px 0 0;
+  }
+  .story-eyebrow { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: #b8934a; margin-bottom: 6px; }
+  .story-title { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 700; color: #241d0e; margin-bottom: 22px; }
+  .story-text p { margin: 0 0 18px; font-size: 17px; }
+  .story-text h3 { font-family: 'Fraunces', serif; font-size: 18px; color: #5c4a1f; margin: 26px 0 10px; }
+  .listen-note { background: #efe4c8; border-left: 3px solid var(--gold); border-radius: 6px; padding: 14px 18px; font-family: 'Public Sans', sans-serif; font-size: 14px; color: #5c4a1f; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <div class="info-box">
+    <div class="info-label">Nota sobre este texto</div>
+    <div class="info-text">"La Muralla" es un poema de Nicolás Guillén, un poeta cubano que murió en 1989. A diferencia de otros textos de esta biblioteca, este poema todavía tiene derechos de autor vigentes — por eso no podemos reproducirlo aquí. En su lugar, esta página explica de qué trata y por qué es importante, para que puedan buscarlo y escucharlo en otras fuentes.</div>
+  </div>
+
+  <article class="page">
+    <div class="story-eyebrow">Sobre el poema · Nicolás Guillén</div>
+    <h1 class="story-title">La Muralla</h1>
+    <div class="story-text">
+      <p>Nicolás Guillén (1902–1989) fue uno de los poetas más importantes de Cuba y de toda Latinoamérica. Es conocido especialmente por combinar la poesía tradicional española con los ritmos y raíces de la cultura afrocubana — un estilo que ayudó a crear lo que hoy se llama "poesía negra" o "poesía afroantillana."</p>
+
+      <h3>¿De qué trata el poema?</h3>
+      <p>"La Muralla" imagina una pared construida entre todos: cada persona trae algo — una mano, una piedra, una flor, un corazón — y juntos forman un muro. Pero no es un muro para separar a la gente; es un muro para proteger algo que todos comparten. En el poema, se pregunta constantemente quién puede pasar y quién no, y la respuesta siempre depende de si esa persona viene con buenas intenciones — con amor, con paloma, con laurel — o con maldad.</p>
+      <p>El poema es, en el fondo, sobre la unidad: la idea de que una comunidad se construye entre todos, y que lo que la protege no es el miedo al otro, sino los valores que decide defender juntos.</p>
+
+      <h3>Una canción, además de un poema</h3>
+      <p>"La Muralla" se hizo aún más famosa cuando el grupo chileno Quilapayún la convirtió en canción, dentro del movimiento de la Nueva Canción Latinoamericana de los años 60 y 70 — un movimiento musical que usaba canciones populares para hablar de justicia social y unidad entre los pueblos de Latinoamérica.</p>
+
+      <div class="listen-note">🎵 Para escuchar el poema cantado, se puede buscar "La Muralla, Quilapayún" en YouTube o Spotify — es una manera hermosa de conocer el ritmo y la fuerza del texto original de Guillén.</div>
+    </div>
+  </article>
+</div>
+</body>
+</html>

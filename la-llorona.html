@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Llorona — Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --page: #faf3e4; --gold: #c9a24b; --lamp: #e7b96b; --coral: #e8735c; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 70px; }
+  .wrap { max-width: 700px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 22px; }
+  .back:hover { color: var(--lamp); }
+
+  .info-box { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; margin-bottom: 24px; }
+  .info-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .info-text { font-size: 0.85rem; color: var(--parchment-dim); line-height: 1.55; }
+
+  .page {
+    background: var(--page); color: #2c2412; border-radius: 14px; padding: 44px 48px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4); position: relative; font-family: 'Source Serif 4', serif; line-height: 1.85;
+  }
+  .page::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, var(--gold), var(--coral)); border-radius: 14px 14px 0 0;
+  }
+  .story-eyebrow { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: #b8934a; margin-bottom: 6px; }
+  .story-title { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 700; color: #241d0e; margin-bottom: 22px; }
+  .story-text p { margin: 0 0 18px; font-size: 17px; }
+  .story-text em { color: #8a7a52; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <div class="info-box">
+    <div class="info-label">Sobre esta leyenda</div>
+    <div class="info-text">"La Llorona" es una de las leyendas más contadas de Latinoamérica — no tiene un solo autor, sino que ha pasado de generación en generación, con muchas versiones distintas según el país y la familia que la cuenta. Esta es una versión suave, pensada para el salón de clase.</div>
+  </div>
+
+  <article class="page">
+    <div class="story-eyebrow">Leyenda tradicional · México</div>
+    <h1 class="story-title">La Llorona</h1>
+    <div class="story-text">
+      <p>Hace muchos años, en un pueblo cerca de un río, vivía una mujer llamada María. Era conocida por su belleza y por lo mucho que quería a sus dos hijos.</p>
+      <p>Un día, la vida de María cambió de una manera muy triste. Perdió a sus hijos cerca del río, en un momento de mucha tristeza y confusión que nadie pudo explicar del todo. Desde ese día, María no volvió a ser la misma.</p>
+      <p>Caminaba de noche por las orillas del río, llorando y llamando a sus hijos. —¡Ay, mis hijos! —decía, una y otra vez, buscando entre las sombras y el agua.</p>
+      <p>Con el tiempo, María murió también, sin dejar de buscar a sus hijos. Pero cuenta la leyenda que su espíritu nunca descansó. Todavía hoy, dicen los que viven cerca de los ríos, se puede escuchar su voz en la noche: un llanto lejano, triste, que viene y va con el viento.</p>
+      <p>Por eso, en muchos pueblos de Latinoamérica, cuando alguien escucha un sonido extraño cerca del agua durante la noche, todavía dice: <em>"Es La Llorona."</em></p>
+      <p>Esta leyenda se cuenta desde hace generaciones — no para asustar, sino para recordar cuánto puede doler el amor de una madre, y para enseñar a los niños a tener cuidado cerca del agua de noche.</p>
+    </div>
+  </article>
+</div>
+</body>
+</html>
