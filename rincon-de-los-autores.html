@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Rincón de los Autores — Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --gold: #c9a24b; --gold-soft: #8a734a; --lamp: #e7b96b;
+    --coral: #e8735c; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 70px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 26px; }
+  .back:hover { color: var(--lamp); }
+  header { text-align: center; margin-bottom: 40px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.5rem; margin-bottom: 10px; }
+  .subtitle { color: var(--parchment-dim); font-size: 1rem; font-style: italic; max-width: 520px; margin: 0 auto; line-height: 1.5; }
+
+  .empty-state {
+    background: var(--bg-panel); border: 1px dashed var(--border); border-radius: 14px;
+    padding: 56px 32px; text-align: center; margin-top: 20px;
+  }
+  .empty-icon { font-size: 42px; margin-bottom: 18px; }
+  .empty-title { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 600; margin-bottom: 10px; color: var(--parchment); }
+  .empty-text { color: var(--parchment-dim); font-size: 0.95rem; line-height: 1.65; max-width: 440px; margin: 0 auto; }
+  .empty-text strong { color: var(--lamp); }
+
+  .info-row { display: flex; gap: 16px; margin-top: 36px; flex-wrap: wrap; justify-content: center; }
+  .info-card {
+    flex: 1 1 200px; max-width: 220px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px; text-align: center;
+  }
+  .info-card .icon { font-size: 24px; margin-bottom: 8px; }
+  .info-card .label { font-family: 'Fraunces', serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+  .info-card .desc { font-size: 0.8rem; color: var(--parchment-dim); line-height: 1.4; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← Cuentópolis</a>
+  <header>
+    <p class="eyebrow">Espacio de estudiantes</p>
+    <h1>El Rincón de los Autores</h1>
+    <p class="subtitle">Un lugar para compartir los cuentos que ustedes escriben — para leer entre compañeros, o en voz alta frente a la clase.</p>
+  </header>
+
+  <div class="empty-state">
+    <div class="empty-icon">✍️📖</div>
+    <div class="empty-title">Todavía no hay cuentos aquí...</div>
+    <div class="empty-text">
+      ¡Pero pronto los habrá! Este rincón está esperando las primeras historias escritas por <strong>ustedes</strong>, los autores de Cuentópolis. Pregúntale a tu maestra cómo compartir tu cuento aquí.
+    </div>
+  </div>
+
+  <div class="info-row">
+    <div class="info-card">
+      <div class="icon">✏️</div>
+      <div class="label">Escribe</div>
+      <div class="desc">Cualquier cuento que hayas escrito en clase puede tener un lugar aquí.</div>
+    </div>
+    <div class="info-card">
+      <div class="icon">🤝</div>
+      <div class="label">Comparte</div>
+      <div class="desc">Tus compañeros podrán leer tu historia cuando quieran.</div>
+    </div>
+    <div class="info-card">
+      <div class="icon">🎤</div>
+      <div class="label">Presenta</div>
+      <div class="desc">También es un buen lugar desde donde leer en voz alta frente a la clase.</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

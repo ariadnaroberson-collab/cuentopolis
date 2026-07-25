@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[TÍTULO DEL CUENTO] — El Rincón de los Autores</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --page: #faf3e4; --gold: #c9a24b; --lamp: #e7b96b; --coral: #e8735c; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 70px; }
+  .wrap { max-width: 680px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 26px; }
+  .back:hover { color: var(--lamp); }
+
+  .page {
+    background: var(--page); color: #2c2412; border-radius: 14px; padding: 44px 48px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4); position: relative; font-family: 'Source Serif 4', serif; line-height: 1.85;
+  }
+  .page::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, var(--gold), var(--coral)); border-radius: 14px 14px 0 0;
+  }
+  .story-title { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: #241d0e; margin-bottom: 6px; }
+  .story-byline { font-family: 'Public Sans', sans-serif; font-size: 13.5px; color: #8a7a52; font-weight: 600; margin-bottom: 28px; }
+  .story-text p { margin: 0 0 18px; font-size: 17px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="rincon-de-los-autores.html">← El Rincón de los Autores</a>
+  <article class="page">
+    <h1 class="story-title">[Título del cuento]</h1>
+    <div class="story-byline">Por [Nombre del estudiante] · [Grado/Nivel]</div>
+    <div class="story-text">
+      <p>[Aquí va el texto del cuento — un párrafo por línea.]</p>
+    </div>
+  </article>
+</div>
+</body>
+</html>
