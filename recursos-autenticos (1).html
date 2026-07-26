@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recursos Auténticos — Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --gold: #c9a24b; --gold-soft: #8a734a; --lamp: #e7b96b; --coral: #e8735c; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 70px; }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 26px; }
+  .back:hover { color: var(--lamp); }
+  header { text-align: center; margin-bottom: 40px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.5rem; margin-bottom: 10px; }
+  .subtitle { color: var(--parchment-dim); font-size: 1rem; font-style: italic; max-width: 560px; margin: 0 auto; line-height: 1.5; }
+
+  .section { margin-top: 44px; }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
+  .section-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.4rem; }
+  .section-count { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--gold-soft); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+  .gallery-item {
+    border-radius: 10px; overflow: hidden; background: var(--bg-panel); border: 1px solid var(--border);
+    cursor: pointer; transition: transform 0.18s ease, border-color 0.18s ease; position: relative;
+  }
+  .gallery-item:hover { transform: translateY(-4px); border-color: var(--gold); }
+  .gallery-item img { width: 100%; height: 200px; object-fit: cover; display: block; }
+  .gallery-caption {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 8px 10px 6px;
+    background: linear-gradient(0deg, rgba(23,21,18,0.95), rgba(23,21,18,0));
+    font-family: 'Public Sans', sans-serif; font-size: 0.78rem; font-weight: 600; line-height: 1.25;
+  }
+
+  .empty-state {
+    background: var(--bg-panel); border: 1px dashed var(--border); border-radius: 12px;
+    padding: 40px 24px; text-align: center;
+  }
+  .empty-icon { font-size: 32px; margin-bottom: 12px; }
+  .empty-text { color: var(--parchment-dim); font-size: 0.9rem; line-height: 1.6; max-width: 380px; margin: 0 auto; }
+
+  .lightbox-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(10,8,6,0.9); z-index: 100;
+    align-items: center; justify-content: center; padding: 30px; backdrop-filter: blur(2px);
+  }
+  .lightbox-overlay.open { display: flex; }
+  .lightbox-box { max-width: 720px; width: 100%; }
+  .lightbox-box img { width: 100%; border-radius: 10px; box-shadow: 0 30px 70px rgba(0,0,0,0.5); display: block; }
+  .lightbox-caption { text-align: center; margin-top: 14px; font-family: 'Fraunces', serif; font-size: 1.05rem; color: var(--parchment); }
+  .lightbox-sub { text-align: center; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--gold-soft); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .lightbox-close {
+    position: absolute; top: 22px; right: 28px; width: 38px; height: 38px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: var(--parchment);
+    font-size: 16px; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← Cuentópolis</a>
+  <header>
+    <p class="eyebrow">Realia · Materiales reales</p>
+    <h1>Recursos Auténticos</h1>
+    <p class="subtitle">Menús, folletos y otros materiales reales del mundo hispano — para practicar leyendo lo que se lee en la vida real.</p>
+  </header>
+
+  <div class="section" id="menus">
+    <div class="section-head">
+      <div class="section-title">🍽️ Menús</div>
+      <div class="section-count" id="menusCount">0 recursos</div>
+    </div>
+    <div id="menusGrid"></div>
+  </div>
+
+  <div class="section" id="folletos">
+    <div class="section-head">
+      <div class="section-title">📄 Folletos</div>
+      <div class="section-count" id="folletosCount">0 recursos</div>
+    </div>
+    <div id="folletosGrid"></div>
+  </div>
+
+  <div class="section" id="boletos">
+    <div class="section-head">
+      <div class="section-title">🎫 Boletos</div>
+      <div class="section-count" id="boletosCount">0 recursos</div>
+    </div>
+    <div id="boletosGrid"></div>
+  </div>
+
+  <div class="section" id="anuncios">
+    <div class="section-head">
+      <div class="section-title">📢 Anuncios y Carteles</div>
+      <div class="section-count" id="anunciosCount">0 recursos</div>
+    </div>
+    <div id="anunciosGrid"></div>
+  </div>
+
+</div>
+
+<div class="lightbox-overlay" id="lightbox" onclick="if(event.target===this) closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div class="lightbox-box">
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+    <div class="lightbox-sub" id="lightboxSub"></div>
+  </div>
+</div>
+
+<script>
+  // Each category is a simple array of {img, caption, sub} objects.
+  // To add a new item: add an entry here (or ask Claude to do it for you) — no other code changes needed.
+  const GALLERIES = {
+    menus: [
+      { img: 'covers/menu_nuevo_boston.jpg', caption: 'Carta — Hotel Nuevo Boston', sub: 'España · restaurante de hotel' },
+      { img: 'covers/menu_maximo_bistrot.jpg', caption: 'Máximo Bistrot', sub: 'Ciudad de México · restaurante' }
+    ],
+    folletos: [
+      { img: 'covers/folleto_el_rastro.jpg', caption: 'El Rastro', sub: 'Madrid, España · folleto turístico' }
+    ],
+    boletos: [
+      { img: 'covers/boleto_metro_madrid.jpg', caption: 'Tarifas Metro de Madrid 2026', sub: 'Madrid, España · transporte público' }
+    ],
+    anuncios: [
+      { img: 'covers/anuncio_feria_primavera.jpg', caption: 'Feria de Primavera y Fiesta del Vino Fino', sub: 'El Puerto de Santa María, España · 2026' }
+    ]
+  };
+
+  function renderGallery(key, gridId, countId) {
+    const items = GALLERIES[key];
+    const grid = document.getElementById(gridId);
+    const count = document.getElementById(countId);
+    count.textContent = items.length + (items.length === 1 ? ' recurso' : ' recursos');
+
+    if (items.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <div class="empty-text">Todavía no hay recursos aquí. ¡Pronto se agregarán ejemplos reales del mundo hispano!</div>
+        </div>`;
+      return;
+    }
+
+    grid.className = 'gallery-grid';
+    grid.innerHTML = items.map((item, i) => `
+      <div class="gallery-item" onclick="openLightbox('${key}', ${i})">
+        <img src="${item.img}" alt="${item.caption}">
+        <div class="gallery-caption">${item.caption}</div>
+      </div>
+    `).join('');
+  }
+
+  function openLightbox(key, i) {
+    const item = GALLERIES[key][i];
+    document.getElementById('lightboxImg').src = item.img;
+    document.getElementById('lightboxImg').alt = item.caption;
+    document.getElementById('lightboxCaption').textContent = item.caption;
+    document.getElementById('lightboxSub').textContent = item.sub || '';
+    document.getElementById('lightbox').classList.add('open');
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  renderGallery('menus', 'menusGrid', 'menusCount');
+  renderGallery('folletos', 'folletosGrid', 'folletosCount');
+  renderGallery('boletos', 'boletosGrid', 'boletosCount');
+  renderGallery('anuncios', 'anunciosGrid', 'anunciosCount');
+</script>
+</body>
+</html>
