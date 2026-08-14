@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Vecinos — Episodio 7: ¿Cómo Viajamos?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1b2a4a;
+    --navy-deep:#101a30;
+    --gold:#c9a227;
+    --gold-light:#e9d18a;
+    --parchment:#f4ecd8;
+    --parchment-dim:#e7dcc0;
+    --ink:#2a2418;
+    --green:#3f7554;
+    --forest:#2f5c41;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--navy-deep);
+    background-image: radial-gradient(circle at 20% 10%, #22335a 0%, var(--navy-deep) 55%);
+    font-family:'Public Sans', sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+  }
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 28px;
+    background:var(--navy);
+    border-bottom:2px solid var(--gold);
+  }
+  .topbar a.back{
+    color:var(--gold-light);
+    text-decoration:none;
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    letter-spacing:0.03em;
+  }
+  .topbar a.back:hover{color:#fff;}
+  .series-tag{
+    color:#fff;
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    opacity:0.85;
+  }
+  .wrap{
+    max-width:840px;
+    margin:0 auto;
+    padding:32px 20px 80px;
+  }
+  .cover{
+    background:var(--parchment);
+    border:1px solid var(--gold);
+    border-radius:10px;
+    padding:36px 32px 30px;
+    text-align:center;
+    box-shadow:0 12px 30px rgba(0,0,0,0.35);
+  }
+  .cover .kicker{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--forest);
+  }
+  .cover h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:6px 0 4px;
+    color:var(--navy);
+  }
+  .cover h2{
+    font-family:'Fraunces', serif;
+    font-weight:400;
+    font-style:italic;
+    font-size:1.15rem;
+    margin:0 0 14px;
+    color:var(--ink);
+  }
+  .pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    padding:5px 12px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:#fff;
+    color:var(--navy);
+  }
+  .street{
+    margin-top:14px;
+    font-size:0.9rem;
+    color:#5a4f36;
+  }
+  section.card{
+    background:var(--parchment);
+    border:1px solid var(--gold-light);
+    border-radius:10px;
+    padding:26px 30px;
+    margin-top:22px;
+    box-shadow:0 8px 22px rgba(0,0,0,0.25);
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--navy);
+    font-size:1.3rem;
+    margin-top:0;
+    border-bottom:1px solid var(--gold-light);
+    padding-bottom:8px;
+  }
+  .historia p{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.75;
+    margin:0 0 14px;
+  }
+  .vocab-hl{
+    background:rgba(201,162,39,0.28);
+    border-bottom:1.5px dotted var(--gold);
+    cursor:help;
+    padding:0 2px;
+    border-radius:3px;
+  }
+  .cast-strip{
+    display:flex;flex-wrap:wrap;gap:10px;
+    margin:14px 0 0;
+  }
+  .cast-chip{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    background:#fff;
+    border:1px solid var(--gold-light);
+    border-radius:8px;
+    padding:6px 10px;
+    color:var(--navy);
+  }
+  .palabra-box{
+    display:flex;align-items:center;gap:18px;
+    background:#fff;
+    border:1px dashed var(--gold);
+    border-radius:8px;
+    padding:16px 20px;
+  }
+  .palabra-word{
+    font-family:'Fraunces', serif;
+    font-size:1.6rem;
+    color:var(--forest);
+    white-space:nowrap;
+  }
+  .mentor-box{
+    background:#fff;
+    border-left:4px solid var(--navy);
+    border-radius:6px;
+    padding:16px 20px;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:1.15rem;
+    color:var(--navy);
+  }
+  .mentor-name{
+    display:block;
+    font-family:'Space Mono', monospace;
+    font-style:normal;
+    font-size:0.75rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--forest);
+    margin-bottom:6px;
+  }
+  dl.glossary{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px 24px;
+    margin:0;
+  }
+  dl.glossary dt{
+    font-weight:700;
+    color:var(--navy);
+    font-family:'Public Sans', sans-serif;
+  }
+  dl.glossary dd{
+    margin:0 0 8px;
+    color:#4a4331;
+  }
+  .wordbank{
+    display:flex;flex-wrap:wrap;gap:8px;
+  }
+  .wordbank span{
+    background:#fff;border:1px solid var(--gold-light);
+    border-radius:6px;padding:5px 10px;
+    font-family:'Space Mono', monospace;font-size:0.82rem;
+  }
+  .tier-select{
+    display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;
+  }
+  .tier-btn{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    padding:7px 14px;
+    border-radius:999px;
+    border:1px solid var(--navy);
+    background:#fff;
+    color:var(--navy);
+    cursor:pointer;
+  }
+  .tier-btn.active{
+    background:var(--navy);
+    color:#fff;
+  }
+  .tier-panel{display:none;}
+  .tier-panel.active{display:block;}
+  ol.comp-q{padding-left:22px;margin:0;}
+  ol.comp-q li{margin-bottom:10px;font-size:1.02rem;}
+  .journal-note{
+    font-size:0.9rem;
+    color:#5a4f36;
+    font-style:italic;
+    margin-top:12px;
+  }
+  .cultural p{margin:0 0 10px;font-size:1rem;}
+  .deferred{
+    font-size:0.85rem;
+    color:#6b6045;
+    background:#fff;
+    border:1px dashed var(--gold-light);
+    border-radius:6px;
+    padding:10px 14px;
+    margin-top:12px;
+  }
+  .modal-btn{
+    position:fixed;
+    bottom:22px;right:22px;
+    background:var(--green);
+    color:#fff;
+    border:none;
+    border-radius:999px;
+    padding:12px 20px;
+    font-family:'Public Sans',sans-serif;
+    font-weight:600;
+    font-size:0.9rem;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,0.35);
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(16,26,48,0.7);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--parchment);
+    border:1px solid var(--gold);
+    border-radius:10px;
+    max-width:640px;width:100%;
+    max-height:85vh;overflow-y:auto;
+    padding:26px 28px;
+  }
+  .modal h3{font-family:'Fraunces', serif;color:var(--navy);margin-top:0;}
+  .modal h4{color:var(--navy);font-size:0.95rem;margin-bottom:4px;}
+  .modal p, .modal li{font-size:0.92rem;color:#3a3222;}
+  .modal-close{
+    float:right;background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--navy);
+  }
+  #copyNotes{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    padding:8px 12px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="los-vecinos.html">← Biblioteca</a>
+  <span class="series-tag">Los Vecinos · Middle School 0</span>
+</div>
+
+<div class="wrap">
+
+  <div class="cover">
+    <div class="kicker">Episodio 7 · Unidad 7</div>
+    <h1>¿Cómo Viajamos?</h1>
+    <h2>Medios de transporte</h2>
+    <div class="pills">
+      <span class="pill">A1</span>
+      <span class="pill">Los Vecinos</span>
+      <span class="pill">Original</span>
+    </div>
+    <div class="street">Calle de los Almendros — San Antonio</div>
+    <div class="cast-strip">
+      <span class="cast-chip">Renata</span>
+      <span class="cast-chip">Tomás</span>
+      <span class="cast-chip">Valentina</span>
+      <span class="cast-chip">Emilio</span>
+      <span class="cast-chip">Nico</span>
+    </div>
+  </div>
+
+  <section class="card historia">
+    <h3>📖 Historia</h3>
+    <p>Es sábado por la mañana. Renata tiene una idea: un picnic junto al río, cerca del Parque Guanacaste.</p>
+    <p>El grupo compara tres opciones para viajar. <span class="vocab-hl" title="a pie — on foot, walking">A pie</span>: gratis, pero <span class="vocab-hl" title="lento/a — slow">lento</span>. En <span class="vocab-hl" title="bicicleta — bicycle">bicicleta</span>: <span class="vocab-hl" title="rápido/a — fast">rápido</span>, pero cansado. En <span class="vocab-hl" title="autobús — bus">autobús</span>: cómodo, pero el autobús no pasa cerca del río, y cuesta dinero.</p>
+
+    <p>Valentina prefiere caminar. Para Valentina, caminar es una aventura. Tomás y Emilio prefieren la bicicleta. Para ellos, la bicicleta es más rápida. Renata compara el costo y el tiempo de cada opción. Nico dibuja las tres opciones en su cuaderno.</p>
+
+    <p>Al final, el grupo decide: bicicleta. Los cinco salen con sus bicicletas. El camino es bonito, cerca de árboles y flores.</p>
+
+    <p>De repente, la bicicleta de Tomás hace un ruido extraño. La <span class="vocab-hl" title="cadena — chain">cadena</span> tiene un problema.</p>
+    <p>Emilio observa la bicicleta, con mucha curiosidad. Emilio examina la cadena. Con cuidado, Emilio <span class="vocab-hl" title="arreglar — to fix">arregla</span> el problema. La bicicleta de Tomás funciona otra vez.</p>
+
+    <p>El grupo llega al río. Los cinco tienen su picnic bajo un árbol grande, con tiempo <span class="vocab-hl" title="de sobra — to spare, extra">de sobra</span>.</p>
+
+    <p>Cada persona tiene una opinión diferente sobre el viaje. Para Emilio, lo mejor es la <span class="vocab-hl" title="velocidad — speed">velocidad</span>. Para Valentina, lo mejor es ver el camino. Para Tomás, lo mejor es que Emilio arregla su bicicleta.</p>
+
+    <p>Lo más importante no es cómo viaja el grupo, sino con quién viaja. Los cinco vecinos comen su picnic junto al río, contentos de llegar juntos.</p>
+    <p style="text-align:center;font-family:'Space Mono', monospace;font-size:0.8rem;color:#6b6045;">— Fin del Episodio 7 —</p>
+  </section>
+
+  <section class="card">
+    <h3>🌟 La Palabra del Día</h3>
+    <div class="palabra-box">
+      <div class="palabra-word">rápido / rápida</div>
+      <div>conecta con “rapid” en inglés — palabra clave de las comparaciones del episodio.</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>💬 La Reflexión del Mentor</h3>
+    <div class="mentor-box">
+      <span class="mentor-name">Profe Rivera pregunta</span>
+      "¿Cómo prefieres viajar tú, y por qué?"
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>📚 Glosario</h3>
+    <dl class="glossary">
+      <dt>a pie</dt><dd>on foot, walking</dd>
+      <dt>bicicleta</dt><dd>bicycle</dd>
+      <dt>autobús</dt><dd>bus</dd>
+      <dt>lento/a</dt><dd>slow</dd>
+      <dt>rápido/a</dt><dd>fast</dd>
+      <dt>cadena</dt><dd>chain</dd>
+      <dt>pedalear</dt><dd>to pedal</dd>
+      <dt>arreglar</dt><dd>to fix</dd>
+      <dt>mecánico/a</dt><dd>mechanic</dd>
+      <dt>de sobra</dt><dd>to spare, extra</dd>
+      <dt>velocidad</dt><dd>speed</dd>
+    </dl>
+  </section>
+
+  <section class="card">
+    <h3>🧺 Banco de Palabras</h3>
+    <div class="wordbank">
+      <span>Voy a... en...</span><span>Prefiero... porque es más...</span>
+      <span>¿Cómo prefieres viajar?</span><span>Es más rápido/a que...</span><span>Es más barato/a que...</span>
+      <span>A pie</span><span>En bicicleta</span><span>En autobús</span><span>Lento/a</span><span>Cómodo/a</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>✅ Comprensión</h3>
+    <div class="tier-select">
+      <button class="tier-btn active" data-tier="apoyo">Apoyo</button>
+      <button class="tier-btn" data-tier="estandar">Estándar</button>
+      <button class="tier-btn" data-tier="reto">Reto</button>
+    </div>
+    <div class="tier-panel active" data-tier="apoyo">
+      <ol class="comp-q">
+        <li>¿A dónde quiere ir el grupo? (al río / a la ciudad)</li>
+        <li>¿Cómo deciden viajar? (en bicicleta / en autobús)</li>
+        <li>¿Qué problema tiene la bicicleta de Tomás? (un problema con la cadena / una llanta rota)</li>
+        <li>¿Quién arregla la bicicleta? (Emilio / Renata)</li>
+      </ol>
+    </div>
+    <div class="tier-panel" data-tier="estandar">
+      <ol class="comp-q">
+        <li>¿Qué opción prefiere cada personaje, y por qué?</li>
+        <li>¿Qué dibuja Nico durante el debate?</li>
+        <li>¿Cómo arregla Emilio el problema de la bicicleta?</li>
+        <li>¿Qué dice Renata al final sobre viajar?</li>
+      </ol>
+    </div>
+    <div class="tier-panel" data-tier="reto">
+      <ol class="comp-q">
+        <li>Compara dos medios de transporte de tu propia vida: ¿cuál prefieres y por qué?</li>
+        <li>¿Por qué crees que el grupo elige viajar juntos, en vez de que cada uno vaya por su cuenta?</li>
+        <li>Describe un momento en que algo salió mal en un viaje y el grupo (o tu familia) lo resolvió junto.</li>
+        <li>¿Estás de acuerdo con Renata: "lo más importante no es cómo viajamos, sino con quién viajamos"? Explica.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>📓 Mi Conexión</h3>
+    <p>Escribe en tu <strong>Cuaderno de Los Vecinos</strong> (papel, no digital): ¿Cómo prefieres viajar tú? ¿A pie, en bicicleta, en carro, en autobús? ¿Por qué?</p>
+    <div class="journal-note">Nota para el maestro: esta actividad se completa en el cuaderno físico, siguiendo el mismo formato que "Cuaderno de El Club del Barrio."</div>
+  </section>
+
+  <section class="card cultural">
+    <h3>🌎 Conexión Cultural</h3>
+    <p>En Belice, muchas personas usan la bicicleta como transporte diario, especialmente en pueblos pequeños — es económica, buena para la salud, y fácil de reparar, como hace Emilio con la bicicleta de Tomás en la historia.</p>
+    <div class="deferred">Segmentos en desarrollo (fast-follow, no incluidos en esta edición): Desafío Conexiones, Reader's Theater, Story Asking. Se agregarán en una próxima actualización, igual que se hizo con El Club del Barrio.</div>
+  </section>
+
+</div>
+
+<button class="modal-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('teacherModal').classList.remove('open')">✕ Cerrar</button>
+    <h3>Notas del maestro — Episodio 7</h3>
+
+    <h4>Unidad curricular</h4>
+    <p>Unidad 7 – ¿Cómo viajamos? Medios de transporte, adjetivos comparativos, y expresar preferencias.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <ul>
+      <li>Vocabulario de transporte: a pie, en bicicleta, en autobús, en carro, en bote</li>
+      <li>Comparativos: más rápido/a, más lento/a, más cómodo/a, más barato/a</li>
+      <li>Prefiero... porque es más...</li>
+      <li>¿Cómo prefieres viajar?</li>
+    </ul>
+
+    <h4>Notas de ritmo (A1)</h4>
+    <p>El debate del grupo sobre cómo viajar da una razón natural para repetir Prefiero... porque... y las comparaciones varias veces con distintas voces (una por personaje). El problema de la cadena de la bicicleta refuerza el vocabulario en un contexto real y resuelto en equipo.</p>
+
+    <h4>Notas de continuidad</h4>
+    <ul>
+      <li>Huellas del Viajero sigue vacía — la Unidad 9 (Home and Host Country) sigue siendo la candidata natural para activar esta sección.</li>
+      <li>Emilio resuelve un problema técnico otra vez (como con la sartén en el Episodio 3), reforzando su rasgo curioso/mecánico; Valentina mantiene su imaginación; Nico sigue dibujando cada episodio.</li>
+    </ul>
+
+    <h4>Segmentos diferidos (fast-follow)</h4>
+    <p>Desafío Conexiones, Reader's Theater, y Story Asking se agregarán en una actualización futura, siguiendo el mismo patrón usado con El Club del Barrio.</p>
+
+    <button id="copyNotes">📋 Copiar notas</button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.tier-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tier-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tier-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector('.tier-panel[data-tier="'+btn.dataset.tier+'"]').classList.add('active');
+    });
+  });
+
+  document.getElementById('copyNotes').addEventListener('click', ()=>{
+    const notes = document.querySelector('.modal').innerText;
+    navigator.clipboard.writeText(notes).then(()=>{
+      const btn = document.getElementById('copyNotes');
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  });
+
+  document.getElementById('teacherModal').addEventListener('click', (e)=>{
+    if(e.target.id === 'teacherModal') e.target.classList.remove('open');
+  });
+</script>
+
+</body>
+</html>

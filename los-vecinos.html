@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Vecinos — Biblioteca de la serie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1b2a4a;
+    --navy-deep:#101a30;
+    --gold:#c9a227;
+    --gold-light:#e9d18a;
+    --parchment:#f4ecd8;
+    --parchment-dim:#e7dcc0;
+    --ink:#2a2418;
+    --green:#3f7554;
+    --forest:#2f5c41;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--navy-deep);
+    background-image: radial-gradient(circle at 20% 10%, #22335a 0%, var(--navy-deep) 55%);
+    font-family:'Public Sans', sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+  }
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 28px;
+    background:var(--navy);
+    border-bottom:2px solid var(--gold);
+  }
+  .topbar a.back{
+    color:var(--gold-light);
+    text-decoration:none;
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    letter-spacing:0.03em;
+  }
+  .topbar a.back:hover{color:#fff;}
+  .series-tag{
+    color:#fff;
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    opacity:0.85;
+  }
+  .wrap{
+    max-width:900px;
+    margin:0 auto;
+    padding:32px 20px 90px;
+  }
+  .cover-image{
+    width:100%;
+    border-radius:12px;
+    border:2px solid var(--gold);
+    margin-bottom:24px;
+    display:block;
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
+  }
+  .cover{
+    background:var(--parchment);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    padding:36px 32px;
+    text-align:center;
+    box-shadow:0 12px 30px rgba(0,0,0,0.35);
+  }
+  .kicker{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--forest);
+    margin-bottom:8px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.6rem;
+    margin:0 0 6px;
+    color:var(--navy);
+  }
+  .cover h2{
+    font-family:'Source Serif 4', serif;
+    font-weight:400;
+    font-style:italic;
+    font-size:1.1rem;
+    color:#5c5330;
+    margin:0 0 18px;
+  }
+  .pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;}
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.04em;
+    padding:4px 12px;
+    border-radius:20px;
+    border:1px solid var(--navy);
+    color:var(--navy);
+    background:#fff;
+  }
+  .cover p.blurb{
+    font-family:'Source Serif 4', serif;
+    font-size:1.05rem;
+    line-height:1.7;
+    max-width:640px;
+    margin:0 auto;
+    color:#3a331d;
+  }
+  .street{
+    font-family:'Space Mono', monospace;
+    font-size:0.82rem;
+    color:#6b6045;
+    margin-top:14px;
+  }
+
+  .cast-strip{
+    display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
+    margin-top:22px;
+  }
+  .cast-chip{
+    font-family:'Public Sans', sans-serif;
+    font-size:0.82rem;
+    font-weight:600;
+    padding:6px 14px;
+    border-radius:20px;
+    border:1px solid var(--gold);
+    background:#fff9ea;
+    color:var(--navy);
+  }
+
+  h3.section-heading{
+    font-family:'Fraunces', serif;
+    color:#fff;
+    font-size:1.4rem;
+    margin:44px 0 18px;
+    text-align:center;
+  }
+
+  .episode-list{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .ep-card{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    background:var(--parchment);
+    border:1px solid var(--gold);
+    border-radius:12px;
+    padding:16px 20px;
+    text-decoration:none;
+    color:var(--ink);
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow:0 4px 14px rgba(0,0,0,0.25);
+  }
+  .ep-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 22px rgba(0,0,0,0.35);
+  }
+  .ep-num{
+    font-family:'Space Mono', monospace;
+    font-size:1.3rem;
+    font-weight:700;
+    color:var(--gold);
+    min-width:38px;
+    text-align:center;
+  }
+  .ep-body{flex:1;}
+  .ep-title{
+    font-family:'Fraunces', serif;
+    font-size:1.15rem;
+    font-weight:600;
+    color:var(--navy);
+    margin:0 0 2px;
+  }
+  .ep-unit{
+    font-family:'Source Serif 4', serif;
+    font-style:italic;
+    font-size:0.92rem;
+    color:#5c5330;
+  }
+  .ep-final-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.68rem;
+    letter-spacing:0.06em;
+    background:var(--forest);
+    color:#fff;
+    padding:3px 9px;
+    border-radius:12px;
+    white-space:nowrap;
+  }
+  .ep-arrow{
+    font-family:'Space Mono', monospace;
+    color:var(--gold);
+    font-size:1.1rem;
+  }
+
+  .resumen-note{
+    text-align:center;
+    color:var(--gold-light);
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    margin-top:10px;
+    opacity:0.85;
+  }
+
+  .next-box{
+    margin-top:50px;
+    background:var(--navy);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    padding:28px 30px;
+    text-align:center;
+  }
+  .next-box .kicker{color:var(--gold-light);}
+  .next-box p{
+    font-family:'Source Serif 4', serif;
+    color:#f0ead6;
+    font-size:1.02rem;
+    line-height:1.6;
+    max-width:560px;
+    margin:0 auto 18px;
+  }
+  .next-btn{
+    display:inline-block;
+    font-family:'Public Sans', sans-serif;
+    font-weight:700;
+    font-size:0.92rem;
+    background:var(--gold);
+    color:var(--navy-deep);
+    padding:10px 22px;
+    border-radius:24px;
+    text-decoration:none;
+  }
+  .next-btn:hover{background:var(--gold-light);}
+
+  footer{
+    text-align:center;
+    color:#8a8464;
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    margin-top:50px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="cuentopolis.html">&larr; Biblioteca Cuentopolis</a>
+  <span class="series-tag">Los Vecinos · Middle School 0</span>
+</div>
+
+<div class="wrap">
+
+  <div class="cover">
+    <img class="cover-image" src="images/los-vecinos-cover.png" alt="Los Vecinos — los cinco vecinos de la Calle de los Almendros">
+    <div class="kicker">Serie · Nivel A1</div>
+    <h1>Los Vecinos</h1>
+    <h2>El origen de una gran amistad, antes de El Club del Barrio</h2>
+    <div class="pills">
+      <span class="pill">A1 · Original</span>
+      <span class="pill">9 episodios</span>
+      <span class="pill">Grade-band: MS0</span>
+    </div>
+    <p class="blurb">
+      Renata, Tomás, Valentina, Emilio y Nico son vecinos en la Calle de los Almendros, en San Antonio.
+      Es su primer año de middle school, y todavía no se conocen bien. Episodio a episodio, la calle
+      se convierte en un vecindario — y los vecinos, en amigos. Esta serie es el punto de partida antes
+      de <strong>El Club del Barrio</strong>.
+    </p>
+    <div class="street">Calle de los Almendros · San Antonio</div>
+    <div class="cast-strip">
+      <span class="cast-chip">Renata</span>
+      <span class="cast-chip">Tomás</span>
+      <span class="cast-chip">Valentina</span>
+      <span class="cast-chip">Emilio</span>
+      <span class="cast-chip">Nico</span>
+      <span class="cast-chip" style="border-color:var(--forest);">Ximena (Ep. 9)</span>
+    </div>
+  </div>
+
+  <h3 class="section-heading">📖 Episodios</h3>
+  <div class="episode-list">
+
+    <a class="ep-card" href="vecinos_episodio1_reader_La_Calle_de_los_Almendros.html">
+      <div class="ep-num">1</div>
+      <div class="ep-body">
+        <div class="ep-title">La Calle de los Almendros</div>
+        <div class="ep-unit">Unidad 1 · ¿Has visto a mi amigo?</div>
+      </div>
+      <div class="ep-arrow">→</div>
+    </a>
+
+    <a class="ep-card" href="vecinos_episodio2_reader_Un_Sabado_en_la_Calle.html">
+      <div class="ep-num">2</div>
+      <div class="ep-body">
+        <div class="ep-title">Un Sábado en la Calle</div>
+        <div class="ep-unit">Unidad 2 · Cosas para hacer adentro y afuera</div>
+      </div>
+      <div class="ep-arrow">→</div>
+    </a>
+
+    <a class="ep-card" href="vecinos_episodio3_reader_La_Cocina_de_Renata.html">
+      <div class="ep-num">3</div>
+      <div class="ep-body">
+        <div class="ep-title">La Cocina de Renata</div>
+        <div class="ep-unit">Unidad 3 · Cocinemos juntos</div>
+      </div>
+      <div class="ep-arrow">→</div>
+    </a>
+
+    <a class="ep-card" href="vecinos_episodio4_reader_Una_Fiesta_Sorpresa_para_Nico.html">
+      <div class="ep-num">4</div>
+      <div class="ep-body">
+        <div class="ep-title">Una Fiesta Sorpresa para Nico</div>
+        <div class="ep-unit">Unidad 4 · Planeando una fiesta</div>
+      </div>
+      <div class="ep-arrow">→</div>
+    </a>
+
+    <a class="ep-card" href="vecinos_episodio5_reader_Un_Tour_por_la_Ciudad.html">
+      <div class="ep-num">5</div>
+      <div class="ep-body">
+        <div class="ep-title">El Mapa al Revés</div>
+        <div class="ep-unit">Unidad 5 · Un tour por la ciudad</div>
+      </div>
+      <div class="ep-arrow">→</div>
+    </a>
+
+    <a class="ep-card" href="vecinos_episodio6_reader_Acampando_en_el_Parque.html">
+      <div class="ep-num">6</div>
+      <div class="ep-body">
+        <div class="ep-title">Acampando en el Parque</div>
+        <div class="ep-unit">Unidad 6 · La ropa y el clima</div>
+      </div>
+      <div class="ep-arrow">→</div>
+    </a>
+
+    <a class="ep-card" href="vecinos_episodio7_reader_Como_Viajamos.html">
+      <div class="ep-num">7</div>
+      <div class="ep-body">
+        <div class="ep-title">¿Cómo Viajamos?</div>
+        <div class="ep-unit">Unidad 7 · Medios de transporte</div>
+      </div>
+      <div class="ep-arrow">→</div>
+    </a>
+
+    <a class="ep-card" href="vecinos_episodio8_reader_Que_Quieres_Ser.html">
+      <div class="ep-num">8</div>
+      <div class="ep-body">
+        <div class="ep-title">¿Qué Quieres Ser?</div>
+        <div class="ep-unit">Unidad 8 · Profesiones y sueños</div>
+      </div>
+      <div class="ep-arrow">→</div>
+    </a>
+
+    <a class="ep-card" href="vecinos_episodio9_reader_Bienvenida_Ximena.html" style="border-color:var(--forest); border-width:2px;">
+      <div class="ep-num">9</div>
+      <div class="ep-body">
+        <div class="ep-title">Bienvenida, Ximena <span class="ep-final-badge">FINAL</span></div>
+        <div class="ep-unit">Unidad 9 · Mi país y mi país anfitrión</div>
+      </div>
+      <div class="ep-arrow">→</div>
+    </a>
+
+  </div>
+  <p class="resumen-note">Cada episodio incluye su propio Reading Passport y un Resumen imprimible para repaso rápido.</p>
+
+  <div class="next-box">
+    <div class="kicker">¿Terminaste la serie?</div>
+    <p>Los vecinos de la Calle de los Almendros van a crecer juntos. Sus próximas aventuras —
+      y un nuevo vecindario de personajes — continúan en <strong>El Club del Barrio</strong>.</p>
+    <a class="next-btn" href="club-del-barrio.html">Ir a El Club del Barrio →</a>
+  </div>
+
+  <footer>Cuentopolis · Los Vecinos · Middle School 0 (MS0) · 9 episodios</footer>
+</div>
+
+</body>
+</html>

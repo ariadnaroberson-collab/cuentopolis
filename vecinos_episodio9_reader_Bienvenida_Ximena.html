@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Vecinos — Episodio 9 (FINAL): Bienvenida, Ximena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1b2a4a;
+    --navy-deep:#101a30;
+    --gold:#c9a227;
+    --gold-light:#e9d18a;
+    --parchment:#f4ecd8;
+    --parchment-dim:#e7dcc0;
+    --ink:#2a2418;
+    --green:#3f7554;
+    --forest:#2f5c41;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--navy-deep);
+    background-image: radial-gradient(circle at 20% 10%, #22335a 0%, var(--navy-deep) 55%);
+    font-family:'Public Sans', sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+  }
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 28px;
+    background:var(--navy);
+    border-bottom:2px solid var(--gold);
+  }
+  .topbar a.back{
+    color:var(--gold-light);
+    text-decoration:none;
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    letter-spacing:0.03em;
+  }
+  .topbar a.back:hover{color:#fff;}
+  .series-tag{
+    color:#fff;
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    opacity:0.85;
+  }
+  .wrap{
+    max-width:840px;
+    margin:0 auto;
+    padding:32px 20px 80px;
+  }
+  .cover{
+    background:var(--parchment);
+    border:1px solid var(--gold);
+    border-radius:10px;
+    padding:36px 32px 30px;
+    text-align:center;
+    box-shadow:0 12px 30px rgba(0,0,0,0.35);
+  }
+  .cover .kicker{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--forest);
+  }
+  .cover h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:6px 0 4px;
+    color:var(--navy);
+  }
+  .cover h2{
+    font-family:'Fraunces', serif;
+    font-weight:400;
+    font-style:italic;
+    font-size:1.15rem;
+    margin:0 0 14px;
+    color:var(--ink);
+  }
+  .pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    padding:5px 12px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:#fff;
+    color:var(--navy);
+  }
+  .street{
+    margin-top:14px;
+    font-size:0.9rem;
+    color:#5a4f36;
+  }
+  section.card{
+    background:var(--parchment);
+    border:1px solid var(--gold-light);
+    border-radius:10px;
+    padding:26px 30px;
+    margin-top:22px;
+    box-shadow:0 8px 22px rgba(0,0,0,0.25);
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--navy);
+    font-size:1.3rem;
+    margin-top:0;
+    border-bottom:1px solid var(--gold-light);
+    padding-bottom:8px;
+  }
+  .historia p{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.75;
+    margin:0 0 14px;
+  }
+  .vocab-hl{
+    background:rgba(201,162,39,0.28);
+    border-bottom:1.5px dotted var(--gold);
+    cursor:help;
+    padding:0 2px;
+    border-radius:3px;
+  }
+  .cast-strip{
+    display:flex;flex-wrap:wrap;gap:10px;
+    margin:14px 0 0;
+  }
+  .cast-chip{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    background:#fff;
+    border:1px solid var(--gold-light);
+    border-radius:8px;
+    padding:6px 10px;
+    color:var(--navy);
+  }
+  .palabra-box{
+    display:flex;align-items:center;gap:18px;
+    background:#fff;
+    border:1px dashed var(--gold);
+    border-radius:8px;
+    padding:16px 20px;
+  }
+  .palabra-word{
+    font-family:'Fraunces', serif;
+    font-size:1.6rem;
+    color:var(--forest);
+    white-space:nowrap;
+  }
+  .mentor-box{
+    background:#fff;
+    border-left:4px solid var(--navy);
+    border-radius:6px;
+    padding:16px 20px;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:1.15rem;
+    color:var(--navy);
+  }
+  .mentor-name{
+    display:block;
+    font-family:'Space Mono', monospace;
+    font-style:normal;
+    font-size:0.75rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--forest);
+    margin-bottom:6px;
+  }
+  dl.glossary{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px 24px;
+    margin:0;
+  }
+  dl.glossary dt{
+    font-weight:700;
+    color:var(--navy);
+    font-family:'Public Sans', sans-serif;
+  }
+  dl.glossary dd{
+    margin:0 0 8px;
+    color:#4a4331;
+  }
+  .wordbank{
+    display:flex;flex-wrap:wrap;gap:8px;
+  }
+  .wordbank span{
+    background:#fff;border:1px solid var(--gold-light);
+    border-radius:6px;padding:5px 10px;
+    font-family:'Space Mono', monospace;font-size:0.82rem;
+  }
+  .tier-select{
+    display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;
+  }
+  .tier-btn{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    padding:7px 14px;
+    border-radius:999px;
+    border:1px solid var(--navy);
+    background:#fff;
+    color:var(--navy);
+    cursor:pointer;
+  }
+  .tier-btn.active{
+    background:var(--navy);
+    color:#fff;
+  }
+  .tier-panel{display:none;}
+  .tier-panel.active{display:block;}
+  ol.comp-q{padding-left:22px;margin:0;}
+  ol.comp-q li{margin-bottom:10px;font-size:1.02rem;}
+  .journal-note{
+    font-size:0.9rem;
+    color:#5a4f36;
+    font-style:italic;
+    margin-top:12px;
+  }
+  .cultural p{margin:0 0 10px;font-size:1rem;}
+  .deferred{
+    font-size:0.85rem;
+    color:#6b6045;
+    background:#fff;
+    border:1px dashed var(--gold-light);
+    border-radius:6px;
+    padding:10px 14px;
+    margin-top:12px;
+  }
+  .modal-btn{
+    position:fixed;
+    bottom:22px;right:22px;
+    background:var(--green);
+    color:#fff;
+    border:none;
+    border-radius:999px;
+    padding:12px 20px;
+    font-family:'Public Sans',sans-serif;
+    font-weight:600;
+    font-size:0.9rem;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,0.35);
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(16,26,48,0.7);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--parchment);
+    border:1px solid var(--gold);
+    border-radius:10px;
+    max-width:640px;width:100%;
+    max-height:85vh;overflow-y:auto;
+    padding:26px 28px;
+  }
+  .modal h3{font-family:'Fraunces', serif;color:var(--navy);margin-top:0;}
+  .modal h4{color:var(--navy);font-size:0.95rem;margin-bottom:4px;}
+  .modal p, .modal li{font-size:0.92rem;color:#3a3222;}
+  .modal-close{
+    float:right;background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--navy);
+  }
+  #copyNotes{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    padding:8px 12px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="los-vecinos.html">← Biblioteca</a>
+  <span class="series-tag">Los Vecinos · Middle School 0</span>
+</div>
+
+<div class="wrap">
+
+  <div class="cover">
+    <div class="kicker">Episodio 9 · Unidad 9 · FINAL</div>
+    <h1>Bienvenida, Ximena</h1>
+    <h2>Mi país y mi país anfitrión</h2>
+    <div class="pills">
+      <span class="pill">A1</span>
+      <span class="pill">Los Vecinos</span>
+      <span class="pill">Original</span>
+    </div>
+    <div class="street">Escuela San Antonio</div>
+    <div class="cast-strip">
+      <span class="cast-chip">Renata</span>
+      <span class="cast-chip">Tomás</span>
+      <span class="cast-chip">Valentina</span>
+      <span class="cast-chip">Emilio</span>
+      <span class="cast-chip">Nico</span>
+      <span class="cast-chip" style="border-color:var(--gold);">Ximena (nueva)</span>
+    </div>
+  </div>
+
+  <section class="card historia">
+    <h3>📖 Historia</h3>
+    <p>Es un día normal de clases. Profe Rivera presenta a una estudiante nueva: Ximena. Ximena es de <span class="vocab-hl" title="Guatemala — Guatemala">Guatemala</span>. Sus padres tienen trabajo nuevo en Belice.</p>
+    <p>Ximena está un poco nerviosa. Ximena está frente a la clase, sola.</p>
+
+    <p>Renata reconoce esa mirada. Renata también está nerviosa el primer día del Episodio 1. Renata invita a Ximena: —Ven con nosotros.</p>
+
+    <p>Durante el día, cada vecino hace una pregunta sobre Guatemala. Tomás pregunta por los deportes. Valentina pregunta por las <span class="vocab-hl" title="leyenda — legend">leyendas</span> y tradiciones. Nico pregunta por el arte y los colores. Emilio pregunta cómo es la ciudad.</p>
+
+    <p>Ximena contesta con mucho entusiasmo. En Guatemala, la <span class="vocab-hl" title="capital — capital">capital</span> es la Ciudad de Guatemala. La <span class="vocab-hl" title="moneda — currency">moneda</span> es el quetzal — ¡como el <span class="vocab-hl" title="símbolo — symbol">símbolo</span> nacional, un ave hermosa! La comida favorita de Ximena es el <span class="vocab-hl" title="pepián — traditional Guatemalan dish">pepián</span>, un plato tradicional.</p>
+
+    <p>El grupo compara: aquí en Belice, la moneda es el dólar beliceño. El ave nacional de Belice es el tucán piquiverde.</p>
+    <p>—¡Diferente, pero también interesante! —dice Ximena, con una sonrisa.</p>
+
+    <p>Ximena descubre cosas nuevas y curiosas en Belice. Ximena está contenta.</p>
+
+    <p>Al final del día, los cinco caminan con Ximena hasta su casa nueva. La casa de Ximena está en la Calle de los Almendros — la misma calle de todos.</p>
+
+    <p>Renata dice: —Bienvenida a la calle, Ximena. Ahora somos seis.</p>
+
+    <p>Los seis caminan juntos, contentos. La Calle de los Almendros tiene un vecino más — y una gran amistad nueva.</p>
+
+    <p style="text-align:center;font-family:'Space Mono', monospace;font-size:0.85rem;color:#6b6045; font-style:italic;">Los vecinos van a crecer juntos. Sus próximas aventuras continúan en El Club del Barrio.</p>
+    <p style="text-align:center;font-family:'Space Mono', monospace;font-size:0.8rem;color:#6b6045;">— Fin de Los Vecinos —</p>
+  </section>
+
+  <section class="card" style="border-left:6px solid var(--gold);">
+    <h3>🧭 Huellas del Viajero</h3>
+    <p style="margin-top:0;"><strong>Ximena</strong> · País de origen: <strong>Guatemala</strong></p>
+    <p>Guatemala es un país vecino de Belice. Los padres de Ximena tienen trabajo nuevo en Belice.</p>
+    <p>Comida favorita: el pepián. Símbolo nacional de Guatemala: el quetzal (¡un ave y también el nombre de la moneda!). En Belice, el símbolo nacional es el tucán piquiverde.</p>
+  </section>
+
+  <section class="card">
+    <h3>🌟 La Palabra del Día</h3>
+    <div class="palabra-box">
+      <div class="palabra-word">bienvenido / bienvenida</div>
+      <div>“welcome” — cierra el círculo de la serie: Nico fue recibido por el grupo en el Episodio 1; ahora el grupo recibe a Ximena.</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>💬 La Reflexión del Mentor</h3>
+    <div class="mentor-box">
+      <span class="mentor-name">Profe Rivera pregunta</span>
+      "¿Qué extrañas más de un lugar donde viviste antes, o qué te gustaría explorar de un lugar nuevo?"
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>📚 Glosario</h3>
+    <dl class="glossary">
+      <dt>estudiante nueva</dt><dd>new student (f.)</dd>
+      <dt>nervioso/a</dt><dd>nervous</dd>
+      <dt>reconocer</dt><dd>to recognize</dd>
+      <dt>leyenda</dt><dd>legend</dd>
+      <dt>capital</dt><dd>capital city</dd>
+      <dt>moneda</dt><dd>currency</dd>
+      <dt>símbolo</dt><dd>symbol</dd>
+      <dt>pepián</dt><dd>traditional Guatemalan dish</dd>
+      <dt>ave</dt><dd>bird</dd>
+      <dt>descubrir</dt><dd>to discover</dd>
+      <dt>bienvenido/a</dt><dd>welcome</dd>
+      <dt>amistad</dt><dd>friendship</dd>
+    </dl>
+  </section>
+
+  <section class="card">
+    <h3>🧺 Banco de Palabras</h3>
+    <div class="wordbank">
+      <span>En mi país...</span><span>Aquí en Belice...</span>
+      <span>Es diferente</span><span>Es similar</span>
+      <span>La capital es...</span><span>La moneda es...</span>
+      <span>Bienvenido/a</span><span>Símbolo nacional</span><span>Comida típica</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>✅ Comprensión</h3>
+    <div class="tier-select">
+      <button class="tier-btn active" data-tier="apoyo">Apoyo</button>
+      <button class="tier-btn" data-tier="estandar">Estándar</button>
+      <button class="tier-btn" data-tier="reto">Reto</button>
+    </div>
+    <div class="tier-panel active" data-tier="apoyo">
+      <ol class="comp-q">
+        <li>¿De qué país es Ximena? (Guatemala / México)</li>
+        <li>¿Quién invita a Ximena primero? (Renata / Tomás)</li>
+        <li>¿Cuál es la comida favorita de Ximena? (el pepián / la pizza)</li>
+        <li>¿Dónde está la casa nueva de Ximena? (la Calle de los Almendros / la ciudad)</li>
+      </ol>
+    </div>
+    <div class="tier-panel" data-tier="estandar">
+      <ol class="comp-q">
+        <li>¿Por qué está en Belice la familia de Ximena?</li>
+        <li>¿Qué preguntas hacen Tomás, Valentina, Nico y Emilio?</li>
+        <li>¿Qué símbolo nacional compara el grupo?</li>
+        <li>¿Cómo reciben los cinco vecinos a Ximena?</li>
+      </ol>
+    </div>
+    <div class="tier-panel" data-tier="reto">
+      <ol class="comp-q">
+        <li>Compara un elemento cultural de Guatemala con el mismo elemento de Belice (comida, símbolo, moneda).</li>
+        <li>¿Por qué crees que Renata reconoce los nervios de Ximena?</li>
+        <li>Imagina que un estudiante nuevo llega a tu clase. ¿Qué preguntas le haces?</li>
+        <li>Explica la conexión entre el Episodio 1 y el Episodio 9. ¿Qué tienen en común?</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>📓 Mi Conexión</h3>
+    <p>Escribe en tu <strong>Cuaderno de Los Vecinos</strong> (papel, no digital): ¿Qué extrañas de un lugar donde viviste antes? ¿Qué te gustaría explorar de un lugar nuevo?</p>
+    <div class="journal-note">Nota para el maestro: esta actividad se completa en el cuaderno físico, siguiendo el mismo formato que "Cuaderno de El Club del Barrio."</div>
+  </section>
+
+  <section class="card cultural">
+    <h3>🌎 Conexión Cultural</h3>
+    <p>Belice es un país con mucha diversidad cultural — familias de Guatemala, México, y muchos otros países viven aquí. Cada familia trae su propia comida, música, y tradiciones, y esto hace de Belice un país anfitrión rico en cultura.</p>
+    <div class="deferred">Segmentos en desarrollo (fast-follow, no incluidos en esta edición): Desafío Conexiones, Reader's Theater, Story Asking. Se agregarán en una próxima actualización, igual que se hizo con El Club del Barrio.</div>
+  </section>
+
+</div>
+
+<button class="modal-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('teacherModal').classList.remove('open')">✕ Cerrar</button>
+    <h3>Notas del maestro — Episodio 9 (FINAL)</h3>
+
+    <h4>Unidad curricular</h4>
+    <p>Unidad 9 – Mi país y mi país anfitrión. Comparar país de origen y país anfitrión: lugares importantes, capital, moneda, símbolos nacionales, comida típica, idioma.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <ul>
+      <li>En mi país... / Aquí en Belice...</li>
+      <li>Es diferente / Es similar</li>
+      <li>Vocabulario cultural: capital, moneda, símbolo nacional, comida típica</li>
+      <li>Bienvenido/a</li>
+    </ul>
+
+    <h4>Notas de ritmo (A1)</h4>
+    <p>La llegada de una estudiante nueva da una razón narrativa auténtica para repetir En mi país.../Aquí en Belice... varias veces, comparando un elemento cultural a la vez.</p>
+
+    <h4>Huellas del Viajero — ACTIVADA</h4>
+    <p>Primera vez en la serie. Personaje: Ximena, de Guatemala. La mudanza se presenta de forma positiva y sencilla (trabajo de los padres), sin detalles difíciles — el enfoque es la bienvenida y la curiosidad cultural.</p>
+
+    <h4>Cierre de la serie</h4>
+    <p>Este es el episodio final de Los Vecinos (MS0). La estructura del episodio refleja intencionalmente el Episodio 1: en el Episodio 1, el grupo se forma recibiendo a Nico, el más nervioso; en el Episodio 9, el grupo (ya unido) recibe a Ximena de la misma manera. El grupo crece de 5 a 6. La última línea del episodio dirige explícitamente a los estudiantes hacia El Club del Barrio (MS1) como el siguiente paso en su trayecto de español.</p>
+
+    <h4>Segmentos diferidos (fast-follow)</h4>
+    <p>Desafío Conexiones, Reader's Theater, y Story Asking se agregarán en una actualización futura, siguiendo el mismo patrón usado con El Club del Barrio.</p>
+
+    <button id="copyNotes">📋 Copiar notas</button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.tier-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tier-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tier-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector('.tier-panel[data-tier="'+btn.dataset.tier+'"]').classList.add('active');
+    });
+  });
+
+  document.getElementById('copyNotes').addEventListener('click', ()=>{
+    const notes = document.querySelector('.modal').innerText;
+    navigator.clipboard.writeText(notes).then(()=>{
+      const btn = document.getElementById('copyNotes');
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  });
+
+  document.getElementById('teacherModal').addEventListener('click', (e)=>{
+    if(e.target.id === 'teacherModal') e.target.classList.remove('open');
+  });
+</script>
+
+</body>
+</html>

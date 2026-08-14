@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Vecinos — Episodio 4: Una Fiesta Sorpresa para Nico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1b2a4a;
+    --navy-deep:#101a30;
+    --gold:#c9a227;
+    --gold-light:#e9d18a;
+    --parchment:#f4ecd8;
+    --parchment-dim:#e7dcc0;
+    --ink:#2a2418;
+    --green:#3f7554;
+    --forest:#2f5c41;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--navy-deep);
+    background-image: radial-gradient(circle at 20% 10%, #22335a 0%, var(--navy-deep) 55%);
+    font-family:'Public Sans', sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+  }
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 28px;
+    background:var(--navy);
+    border-bottom:2px solid var(--gold);
+  }
+  .topbar a.back{
+    color:var(--gold-light);
+    text-decoration:none;
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    letter-spacing:0.03em;
+  }
+  .topbar a.back:hover{color:#fff;}
+  .series-tag{
+    color:#fff;
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    opacity:0.85;
+  }
+  .wrap{
+    max-width:840px;
+    margin:0 auto;
+    padding:32px 20px 80px;
+  }
+  .cover{
+    background:var(--parchment);
+    border:1px solid var(--gold);
+    border-radius:10px;
+    padding:36px 32px 30px;
+    text-align:center;
+    box-shadow:0 12px 30px rgba(0,0,0,0.35);
+  }
+  .cover .kicker{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--forest);
+  }
+  .cover h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:6px 0 4px;
+    color:var(--navy);
+  }
+  .cover h2{
+    font-family:'Fraunces', serif;
+    font-weight:400;
+    font-style:italic;
+    font-size:1.15rem;
+    margin:0 0 14px;
+    color:var(--ink);
+  }
+  .pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    padding:5px 12px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:#fff;
+    color:var(--navy);
+  }
+  .street{
+    margin-top:14px;
+    font-size:0.9rem;
+    color:#5a4f36;
+  }
+  section.card{
+    background:var(--parchment);
+    border:1px solid var(--gold-light);
+    border-radius:10px;
+    padding:26px 30px;
+    margin-top:22px;
+    box-shadow:0 8px 22px rgba(0,0,0,0.25);
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--navy);
+    font-size:1.3rem;
+    margin-top:0;
+    border-bottom:1px solid var(--gold-light);
+    padding-bottom:8px;
+  }
+  .historia p{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.75;
+    margin:0 0 14px;
+  }
+  .vocab-hl{
+    background:rgba(201,162,39,0.28);
+    border-bottom:1.5px dotted var(--gold);
+    cursor:help;
+    padding:0 2px;
+    border-radius:3px;
+  }
+  .cast-strip{
+    display:flex;flex-wrap:wrap;gap:10px;
+    margin:14px 0 0;
+  }
+  .cast-chip{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    background:#fff;
+    border:1px solid var(--gold-light);
+    border-radius:8px;
+    padding:6px 10px;
+    color:var(--navy);
+  }
+  .palabra-box{
+    display:flex;align-items:center;gap:18px;
+    background:#fff;
+    border:1px dashed var(--gold);
+    border-radius:8px;
+    padding:16px 20px;
+  }
+  .palabra-word{
+    font-family:'Fraunces', serif;
+    font-size:1.6rem;
+    color:var(--forest);
+    white-space:nowrap;
+  }
+  .mentor-box{
+    background:#fff;
+    border-left:4px solid var(--navy);
+    border-radius:6px;
+    padding:16px 20px;
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:1.15rem;
+    color:var(--navy);
+  }
+  .mentor-name{
+    display:block;
+    font-family:'Space Mono', monospace;
+    font-style:normal;
+    font-size:0.75rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--forest);
+    margin-bottom:6px;
+  }
+  dl.glossary{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px 24px;
+    margin:0;
+  }
+  dl.glossary dt{
+    font-weight:700;
+    color:var(--navy);
+    font-family:'Public Sans', sans-serif;
+  }
+  dl.glossary dd{
+    margin:0 0 8px;
+    color:#4a4331;
+  }
+  .wordbank{
+    display:flex;flex-wrap:wrap;gap:8px;
+  }
+  .wordbank span{
+    background:#fff;border:1px solid var(--gold-light);
+    border-radius:6px;padding:5px 10px;
+    font-family:'Space Mono', monospace;font-size:0.82rem;
+  }
+  .tier-select{
+    display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;
+  }
+  .tier-btn{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    padding:7px 14px;
+    border-radius:999px;
+    border:1px solid var(--navy);
+    background:#fff;
+    color:var(--navy);
+    cursor:pointer;
+  }
+  .tier-btn.active{
+    background:var(--navy);
+    color:#fff;
+  }
+  .tier-panel{display:none;}
+  .tier-panel.active{display:block;}
+  ol.comp-q{padding-left:22px;margin:0;}
+  ol.comp-q li{margin-bottom:10px;font-size:1.02rem;}
+  .journal-note{
+    font-size:0.9rem;
+    color:#5a4f36;
+    font-style:italic;
+    margin-top:12px;
+  }
+  .cultural p{margin:0 0 10px;font-size:1rem;}
+  .deferred{
+    font-size:0.85rem;
+    color:#6b6045;
+    background:#fff;
+    border:1px dashed var(--gold-light);
+    border-radius:6px;
+    padding:10px 14px;
+    margin-top:12px;
+  }
+  .modal-btn{
+    position:fixed;
+    bottom:22px;right:22px;
+    background:var(--green);
+    color:#fff;
+    border:none;
+    border-radius:999px;
+    padding:12px 20px;
+    font-family:'Public Sans',sans-serif;
+    font-weight:600;
+    font-size:0.9rem;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(0,0,0,0.35);
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(16,26,48,0.7);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--parchment);
+    border:1px solid var(--gold);
+    border-radius:10px;
+    max-width:640px;width:100%;
+    max-height:85vh;overflow-y:auto;
+    padding:26px 28px;
+  }
+  .modal h3{font-family:'Fraunces', serif;color:var(--navy);margin-top:0;}
+  .modal h4{color:var(--navy);font-size:0.95rem;margin-bottom:4px;}
+  .modal p, .modal li{font-size:0.92rem;color:#3a3222;}
+  .modal-close{
+    float:right;background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--navy);
+  }
+  #copyNotes{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    padding:8px 12px;
+    cursor:pointer;
+    margin-top:14px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="los-vecinos.html">← Biblioteca</a>
+  <span class="series-tag">Los Vecinos · Middle School 0</span>
+</div>
+
+<div class="wrap">
+
+  <div class="cover">
+    <div class="kicker">Episodio 4 · Unidad 4</div>
+    <h1>Una Fiesta Sorpresa para Nico</h1>
+    <h2>Planeando una fiesta</h2>
+    <div class="pills">
+      <span class="pill">A1</span>
+      <span class="pill">Los Vecinos</span>
+      <span class="pill">Original</span>
+    </div>
+    <div class="street">Calle de los Almendros — San Antonio</div>
+    <div class="cast-strip">
+      <span class="cast-chip">Renata</span>
+      <span class="cast-chip">Tomás</span>
+      <span class="cast-chip">Valentina</span>
+      <span class="cast-chip">Emilio</span>
+      <span class="cast-chip">Nico</span>
+    </div>
+  </div>
+
+  <section class="card historia">
+    <h3>📖 Historia</h3>
+    <p>Es lunes. Renata camina con Nico a la escuela. Nico dice: este sábado es su cumpleaños. Pero Nico dice que no es importante.</p>
+    <p>Renata está sorprendida. Nico es tímido y no dice nada normalmente. Renata tiene una idea secreta.</p>
+
+    <p>Esa tarde, Renata habla con Tomás, Valentina, y Emilio. Los cuatro van a organizar una <span class="vocab-hl" title="fiesta sorpresa — surprise party">fiesta sorpresa</span> para Nico. Es un secreto.</p>
+    <p>Tomás va a decorar con <span class="vocab-hl" title="globo — balloon">globos</span>. Valentina va a escribir una <span class="vocab-hl" title="invitación — invitation">invitación</span> misteriosa, como un mapa del tesoro. Emilio va a construir una decoración especial y mecánica.</p>
+
+    <p>El grupo decide el <span class="vocab-hl" title="regalo — gift">regalo</span> perfecto: un cuaderno de dibujo nuevo, y lápices de colores. A Nico le encanta dibujar.</p>
+
+    <p>Durante la semana, el grupo prepara todo, en secreto. Tomás decora la sala con globos. Un globo explota, y todos ríen. Valentina escribe su invitación misteriosa. Emilio construye su decoración especial, con mucho cuidado.</p>
+
+    <p>El sábado, Renata invita a Nico a su casa. Nico está un poco nervioso — no sabe por qué.</p>
+    <p>Nico toca la puerta. Nico abre la puerta. Todos gritan: ¡<span class="vocab-hl" title="sorpresa — surprise">SORPRESA</span>! ¡Feliz cumpleaños, Nico!</p>
+
+    <p>Nico está sin palabras. Nico mira los globos, la invitación misteriosa, la decoración de Emilio, y el regalo en la mesa. Nico sonríe — una sonrisa enorme. Nico dice gracias, con la voz un poco temblorosa. Renata explica: los amigos celebran juntos.</p>
+
+    <p>Nico abre su regalo: el cuaderno de dibujo y los lápices de colores. Nico abre el cuaderno, y dibuja la fiesta: los globos, las caras felices de sus amigos, y él mismo, en medio del grupo — ya no solo un observador.</p>
+    <p style="text-align:center;font-family:'Space Mono', monospace;font-size:0.8rem;color:#6b6045;">— Fin del Episodio 4 —</p>
+  </section>
+
+  <section class="card">
+    <h3>🌟 La Palabra del Día</h3>
+    <div class="palabra-box">
+      <div class="palabra-word">sorpresa</div>
+      <div>“surprise” — el corazón emocional de este episodio.</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>💬 La Reflexión del Mentor</h3>
+    <div class="mentor-box">
+      <span class="mentor-name">Profe Rivera pregunta</span>
+      "¿Qué haces tú para celebrar a las personas especiales en tu vida?"
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>📚 Glosario</h3>
+    <dl class="glossary">
+      <dt>fiesta sorpresa</dt><dd>surprise party</dd>
+      <dt>globo</dt><dd>balloon</dd>
+      <dt>invitación</dt><dd>invitation</dd>
+      <dt>regalo</dt><dd>gift</dd>
+      <dt>decorar</dt><dd>to decorate</dd>
+      <dt>pastel</dt><dd>cake</dd>
+      <dt>sorpresa</dt><dd>surprise</dd>
+      <dt>secreto</dt><dd>secret</dd>
+      <dt>envuelto/a</dt><dd>wrapped</dd>
+      <dt>tembloroso/a</dt><dd>trembling, shaky</dd>
+      <dt>creer</dt><dd>to believe</dd>
+      <dt>quieto/a</dt><dd>still, quiet</dd>
+    </dl>
+  </section>
+
+  <section class="card">
+    <h3>🧺 Banco de Palabras</h3>
+    <div class="wordbank">
+      <span>Vamos a hacer una fiesta</span><span>Necesitamos invitar a...</span>
+      <span>¿Qué regalo compramos para...?</span><span>Creo que...</span><span>Me parece buena idea</span>
+      <span>Decoramos con...</span><span>¡Sorpresa!</span><span>Globos</span><span>Pastel</span><span>Regalo</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>✅ Comprensión</h3>
+    <div class="tier-select">
+      <button class="tier-btn active" data-tier="apoyo">Apoyo</button>
+      <button class="tier-btn" data-tier="estandar">Estándar</button>
+      <button class="tier-btn" data-tier="reto">Reto</button>
+    </div>
+    <div class="tier-panel active" data-tier="apoyo">
+      <ol class="comp-q">
+        <li>¿Para quién es la fiesta sorpresa? (Nico / Emilio)</li>
+        <li>¿Quién decora con globos? (Tomás / Valentina)</li>
+        <li>¿Quién escribe la invitación? (Valentina / Renata)</li>
+        <li>¿Qué regalo compran? (un cuaderno de dibujo / una pelota)</li>
+      </ol>
+    </div>
+    <div class="tier-panel" data-tier="estandar">
+      <ol class="comp-q">
+        <li>¿Cómo descubre Renata que es el cumpleaños de Nico?</li>
+        <li>¿Qué construye Emilio para la fiesta?</li>
+        <li>¿Cómo está Nico cuando ve la sorpresa?</li>
+        <li>¿Qué dibuja Nico al final del episodio, y por qué es diferente de antes?</li>
+      </ol>
+    </div>
+    <div class="tier-panel" data-tier="reto">
+      <ol class="comp-q">
+        <li>¿Por qué crees que Nico no quería una fiesta grande al principio?</li>
+        <li>Explica por qué el regalo (cuaderno y lápices) es perfecto para Nico específicamente.</li>
+        <li>Planea una fiesta sorpresa para un amigo: ¿a quién invitas, qué regalo compras, cómo decoras?</li>
+        <li>Compara cómo era Nico en el Episodio 1 y cómo es ahora en el Episodio 4.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>📓 Mi Conexión</h3>
+    <p>Escribe en tu <strong>Cuaderno de Los Vecinos</strong> (papel, no digital): ¿Cómo celebras tú los cumpleaños en tu familia? ¿Has organizado o recibido alguna vez una fiesta sorpresa?</p>
+    <div class="journal-note">Nota para el maestro: esta actividad se completa en el cuaderno físico, siguiendo el mismo formato que "Cuaderno de El Club del Barrio."</div>
+  </section>
+
+  <section class="card cultural">
+    <h3>🌎 Conexión Cultural</h3>
+    <p>En muchos países de Latinoamérica, los cumpleaños son celebraciones grandes — con piñatas, música, y comida para familia y vecinos. La idea de celebrar juntos, como hacen Renata y sus amigos por Nico, es una tradición muy valorada en la cultura hispana.</p>
+    <div class="deferred">Segmentos en desarrollo (fast-follow, no incluidos en esta edición): Desafío Conexiones, Reader's Theater, Story Asking. Se agregarán en una próxima actualización, igual que se hizo con El Club del Barrio.</div>
+  </section>
+
+</div>
+
+<button class="modal-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('teacherModal').classList.remove('open')">✕ Cerrar</button>
+    <h3>Notas del maestro — Episodio 4</h3>
+
+    <h4>Unidad curricular</h4>
+    <p>Unidad 4 – Planeando una fiesta. Organizar una fiesta (cumpleaños, Navidad, Año Nuevo), invitar, elegir regalos, decorar, y expresar opiniones/ideas.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <ul>
+      <li>Ir a + infinitivo para planes futuros: Vamos a hacer...</li>
+      <li>Vocabulario de fiesta: invitación, decoraciones, globos, regalo, pastel, sorpresa</li>
+      <li>Expresar opinión: Creo que... / Me parece buena idea</li>
+      <li>Pedir/dar sugerencias: ¿Qué regalo compramos? / Podemos...</li>
+    </ul>
+
+    <h4>Notas de ritmo (A1)</h4>
+    <p>Cada personaje aporta una idea distinta según su rasgo ya establecido, repitiendo Creo que... / Me parece... de forma natural. Vocabulario de fiesta introducido uno a la vez, con apoyo visual (globos, pastel, regalo envuelto).</p>
+
+    <h4>Notas de continuidad</h4>
+    <ul>
+      <li>Huellas del Viajero sigue vacía — la Unidad 9 (Home and Host Country) sigue siendo la candidata natural para activar esta sección.</li>
+      <li>Momento de arco narrativo: Nico, el más tímido del Episodio 1, ahora es el centro emocional del episodio — sus amigos organizan algo especial para él, y él dibuja la fiesta como protagonista, no solo como observador. Refuerza el tema de la amistad que se profundiza a través de la serie.</li>
+    </ul>
+
+    <h4>Segmentos diferidos (fast-follow)</h4>
+    <p>Desafío Conexiones, Reader's Theater, y Story Asking se agregarán en una actualización futura, siguiendo el mismo patrón usado con El Club del Barrio.</p>
+
+    <button id="copyNotes">📋 Copiar notas</button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.tier-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tier-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tier-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector('.tier-panel[data-tier="'+btn.dataset.tier+'"]').classList.add('active');
+    });
+  });
+
+  document.getElementById('copyNotes').addEventListener('click', ()=>{
+    const notes = document.querySelector('.modal').innerText;
+    navigator.clipboard.writeText(notes).then(()=>{
+      const btn = document.getElementById('copyNotes');
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  });
+
+  document.getElementById('teacherModal').addEventListener('click', (e)=>{
+    if(e.target.id === 'teacherModal') e.target.classList.remove('open');
+  });
+</script>
+
+</body>
+</html>
