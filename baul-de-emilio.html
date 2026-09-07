@@ -19,7 +19,16 @@
   .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
   h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.6rem; }
   .subtitle { color: var(--parchment-dim); font-size: 0.95rem; margin-top: 8px; font-style: italic; }
+
+  .intro { background: var(--bg-panel); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 10px; padding: 26px 28px; margin-top: 30px; }
+  .intro-eyebrow { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--lamp); margin-bottom: 10px; }
+  .intro h2 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.4rem; margin-bottom: 14px; color: var(--parchment); }
+  .intro p { font-size: 0.98rem; line-height: 1.7; color: var(--parchment); margin-bottom: 12px; }
+  .intro p:last-child { margin-bottom: 0; }
+  .intro .signoff { font-family: 'Fraunces', serif; font-style: italic; color: var(--gold); font-size: 1rem; }
+
   .list { display: flex; flex-direction: column; gap: 14px; margin-top: 30px; }
+  .list-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-soft); margin-bottom: 4px; }
   .ep { display: flex; align-items: center; gap: 18px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; text-decoration: none; color: var(--parchment); transition: border-color 0.15s ease; }
   .ep:hover { border-color: var(--gold); }
   .ep-num { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold-soft); min-width: 70px; }
@@ -35,6 +44,17 @@
     <h1>El Baúl de Emilio</h1>
     <p class="subtitle">Emilio abre el baúl de su abuela y descubre la niñez de figuras destacadas del mundo hispano.</p>
   </header>
+
+  <div class="intro">
+    <p class="intro-eyebrow">Conoce a Emilio</p>
+    <h2>El niño del baúl</h2>
+    <p>Emilio tiene 9 años y vive en Colombia. Es curioso, un poco despistado y sueña despierto casi todo el día... hasta que encuentra algo interesante. Entonces, nada más le importa.</p>
+    <p>Todo empezó el día que encontró el baúl de madera de su abuela, guardado en un rincón de la casa. Dentro hay fotos viejas, cartas, boletos, recortes de periódico y objetos que nadie más nota... pero que para Emilio esconden una historia esperando ser descubierta.</p>
+    <p>Cada vez que Emilio saca algo del baúl, no puede evitarlo: investiga, lee, hace preguntas y escribe todo lo que aprende sobre las personas más fascinantes del mundo hispano — de dónde vienen, cómo eran de niños, y qué los hizo tan especiales.</p>
+    <p class="signoff">Hoy abre el baúl por primera vez para ustedes. ¿Qué encontrará?</p>
+  </div>
+
+  <p class="list-label" style="margin-top: 30px;">Lo que ha encontrado Emilio</p>
   <div class="list">
     <a class="ep" href="baul_de_emilio_episodio1_reader_Lionel_Messi.html">
       <span class="ep-num">Episodio 1</span>
