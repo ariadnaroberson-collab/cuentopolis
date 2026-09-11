@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Cipitío — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Leyenda (adaptación)</div>
+    <h1>El Cipitío</h1>
+    <div class="subtitle">Leyenda salvadoreña — el niño travieso que nunca crece</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>El Cipitío es un niño mágico de El Salvador. Tiene un sombrero grande de petate.</p>
+        <p>Tiene los pies <span class="gloss" data-word="al revés">al revés</span>: los dedos miran para atrás.</p>
+        <p>El Cipitío come <span class="gloss" data-word="ceniza">ceniza</span> de la cocina. Es un niño para siempre; nunca crece. Su mamá se llama la Siguanaba.</p>
+        <p>El Cipitío es <span class="gloss" data-word="travieso">travieso</span>. Le gusta tirar piedritas pequeñas cerca de la gente. También le gusta esconderse detrás de los árboles y hacer ruidos.</p>
+        <p>A veces, deja <span class="gloss" data-word="flores silvestres">flores silvestres</span> en el camino de las personas del pueblo.</p>
+        <p>Cuando alguien busca al Cipitío, es imposible encontrarlo: sus pies al revés confunden el camino.</p>
+        <p>La gente de El Salvador todavía cuenta esta leyenda a los niños.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>En El Salvador, muchas familias conocen la leyenda del Cipitío, un niño mágico y travieso que nunca crece.</p>
+        <p>El Cipitío usa un sombrero enorme de petate (una fibra vegetal) y tiene una característica muy especial: sus pies están al revés, con los dedos apuntando hacia atrás en lugar de hacia adelante. Por eso, cuando alguien intenta seguir sus huellas, termina caminando en la dirección equivocada.</p>
+        <p>El Cipitío tiene una panza redonda porque le encanta comer ceniza directamente del fogón de las cocinas. Es hijo de otra figura legendaria, la Siguanaba, aunque el Cipitío tiene un carácter mucho más juguetón que su madre.</p>
+        <p>Le gusta esconderse detrás de los árboles, silbar melodías extrañas y tirar piedritas pequeñas cerca de los caminantes nocturnos para asustarlos un poco. También se dice que deja flores silvestres en el camino como un pequeño gesto amistoso.</p>
+        <p>A pesar de sus travesuras, la mayoría de la gente considera al Cipitío una presencia más cómica que peligrosa, muy diferente de otras leyendas centroamericanas más oscuras.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Entre las leyendas más queridas —y más divertidas— de El Salvador se encuentra la del Cipitío, un espíritu con forma de niño que quedó atrapado para siempre en la infancia.</p>
+        <p>Según cuenta la tradición, el Cipitío usa un sombrero descomunal de petate y tiene una panza redonda, resultado de su afición por comer ceniza directamente de los fogones de las cocinas rurales. Su característica más peculiar, sin embargo, son sus pies: los tiene al revés, con los talones hacia adelante y los dedos hacia atrás, de manera que cualquiera que intentara seguir su rastro terminaría caminando exactamente en la dirección contraria a la que él realmente tomó.</p>
+        <p>Se dice que el Cipitío es hijo de la Siguanaba, otra figura central del folclore salvadoreño, aunque, a diferencia de su madre —una figura mucho más temida—, el Cipitío es una presencia mucho más traviesa que amenazante.</p>
+        <p>Le gustaba, según los relatos, esconderse tras los árboles para silbar melodías extrañas, lanzar piedritas cerca de los viajeros nocturnos y provocar pequeños sustos sin mayores consecuencias. También se contaba que dejaba flores silvestres en el camino de la gente del pueblo, como un gesto travieso pero amistoso.</p>
+        <p>Con el tiempo, la figura del Cipitío se transformó en un símbolo entrañable de la identidad salvadoreña, e incluso aparece representado en esculturas, murales y celebraciones populares por todo el país.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Registro cercano al original</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Adaptación narrativa basada en la tradición oral salvadoreña, de dominio público, ampliamente difundida en El Salvador y Centroamérica.</p>
+        <p>Dentro del rico panteón de figuras legendarias centroamericanas, el Cipitío ocupa un lugar particular: mientras que muchas leyendas de la región están teñidas de un tono oscuro y aleccionador, la del Cipitío conserva un carácter marcadamente lúdico y hasta entrañable.</p>
+        <p>Se le describe como un espíritu infantil de piel oscura, panza prominente —producto, según la tradición oral, de su insaciable gusto por comer ceniza recién apagada de los fogones campesinos— y un sombrero de petate desproporcionadamente grande que apenas le permite ver. Su rasgo más distintivo, no obstante, son los pies: invertidos, con los talones apuntando hacia el frente y los dedos hacia atrás, de modo que cualquier intento de rastrearlo resulta, invariablemente, en un camino equivocado.</p>
+        <p>La tradición salvadoreña lo presenta como hijo de la Siguanaba, una mujer espectral asociada a otra leyenda muy conocida del país; sin embargo, el temperamento del Cipitío contrasta notablemente con el de su madre. Condenado —según algunas versiones del relato— a permanecer eternamente niño, el Cipitío canaliza su energía en travesuras relativamente inofensivas: se esconde entre el follaje para lanzar piedrecillas cerca de los caminantes solitarios, emite un silbido agudo y particular que anuncia su cercanía, y, de acuerdo con la versión más entrañable de la leyenda, deja discretamente flores silvestres en el camino de la gente del pueblo, como una suerte de travesura amistosa e infantil.</p>
+        <p><em>Esta dualidad entre lo travieso y lo tierno ha convertido al Cipitío en una de las figuras más queridas del folclore salvadoreño, presente hoy no solo en la tradición oral, sino también en la iconografía popular, la literatura infantil nacional y hasta en celebraciones cívicas que reivindican la identidad cultural del país.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el sombrero de petate</span> — palm-fiber hat</div>
+      <div><span class="term">la ceniza</span> — ash</div>
+      <div><span class="term">al revés</span> — backwards</div>
+      <div><span class="term">travieso/a</span> — mischievous</div>
+      <div><span class="term">silbar</span> — to whistle</div>
+      <div><span class="term">las flores silvestres</span> — wildflowers</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>el sombrero de petate</span>
+      <span>la ceniza</span>
+      <span>al revés</span>
+      <span>travieso</span>
+      <span>silbar</span>
+      <span>flores silvestres</span>
+      <span>nunca crece</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cómo son los pies del Cipitío y por qué son importantes en la leyenda?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué tipo de travesuras hace el Cipitío?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Cipitío</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — tercera y última incorporación de la tanda de nuevas leyendas (junto a El Alebrije y El Pombero), sumándose a La Llorona, La leyenda del chupacabra, La leyenda del maíz, El callejón del beso, La camisa de Margarita, La sierva de los milagros y Popol Vuh.</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Folclore centroamericano; figuras legendarias infantiles; el humor y la travesura como contraste con leyendas más oscuras de la región (la Siguanaba, el Cadejo).</p>
+
+    <h4>Nivel original</h4>
+    <p>No existe un texto fuente único: esta es una adaptación narrativa de la tradición oral salvadoreña, ampliamente difundida en El Salvador y Centroamérica. A1 recibe una simplificación real; B2 se acerca a un registro narrativo cultural más rico, con referencia a su presencia en la iconografía nacional.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir las características físicas de un personaje legendario; narrar comportamientos habituales en pasado; usar vocabulario relacionado con el folclore y la tradición oral.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>el sombrero de petate · la ceniza · al revés · travieso · silbar · flores silvestres · nunca crece.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas, repetición del vocabulario clave de su apariencia física.<br>
+    <strong>A2:</strong> presente con más detalle descriptivo de sus travesuras y de su relación con la Siguanaba.<br>
+    <strong>B1:</strong> pasado narrativo; se añade el contraste con otras leyendas centroamericanas más oscuras.<br>
+    <strong>B2:</strong> registro cercano a un texto cultural/etnográfico, con referencia a su presencia en esculturas, murales y celebraciones nacionales.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>La versión tradicional del Cipitío incluye que sigue a jóvenes hermosas y les deja flores como cortejo infantil. Esta adaptación suaviza intencionalmente ese elemento: en todos los niveles, el Cipitío deja flores silvestres "en el camino de la gente del pueblo" en general, como gesto travieso-amistoso, sin enmarcarlo como cortejo romántico — más apropiado para el rango de grado 3.º-8.º.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — leyenda de la Biblioteca FVR, sin personaje anfitrión internacional dentro de esta narrativa.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>travieso</em> — cognado parcial/reconocible por su raíz ("travesura"), usado para resumir el carácter central y entrañable del personaje.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>El Cipitío nunca crece y pasa su tiempo haciendo travesuras. Si tú pudieras quedarte en una edad para siempre, ¿cuál elegirías y por qué?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Tercer y último título de la tanda de tres nuevas leyendas de la Biblioteca FVR (El Alebrije y El Pombero ya construidos). Los tres se añadirán juntos a la fila "Leyendas Latinoamericanas" una vez subidos al repositorio.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>

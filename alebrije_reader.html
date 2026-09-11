@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Alebrije — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Leyenda (adaptación)</div>
+    <h1>El Alebrije</h1>
+    <div class="subtitle">Leyenda mexicana — el sueño febril que se convirtió en arte (origen: Pedro Linares, 1936)</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Pedro es un artesano. Vive en la Ciudad de México.</p>
+        <p>Un día, Pedro está muy enfermo. Tiene mucha fiebre.</p>
+        <p>Pedro duerme y sueña. En el sueño, ve un bosque extraño.</p>
+        <p>En el bosque hay animales fantásticos. Un animal tiene <span class="gloss" data-word="alas">alas</span> de mariposa. Otro animal tiene cuerpo de león. Otro animal tiene <span class="gloss" data-word="cuernos">cuernos</span> de toro.</p>
+        <p>Los animales gritan una palabra: "¡Alebrije! ¡Alebrije! ¡Alebrije!"</p>
+        <p>Pedro tiene miedo, pero también está fascinado. Los colores del sueño son muy vibrantes: rojo, azul, amarillo, verde.</p>
+        <p>Cuando Pedro despierta, ya no tiene fiebre. Está bien.</p>
+        <p>Pedro va a su <span class="gloss" data-word="taller">taller</span>. Con papel y pintura, Pedro crea las criaturas de su sueño.</p>
+        <p>Las llama "alebrijes". Hoy, los alebrijes son un arte famoso de México.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>En 1936, un artesano llamado Pedro Linares vive en la Ciudad de México y hace piñatas y otras figuras de papel maché para ganarse la vida.</p>
+        <p>Un día, Pedro se enferma gravemente y tiene una fiebre muy alta durante varios días. Mientras está en cama, tiene un sueño extraño e inolvidable: camina por un bosque misterioso donde las nubes, las rocas y los árboles se transforman en animales imposibles.</p>
+        <p>Ve una criatura con alas de mariposa, cuerpo de león y cabeza de águila. Otra tiene cuernos de toro y cola de dragón. Todos los animales repiten la misma palabra, una y otra vez: "¡Alebrije! ¡Alebrije!"</p>
+        <p>Los colores del sueño son intensos: verde brillante, rosa fuerte, azul eléctrico.</p>
+        <p>Cuando por fin se recupera de la fiebre, Pedro no puede olvidar las imágenes. Decide ir a su taller y, con papel, alambre y pintura, empieza a construir las criaturas exactamente como las vio.</p>
+        <p>Así nace el primer alebrije, y con él, un nuevo arte popular mexicano que hoy se conoce en todo el mundo.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Era el año 1936 cuando Pedro Linares, un artesano cartonero de la Ciudad de México, cayó gravemente enfermo. Durante varios días, la fiebre lo mantuvo entre la vida y la conciencia difusa de los sueños, y fue precisamente en ese estado donde ocurrió algo que cambiaría su vida y, con ella, el arte popular mexicano.</p>
+        <p>Pedro soñó que caminaba por un bosque extraño donde las rocas, las nubes y hasta los árboles se convertían, ante sus ojos, en criaturas imposibles: un burro con alas de mariposa, un gallo con cuernos de toro, un león con cabeza de águila. Todas estas criaturas, mientras avanzaban a su alrededor, repetían sin cesar una sola palabra que Pedro nunca había escuchado antes: "¡Alebrijes, alebrijes, alebrijes!"</p>
+        <p>Los colores del sueño eran tan vívidos —verdes fosforescentes, rosas intensos, azules eléctricos— que Pedro los recordaba con total claridad incluso después de recuperarse.</p>
+        <p>En cuanto se sintió mejor, corrió a su taller y, con papel maché, alambre y mucha paciencia, empezó a dar forma a las criaturas de su pesadilla febril. Así nacieron los primeros alebrijes, figuras fantásticas que combinan partes de distintos animales en un solo cuerpo imposible.</p>
+        <p>Con el tiempo, este arte se extendió por todo México, especialmente en Oaxaca, donde artesanos indígenas lo adoptaron y lo enriquecieron con técnicas de talla en madera. Hoy en día, los alebrijes son uno de los símbolos artísticos más reconocidos de México, y aparecen incluso en desfiles, museos y películas internacionales.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Registro cercano al original</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Adaptación narrativa basada en el relato de origen difundido sobre el artesano mexicano Pedro Linares (1936), tradición oral y cultural de dominio público.</p>
+        <p>Era 1936, y en un pequeño taller de la Ciudad de México, Pedro Linares —cartonero de oficio, especializado en piñatas y en las tradicionales figuras de Judas que se queman durante la Semana Santa— cayó gravemente enfermo. La fiebre lo consumió durante varios días, sumiéndolo en un delirio del que, según contaría más tarde, jamás pudo escapar del todo.</p>
+        <p>Fue en ese estado de <span class="gloss" data-word="duermevela">duermevela</span> febril donde Pedro tuvo la visión que marcaría el resto de su vida: se encontró caminando por un bosque de aspecto irreal, donde las rocas se transformaban en nubes y las nubes, a su vez, en animales de una anatomía absolutamente imposible. Vio un burro con alas de mariposa multicolor; un gallo con cuernos afilados de toro; un león cuya cabeza era, inequívocamente, la de un águila real.</p>
+        <p>Estas criaturas, mientras desfilaban ante él en aquel bosque de ensueño, coreaban al unísono una sola palabra —una palabra que Pedro nunca había oído antes y que, sin embargo, se le quedó grabada con precisión absoluta—: "¡Alebrijes! ¡Alebrijes! ¡Alebrijes!" Los colores de aquel sueño eran de una intensidad casi dolorosa: verdes fosforescentes, rosas mexicanos, azules eléctricos que parecían vibrar por sí solos.</p>
+        <p>Cuando finalmente la fiebre cedió y Pedro recuperó la conciencia plena, descubrió que no podía —ni quería— olvidar lo que había visto. Se dirigió de inmediato a su taller y, con el papel maché, el alambre y la pintura que conocía tan bien de su oficio, comenzó a dar forma física a aquellas criaturas oníricas. Nacieron así los primeros alebrijes: esculturas híbridas y fantásticas que desafían toda clasificación zoológica.</p>
+        <p>Con el paso de las décadas, esta forma de arte popular trascendió el taller de Linares y llegó hasta Oaxaca, donde comunidades indígenas zapotecas, especialmente en los pueblos de Arrazola, San Martín Tilcajete y La Unión Tejalapan, adoptaron la técnica y la fusionaron con su propia tradición de tallado en madera de copal, dando origen a los alebrijes de madera que hoy conocemos internacionalmente.</p>
+        <p><em>Actualmente, los alebrijes no solo decoran hogares y museos, sino que también desfilan cada año por las calles de la capital mexicana durante el Desfile de Alebrijes Monumentales, y han alcanzado fama mundial gracias a su aparición en producciones cinematográficas como Coco, de Pixar.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la fiebre</span> — fever</div>
+      <div><span class="term">el sueño</span> — dream</div>
+      <div><span class="term">la criatura</span> — creature</div>
+      <div><span class="term">las alas</span> — wings</div>
+      <div><span class="term">los cuernos</span> — horns</div>
+      <div><span class="term">el taller</span> — workshop</div>
+      <div><span class="term">el papel maché</span> — papier-mâché</div>
+      <div><span class="term">el desfile</span> — parade</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>la fiebre</span>
+      <span>el sueño</span>
+      <span>alas de mariposa</span>
+      <span>cuernos de toro</span>
+      <span>el taller</span>
+      <span>papel maché</span>
+      <span>los alebrijes</span>
+      <span>colores vibrantes</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué le pasó a Pedro Linares antes de tener el sueño de los alebrijes?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cómo son las criaturas que Pedro vio en su sueño? Menciona al menos dos características.</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Alebrije</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — nueva incorporación a la colección de leyendas, junto a La Llorona, La leyenda del chupacabra, La leyenda del maíz, El callejón del beso, La camisa de Margarita, La sierva de los milagros y Popol Vuh.</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Arte popular mexicano; el poder de la imaginación y de los sueños; la creatividad como respuesta a la adversidad (una enfermedad que se transforma en algo hermoso).</p>
+
+    <h4>Nivel original</h4>
+    <p>No existe un texto fuente único: esta es una adaptación narrativa del relato de origen ampliamente difundido sobre el artesano Pedro Linares. A1 recibe una simplificación real; B2 se acerca a un registro narrativo cultural/periodístico, con datos históricos adicionales (Oaxaca, comunidades zapotecas, Coco de Pixar).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar en pasado un evento transformador; describir criaturas fantásticas combinando partes de distintos animales; usar vocabulario relacionado con el arte y la artesanía.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>la fiebre · el sueño · alas de mariposa · cuernos de toro · el taller · papel maché · los alebrijes.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas, repetición del vocabulario clave de la enfermedad y el sueño.<br>
+    <strong>A2:</strong> presente con más detalle descriptivo de las criaturas y contexto histórico (1936, Ciudad de México).<br>
+    <strong>B1:</strong> pasado narrativo; se añade el contexto de la expansión del arte hacia Oaxaca.<br>
+    <strong>B2:</strong> registro cercano a un texto cultural/periodístico, con referencias históricas y contemporáneas (comunidades zapotecas, Coco de Pixar).</p>
+
+    <h4>Contenido sensible</h4>
+    <p>La fiebre/enfermedad de Pedro se maneja de forma breve, genérica y no alarmante: es el punto de partida de la historia, no su foco central, y se resuelve rápida y positivamente en todos los niveles ("cuando por fin se recupera de la fiebre").</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — leyenda de la Biblioteca FVR, sin personaje anfitrión internacional dentro de esta narrativa.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>las criaturas</em> — cognado natural con "creatures", usado para describir a los seres fantásticos centrales de la leyenda.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Pedro convirtió una enfermedad difícil en algo hermoso y creativo. ¿Alguna vez una experiencia complicada te ayudó a descubrir algo nuevo sobre ti mismo?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Nuevo título en la colección de Leyendas de la Biblioteca FVR. Complementa el catálogo existente de leyendas latinoamericanas; próximos títulos planeados en la misma tanda: El Pombero y El Cipitío.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>

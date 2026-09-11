@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Pombero — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .auth-badge{
+    font-family:'Space Mono', monospace;
+    font-size:0.65rem;
+    color:var(--green);
+    border:1px solid var(--green);
+    border-radius:999px;
+    padding:2px 8px;
+    background:rgba(63,107,74,0.15);
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html">← Biblioteca FVR</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Leyenda (adaptación)</div>
+    <h1>El Pombero</h1>
+    <div class="subtitle">Leyenda guaraní — el guardián silencioso del monte</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2 <span class="auth-badge">Auténtico</span></button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>El Pombero vive en el <span class="gloss" data-word="monte">monte</span>. El monte es un bosque grande de Paraguay, Argentina y Brasil.</p>
+        <p>El Pombero es pequeño y tiene el cuerpo cubierto de pelo. Camina por la noche. Nadie ve su cara.</p>
+        <p>El Pombero protege los animales y las plantas del monte.</p>
+        <p>Cuando una persona corta muchos árboles o mata muchos animales sin necesidad, el Pombero se enoja.</p>
+        <p><span class="gloss" data-word="silba">Silba</span> de una manera especial: fiu, fiu, fiu. Si escuchas ese silbido de noche, el Pombero está cerca.</p>
+        <p>La gente del campo deja una <span class="gloss" data-word="ofrenda">ofrenda</span> para el Pombero: tabaco o miel. Así, el Pombero no molesta a la familia.</p>
+        <p>El Pombero es un guardián del monte. Protege la naturaleza.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>En Paraguay, en el norte de Argentina y en partes de Brasil, existe una leyenda guaraní muy conocida: la leyenda del Pombero.</p>
+        <p>Se dice que el Pombero es un ser pequeño y peludo que vive en el monte, el bosque denso de la región, y que sale principalmente durante la noche. Nadie puede describir su rostro con claridad porque siempre se cubre con un gran sombrero de paja.</p>
+        <p>El Pombero es considerado el protector de los animales, los pájaros y las plantas del monte. Cuando alguien caza más animales de los que necesita, o corta árboles sin cuidado, el Pombero se enoja y castiga a esa persona con travesuras: esconde herramientas, asusta a los animales domésticos o hace ruidos extraños toda la noche.</p>
+        <p>Su presencia se anuncia con un silbido característico que las familias del campo reconocen inmediatamente. Para mantener una buena relación con él, muchas familias dejan pequeñas ofrendas cerca de su casa: un poco de tabaco, miel o caña de azúcar.</p>
+        <p>Gracias a estas ofrendas, el Pombero protege a la familia en vez de molestarla. Esta leyenda enseña un mensaje importante: hay que respetar la naturaleza y no tomar más de lo que se necesita.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Cuenta la leyenda guaraní que, en lo más profundo del monte —esa selva espesa que se extiende por Paraguay, el norte de Argentina y partes de Brasil— vivía un ser misterioso conocido como el Pombero.</p>
+        <p>Era pequeño, de cuerpo cubierto de vello oscuro, y ocultaba su rostro bajo un ancho sombrero de paja, de modo que nadie podía asegurar haberlo visto realmente. El Pombero salía sobre todo de noche, y se decía que era el guardián silencioso de los animales, los árboles y los ríos del monte.</p>
+        <p>Quienes cazaban más de lo necesario, o talaban árboles sin razón, pronto sufrían las consecuencias: el Pombero les escondía las herramientas, espantaba a sus gallinas o los mantenía despiertos toda la noche con ruidos inexplicables. Su llegada siempre se anunciaba con un silbido inconfundible que resonaba entre los árboles, y que los campesinos aprendían a reconocer desde niños.</p>
+        <p>Para evitar su enojo, muchas familias guaraníes acostumbraban dejar pequeñas ofrendas junto a sus casas —tabaco, miel silvestre o caña de azúcar— como muestra de respeto hacia el monte y sus criaturas. A cambio, el Pombero no solo dejaba en paz a la familia, sino que a veces incluso los protegía de otros peligros del bosque.</p>
+        <p>Con el tiempo, la leyenda del Pombero se convirtió en una manera de transmitir, de generación en generación, un mensaje fundamental para los pueblos guaraníes: la naturaleza no es un recurso ilimitado, sino algo que merece cuidado y equilibrio.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2 <span class="auth-badge" style="margin-left:8px;">Registro cercano al original</span></h2>
+      <div class="story-text">
+        <p style="font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;">Adaptación narrativa basada en la tradición oral guaraní, de dominio público, difundida en Paraguay, el norte de Argentina y partes de Brasil.</p>
+        <p>En el imaginario guaraní, pocos seres inspiran tanto respeto —y tanto temor— como el Pombero, el legendario protector del monte que habita las profundidades de la selva paraguaya, el norte argentino y algunas regiones de Brasil.</p>
+        <p>Descrito tradicionalmente como una figura pequeña, de cuerpo cubierto por un vello áspero y oscuro, el Pombero oculta su rostro bajo un sombrero de paja de proporciones desmesuradas, razón por la cual pocos aseguran haberlo visto con claridad; quienes lo describen coinciden, sin embargo, en un detalle inquietante: fuma en pipa, y el humo de tabaco silvestre suele ser el primer indicio de su presencia cercana.</p>
+        <p>El Pombero recorre el monte casi exclusivamente durante la noche, y su papel dentro de la cosmovisión guaraní es inequívoco: es el guardián de los animales silvestres, de los árboles centenarios y de los cursos de agua que atraviesan la selva. Aquellos cazadores que abaten más presas de las que necesitan para alimentar a su familia, o los leñadores que talan sin discernimiento, pronto experimentan su ira, manifestada en travesuras que van de lo molesto a lo genuinamente perturbador: herramientas que desaparecen sin explicación, gallineros alborotados en plena madrugada, o un silbido agudo y persistente —fiu, fiu, fiu— que se escucha entre los árboles justo antes de que algo salga mal.</p>
+        <p>Para congraciarse con él, es costumbre entre las familias rurales de la región dejar pequeñas ofrendas en los límites del monte o cerca del patio de la casa: tabaco negro, miel silvestre recién recolectada, o caña de azúcar. A cambio de este gesto de respeto, se cree que el Pombero no solo se abstiene de molestar a la familia, sino que en ocasiones llega incluso a protegerla de otros peligros del bosque, guiando a los niños perdidos de vuelta a casa o advirtiendo, con su silbido, sobre la presencia de una víbora venenosa.</p>
+        <p><em>Más allá del elemento sobrenatural, la leyenda del Pombero funciona, en el fondo, como un código ecológico ancestral transmitido oralmente durante generaciones: un recordatorio de que el monte no es un recurso inagotable, sino un ecosistema vivo que exige reciprocidad, mesura y profundo respeto.</em></p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el monte</span> — wild forest</div>
+      <div><span class="term">el guardián</span> — guardian</div>
+      <div><span class="term">silbar / el silbido</span> — to whistle / the whistle</div>
+      <div><span class="term">la ofrenda</span> — offering</div>
+      <div><span class="term">cazar</span> — to hunt</div>
+      <div><span class="term">talar</span> — to cut down trees</div>
+      <div><span class="term">respetar</span> — to respect</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>el monte</span>
+      <span>el guardián</span>
+      <span>el silbido</span>
+      <span>la ofrenda</span>
+      <span>cazar</span>
+      <span>talar árboles</span>
+      <span>respetar la naturaleza</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué se enoja el Pombero con algunas personas?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué hacen las familias para tener una buena relación con el Pombero?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Pombero</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — segunda incorporación de la tanda de nuevas leyendas (junto a El Alebrije y El Cipitío), sumándose a La Llorona, La leyenda del chupacabra, La leyenda del maíz, El callejón del beso, La camisa de Margarita, La sierva de los milagros y Popol Vuh.</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Folclore guaraní; respeto y equilibrio con la naturaleza; consecuencias de tomar más de lo necesario del entorno natural.</p>
+
+    <h4>Nivel original</h4>
+    <p>No existe un texto fuente único: esta es una adaptación narrativa de la tradición oral guaraní, ampliamente difundida en Paraguay, el norte de Argentina y partes de Brasil. A1 recibe una simplificación real; B2 se acerca a un registro narrativo cultural/etnográfico más rico.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir un ser legendario y su hábitat; narrar causa y efecto (acciones humanas → reacciones del Pombero); usar vocabulario relacionado con la naturaleza y la conservación.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>el monte · el guardián · el silbido · la ofrenda · cazar · talar árboles · respetar la naturaleza.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas, repetición del vocabulario clave del monte y la ofrenda.<br>
+    <strong>A2:</strong> presente con más detalle descriptivo del Pombero y de las travesuras que hace.<br>
+    <strong>B1:</strong> pasado narrativo; se añade el mensaje ecológico transmitido de generación en generación.<br>
+    <strong>B2:</strong> registro cercano a un texto cultural/etnográfico, con vocabulario adicional (cosmovisión, discernimiento) y cierre reflexivo explícito.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>El elemento de "castigo" del Pombero se mantiene como travesuras leves y no amenazantes (esconder herramientas, ruidos, sustos) en todos los niveles — nunca violencia física ni daño real a las personas.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — leyenda de la Biblioteca FVR, sin personaje anfitrión internacional dentro de esta narrativa.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>respetar</em> — cognado natural con "respect", usado para resumir el mensaje central de la leyenda: la relación de reciprocidad entre las personas y la naturaleza.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>El Pombero protege el monte y castiga a quienes no lo respetan. ¿Qué reglas o costumbres conoces tú para cuidar la naturaleza en tu propia comunidad?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Segundo título de la tanda de tres nuevas leyendas de la Biblioteca FVR (El Alebrije ya construido; El Cipitío pendiente). Todos se añadirán juntos a la fila "Leyendas Latinoamericanas" una vez completa la tanda.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+</body>
+</html>
