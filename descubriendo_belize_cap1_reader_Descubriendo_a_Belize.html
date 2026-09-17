@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Descubriendo Belize — Capítulo 1: Yo También Soy de Aquí</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c1024;
+    --ink-2:#141a35;
+    --lamp:#e8a94c;
+    --lamp-dim:#c98a34;
+    --parchment:#f3e9d6;
+    --parchment-dim:#e4d6b8;
+    --slate:#9aa2ba;
+    --green:#4a8b6f;
+    --green-dim:#3a6e58;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--ink);color:var(--parchment);font-family:'Public Sans',sans-serif;}
+  h1,h2,.display{font-family:'Fraunces',serif;}
+  .mono{font-family:'Space Mono',monospace;}
+  .story-text{font-family:'Source Serif 4',serif;}
+
+  .topbar{display:flex;align-items:center;gap:16px;padding:16px 32px;border-bottom:1px solid rgba(232,169,76,0.15);}
+  .back-link{font-size:13px;color:var(--slate);text-decoration:none;font-family:'Space Mono',monospace;}
+  .back-link:hover{color:var(--lamp);}
+  .wordmark{margin-left:auto;font-family:'Fraunces',serif;font-weight:700;color:var(--lamp);font-size:15px;letter-spacing:.3px;}
+
+  .hero{padding:36px 32px 12px;max-width:820px;margin:0 auto;}
+  .eyebrow{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lamp);margin-bottom:10px;}
+  h1.title{font-size:34px;font-weight:700;margin:0 0 6px;color:var(--parchment);}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;color:var(--lamp-dim);font-size:18px;margin:0 0 18px;}
+  .meta-row{font-size:13px;color:var(--slate);margin-bottom:22px;}
+
+  .level-pills{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
+  .pill{font-family:'Space Mono',monospace;font-weight:700;font-size:13px;padding:8px 16px;border-radius:20px;
+    border:1.5px solid rgba(232,169,76,0.4);background:rgba(255,255,255,0.03);color:var(--parchment);cursor:pointer;transition:all .15s;}
+  .pill:hover{border-color:var(--lamp);}
+  .pill.active{background:var(--lamp);border-color:var(--lamp);color:#26160a;}
+
+  .reader-card{max-width:820px;margin:0 auto 30px;background:var(--parchment);color:#26221a;border-radius:14px;padding:36px 40px;box-shadow:0 20px 50px rgba(0,0,0,0.4);}
+  .story-text{font-size:19px;line-height:1.85;}
+  .story-text p{margin:0 0 18px;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+
+  .gloss{border-bottom:1.5px dotted var(--lamp-dim);cursor:help;position:relative;font-weight:600;}
+  .gloss:hover::after{
+    content:attr(data-tip);position:absolute;left:0;bottom:125%;background:var(--ink);color:var(--parchment);
+    padding:6px 10px;border-radius:6px;font-size:13px;font-family:'Public Sans',sans-serif;white-space:nowrap;
+    box-shadow:0 8px 20px rgba(0,0,0,0.4);z-index:5;border:1px solid rgba(232,169,76,0.3);
+  }
+
+  .section{max-width:820px;margin:0 auto 30px;}
+  .section-title{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--lamp);margin-bottom:12px;}
+  .wordbank{display:flex;flex-wrap:wrap;gap:10px;}
+  .wb-chip{background:rgba(232,169,76,0.08);border:1px solid rgba(232,169,76,0.25);border-radius:8px;padding:8px 14px;font-size:14px;}
+  .wb-chip b{color:var(--lamp);}
+
+  .comp-q{background:rgba(255,255,255,0.03);border:1px solid rgba(232,169,76,0.15);border-radius:10px;padding:18px 20px;margin-bottom:14px;}
+  .comp-q p{margin:0 0 10px;font-weight:600;}
+  .comp-opts{display:flex;gap:10px;flex-wrap:wrap;}
+  .opt-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(232,169,76,0.3);color:var(--parchment);padding:8px 14px;border-radius:8px;cursor:pointer;font-family:'Public Sans',sans-serif;font-size:14px;}
+  .opt-btn:hover{border-color:var(--lamp);}
+  .opt-btn.correct{background:#3a6e58;border-color:#4a8b6f;}
+  .opt-btn.wrong{background:#7a3a3a;border-color:#a34c4c;}
+
+  .teacher-btn{
+    display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#eafff5;border:none;
+    padding:12px 22px;border-radius:8px;font-weight:700;font-size:14.5px;cursor:pointer;margin:0 auto 50px;display:flex;
+    max-width:820px;width:calc(100% - 64px);justify-content:center;
+  }
+  .teacher-btn:hover{background:var(--green-dim);}
+
+  .modal-overlay{position:fixed;inset:0;background:rgba(6,8,18,0.8);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--ink-2);border:1px solid rgba(74,139,111,0.4);border-radius:14px;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;padding:28px 32px;}
+  .modal h2{color:#8fd6b6;font-size:22px;margin:0 0 4px;}
+  .modal-sub{color:var(--slate);font-size:13px;margin-bottom:20px;font-family:'Space Mono',monospace;}
+  .modal h3{color:var(--lamp);font-size:14px;text-transform:uppercase;letter-spacing:.6px;margin:20px 0 6px;font-family:'Space Mono',monospace;}
+  .modal p, .modal li{font-size:14.5px;line-height:1.6;color:#dfe3ee;}
+  .modal ul{margin:0;padding-left:20px;}
+  .modal-close{float:right;background:none;border:none;color:var(--slate);font-size:20px;cursor:pointer;}
+  .copy-btn{margin-top:22px;background:rgba(143,214,182,0.12);border:1px solid rgba(143,214,182,0.4);color:#8fd6b6;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;}
+  .copy-btn:hover{background:rgba(143,214,182,0.22);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back-link" href="panorama-cultural.html">← Panorama Cultural</a>
+  <span class="wordmark">CUENTÓPOLIS</span>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">Panorama Cultural · Descubriendo Belize</div>
+  <h1 class="title">Capítulo 1: Yo También Soy de Aquí</h1>
+  <p class="subtitle">narrado por Profe Ari</p>
+  <div class="meta-row">Identidad · Inmigración · Diversidad cultural de Belize &nbsp;·&nbsp; 21 de septiembre</div>
+
+  <div class="level-pills" id="levelPills">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+</div>
+
+<div class="reader-card">
+  <div class="story-text">
+
+    <div class="level-block active" data-level="A1">
+      <p>"¡Feliz cumpleaños, Belize!" dice Profe Ari.</p>
+      <p>Profe Ari no es de Belize. Ella es de Cuba.</p>
+      <p>Profe Ari es <span class="gloss" data-tip="immigrant">inmigrante</span>. Un inmigrante vive en un país diferente.</p>
+      <p>Profe Ari vive en Belize ahora.</p>
+      <p>A Profe Ari le gusta mucho Belize.</p>
+      <p>Belize tiene muchos grupos de personas diferentes.</p>
+      <p>Belize tiene animales <span class="gloss" data-tip="amazing">asombrosos</span>.</p>
+      <p>Belize tiene un arrecife muy grande.</p>
+      <p>Belize tiene ciudades mayas importantes.</p>
+      <p>Belize es pequeño, pero es especial.</p>
+      <p>Cada día, Profe Ari descubre algo nuevo.</p>
+      <p>¡Hoy, Profe Ari también es de aquí!</p>
+    </div>
+
+    <div class="level-block" data-level="A2">
+      <p>"¡Feliz cumpleaños, Belize!" dice Profe Ari con <span class="gloss" data-tip="pride">orgullo</span>.</p>
+      <p>Profe Ari no es de aquí — ella es de Cuba, una isla pequeña.</p>
+      <p>Profe Ari es inmigrante. Un inmigrante es una persona que llega a un país diferente para vivir allí.</p>
+      <p>Antes, Profe Ari vivía en Cuba. Ahora vive en Belize.</p>
+      <p>Al principio fue difícil, porque ella dejó su familia, su cultura y su idioma.</p>
+      <p>Pero Belize hizo todo más fácil, porque Belize no es un lugar ordinario.</p>
+      <p>Belize es pequeño, pero tiene mucho: grupos étnicos con mucha cultura, animales asombrosos, un arrecife enorme, y ciudades mayas importantes.</p>
+      <p>Por eso, Profe Ari dice: "Belize es como David — pequeño, pero <span class="gloss" data-tip="majestic">majestuoso</span>."</p>
+      <p>Cada día, ella descubre algo nuevo.</p>
+      <p>Y hoy, ella también es de aquí.</p>
+    </div>
+
+    <div class="level-block" data-level="B1">
+      <p>"¡Feliz cumpleaños, Belize!" dice Profe Ari con orgullo. La profe no es de aquí. Ella viene de una pequeña isla llamada Cuba. La profe es inmigrante. ¿Qué es un inmigrante? De acuerdo con el diccionario de la lengua española: un inmigrante es una persona que llega a un país o lugar diferente para vivir allí.</p>
+      <p>Yo vivía en Cuba, y ahora vivo en Belize. Al principio fue muy difícil para mí: abandonar mi tierra, mi familia, mis amigos, mi cultura y mis tradiciones. Luego, enfrentarme a las dificultades del idioma. Todo parecía un gran <span class="gloss" data-tip="challenge">reto</span>. Pero Belize hizo todo mucho más fácil para mí, porque Belize no es un lugar ordinario.</p>
+      <p>A simple vista puede parecer un país pequeño. Pero algo que descubro día a día es que Belize es un país impresionante, diverso y espectacular.</p>
+      <p>Lo que más me gusta de Belize es su <span class="gloss" data-tip="multiculturalism">multiculturalismo</span>. Sus grupos étnicos tienen tanta cultura que ofrecer. Belize es el hogar de muchos animales asombrosos. Belize guarda un <span class="gloss" data-tip="reef">arrecife</span> de coral que es el segundo más largo del mundo. Belize tiene una de las ciudades mayas más importantes de Centroamérica.</p>
+      <p>Belize es un David: pequeño, pero majestuoso.</p>
+      <p>Cada día descubro algo nuevo e interesante sobre esta tierra. Y me encanta saber que hoy, yo también soy de aquí.</p>
+    </div>
+
+    <div class="level-block" data-level="B2">
+      <p>"¡Feliz cumpleaños, Belize!" dice Profe Ari con orgullo, casi como si le hablara a un viejo amigo. Ella no es de aquí. Viene de una pequeña isla llamada Cuba, y hoy es, <span class="gloss" data-tip="undoubtedly">sin duda</span>, una inmigrante. Según el diccionario de la lengua española, un inmigrante es una persona que llega a un país o lugar diferente para vivir allí — una definición sencilla para algo que, en la práctica, cambia la vida entera.</p>
+      <p>Yo vivía en Cuba, y ahora vivo en Belize. Al principio fue muy difícil: abandonar mi tierra, mi familia, mis amigos, mi cultura y mis tradiciones, y después enfrentarme a las dificultades del idioma. Todo parecía un reto enorme. Pero Belize hizo todo mucho más fácil para mí, porque Belize no es un lugar ordinario.</p>
+      <p>A simple vista puede parecer un país pequeño. Pero algo que descubro día a día es que Belize es impresionante, diverso y espectacular — un país que guarda más de lo que su tamaño sugiere.</p>
+      <p>Lo que más me gusta de Belize es su multiculturalismo. Sus grupos étnicos tienen tanta cultura que ofrecer. Belize es el hogar de muchos animales asombrosos, guarda un arrecife de coral que es el segundo más largo del mundo, y tiene una de las ciudades mayas más importantes de Centroamérica.</p>
+      <p>Belize es un David: pequeño, pero majestuoso.</p>
+      <p>Cada día descubro algo nuevo e interesante sobre esta tierra. Y me encanta saber que hoy, yo también soy de aquí.</p>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Banco de palabras</div>
+  <div class="wordbank">
+    <span class="wb-chip"><b>inmigrante</b> — immigrant</span>
+    <span class="wb-chip"><b>orgullo</b> — pride</span>
+    <span class="wb-chip"><b>asombroso</b> — amazing</span>
+    <span class="wb-chip"><b>multiculturalismo</b> — multiculturalism</span>
+    <span class="wb-chip"><b>arrecife</b> — reef</span>
+    <span class="wb-chip"><b>majestuoso</b> — majestic</span>
+    <span class="wb-chip"><b>reto</b> — challenge</span>
+    <span class="wb-chip"><b>descubrir</b> — to discover</span>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Comprensión</div>
+
+  <div class="comp-q">
+    <p>1. ¿De dónde es Profe Ari?</p>
+    <div class="comp-opts">
+      <button class="opt-btn" data-correct="false">Belize</button>
+      <button class="opt-btn" data-correct="true">Cuba</button>
+      <button class="opt-btn" data-correct="false">México</button>
+    </div>
+  </div>
+
+  <div class="comp-q">
+    <p>2. ¿Por qué dice Profe Ari que "Belize es un David"?</p>
+    <div class="comp-opts">
+      <button class="opt-btn" data-correct="false">Porque Belize es un país bíblico</button>
+      <button class="opt-btn" data-correct="true">Porque Belize es pequeño pero especial</button>
+      <button class="opt-btn" data-correct="false">Porque Belize tiene un rey llamado David</button>
+    </div>
+  </div>
+</div>
+
+<button class="teacher-btn" onclick="document.getElementById('modalOverlay').classList.add('open')">🎓 Notas del maestro</button>
+
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">✕</button>
+    <h2>Notas del maestro</h2>
+    <div class="modal-sub">Descubriendo Belize · Capítulo 1 · Foundation edition</div>
+
+    <h3>Unidad curricular</h3>
+    <p>Identidad, inmigración y diversidad cultural de Belize — unidad de Independencia (21 de septiembre).</p>
+
+    <h3>Objetivos lingüísticos</h3>
+    <ul>
+      <li>Narrar en primera persona con contraste de pasados (imperfecto: vivía · pretérito: fue, hizo)</li>
+      <li>Usar el presente para expresar descubrimiento continuo (descubro, me gusta)</li>
+      <li>Comprender una definición de diccionario como recurso de vocabulario en contexto</li>
+      <li>Vocabulario de identidad y pertenencia (inmigrante, multiculturalismo, hogar)</li>
+    </ul>
+
+    <h3>Estructuras de alta frecuencia</h3>
+    <p>es / son · tiene · vivía · fue · hizo · me gusta · descubro · guarda · puede parecer</p>
+
+    <h3>Notas de ritmo CEFR</h3>
+    <ul>
+      <li>A1 — solo presente; oraciones muy cortas.</li>
+      <li>A2 — se introduce el pasado simple (vivía/fue) y el conector porque.</li>
+      <li>B1 — texto original de Profe Ari, tal como fue escrito.</li>
+      <li>B2 — registro más natural, con matices y conectores adicionales.</li>
+    </ul>
+
+    <h3>Banderas de sensibilidad de contenido</h3>
+    <p>El texto toca el tema de dejar el país de origen, la familia y los amigos — emocional pero manejado de forma positiva y esperanzadora. Tono cálido recomendado durante la lectura en voz alta.</p>
+
+    <h3>Nota de manejo cultural</h3>
+    <p>El nombre del país se mantiene en inglés — "Belize" — en vez de "Belice", por preferencia local dado el contexto histórico con Guatemala. Aplicar en todos los capítulos futuros de esta serie.</p>
+
+    <h3>Huellas del Viajero</h3>
+    <p>Profe Ari — de Cuba, ahora vive en Belize. Este capítulo establece el molde de la serie: cada narrador futuro ES el Huellas del Viajero de su propio capítulo.</p>
+
+    <h3>Palabra del Bosque</h3>
+    <p>inmigrante — ya viene con su propia definición dentro del texto.</p>
+
+    <h3>Pregunta de Don Pico</h3>
+    <p>Profe Ari dice: "hoy, yo también soy de aquí." ¿Qué hace que un lugar se convierta en tu hogar?</p>
+
+    <h3>Notas de continuidad</h3>
+    <ul>
+      <li>Nombre de la serie confirmado como "Descubriendo Belize" (sin "a").</li>
+      <li>Un concepto anterior de Capítulo 0 (un tucán guía llamado Toby) fue retirado por completo — reemplazado por el patrón de narrador humano.</li>
+      <li>Ubicada dentro de Panorama Cultural como su propio libro (no una nueva zona "Rincón de los Autores").</li>
+      <li>Diferido: audio narrado, banco de palabras ampliado por nivel, hub page dedicada (pendiente hasta que existan más capítulos).</li>
+    </ul>
+
+    <button class="copy-btn" onclick="copyNotes()">📋 Copiar notas</button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const level = pill.dataset.level;
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      document.querySelectorAll('.level-block').forEach(b => b.classList.toggle('active', b.dataset.level === level));
+    });
+  });
+
+  document.querySelectorAll('.comp-q').forEach(q => {
+    q.querySelectorAll('.opt-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const opts = q.querySelectorAll('.opt-btn');
+        opts.forEach(o => o.classList.remove('correct','wrong'));
+        if (btn.dataset.correct === 'true') {
+          btn.classList.add('correct');
+        } else {
+          btn.classList.add('wrong');
+          opts.forEach(o => { if (o.dataset.correct === 'true') o.classList.add('correct'); });
+        }
+      });
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('.modal');
+    const text = modal.innerText.replace('✕','').replace('📋 Copiar notas','').trim();
+    navigator.clipboard.writeText(text).then(() => alert('Notas copiadas.'));
+  }
+</script>
+
+</body>
+</html>
