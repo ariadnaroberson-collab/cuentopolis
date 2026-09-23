@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mi Herencia Hispana</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,6 +16,7 @@
   --body:"Public Sans", "Segoe UI", system-ui, sans-serif;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:radial-gradient(ellipse at top,#2a241b 0%,var(--bg) 70%) fixed;background-color:var(--bg);color:var(--parch);font-family:var(--body);font-size:17px;line-height:1.5;margin:0}
 .wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:20px 60px}
 a{color:inherit}
@@ -109,6 +115,8 @@ footer{margin-top:40px;text-align:center;font-size:13px;color:var(--dim)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
+</head>
+<body>
 <div class="wrap">
   <header class="top">
     <div class="eyebrow">Cuentópolis · 15 de septiembre – 15 de octubre</div>
@@ -257,13 +265,17 @@ const BANDS={
 const $=s=>document.querySelector(s);
 const flag=code=>FLAGS[code]?flagSVG(code):'<svg viewBox="0 0 300 200" role="img" aria-label="Belice"><rect width="300" height="200" fill="#003F87"/><rect y="0" width="300" height="24" fill="#CE1126"/><rect y="176" width="300" height="24" fill="#CE1126"/><circle cx="150" cy="100" r="52" fill="#fff"/><circle cx="150" cy="100" r="44" fill="none" stroke="#3d7a2e" stroke-width="6"/></svg>';
 const cname=code=>code==='BZ'?'Belice':C[code].n;
-const pick=(href,code,title,sub)=>`<a class="pick" href="${href}" target="_blank" rel="noopener">${flag(code)}<div><b>${title}</b><span>${sub}</span></div><span class="arrow" aria-hidden="true">→</span></a>`;
+const ext=h=>h.startsWith(BASE)?'':' target="_blank" rel="noopener"';
+const pick=(href,code,title,sub)=>`<a class="pick" href="${href}"${ext(href)}>${flag(code)}<div><b>${title}</b><span>${sub}</span></div><span class="arrow" aria-hidden="true">→</span></a>`;
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 
 let band=null, tab='ruta', filter='Todos', q='';
+const ss={get(k){try{return JSON.parse(sessionStorage.getItem(k))}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const hash=(location.hash||'').slice(1);
 const HMAP={tres:'u35',ms:'ms',sec:'sec'};
 band=HMAP[hash]||store.get('hhm-est-band','u35');
+const back=ss.get('hhm-est-state'); let reopen=null;
+if(back&&(!HMAP[hash]||HMAP[hash]===back.band)){band=back.band;tab=back.tab;filter=back.filter||'Todos';reopen=back.country||null}
 
 function renderBands(){
   $('#bands').innerHTML=Object.entries(BANDS).map(([k,b])=>`<button class="band" data-b="${k}" aria-pressed="${k===band}">${b.tab} · ${b.name}</button>`).join('');
@@ -326,7 +338,7 @@ function openCountry(k){
    <div class="chead">${flag(k)}<div><div class="eyebrow">${c.reg}</div><h2>${c.n}</h2></div><button class="close" id="close">Cerrar ✕</button></div>
    <div class="facts"><div class="fact"><small>Capital</small>${c.cap}</div><div class="fact"><small>Idioma</small>${c.idi}</div><div class="fact"><small>Región</small>${c.reg}</div></div>
    <div class="sect"><h3>Ficha rápida</h3><div class="ficha">${c.ficha.map(f=>`<p>${f}</p>`).join('')}</div></div>
-   <div class="sect"><h3>Lee en Cuentópolis</h3>${reads.length?`<div class="links">${reads.map(r=>`<a class="link" href="${r.u}" target="_blank" rel="noopener"><div><b>${r.t}</b><span>${r.b}</span></div><span class="arrow">Abrir →</span></a>`).join('')}</div>`:'<p class="none">Todavía no hay una historia de este país en Cuentópolis.</p>'}</div>
+   <div class="sect"><h3>Lee en Cuentópolis</h3>${reads.length?`<div class="links">${reads.map(r=>`<a class="link" href="${r.u}"><div><b>${r.t}</b><span>${r.b}</span></div><span class="arrow">Abrir →</span></a>`).join('')}</div>`:'<p class="none">Todavía no hay una historia de este país en Cuentópolis.</p>'}</div>
    <div class="sect"><h3>Lee más</h3><div class="links"><a class="link" href="${VIKI+c.vk}" target="_blank" rel="noopener"><div><b>${c.n} en Vikidia</b><span>Enciclopedia en español para jóvenes de 8 a 13 años</span></div><span class="arrow">Abrir →</span></a></div></div>
    <div class="sect"><h3>Mi Pasaporte del País</h3><p class="note">Marca cada pregunta cuando encuentres la respuesta y escríbela en tu pasaporte.</p>
     <div class="check">${QS.map((qq,i)=>`<label><input type="checkbox" id="q-${k}-${i}" data-q="${i}" ${done.includes(i)?'checked':''}>${qq}</label>`).join('')}</div></div>
@@ -343,6 +355,7 @@ function render(){
 $('#bands').addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(!b)return;band=b.dataset.b;store.set('hhm-est-band',band);tab='ruta';render()});
 $('#tabs').addEventListener('click',e=>{const t=e.target.closest('[data-t]');if(!t)return;tab=t.dataset.t;render()});
 document.addEventListener('click',e=>{
+  const a=e.target.closest('a[href]'); if(a&&a.href.startsWith(BASE)){ss.set('hhm-est-state',{band,tab,filter,country:$('#overlay').hidden?null:$('#overlay').dataset.k,y:window.scrollY})}
   const g=e.target.closest('[data-go]'); if(g){tab=g.dataset.go;render();window.scrollTo(0,0);return}
   const c=e.target.closest('[data-country]'); if(c){openCountry(c.dataset.country);return}
   const f=e.target.closest('[data-f]'); if(f){filter=f.dataset.f;render();return}
@@ -352,4 +365,9 @@ document.addEventListener('input',e=>{if(e.target.id==='search'){q=e.target.valu
 document.addEventListener('change',e=>{const i=e.target.dataset.q;if(i==null)return;const k=$('#overlay').dataset.k;const all=store.get('hhm-est-check',{});const set=new Set(all[k]||[]);e.target.checked?set.add(+i):set.delete(+i);all[k]=[...set];store.set('hhm-est-check',all)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#overlay').hidden)closeCountry()});
 render();
+if(reopen&&C[reopen])openCountry(reopen);
+if(back&&back.y&&!reopen)window.scrollTo(0,back.y);
 </script>
+
+</body>
+</html>
