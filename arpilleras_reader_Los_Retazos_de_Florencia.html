@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Retazos de Florencia — Biblioteca FVR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+<style>.cp-back{display:inline-flex;align-items:center;gap:6px;font-family:"Space Mono",monospace;font-size:13px;color:#e3c878;text-decoration:none;border:1px solid #c9a24b;border-radius:999px;padding:6px 14px;margin:0 0 14px}.cp-back:hover{background:rgba(201,162,75,.15)}</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="cp-back" href="biblioteca-fvr.html" onclick="if(document.referrer&&document.referrer.indexOf(location.host)>-1&&history.length>1){history.back();return false;}">← Volver</a>
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Arte y artesanía</div>
+    <h1>Los Retazos de Florencia</h1>
+    <div class="subtitle">Una historia de Talca, región del Maule, Chile</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Florencia tiene doce años. Vive en Talca, una ciudad de Chile.</p>
+        <p>En la escuela, la maestra dice: "Proyecto nuevo: muestra tu comunidad."</p>
+        <p>Florencia piensa y piensa. No sabe qué hacer.</p>
+        <p>Florencia va a la casa de su abuela Rosa. La abuela tiene un baúl viejo.</p>
+        <p>Abre el baúl. ¡Hay muchos retazos! Son pedacitos de tela de colores: rojo, azul, verde, amarillo.</p>
+        <p>La abuela dice: "Es ropa vieja de la familia. Cada retazo tiene una historia."</p>
+        <p>La abuela dice: "Vamos a hacer una arpillera."</p>
+        <p>Florencia pregunta: "¿Qué es una arpillera?"</p>
+        <p>La abuela responde: "Es un cuadro de tela. No se pinta. Se corta y se cose."</p>
+        <p>Primero, Florencia dibuja su idea. Después, corta las formas: las montañas, las casas y el sol.</p>
+        <p>Pone las formas sobre una tela de saco. La tela de saco también se llama arpillera.</p>
+        <p>Después, cose las formas con aguja e hilo. La abuela la ayuda.</p>
+        <p>Al final, hacen muñequitas pequeñas de tela. Las muñequitas son la gente del barrio.</p>
+        <p>Mientras cosen, la abuela habla de Violeta Parra. Violeta Parra es una cantante famosa de Chile. También hace arpilleras.</p>
+        <p>En 1964, Violeta Parra muestra sus arpilleras en París, en el Palacio del Louvre.</p>
+        <p>La abuela dice: "Con tela y aguja se puede contar una historia."</p>
+        <p>La arpillera de Florencia tiene su barrio, la feria del sábado, las montañas y a su abuela.</p>
+        <p>En un rincón, Florencia cose un retazo azul. Es de la camisa de su abuelo.</p>
+        <p>En la escuela, Florencia muestra su arpillera. Dice: "Esta es mi comunidad. Y este retazo es de mi abuelo."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Florencia tiene doce años y vive en Talca, una ciudad en el centro de Chile, cerca de la cordillera de los Andes.</p>
+        <p>Un lunes, la maestra anuncia un proyecto nuevo: "Muestren su comunidad. Pueden usar fotos, dibujos o lo que quieran." Florencia piensa toda la semana, pero no tiene ninguna idea.</p>
+        <p>El sábado visita a su abuela Rosa. La abuela abre un baúl viejo lleno de retazos de tela de muchos colores. "Es ropa vieja de toda la familia," explica. "Guardo un retazo de cada camisa, cada vestido, cada pantalón. Cada retazo tiene una historia." Entonces sonríe: "Vamos a hacer una arpillera."</p>
+        <p>Florencia no sabe qué es. La abuela le explica: "Una arpillera es un cuadro de tela. No se pinta: se corta y se cose. Se llama así porque la base es tela de saco, que en Chile llamamos arpillera."</p>
+        <p>Primero, Florencia dibuja su idea en un papel. Después, corta las formas en los retazos: las montañas, las casas, el sol y los árboles. Luego pone las formas en capas sobre la tela de saco y las cose con una puntada simple. La abuela le enseña a mover la aguja despacio.</p>
+        <p>Al final, hacen muñequitas de tela, muy pequeñas, para la gente del barrio. Así la arpillera tiene relieve y parece tener vida.</p>
+        <p>Mientras cosen, la abuela le cuenta de Violeta Parra, una cantante y artista chilena muy famosa. Violeta Parra también hacía arpilleras, y en 1964 las mostró en París, en el Palacio del Louvre. "Con tela y aguja se puede contar una historia," dice la abuela.</p>
+        <p>La arpillera de Florencia muestra su barrio, la feria del sábado, las montañas y a su abuela cosiendo. En un rincón, Florencia cose un retazo azul de la camisa de su abuelo, que ya no vive con ellas.</p>
+        <p>El lunes, Florencia presenta su proyecto en la escuela. "Esta es mi comunidad," dice. "Y este retazo azul es de mi abuelo. Así él también está en mi arpillera."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Florencia tenía doce años y vivía en Talca, una ciudad del centro de Chile, desde donde se veía la cordillera de los Andes. Un lunes, la maestra anunció un proyecto nuevo: "Muestren su comunidad." Florencia pasó toda la semana pensando, pero no se le ocurrió nada.</p>
+        <p>El sábado fue a visitar a su abuela Rosa. La abuela abrió un baúl viejo lleno de retazos de tela de todos los colores. "Es ropa de toda la familia," le explicó. "Cada vez que una prenda se rompe, guardo un pedacito. Cada retazo tiene una historia." Luego la miró con una sonrisa: "Vamos a hacer una arpillera."</p>
+        <p>Florencia nunca había hecho una. La abuela le explicó que una arpillera era un cuadro de tela: no se pintaba, se cortaba y se cosía. El nombre venía de la base, una tela de saco que en Chile se llama arpillera.</p>
+        <p>Primero, Florencia dibujó su idea en un papel. Después cortó las formas en los retazos: la cordillera, las casas, el sol y los álamos de la calle. Luego las fue poniendo en capas sobre la tela de saco y las cosió con una puntada simple, mientras la abuela le enseñaba a mover la aguja con paciencia.</p>
+        <p>Al final hicieron muñequitas de tela, muy pequeñas, para representar a la gente del barrio. Las cosieron encima de todo, y así la arpillera tuvo relieve, como si las personas pudieran salir caminando.</p>
+        <p>Mientras cosían, la abuela le contó la historia de Violeta Parra, una cantante y artista chilena muy famosa que también hacía arpilleras. En 1964, Violeta Parra llevó sus arpilleras a París y las mostró en el Palacio del Louvre: fue la primera artista latinoamericana con una exposición individual allí. "Con tela y aguja se puede contar una historia," le dijo la abuela.</p>
+        <p>La arpillera de Florencia quedó llena de vida: su barrio, la feria del sábado, la cordillera y su abuela cosiendo junto a la ventana. En un rincón, Florencia cosió un retazo azul de la camisa de su abuelo, que había muerto el año anterior.</p>
+        <p>El lunes presentó su proyecto frente a la clase. "Esta es mi comunidad," dijo. "Y este retazo azul era de la camisa de mi abuelo. Así él también está en mi arpillera."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Florencia tenía doce años y vivía en Talca, una ciudad del centro de Chile desde la que, en los días despejados, se divisaba la cordillera de los Andes. Un lunes, la maestra propuso un proyecto: "Muestren su comunidad, como ustedes quieran." Florencia pasó la semana entera dándole vueltas al asunto, sin que se le ocurriera nada que la convenciera.</p>
+        <p>El sábado fue a visitar a su abuela Rosa, quien, al oír el problema, abrió un baúl antiguo repleto de retazos de tela de todos los colores. "Es la ropa de toda la familia," le explicó. "Cada vez que una prenda se gasta, le corto un pedacito y lo guardo aquí. Cada retazo tiene una historia." Luego añadió con una sonrisa cómplice: "Vamos a hacer una arpillera."</p>
+        <p>Florencia nunca había hecho una. Su abuela le explicó que una arpillera es un cuadro textil: no se pinta, sino que se construye cortando y cosiendo. El nombre proviene de la base, una tela de saco áspera que en Chile se conoce precisamente como arpillera.</p>
+        <p>Primero, Florencia esbozó su idea en un papel. Después recortó las formas en los retazos: la silueta de la cordillera, las casas, el sol y los álamos de su calle. Luego las fue superponiendo en capas sobre la tela de saco y las fijó con una puntada sencilla, mientras la abuela le enseñaba a guiar la aguja sin prisa.</p>
+        <p>Por último confeccionaron unas muñequitas diminutas de tela para representar a los vecinos del barrio. Al coserlas sobre la escena, la arpillera adquirió relieve, como si aquellas figuras pudieran echarse a caminar en cualquier momento.</p>
+        <p>Mientras cosían, la abuela le habló de Violeta Parra, cantante, compositora y artista chilena que también creó arpilleras. En 1964 las expuso en París, en el Museo de Artes Decorativas del Palacio del Louvre, y se convirtió así en la primera artista latinoamericana en presentar allí una exposición individual. "Con tela y aguja también se puede contar una historia," concluyó la abuela.</p>
+        <p>La arpillera de Florencia terminó rebosante de vida: su barrio, la feria de los sábados, la cordillera al fondo y su abuela cosiendo junto a la ventana. En un rincón, casi escondido, Florencia cosió un retazo azul de la camisa de su abuelo, fallecido el año anterior.</p>
+        <p>El lunes presentó su trabajo ante la clase. "Esta es mi comunidad," dijo. "Y este retazo azul era de la camisa de mi abuelo. Así él también forma parte de mi arpillera."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la arpillera</span> — burlap; also the Chilean fabric picture</div>
+      <div><span class="term">el retazo</span> — fabric scrap</div>
+      <div><span class="term">la tela</span> — fabric, cloth</div>
+      <div><span class="term">coser</span> — to sew</div>
+      <div><span class="term">la aguja</span> — needle</div>
+      <div><span class="term">el hilo</span> — thread</div>
+      <div><span class="term">la puntada</span> — stitch</div>
+      <div><span class="term">la capa</span> — layer</div>
+      <div><span class="term">el baúl</span> — chest, trunk</div>
+      <div><span class="term">la cordillera</span> — mountain range</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>se hace con...</span>
+      <span>no se pinta, se corta y se cose</span>
+      <span>primero..., después..., al final...</span>
+      <span>cada retazo tiene una historia</span>
+      <span>con tela y aguja se puede contar una historia</span>
+      <span>esta es mi comunidad</span>
+      <span>así él también está...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué es una arpillera? Explica los pasos para hacerla en orden.</div>
+    <div class="comp-q"><span class="num">2.</span>¿Por qué cose Florencia un retazo de la camisa de su abuelo?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Los Retazos de Florencia</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR → Arte y artesanía (texto independiente)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Arte y tradición cultural — la arpillera chilena como forma de contar historias, el reciclaje de tela, el arte comunitario y el aprendizaje de un oficio en familia. Texto base de la manualidad de arpilleras de Middle School.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir una obra de arte (qué muestra, materiales, colores); narrar un proceso artesanal en orden; explicar cómo un objeto cuenta una historia; narrar en pasado una experiencia de aprendizaje con un familiar.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>se hace con... · no se pinta, se corta y se cose · primero..., después..., al final... · cada retazo tiene una historia · con tela y aguja se puede contar una historia · esta es mi comunidad.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas; la arpillera se describe con colores y formas; el proceso con verbos simples (dibuja, corta, cose).<br>
+    <strong>A2:</strong> se añaden el origen del nombre, las capas, las muñequitas y el dato de Violeta Parra; conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando cómo Florencia hizo y presentó su arpillera; el abuelo aparece como recuerdo.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario textil más preciso (superponer, relieve, confeccionar); reflexión sobre el arte como memoria.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>A1/A2 no mencionan la muerte del abuelo ("ya no vive con ellas" en A2); B1/B2 lo dicen de forma breve y tranquila. Las arpilleras también son conocidas porque, durante la dictadura en Chile (1973–1990), muchas mujeres las usaron para contar historias difíciles de sus familias; esto no aparece en el texto de los estudiantes y queda a criterio de la maestra. Datos reales y documentados: la arpillera como cuadro de retazos y lana cosidos sobre tela de saco; telas recicladas; Violeta Parra (1917–1967) y su exposición individual de 1964 en el Museo de Artes Decorativas del Palacio del Louvre, la primera de una artista latinoamericana; artesanas actuales en la región del Maule y Santiago. Florencia y la abuela Rosa son personajes ficticios.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Abuela Rosa</strong> — arpillerista de Talca. Detalle propio: guarda un retazo de cada prenda vieja de la familia en un baúl, "porque cada retazo tiene una historia".</p>
+    <p><strong>(Sin visitante internacional)</strong> — El espacio se mantiene según el formato. La conexión con el mundo es Violeta Parra y su exposición en París.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>textil</em> — cognado natural con "textile"; nombra el tipo de arte de la arpillera.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Si hicieras una arpillera de tu comunidad en Belice, ¿qué escenas pondrías? ¿Qué retazo de tu familia usarías?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Texto independiente, no pertenece a una serie. Conexión con La Collera de Javiera (Entrevistas callejeras, Historia 5): Chile, la cueca y el campo. Incluido en la ficha de Chile de la app "Mi Mes de la Herencia Hispana".</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

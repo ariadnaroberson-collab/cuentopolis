@@ -197,7 +197,7 @@ const C={
  BO:{n:'Bolivia',cap:'Sucre y La Paz',reg:'Sudamérica',idi:'español, quechua, aimara y más',vk:'Bolivia',
    ficha:['Bolivia está en Sudamérica. Tiene dos capitales: Sucre y La Paz.','El Salar de Uyuni es el desierto de sal más grande del mundo.','Una comida típica es la salteña, una empanada con caldo adentro.','Comparte el lago Titicaca con Perú.','En las montañas viven llamas y cóndores.']},
  CL:{n:'Chile',cap:'Santiago',reg:'Sudamérica',idi:'español',vk:'Chile',
-   ficha:['Chile está en Sudamérica. La capital es Santiago.','Chile es un país muy largo y muy delgado.','En el norte está el desierto de Atacama, uno de los lugares más secos del mundo.','Una comida típica es la empanada de pino (carne, cebolla, huevo y aceituna).','El baile nacional es la cueca. Se baila con un pañuelo.']},
+   ficha:['Chile está en Sudamérica. La capital es Santiago.','Chile es un país muy largo y muy delgado.','En el norte está el desierto de Atacama, uno de los lugares más secos del mundo.','Una comida típica es la empanada de pino (carne, cebolla, huevo y aceituna).','El baile nacional es la cueca. Se baila con un pañuelo.','Las arpilleras son cuadros de tela cosidos a mano. ¡Cuentan historias con retazos!']},
  AR:{n:'Argentina',cap:'Buenos Aires',reg:'Sudamérica',idi:'español',vk:'Argentina',
    ficha:['Argentina está en Sudamérica. La capital es Buenos Aires.','El tango es un baile famoso de Buenos Aires.','Una comida típica es el asado. También las empanadas.','Mucha gente toma mate, una bebida caliente que se comparte.','El ave nacional es el hornero: ¡hace su casa de barro!']},
  UY:{n:'Uruguay',cap:'Montevideo',reg:'Sudamérica',idi:'español',vk:'Uruguay',
@@ -229,7 +229,7 @@ const READS={
  EC:[R('pueblosperdidos_historia8_reader_La_Canoa_Solar_de_Yankuam.html','La Canoa Solar de Yankuam',MEM)],
  PE:[R('pueblosperdidos_historia1_reader_El_Camino_de_Killa.html','El Camino de Killa',MEM),R('recetaabuela_historia1_reader_El_Ceviche_de_Fernanda.html','El Ceviche de Fernanda',REC)],
  BO:[R('pueblosperdidos_historia2_reader_El_Lago_de_Wara.html','El Lago de Wara',MEM),R('recetaabuela_historia6_reader_El_Secreto_de_Veronica.html','El Secreto de Verónica',REC)],
- CL:[R('entrevistas_historia5_reader_La_Collera_de_Javiera.html','La Collera de Javiera',ENT)],
+ CL:[R('entrevistas_historia5_reader_La_Collera_de_Javiera.html','La Collera de Javiera',ENT),R('arpilleras_reader_Los_Retazos_de_Florencia.html','Los Retazos de Florencia','Biblioteca FVR · Arte y artesanía')],
  AR:[R('pueblosperdidos_historia7_reader_El_Viento_de_Tomas.html','El Viento de Tomás',MEM),R('recetaabuela_historia2_reader_El_Repulgue_de_Joaquin.html','El Repulgue de Joaquín',REC),R('baul_de_emilio_episodio1_reader_Lionel_Messi.html','Lionel Messi',BAUL)],
  UY:[R('entrevistas_historia7_reader_La_Ronda_de_Bruno.html','La Ronda de Bruno',ENT)],
  PY:[R('pombero_reader.html','El Pombero',FVR)],
@@ -254,7 +254,7 @@ const BANDS={
   road:[['Semana 1','El sorteo','Tu pareja recibe una persona especial de El Baúl de Emilio.','misiones'],['Semana 2','El Baúl de Emilio','Lees el episodio de tu persona especial: ¿cómo era a tu edad?','misiones'],['Semana 3','¡Perú!','Leemos sobre Perú y hacemos el póster de la clase.','misiones'],['10 de octubre','La gran fiesta','Presentas tu persona especial y el póster de Perú a las familias.',null]],
   missions:['persona','peru']},
  ms:{tab:'6-8',name:'Middle School',
-  road:[['Semana 1','Doble sorteo','Una leyenda para tu pareja y un país para ti.','misiones'],['Semana 2','Leyendas y países','Lees tu leyenda en la Biblioteca FVR. Empiezas tu Pasaporte del País.','paises'],['Semana 3','¡Chile!','Investigamos Chile para el proyecto de la clase. Terminas tu pasaporte.','misiones'],['10 de octubre','La gran fiesta','Cuentas tu leyenda y muestras tu país y Chile a las familias.',null]],
+  road:[['Semana 1','Doble sorteo','Una leyenda para tu pareja y un país para ti.','misiones'],['Semana 2','Leyendas y países','Lees tu leyenda en la Biblioteca FVR. Empiezas tu Pasaporte del País.','paises'],['Semana 3','Arpilleras de Chile','Leemos Los Retazos de Florencia y hacemos nuestras arpilleras. Terminas tu pasaporte.','misiones'],['10 de octubre','La gran fiesta','Cuentas tu leyenda y muestras tu país y Chile a las familias.',null]],
   missions:['leyenda','pasaporte','chile']},
  sec:{tab:'9-11',name:'Secundaria',
   road:[['Semana 1','El sorteo','Recibes un país de Memorias de pueblos perdidos.','misiones'],['Semana 2','Tu historia','Lees la historia de tu país e investigas: geografía, escuela, cultura y retos.','paises'],['Semana 3','Máscaras de Puerto Rico','Leemos El Vejigante de Valeria y hacemos las máscaras.','misiones'],['10 de octubre','La gran fiesta','Presentas tu país y mostramos las máscaras a las familias.',null]],
@@ -307,9 +307,9 @@ const M={
  pasaporte:()=>`<article class="mission"><div class="mhead"><h3>Mi Pasaporte del País</h3><span class="tag">Individual</span></div>
    <p class="lead">Busca tu país en el <b>Explorador de países</b>. Allí encuentras su ficha, las historias de Cuentópolis y más lecturas.</p>
    <div class="row"><button class="btn" data-go="paises">Ir al Explorador de países →</button></div></article>`,
- chile:()=>`<article class="mission"><div class="mhead"><h3>Proyecto de la clase: Chile</h3><span class="tag">Toda la clase</span></div>
-   <p class="lead">Investigamos Chile juntos para nuestro proyecto y manualidad.</p>
-   <div class="grid">${pick(READS.CL[0].u,'CL','La Collera de Javiera','Entrevistas callejeras · rodeo y cueca')}<a class="pick" href="${VIKI+'Chile'}" target="_blank" rel="noopener">${flag('CL')}<div><b>Chile en Vikidia</b><span>Enciclopedia para jóvenes</span></div><span class="arrow" aria-hidden="true">→</span></a></div>
+ chile:()=>`<article class="mission"><div class="mhead"><h3>Proyecto de la clase: arpilleras de Chile</h3><span class="tag">Toda la clase</span></div>
+   <p class="lead">Vamos a hacer arpilleras: cuadros de tela cosidos, un arte tradicional de Chile. Primero leemos cómo Florencia hace la suya con su abuela.</p>
+   <div class="grid">${pick(READS.CL[1].u,'CL','Los Retazos de Florencia','Biblioteca FVR · arpilleras')}${pick(READS.CL[0].u,'CL','La Collera de Javiera','Entrevistas callejeras · rodeo y cueca')}<a class="pick" href="${VIKI+'Chile'}" target="_blank" rel="noopener">${flag('CL')}<div><b>Chile en Vikidia</b><span>Enciclopedia para jóvenes</span></div><span class="arrow" aria-hidden="true">→</span></a></div>
    <div class="row"><button class="btn" data-country="CL">Ficha de Chile</button></div></article>`,
  memorias:()=>`<article class="mission"><div class="mhead"><h3>Mi país en Memorias de pueblos perdidos</h3><span class="tag">Individual</span></div>
    <p class="lead">Busca el país que te tocó en el sorteo y abre su historia. Cada historia cuenta cómo un niño o una niña llega a la escuela.</p>
