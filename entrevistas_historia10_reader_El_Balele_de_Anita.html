@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Balélé de Anita — Entrevistas callejeras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Entrevistas callejeras · Historia 10</div>
+    <h1>El Balélé de Anita</h1>
+    <div class="subtitle">Una historia de Malabo, isla de Bioko, Guinea Ecuatorial</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Ramón y Milo Compás tienen un proyecto nuevo. Es una serie de videos: "Ritmos del mundo hispano."</p>
+        <p>La primera parada es una sorpresa. ¡Es África!</p>
+        <p>Ramón pregunta: "¿Hablan español en África?" Milo responde: "Sí. En Guinea Ecuatorial, el español es un idioma oficial."</p>
+        <p>Guinea Ecuatorial es el único país de África con el español como idioma oficial.</p>
+        <p>Ramón y Milo llegan a Malabo. Malabo es la capital. Está en una isla: la isla de Bioko.</p>
+        <p>Es diciembre. Es Navidad. En la calle hay música y tambores.</p>
+        <p>Un grupo baila balélé. Los pies se mueven muy rápido. La gente canta y aplaude.</p>
+        <p>Ramón conoce a Anita. Anita tiene catorce años. Baila balélé con el grupo de su barrio.</p>
+        <p>Milo quiere bailar. Mueve los pies... ¡pero se enreda! Todos se ríen. Milo se ríe también.</p>
+        <p>Anita le enseña un truco: "Primero escucha el tambor. Después mueve los pies."</p>
+        <p>Milo cierra los ojos. Escucha el tambor: pum, pum-pum, pum. Después mueve los pies. ¡Ahora sí!</p>
+        <p>Ramón entrevista a Anita: "¿Qué idiomas hablas?" Anita responde: "En la escuela hablo español. En casa, con mi abuela, hablo el idioma de mi familia."</p>
+        <p>Anita dice: "Soy africana y hablo español. Las dos cosas son mías."</p>
+        <p>Anita cuenta un dato: "Mi país celebra su independencia el 12 de octubre."</p>
+        <p>Ramón mira a la cámara: "¡Qué sorpresa! El mundo hispano es más grande de lo que pensamos."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Ramón y Milo Compás empiezan por fin el proyecto que prometieron en Santo Domingo: una serie de videos llamada "Ritmos del mundo hispano." Cuando Ramón anuncia la primera parada, sus seguidores no lo pueden creer: ¡África!</p>
+        <p>Muchos comentan: "¿Español en África?" Ramón explica que Guinea Ecuatorial es el único país de África donde el español es idioma oficial. El francés y el portugués también son oficiales allí.</p>
+        <p>Ramón y Milo llegan a Malabo, la capital, que está en la isla de Bioko. Es diciembre, y la ciudad se prepara para la Navidad.</p>
+        <p>Por la noche, las calles se llenan de música. Un grupo baila balélé: los pies se mueven muy rápido, la gente canta y los tambores no paran. En la costa del país se baila balélé todo el año, pero en Bioko es muy popular en Navidad.</p>
+        <p>Ramón conoce a Anita, una chica de catorce años que baila con el grupo de su barrio. Anita practica los pasos en las escaleras de su edificio, contando en español y en el idioma de su abuela.</p>
+        <p>Milo, con mucha energía, intenta bailar. Pero los pies van demasiado rápido y... ¡se enreda! Todos se ríen, y Milo se ríe también.</p>
+        <p>Anita le explica el truco: "Tú miras los pies. Pero el balélé no empieza en los pies. Primero escucha el tambor. Después mueve los pies." Milo escucha con atención y, poco a poco, sus pies encuentran el ritmo.</p>
+        <p>Después, Ramón entrevista a Anita. "¿Qué idiomas hablas?" pregunta. "En la escuela hablo español," responde Anita. "En casa, con mi abuela, hablo el idioma de mi familia. Soy africana y hablo español. Las dos cosas son mías."</p>
+        <p>Anita añade un dato curioso: su país celebra la independencia el 12 de octubre. Ramón mira a la cámara y dice: "Pensé que conocía el mundo hispano. Pero es más grande de lo que pensamos."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Una semana antes de Navidad, Ramón y Milo Compás aterrizaron en Malabo para empezar, por fin, el proyecto que habían prometido en Santo Domingo: una serie de videos llamada "Ritmos del mundo hispano." Cuando Ramón anunció la primera parada, sus seguidores llenaron los comentarios de preguntas: "¿África? ¿Hablan español allí?"</p>
+        <p>Ramón ya tenía la respuesta preparada. Guinea Ecuatorial es el único país de África donde el español es idioma oficial, junto con el francés y el portugués. Su capital, Malabo, está en la isla de Bioko, frente a la costa del continente.</p>
+        <p>Esa noche, las calles se llenaron de música. Un grupo bailaba balélé frente a una casa del barrio: pasos rápidos, cantos alegres y tambores que no paraban ni un segundo. Un señor le explicó a Ramón que en la costa el balélé se baila durante todo el año, pero que en Bioko es sobre todo una tradición de Navidad.</p>
+        <p>Allí conocieron a Anita, una chica de catorce años que bailaba con el grupo de su barrio desde pequeña. Contó que practicaba los pasos en las escaleras de su edificio, contando en español y en el idioma de su abuela.</p>
+        <p>Milo no pudo esperar. Entró en el círculo con mucha energía, pero sus pies iban por un lado y el ritmo por otro. Se enredó, casi se cayó, y todo el grupo se echó a reír. Milo se rió también: después de Sevilla, ya sabía que equivocarse era parte de aprender.</p>
+        <p>Anita se acercó y le dio el consejo que le había dado su abuela: "Estás mirando tus pies. Pero el balélé no empieza en los pies. Primero escucha el tambor. Después mueve los pies." Milo cerró los ojos, escuchó, y poco a poco sus pasos encontraron el ritmo.</p>
+        <p>Más tarde, Ramón le hizo la entrevista. "¿Qué idiomas hablas?" le preguntó. "En la escuela, español. En casa, con mi abuela, el idioma de mi familia," respondió Anita. "A veces la gente cree que tengo que elegir. Pero soy africana y hablo español. Las dos cosas son mías."</p>
+        <p>Antes de despedirse, Anita le contó que su país celebra la independencia el 12 de octubre, desde 1968. Ramón miró a la cámara: "Pensé que conocía el mundo hispano. Esta noche aprendí que es mucho más grande de lo que pensábamos."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Una semana antes de Navidad, Ramón y Milo Compás aterrizaron en Malabo dispuestos a inaugurar, por fin, el proyecto que se habían prometido en Santo Domingo: una serie de videos titulada "Ritmos del mundo hispano." En cuanto Ramón anunció el destino de la primera parada, los comentarios se inundaron de asombro: "¿África? ¿De verdad se habla español allí?"</p>
+        <p>Ramón tenía la respuesta preparada. Guinea Ecuatorial es el único país africano en el que el español es lengua oficial, junto con el francés y el portugués. Su capital, Malabo, se encuentra en la isla de Bioko, frente a la costa continental, y en sus calles conviven varios pueblos y varias lenguas.</p>
+        <p>Esa misma noche, el barrio se llenó de música. Frente a una casa, un grupo bailaba balélé: un juego de pies veloz y preciso, cantos que el público coreaba y unos tambores que no daban tregua. Un vecino le explicó a Ramón que en la costa el balélé se baila a lo largo de todo el año, pero que en Bioko está íntimamente ligado a la Navidad.</p>
+        <p>Fue allí donde conocieron a Anita, una muchacha de catorce años que bailaba con el grupo de su barrio desde que tenía memoria. Les confesó que ensayaba los pasos en las escaleras de su edificio, contando en voz baja en español y en la lengua de su abuela.</p>
+        <p>Milo, incapaz de contenerse, se lanzó al círculo con su entusiasmo habitual; sin embargo, sus pies parecían ir por un camino y el ritmo por otro. Se enredó, estuvo a punto de caerse, y el grupo entero estalló en carcajadas. Milo se rio con ellos: desde Sevilla había aprendido que equivocarse forma parte de cualquier aprendizaje verdadero.</p>
+        <p>Anita se le acercó y le transmitió el consejo que ella misma había recibido de su abuela: "Estás pendiente de tus pies. Pero el balélé no nace en los pies. Primero escucha el tambor; después, deja que los pies le respondan." Milo cerró los ojos, escuchó con atención y, paso a paso, su cuerpo fue encontrando el ritmo.</p>
+        <p>Más tarde, ya con la cámara encendida, Ramón le preguntó qué idiomas hablaba. "En la escuela, español. En casa, con mi abuela, la lengua de mi familia," respondió Anita con naturalidad. "A veces la gente da por hecho que tengo que escoger. Pero soy africana y hablo español. Las dos cosas son mías."</p>
+        <p>Antes de despedirse, Anita añadió un dato que Ramón no esperaba: su país celebra la independencia el 12 de octubre, desde 1968, en pleno mes de la herencia hispana. Ramón miró a la cámara y cerró el episodio: "Creía que conocía el mundo hispano. Esta noche descubrí que es mucho más grande de lo que imaginábamos."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el idioma oficial</span> — official language</div>
+      <div><span class="term">la isla</span> — island</div>
+      <div><span class="term">la capital</span> — capital city</div>
+      <div><span class="term">el tambor</span> — drum</div>
+      <div><span class="term">los pasos</span> — dance steps</div>
+      <div><span class="term">enredarse</span> — to get tangled up</div>
+      <div><span class="term">el truco</span> — trick, tip</div>
+      <div><span class="term">el barrio</span> — neighborhood</div>
+      <div><span class="term">equivocarse</span> — to make a mistake</div>
+      <div><span class="term">el ritmo</span> — rhythm (cognate)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>es el único país de...</span>
+      <span>primero escucha, después...</span>
+      <span>en la escuela hablo...</span>
+      <span>en casa hablo...</span>
+      <span>las dos cosas son mías</span>
+      <span>se baila en Navidad</span>
+      <span>es más grande de lo que pensamos</span>
+      <span>¡qué sorpresa!</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué truco le enseña Anita a Milo para aprender el balélé?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué quiere decir Anita con "Las dos cosas son mías"?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Balélé de Anita</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Entrevistas callejeras → Historia 10 (segundo viaje, parada 1)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Identidad y diversidad del mundo hispanohablante — el español fuera de América Latina y España, el baile como tradición comunitaria, identidades múltiples.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir una tradición de baile y cuándo se celebra; explicar qué idiomas habla una persona y dónde los usa; expresar una identidad múltiple ("soy... y también..."); narrar en pasado la llegada a un lugar nuevo.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>es el único país de... · primero escucha, después... · en la escuela hablo... en casa hablo... · las dos cosas son mías · se baila en Navidad · es más grande de lo que pensamos · ¡qué sorpresa!.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas, el baile contado paso a paso; mucha repetición de "hablo español" / "en casa hablo".<br>
+    <strong>A2:</strong> se añaden el dato del español en África, la Navidad en Bioko y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado narrando la llegada a Malabo y el primer intento de Milo como evento específico.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario más preciso sobre identidad y lenguas; cierre reflexivo sobre la diversidad del mundo hispano.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Se excluye por completo el contexto político actual del país (mismo criterio que la Historia 6). La época colonial se menciona solo como dato neutral (el origen del español y la fecha de independencia). La diversidad étnica se presenta como riqueza, sin comparaciones entre grupos. Datos reales y documentados: el español como idioma oficial (junto con el francés y el portugués), Malabo en la isla de Bioko, el balélé (bailado en la costa todo el año y en Bioko alrededor de la Navidad) y la independencia del 12 de octubre de 1968. Anita es un personaje ficticio.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Anita</strong> — bailarina de 14 años de un grupo de balélé de su barrio en Malabo. Detalle propio: practica los pasos en las escaleras de su edificio, contando en español y en el idioma de su abuela.</p>
+    <p><strong>Milo Compás</strong> — cuarta aparición. Abre un nuevo arco: el "proyecto juntos" con Ramón. Vuelve a ser principiante, pero ya aplica la humildad que aprendió en Sevilla.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>ritmo</em> — cognado natural con "rhythm", usado para el balélé y para el truco de Anita.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Anita dice que ser africana y hablar español son "dos cosas mías". ¿Qué culturas, idiomas o lugares forman parte de ti?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Abre el segundo viaje de Ramón y Milo (Historias 10–12), que cumple el gancho de la Historia 9: "Tal vez hagamos un proyecto juntos pronto." El viaje sigue el calendario real de las fiestas: Navidad en Bioko, enero en Diriamba, febrero en Ponce.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

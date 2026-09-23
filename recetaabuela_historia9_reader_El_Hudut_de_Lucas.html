@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Hudut de Lucas — La Receta de la Abuela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · La Receta de la Abuela · Historia 9</div>
+    <h1>El Hudut de Lucas</h1>
+    <div class="subtitle">Una historia de Sambo Creek, costa norte de Honduras</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>El chef Lucas Bernárdez es garífuna. Es de Sambo Creek, un pueblo junto al mar, en Honduras.</p>
+        <p>Lucas es famoso por su hudut. El hudut es pescado en caldo de coco, con machuca de plátano.</p>
+        <p>La receta es de su abuela. Lucas cuenta: "Hay una cosa que nunca cambia: la leche de coco se hace a mano."</p>
+        <p>Así se hace: se ralla el coco. Se le pone agua. Después, se exprime con las manos.</p>
+        <p>Lucas dice: "Mi abuela nunca usaba coco de lata. Ella decía: 'El coco de lata no tiene memoria.'"</p>
+        <p>De niño, Lucas rallaba cocos con su abuela. Ella le enseñaba los nombres de la comida en garífuna.</p>
+        <p>Después, se cocina el pescado en la leche de coco.</p>
+        <p>Y se hace la machuca: se hierve el plátano y se machaca en un pilón de madera. La machuca queda suave.</p>
+        <p>El hudut se come con los dedos. Se hace un hoyito en la machuca y se moja en el caldo. ¡Mmm!</p>
+        <p>Ahora Lucas tiene su propio restaurante. Su menú está en garífuna y en español.</p>
+        <p>Lucas enseña una palabra garífuna a cada cliente. Él dice: "La receta es de mi abuela. Pero el menú en garífuna, eso sí es mío. Es para que el idioma siga vivo."</p>
+        <p>Un cliente pregunta: "¿De dónde vienen los garífunas?"</p>
+        <p>Lucas responde: "Nuestros antepasados eran africanos e indígenas del Caribe. Vivían en la isla de San Vicente. Llegaron a Honduras en 1797."</p>
+        <p>"Hoy vivimos en Honduras, Belice, Guatemala y Nicaragua."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>El chef Lucas Bernárdez es garífuna y es de Sambo Creek, un pueblo junto al mar cerca de La Ceiba, en la costa norte de Honduras. Es famoso por su hudut: pescado cocinado en caldo de coco y servido con machuca, una masa suave de plátano.</p>
+        <p>La receta es de su abuela. "Hay una cosa que nunca cambia," cuenta Lucas. "La leche de coco se hace a mano. Se ralla el coco, se le pone agua tibia y se exprime con las manos, una y otra vez."</p>
+        <p>"Mi abuela nunca usaba coco de lata," dice, riendo. "Ella decía: 'El coco de lata no tiene memoria.'"</p>
+        <p>De niño, Lucas pasaba las tardes rallando cocos con su abuela en el patio. Mientras trabajaban, ella le enseñaba los nombres de cada ingrediente en garífuna. En la pared de su cocina, Lucas todavía guarda el rallador de su abuela. Solo lo usa un día al año: el 12 de abril, cuando su pueblo recuerda la llegada de los garífunas a Honduras.</p>
+        <p>Para preparar el hudut, primero se cocina el pescado en la leche de coco. Después se hace la machuca: se hierve el plátano y se machaca en un pilón de madera hasta que queda suave. El hudut se come con los dedos: se hace un hoyito en la machuca y se moja en el caldo.</p>
+        <p>Hoy, en su restaurante, Lucas sirve el hudut exactamente como lo hacía su abuela. Pero ha añadido algo nuevo: su menú está escrito en garífuna y en español, y a cada cliente le enseña una palabra, como "buiti binafi," que quiere decir "buenos días." "La receta es de mi abuela," dice Lucas. "Pero el menú en garífuna, eso sí es mío. Es para que el idioma siga vivo."</p>
+        <p>Un día, un cliente pregunta de dónde vienen los garífunas. Lucas explica: "Nuestros antepasados eran africanos e indígenas del Caribe, y vivían en la isla de San Vicente. Llegaron a la costa de Honduras en 1797. Hoy vivimos en Honduras, Belice, Guatemala y Nicaragua."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Un domingo por la tarde, en su restaurante frente al mar de Sambo Creek, cerca de La Ceiba, el chef Lucas Bernárdez preparaba hudut para una mesa de visitantes curiosos. El plato, típico de la cocina garífuna, consistía en pescado cocinado en caldo de coco y servido con machuca, una masa suave de plátano.</p>
+        <p>"Hay una cosa que nunca ha cambiado en mi familia," explicó Lucas mientras trabajaba. "La leche de coco se hace a mano. Se ralla el coco, se le echa agua tibia y se exprime con las manos, varias veces, hasta sacar todo el sabor." Luego añadió con una sonrisa: "Mi abuela nunca usó coco de lata. Siempre decía: 'El coco de lata no tiene memoria.'"</p>
+        <p>Lucas recordó que, de niño, pasaba las tardes en el patio rallando cocos con su abuela. Mientras trabajaban, ella le enseñaba los nombres de cada ingrediente en garífuna. Todavía guardaba el rallador de su abuela colgado en la pared de la cocina, y solo lo usaba un día al año: el 12 de abril, cuando su pueblo recuerda la llegada de los garífunas a Honduras.</p>
+        <p>Para terminar el plato, cocinó el pescado en la leche de coco y preparó la machuca: hirvió el plátano y lo machacó en un pilón de madera hasta que quedó suave. Después les explicó a los visitantes cómo comerlo: con los dedos, haciendo un pequeño hoyo en la machuca para mojarla en el caldo.</p>
+        <p>En su restaurante, Lucas servía el hudut exactamente como lo hacía su abuela, pero había añadido algo propio: el menú estaba escrito en garífuna y en español, y a cada cliente le enseñaba una palabra nueva, como "buiti binafi," que significa "buenos días." "La receta es de mi abuela," afirmó. "Pero el menú en garífuna, eso sí es mío. Lo hago para que el idioma siga vivo."</p>
+        <p>Cuando uno de los visitantes le preguntó por el origen de los garífunas, Lucas respondió con orgullo: "Nuestros antepasados eran africanos e indígenas del Caribe, y vivían en la isla de San Vicente. En 1797 tuvieron que salir de su isla y llegaron a la costa de Honduras. Hoy vivimos en Honduras, Belice, Guatemala y Nicaragua, y seguimos cocinando, cantando y hablando en garífuna."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Un domingo por la tarde, en su restaurante frente al mar de Sambo Creek, a pocos kilómetros de La Ceiba, el chef Lucas Bernárdez preparaba hudut ante una mesa de visitantes curiosos. El plato, emblema de la cocina garífuna cotidiana, consiste en pescado cocinado en caldo de coco y acompañado de machuca, una masa tersa y elástica de plátano.</p>
+        <p>"Hay algo que en mi familia jamás ha cambiado," explicó Lucas sin dejar de trabajar. "La leche de coco se obtiene a mano. Se ralla el coco, se le añade agua tibia y se exprime con las manos, una y otra vez, hasta extraerle todo el sabor." Luego agregó, sonriendo: "Mi abuela nunca recurrió al coco de lata. Solía decir: 'El coco de lata no tiene memoria.'"</p>
+        <p>Lucas evocó las tardes de su infancia en el patio, rallando cocos junto a su abuela, quien aprovechaba cada momento para enseñarle en garífuna el nombre de cada ingrediente. El rallador de ella seguía colgado en la pared de la cocina, y Lucas solo lo descolgaba una vez al año: el 12 de abril, fecha en que su pueblo conmemora la llegada de los garífunas a Honduras.</p>
+        <p>Para completar el plato, cocinó el pescado a fuego lento en la leche de coco y preparó la machuca: hirvió el plátano y lo machacó en un pilón de madera hasta obtener una textura suave. Después les mostró a los comensales la manera tradicional de comerlo: con los dedos, abriendo un pequeño hueco en la machuca para empaparla en el caldo.</p>
+        <p>En su restaurante, Lucas servía el hudut tal como lo hacía su abuela, sin alterar un solo paso; sin embargo, había incorporado una aportación propia: el menú estaba redactado en garífuna y en español, y a cada cliente le enseñaba una palabra nueva, como "buiti binafi," que significa "buenos días." "La receta pertenece a mi abuela," afirmó. "Pero el menú en garífuna, eso sí es mío. Lo hago para que nuestra lengua siga viva."</p>
+        <p>Cuando uno de los visitantes le preguntó por el origen de su pueblo, Lucas respondió con evidente orgullo: "Nuestros antepasados eran africanos e indígenas del Caribe que vivían en la isla de San Vicente. En 1797 se vieron obligados a abandonar su isla y llegaron a la costa de Honduras. Hoy vivimos en Honduras, Belice, Guatemala y Nicaragua, y seguimos cocinando, cantando y hablando en garífuna. La lengua, la música y la danza garífunas incluso fueron reconocidas por la UNESCO."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">garífuna</span> — Garífuna (Afro-Indigenous Caribbean people and language)</div>
+      <div><span class="term">el caldo</span> — broth</div>
+      <div><span class="term">la machuca</span> — mashed plantain dough</div>
+      <div><span class="term">rallar</span> — to grate</div>
+      <div><span class="term">exprimir</span> — to squeeze</div>
+      <div><span class="term">la lata</span> — can, tin</div>
+      <div><span class="term">hervir</span> — to boil</div>
+      <div><span class="term">machacar</span> — to mash</div>
+      <div><span class="term">el pilón</span> — wooden mortar</div>
+      <div><span class="term">los antepasados</span> — ancestors</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>nunca cambia</span>
+      <span>se hace a mano</span>
+      <span>se ralla, se exprime, se machaca</span>
+      <span>se come con los dedos</span>
+      <span>de niño, yo...</span>
+      <span>eso sí es mío</span>
+      <span>para que el idioma siga vivo</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué parte de la receta nunca cambia? ¿Por qué la abuela de Lucas no usaba coco de lata?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cuál es el toque moderno de Lucas y por qué es importante para él?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Hudut de Lucas</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → La Receta de la Abuela → Historia 9 (nueva última historia del libro)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Gastronomía y tradición cultural — la cocina garífuna, herencia afroindígena del Caribe, el idioma como parte de la receta familiar, equilibrio entre tradición e innovación.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar un proceso culinario en orden (se ralla, se exprime, se hierve, se machaca); explicar por qué algo nunca cambia; describir una costumbre al comer; expresar continuidad y cambio; narrar en pasado un recuerdo de la infancia.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>se hace a mano · nunca cambia · se ralla, se exprime, se machaca · se come con los dedos · de niño, yo... · para que el idioma siga vivo · eso sí es mío.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas; la receta paso a paso con verbos de cocina en forma impersonal (se ralla, se hierve).<br>
+    <strong>A2:</strong> se añaden el recuerdo de la abuela, el rallador del 12 de abril y el toque moderno del menú en garífuna.<br>
+    <strong>B1:</strong> se introduce el pasado narrando una escena específica en el restaurante; origen del pueblo garífuna con una mención breve de la salida de San Vicente.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario culinario e histórico más preciso; cierre sobre la lengua como herencia y el reconocimiento de la UNESCO.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>La llegada de los garífunas a Honduras en 1797 fue consecuencia de su expulsión de la isla de San Vicente. Se menciona solo en B1/B2 de forma breve y factual ("tuvieron que salir de su isla"), sin detalles. En A1/A2 solo se dice que "llegaron a Honduras en 1797". La historia se centra en el orgullo cultural y la continuidad. Datos reales y documentados: el hudut (pescado en leche de coco con machuca) como plato garífuna cotidiano que se come con los dedos; el origen afroindígena de los garífunas en San Vicente; la llegada a Honduras en 1797 (recordada el 12 de abril); las comunidades de Honduras, Belice, Guatemala y Nicaragua; el reconocimiento de la UNESCO a la lengua, la danza y la música garífunas (2001); Sambo Creek como comunidad garífuna real. Lucas Bernárdez es un personaje ficticio. Conexión con Belice: Día del Asentamiento Garífuna, 19 de noviembre.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Chef Lucas Bernárdez</strong> — chef garífuna de Sambo Creek. Detalle propio: guarda el rallador de coco de su abuela colgado en la pared de la cocina y solo lo usa el 12 de abril, el día en que su pueblo recuerda la llegada de los garífunas a Honduras.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>coco</em> — cognado natural con "coconut"; el ingrediente que "tiene memoria" en la historia.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Lucas escribe su menú en garífuna para que el idioma no se pierda. ¿Qué palabras o expresiones de tu familia quieres conservar?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Se añade al final del libro, después de El Socarrat de Vicente (Historia 8). Sigue el patrón del libro: Huellas del Viajero presenta al chef; algo de la abuela nunca cambia y el chef añade un toque propio. Conexión con El Pilón de Ismael (Historia 5): los dos platos tienen raíces africanas y usan un pilón de madera; para no repetir el tema del objeto heredado, aquí lo que nunca cambia es un proceso (la leche de coco a mano) y el toque moderno es el idioma, no un plato nuevo.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

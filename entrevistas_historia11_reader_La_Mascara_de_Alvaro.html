@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Máscara de Álvaro — Entrevistas callejeras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Entrevistas callejeras · Historia 11</div>
+    <h1>La Máscara de Álvaro</h1>
+    <div class="subtitle">Una historia de Diriamba, Carazo, Nicaragua</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Es enero. Ramón y Milo llegan a Diriamba, un pueblo de Nicaragua. Hay una fiesta muy grande: las fiestas de San Sebastián.</p>
+        <p>Milo está feliz: "¡Una fiesta! ¡Vamos a bailar!"</p>
+        <p>Pero en Diriamba, el baile es diferente. Los bailarines llevan máscaras. Y el baile también cuenta una historia.</p>
+        <p>Ramón conoce a Álvaro. Álvaro tiene trece años. Este año baila por primera vez en El Güegüense.</p>
+        <p>El abuelo de Álvaro se llama Don Chepe. Don Chepe hace máscaras de madera.</p>
+        <p>En su taller, Don Chepe muestra cómo se hace una máscara. Primero, talla la madera. Después, lija la madera. Al final, pinta la máscara.</p>
+        <p>La máscara tiene la cara rosada, un bigote negro y ojos grandes.</p>
+        <p>Álvaro explica la historia: "El Güegüense es un señor viejo y muy listo. Es comerciante."</p>
+        <p>"El gobernador quiere dinero. Pero el Güegüense hace chistes. A veces finge que no oye bien. ¡Lo hace a propósito!"</p>
+        <p>Milo se ríe: "¡Aquí el baile también habla!"</p>
+        <p>Álvaro dice: "La obra habla en español y en náhuatl, un idioma indígena. Es muy, muy vieja."</p>
+        <p>Ramón aprende un dato: en 2005, la UNESCO dijo que El Güegüense es patrimonio de la humanidad.</p>
+        <p>Álvaro se pone su máscara. En la mano lleva una sonaja, como una maraca: chis, chis, chis. Baila en la calle. Don Chepe sonríe.</p>
+        <p>Ramón dice: "Una máscara esconde la cara, pero muestra la historia de un pueblo."</p>
+        <p>Milo mira el mapa: "Próxima parada: otro país con máscaras. ¡Puerto Rico!"</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>En enero, Ramón y Milo llegan a Diriamba, en Nicaragua, para las fiestas de San Sebastián. Milo está emocionado: "¡Una fiesta! Por fin vamos a bailar." Pero pronto descubren que en Diriamba el baile es diferente: los bailarines llevan máscaras, y el baile también es teatro.</p>
+        <p>Allí conocen a Álvaro, un chico de trece años que este año baila por primera vez en El Güegüense. Está nervioso, pero muy orgulloso.</p>
+        <p>Álvaro los lleva al taller de su abuelo, Don Chepe, que hace máscaras de madera desde hace muchos años. "Se hace así," explica Don Chepe. "Primero, tallo la madera. Después, la lijo hasta que queda suave. Al final, la pinto a mano." La máscara tiene la cara rosada, un bigote negro y unos ojos grandes que parecen mirar a todos.</p>
+        <p>Don Chepe le muestra a Ramón un secreto: dentro de la primera máscara de Álvaro hay una pequeña marca escondida. "Es para que siempre sepa que es suya," dice el abuelo.</p>
+        <p>Después, Álvaro cuenta la historia de la obra: "El Güegüense es un comerciante viejo y muy astuto. El gobernador quiere cobrarle dinero, pero el Güegüense usa chistes y palabras con doble sentido. A veces finge que no oye bien... ¡a propósito! Así se burla del gobernador sin que él se dé cuenta."</p>
+        <p>Milo se ríe: "Entonces aquí el baile también habla." Álvaro asiente: "Sí. Y habla en español y en náhuatl, un idioma indígena. Es una de las obras de teatro más antiguas de América."</p>
+        <p>Ramón aprende que, en 2005, la UNESCO reconoció El Güegüense como patrimonio de la humanidad.</p>
+        <p>Por la tarde, Álvaro se pone la máscara y toma su sonaja, un instrumento que parece una maraca. Con cada paso la sacude: chis, chis, chis. Baila en la procesión, y Don Chepe lo mira con los ojos brillantes.</p>
+        <p>Ramón mira a la cámara: "Una máscara esconde la cara, pero muestra la historia de un pueblo." Milo ya está mirando el mapa: "La próxima parada también tiene máscaras. ¡Nos vamos a Puerto Rico!"</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>A mediados de enero, Ramón y Milo llegaron a Diriamba, en el departamento de Carazo, justo a tiempo para las fiestas de San Sebastián. Milo estaba listo para bailar, pero pronto descubrió que en Diriamba el baile no era solo movimiento: los bailarines llevaban máscaras y, mientras bailaban, representaban una obra de teatro.</p>
+        <p>Allí conocieron a Álvaro, un chico de trece años que ese año iba a bailar por primera vez en El Güegüense. Estaba nervioso, pero no podía esconder su orgullo.</p>
+        <p>Álvaro los llevó al taller de su abuelo, Don Chepe, que llevaba toda la vida haciendo máscaras de madera. "Primero se talla la madera," les explicó el abuelo mientras trabajaba con cuidado. "Después se lija hasta que queda suave. Al final, se pinta a mano." La máscara que tenía en las manos tenía la cara rosada, un bigote negro y unos ojos grandes y abiertos.</p>
+        <p>Don Chepe les enseñó un detalle que casi nadie conocía: dentro de la primera máscara de Álvaro había tallado una pequeña marca escondida. "Para que siempre sepa que es suya," dijo.</p>
+        <p>Mientras tanto, Álvaro les contó la historia. El Güegüense era un comerciante viejo y muy astuto. Cuando el gobernador intentaba cobrarle, él respondía con chistes y con palabras que tenían doble sentido. A veces fingía que no oía bien, y contestaba otra cosa a propósito. "Así se burla del gobernador," explicó Álvaro, riendo, "y el gobernador ni se da cuenta."</p>
+        <p>"Entonces aquí el baile también habla," dijo Milo. Álvaro le explicó que la obra mezclaba el español y el náhuatl, una lengua indígena, y que era una de las obras de teatro más antiguas de América. Ramón añadió un dato que había leído: en 2005, la UNESCO la reconoció como patrimonio de la humanidad.</p>
+        <p>Por la tarde, Álvaro se puso la máscara, tomó su sonaja —un instrumento que parece una maraca— y salió a bailar en la procesión, al lado de los bailarines más grandes, marcando cada paso con su sonido. Don Chepe lo miraba desde la acera con los ojos brillantes.</p>
+        <p>Esa noche, Ramón grabó el cierre del video: "Una máscara esconde la cara, pero muestra la historia de un pueblo." Milo ya estaba mirando el mapa. "La próxima parada también tiene máscaras," anunció. "Nos vamos a Puerto Rico."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>A mediados de enero, Ramón y Milo llegaron a Diriamba, en el departamento de Carazo, justo a tiempo para las fiestas de San Sebastián. Milo venía preparado para bailar, pero pronto comprendió que en Diriamba el baile no se agota en el movimiento: los bailarines, con el rostro cubierto por máscaras, escenifican al mismo tiempo una obra de teatro.</p>
+        <p>Allí conocieron a Álvaro, un muchacho de trece años que ese año debutaría en El Güegüense. Los nervios se le notaban en la voz, pero el orgullo se le notaba todavía más.</p>
+        <p>Álvaro los condujo al taller de su abuelo, Don Chepe, quien llevaba toda una vida dedicado a tallar máscaras. "Primero se talla la madera," explicó el anciano sin dejar de trabajar. "Luego se lija hasta que queda suave como la piel. Y al final se pinta, siempre a mano." La máscara que sostenía mostraba un rostro rosado, un bigote negro y unos ojos grandes, abiertos, que parecían seguir a quien los mirara.</p>
+        <p>Don Chepe les reveló un detalle que casi nadie conocía: en el interior de la primera máscara de Álvaro había tallado una pequeña marca, invisible desde fuera. "Para que siempre sepa que es suya," dijo con sencillez.</p>
+        <p>Mientras tanto, Álvaro les resumió el argumento. El Güegüense es un comerciante anciano y extraordinariamente astuto que, ante las exigencias del gobernador colonial, responde con ingenio: chistes, juegos de palabras y frases de doble sentido. En ocasiones finge no oír bien y contesta otra cosa a propósito. "Así se burla del gobernador," explicó Álvaro entre risas, "y el gobernador ni siquiera se da cuenta."</p>
+        <p>"O sea que aquí el baile también habla," concluyó Milo. Álvaro le explicó que la obra combina el español con el náhuatl, una lengua indígena, y que se considera una de las piezas teatrales más antiguas de América. Ramón completó el dato: en 2005, la UNESCO la reconoció como patrimonio oral e inmaterial de la humanidad.</p>
+        <p>Por la tarde, Álvaro se colocó la máscara, empuñó su sonaja —semejante a una maraca— y se sumó a la procesión junto a los bailarines veteranos, acompasando cada paso con su repiqueteo, mientras Don Chepe lo observaba desde la acera con los ojos húmedos de emoción.</p>
+        <p>Esa noche, Ramón grabó el cierre del episodio: "Una máscara esconde el rostro, pero revela la historia de un pueblo." Milo, inclinado sobre el mapa, ya tenía decidido el siguiente destino: "Seguimos con las máscaras. Nos vamos a Puerto Rico."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la máscara</span> — mask (cognate)</div>
+      <div><span class="term">el taller</span> — workshop</div>
+      <div><span class="term">tallar</span> — to carve</div>
+      <div><span class="term">lijar</span> — to sand</div>
+      <div><span class="term">el bigote</span> — mustache</div>
+      <div><span class="term">el comerciante</span> — merchant</div>
+      <div><span class="term">astuto/a</span> — clever, cunning</div>
+      <div><span class="term">fingir</span> — to pretend</div>
+      <div><span class="term">a propósito</span> — on purpose</div>
+      <div><span class="term">burlarse de</span> — to make fun of</div>
+      <div><span class="term">la sonaja</span> — rattle (like a maraca)</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>por primera vez</span>
+      <span>primero..., después..., al final...</span>
+      <span>se hace así</span>
+      <span>finge que no oye</span>
+      <span>se burla de...</span>
+      <span>aquí el baile también habla</span>
+      <span>esconde..., pero muestra...</span>
+      <span>para que siempre sepa...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cómo hace Don Chepe una máscara? Pon los pasos en orden.</div>
+    <div class="comp-q"><span class="num">2.</span>¿Por qué el Güegüense finge que no oye bien?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — La Máscara de Álvaro</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Entrevistas callejeras → Historia 11 (segundo viaje, parada 2)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Arte y tradición cultural — teatro popular, máscaras artesanales, el humor como herramienta de un pueblo, transmisión de un oficio entre abuelo y nieto.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir un objeto artesanal y cómo se hace; resumir el argumento de una obra tradicional; explicar la intención de un personaje (finge, se burla); narrar en pasado una primera experiencia.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>por primera vez · se hace así: primero..., después..., al final... · finge que no oye · se burla de... · aquí el baile también habla · esconde..., pero muestra... · para que siempre sepa....</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas; la máscara se describe con colores y partes de la cara; el Güegüense es "un señor viejo y muy listo".<br>
+    <strong>A2:</strong> se añaden el proceso con secuenciadores y el argumento básico de la obra.<br>
+    <strong>B1:</strong> se introduce el pasado para narrar el primer baile de Álvaro; se explica el doble sentido del humor con un ejemplo sencillo.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario de teatro y artesanía; reflexión sobre la máscara como símbolo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>La obra es una sátira de las autoridades coloniales; se presenta como una historia de ingenio y humor, sin violencia. Se excluye por completo el contexto político actual de Nicaragua. El instrumento que lleva Álvaro es la sonaja, parecida a una maraca (dato confirmado por la maestra). Datos reales y documentados: El Güegüense (o Macho Ratón) en las fiestas de San Sebastián de Diriamba en enero; mezcla de español y náhuatl; reconocido por la UNESCO en 2005; máscaras talladas en madera y pintadas a mano. Álvaro y Don Chepe son personajes ficticios.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Álvaro</strong> — bailarín de 13 años, nieto de un tallador de máscaras de Diriamba. Detalle propio: su abuelo talló una pequeña marca escondida dentro de su primera máscara, "para que siempre sepa que es suya."</p>
+    <p><strong>Milo Compás</strong> — quinta aparición. Aprende que en El Güegüense el baile cuenta una historia; anuncia la próxima parada: Puerto Rico.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>máscara</em> — cognado natural con "mask"; conecta con la manualidad de máscaras de Secundaria.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>El Güegüense usa el humor para enfrentar a alguien con más poder. ¿Crees que el humor puede ser una forma de decir la verdad? ¿Cuándo?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Segunda parada del segundo viaje (Historias 10–12). Termina anunciando Puerto Rico para enlazar dos tradiciones de máscaras seguidas. Conecta con La Mola de Olowaili (Historia 8): otra vez un oficio artesanal que pasa de abuela/abuelo a nieta/nieto.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

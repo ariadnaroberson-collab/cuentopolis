@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Vejigante de Valeria — Entrevistas callejeras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · Entrevistas callejeras · Historia 12 (final)</div>
+    <h1>El Vejigante de Valeria</h1>
+    <div class="subtitle">Una historia de Ponce, Puerto Rico</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Es febrero. Ramón y Milo llegan a Ponce, en Puerto Rico. ¡Es el Carnaval!</p>
+        <p>En la calle hay vejigantes. Los vejigantes llevan máscaras de muchos colores. Las máscaras tienen muchos cuernos.</p>
+        <p>Los vejigantes corren, gritan y asustan a la gente... ¡pero jugando! Todos se ríen.</p>
+        <p>Ramón conoce a Valeria. Valeria tiene quince años. Hace máscaras de vejigante con su mamá.</p>
+        <p>Este año, Valeria hace su primera máscara sola, de principio a fin.</p>
+        <p>Valeria explica: "La máscara se hace con papel maché. Primero, pongo papel con pegamento en un molde. Capa por capa."</p>
+        <p>"Después, espero. La máscara seca por varios días."</p>
+        <p>"Después, pongo los cuernos, uno por uno. Al final, pinto la máscara con colores fuertes y muchos puntos."</p>
+        <p>Ramón pregunta: "¿Por qué se llama vejigante?"</p>
+        <p>Valeria responde: "Viene de la palabra vejiga. Antes, los vejigantes llevaban una vejiga de vaca inflada, como un globo. Hoy, muchos llevan un globo de verdad."</p>
+        <p>Valeria dice: "En Loíza, otro pueblo de Puerto Rico, las máscaras son de coco. Allí los vejigantes salen en julio."</p>
+        <p>Ramón piensa en Nicaragua: "Una máscara de madera, una de papel, una de coco. Tres materiales, una misma idea."</p>
+        <p>Milo se pone un traje de vejigante y baila en el desfile. ¡Esta vez no tiene miedo de equivocarse!</p>
+        <p>Al final, Ramón mira a la cámara: "En cada país encontré una historia. Y cada historia me encontró a mí."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>En febrero, Ramón y Milo llegan a Ponce, en el sur de Puerto Rico, para el Carnaval. Las calles están llenas de vejigantes: personajes con máscaras de muchos cuernos, trajes de colores y unas "alas" de tela que se abren cuando levantan los brazos. Corren, gritan y asustan a la gente, pero todo es un juego, y todos se ríen.</p>
+        <p>Allí conocen a Valeria, una chica de quince años que hace máscaras con su mamá en el taller de la familia. Este año es especial: por primera vez, Valeria hace una máscara sola, de principio a fin.</p>
+        <p>"Se hace con papel maché," explica Valeria. "Primero, pongo tiras de papel con pegamento sobre un molde, capa por capa. Después, espero varios días hasta que seca. Luego pongo los cuernos, uno por uno. Al final, la pinto con colores fuertes y muchos puntos."</p>
+        <p>Valeria le enseña un secreto a Ramón: en cada máscara pinta un punto de un color que nadie más usa. "Es mi firma escondida," dice.</p>
+        <p>Ramón pregunta por el nombre. "Vejigante viene de vejiga," explica Valeria. "Antes, los vejigantes llevaban una vejiga de vaca inflada y pintada, como un globo. Hoy muchos llevan un globo de verdad."</p>
+        <p>Valeria también le cuenta que en Loíza, otro pueblo de la isla, las máscaras se hacen con cáscaras de coco y los vejigantes salen en julio, en las fiestas de Santiago Apóstol. Ramón recuerda la máscara de madera de Don Chepe en Nicaragua: "Madera, papel y coco. Tres materiales, una misma idea."</p>
+        <p>Por la tarde, Milo se pone un traje de vejigante y baila en el desfile. Esta vez no tiene miedo de equivocarse: mezcla un poco de todo lo que aprendió en el viaje.</p>
+        <p>Después del desfile, Ramón come un mofongo en una fonda y piensa en todos sus viajes. Mira a la cámara: "En cada país encontré una historia. Y cada historia me encontró a mí."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>En febrero, Ramón y Milo llegaron a Ponce, en el sur de Puerto Rico, justo a tiempo para el Carnaval. Las calles estaban llenas de vejigantes: personajes con máscaras de muchos cuernos, trajes de colores brillantes y unas "alas" de tela que se abrían cuando levantaban los brazos. Corrían, gritaban y asustaban a la gente, pero siempre jugando, y el público respondía con risas.</p>
+        <p>Allí conocieron a Valeria, una chica de quince años que hacía máscaras con su mamá en el taller de la familia. Ese año era especial: por primera vez, su mamá la había dejado hacer una máscara sola, de principio a fin.</p>
+        <p>Valeria les explicó el proceso con paciencia. Primero había puesto tiras de papel con pegamento sobre un molde, capa por capa. Después había esperado varios días hasta que todo se secó. Luego había pegado los cuernos, uno por uno, y al final había pintado la máscara con colores fuertes y cientos de puntos.</p>
+        <p>"Y aquí está mi firma escondida," dijo, señalando un pequeño punto de un color que no aparecía en ninguna otra parte. "Lo pinto en todas mis máscaras. Nadie más usa ese color."</p>
+        <p>Cuando Ramón le preguntó por el nombre, Valeria le contó que "vejigante" venía de "vejiga": antiguamente, los vejigantes llevaban una vejiga de vaca inflada y pintada, como un globo. Además, el personaje nació hace siglos en el teatro religioso de España, en las representaciones de moros y cristianos, y en Puerto Rico se mezcló con la herencia africana y taína hasta convertirse en el personaje más famoso del carnaval.</p>
+        <p>Valeria le contó también que en Loíza, un pueblo del norte de la isla, las máscaras se tallaban en cáscaras de coco y los vejigantes salían en julio, en las fiestas de Santiago Apóstol. Ramón pensó en la máscara de madera de Don Chepe, en Nicaragua: "Madera, papel y coco. Tres materiales, una misma idea."</p>
+        <p>Por la tarde, Milo se puso un traje de vejigante y bailó en el desfile. Esta vez no le dio miedo equivocarse: mezcló los pies rápidos del balélé con la alegría de la bachata, y la gente lo aplaudió.</p>
+        <p>Al final del día, Ramón se sentó en una fonda a comer mofongo y a pensar en todo el camino recorrido. Encendió la cámara por última vez: "En cada país encontré una historia. Y cada historia, de alguna forma, me encontró a mí."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>En febrero, Ramón y Milo llegaron a Ponce, en la costa sur de Puerto Rico, en pleno Carnaval. Las calles hervían de vejigantes: figuras enmascaradas con máscaras erizadas de cuernos, trajes de colores estridentes y unas "alas" de tela que se desplegaban cada vez que alzaban los brazos. Corrían, gritaban y amenazaban al público, aunque siempre en clave de juego, y la gente les respondía con carcajadas.</p>
+        <p>Allí conocieron a Valeria, una joven de quince años que trabajaba junto a su madre en el taller familiar. Aquel año tenía un significado particular: por primera vez, su madre le había confiado la elaboración de una máscara completa, de principio a fin.</p>
+        <p>Valeria les describió el proceso con la paciencia de quien lo ha repetido mil veces. Primero había cubierto un molde con tiras de papel empapadas en pegamento, capa tras capa. Luego había esperado varios días a que el conjunto se secara por completo. Después había fijado los cuernos, uno a uno, y por último había pintado la superficie con colores intensos y cientos de puntos minúsculos.</p>
+        <p>"Y esta es mi firma escondida," añadió, señalando un diminuto punto de un tono que no se repetía en ningún otro lugar de la máscara. "La pongo en todas. Nadie más usa ese color."</p>
+        <p>Cuando Ramón le preguntó por el origen del nombre, Valeria le explicó que "vejigante" deriva de "vejiga": antiguamente, estos personajes portaban una vejiga de vaca inflada y pintada, a modo de globo. El personaje, por su parte, surgió hace siglos en el teatro religioso español, en las representaciones de moros y cristianos; al llegar a Puerto Rico se entrelazó con la herencia africana y taína hasta convertirse en el emblema del carnaval puertorriqueño.</p>
+        <p>Valeria le contó además que en Loíza, en el norte de la isla, las máscaras se tallan en cáscaras de coco y los vejigantes salen en julio, durante las fiestas de Santiago Apóstol. Ramón evocó entonces la máscara de madera de Don Chepe en Nicaragua: "Madera, papel y coco. Tres materiales distintos, una misma idea."</p>
+        <p>Por la tarde, Milo se enfundó un traje de vejigante y se unió al desfile. Esta vez no temió equivocarse: combinó los pies veloces del balélé con la soltura de la bachata, y el público lo recompensó con aplausos.</p>
+        <p>Al caer la noche, Ramón se sentó en una fonda frente a un plato de mofongo y repasó mentalmente todo el camino recorrido. Encendió la cámara por última vez: "En cada país encontré una historia. Y cada historia, de algún modo, terminó encontrándome a mí."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el vejigante</span> — masked carnival character of Puerto Rico</div>
+      <div><span class="term">el cuerno</span> — horn</div>
+      <div><span class="term">el papel maché</span> — papier-mâché</div>
+      <div><span class="term">el molde</span> — mold</div>
+      <div><span class="term">la capa</span> — layer</div>
+      <div><span class="term">el pegamento</span> — glue</div>
+      <div><span class="term">secar(se)</span> — to dry</div>
+      <div><span class="term">la vejiga</span> — bladder (origin of "vejigante")</div>
+      <div><span class="term">la cáscara de coco</span> — coconut shell</div>
+      <div><span class="term">el desfile</span> — parade</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>viene de...</span>
+      <span>se hace con...</span>
+      <span>capa por capa</span>
+      <span>por primera vez</span>
+      <span>de principio a fin</span>
+      <span>en cambio, en Loíza...</span>
+      <span>tres materiales, una misma idea</span>
+      <span>cada historia me encontró a mí</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cómo hace Valeria su máscara de vejigante? Explica los pasos en orden.</div>
+    <div class="comp-q"><span class="num">2.</span>¿En qué se parecen y en qué son diferentes las máscaras de Ponce, Loíza y Diriamba?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Vejigante de Valeria</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → Entrevistas callejeras → Historia 12 (segundo viaje, parada 3 · última del libro)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Arte y tradición cultural — la máscara de vejigante, el carnaval como fiesta comunitaria, la herencia africana, española y taína en Puerto Rico, el aprendizaje de un oficio en familia.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir una máscara (forma, colores, materiales); narrar un proceso artesanal en orden; comparar tres tradiciones parecidas; explicar el origen de una palabra; narrar en pasado un cierre de viaje.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>viene de... · se hace con... · capa por capa · por primera vez · de principio a fin · en cambio, en Loíza... · tres materiales, una misma idea.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones cortas; la máscara se describe con colores, cuernos y puntos; el proceso con verbos simples en primera persona.<br>
+    <strong>A2:</strong> se añaden el origen de la palabra "vejigante", la comparación con Loíza y conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado (y el pluscuamperfecto para el proceso ya terminado); comparación de tres tradiciones; breve origen histórico.<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario de artesanía y carnaval más preciso; cierre reflexivo del libro completo.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>El vejigante nació en el teatro religioso español como el personaje de los moros vencidos y más tarde se usó como figura de "diablo". Solo en B1/B2 se menciona de forma breve y neutral ("representaciones de moros y cristianos"), sin lenguaje de enemigo ni de demonio. En A1/A2 es un personaje de carnaval que asusta jugando. La vejiga de vaca se menciona solo como dato curioso. Datos reales y documentados: máscaras de papel maché con muchos cuernos en el Carnaval de Ponce (febrero); máscaras de cáscara de coco en Loíza (fiestas de Santiago Apóstol, julio); origen del nombre en "vejiga"; herencia africana, española y taína. Valeria y su mamá son personajes ficticios.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Valeria</strong> — artesana de 15 años de Ponce; hace su primera máscara completa con la ayuda de su mamá. Detalle propio: pinta en cada máscara un punto de un color que nadie más usa, "mi firma escondida".</p>
+    <p><strong>Milo Compás</strong> — sexta y última aparición en el libro. Cierra su segundo arco bailando en el desfile sin miedo a equivocarse, mezclando lo aprendido (balélé y bachata).</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>carnaval</em> — cognado natural con "carnival"; la fiesta donde salen los vejigantes.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Valeria hace su primera máscara completa con la ayuda de su mamá. ¿Qué te gustaría aprender a hacer con alguien de tu familia? Si hicieras una máscara que te representa, ¿cómo sería?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Cierre del segundo viaje (Historias 10–12) y nuevo final del libro. Enlaza con La Máscara de Álvaro (Historia 11): madera en Nicaragua, papel maché en Ponce, coco en Loíza. Guiño a La Receta de la Abuela: Ramón come mofongo en Ponce (El Pilón de Ismael), sin cruzar personajes. Texto base para la manualidad de máscaras de vejigante de Secundaria.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>
