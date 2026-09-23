@@ -1,0 +1,355 @@
+<title>Mi Herencia Hispana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Public+Sans:wght@400;600;700&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#1b1712; --panel:#241f18; --panel2:#2d271e; --line:#3d3528;
+  --parch:#f4ecd8; --dim:#cfc3a6; --gold:#c9a24b; --gold2:#e3c878; --green:#5f9a6e; --sky:#8fb8d8;
+  --display:"Fraunces", Georgia, "Times New Roman", serif;
+  --body:"Public Sans", "Segoe UI", system-ui, sans-serif;
+}
+*{box-sizing:border-box}
+body{background:radial-gradient(ellipse at top,#2a241b 0%,var(--bg) 70%) fixed;background-color:var(--bg);color:var(--parch);font-family:var(--body);font-size:17px;line-height:1.5;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:20px 60px}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold2);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+
+header.top{text-align:center;display:grid;gap:10px;padding-block:14px 22px;border-bottom:1px solid var(--line);margin-bottom:22px}
+.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);font-weight:700}
+h1{font-size:clamp(32px,5.4vw,54px);font-weight:800}
+.sub{color:var(--dim);max-width:52ch;margin:0 auto}
+.bands{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:6px}
+.band{border:1.5px solid var(--gold);background:transparent;color:var(--gold2);border-radius:999px;padding:10px 20px;font-weight:700}
+.band[aria-pressed="true"]{background:var(--gold);color:#1b1712}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;border-bottom:1px solid var(--line)}
+nav.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;font-weight:700;color:var(--dim)}
+nav.tabs button[aria-selected="true"]{color:var(--gold2);border-bottom-color:var(--gold)}
+
+section.view{display:grid;gap:18px}
+h2{font-size:clamp(24px,3.2vw,34px);font-weight:800}
+.lead{color:var(--dim);max-width:62ch}
+
+/* roadmap */
+.road{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;position:relative}
+.stop{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:left;display:grid;gap:8px;align-content:start}
+.stop:hover{border-color:var(--gold)}
+.stop .when{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--gold2)}
+.stop h3{font-size:20px}
+.stop p{color:var(--dim);font-size:15px}
+.stop .go{font-size:14px;font-weight:700;color:var(--gold2)}
+.stop.fiesta{border:2px solid var(--gold);background:var(--panel2)}
+
+/* mission */
+.mission{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:14px}
+.mission h3{font-size:24px;color:var(--gold2)}
+.mhead{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;justify-content:space-between}
+.tag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--green);border:1px solid var(--green);border-radius:999px;padding:3px 10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.pick{display:flex;gap:12px;align-items:center;text-decoration:none;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px}
+.pick:hover{border-color:var(--gold)}
+.pick svg{width:48px;height:32px;flex:none;border-radius:3px;outline:1px solid rgba(255,255,255,.2)}
+.pick b{display:block;font-size:16px}
+.pick span{display:block;font-size:13px;color:var(--dim)}
+.pick .arrow{margin-left:auto;color:var(--gold2);font-weight:700}
+.steps{margin:0;padding-left:1.2em;display:grid;gap:4px;color:var(--dim)}
+.steps b{color:var(--parch)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;background:var(--gold);color:#1b1712;padding:10px 18px;font-weight:700;text-decoration:none}
+.btn.ghost{background:transparent;border:1.5px solid var(--gold);color:var(--gold2)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+/* explorer */
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.tools input{flex:1;min-width:0;background:var(--panel);border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;color:var(--parch);font-size:16px}
+.filters{display:flex;flex-wrap:wrap;gap:6px}
+.filters button{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:14px;color:var(--dim)}
+.filters button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold2)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:8px;justify-items:center;text-align:center}
+.tile:hover{border-color:var(--gold);transform:translateY(-2px)}
+.tile svg{width:100%;max-width:120px;height:auto;border-radius:4px;outline:1px solid rgba(255,255,255,.2)}
+.tile b{font-family:var(--display);font-size:18px}
+.tile span{font-size:12px;color:var(--dim)}
+
+/* country panel */
+.overlay{position:fixed;inset:0;background:rgba(8,6,4,.78);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto;z-index:20}
+.card{background:var(--panel);border:1px solid var(--gold);border-radius:18px;max-width:760px;width:100%;margin-block:20px;padding:22px;display:grid;gap:16px}
+.chead{display:flex;gap:16px;align-items:center}
+.chead svg{width:110px;height:auto;flex:none;border-radius:5px;outline:1px solid rgba(255,255,255,.25)}
+.chead h2{font-size:clamp(28px,4vw,40px)}
+.close{margin-left:auto;align-self:flex-start;background:none;border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--dim)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.fact{background:var(--panel2);border-radius:10px;padding:10px 12px}
+.fact small{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold2);font-weight:700}
+.ficha{font-family:"Source Serif 4",Georgia,serif;font-size:19px;line-height:1.7;background:var(--panel2);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:14px 18px}
+.ficha p+p{margin-top:.5em}
+.sect{display:grid;gap:8px}
+.sect h3{font-size:18px;color:var(--gold2)}
+.links{display:grid;gap:8px}
+.link{display:flex;gap:10px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-decoration:none}
+.link:hover{border-color:var(--gold)}
+.link b{display:block}
+.link span{font-size:13px;color:var(--dim)}
+.link .arrow{margin-left:auto;color:var(--gold2);font-weight:700;flex:none}
+.none{color:var(--dim);font-size:15px}
+.check{display:grid;gap:6px}
+.check label{display:flex;gap:10px;align-items:flex-start;background:var(--panel2);border-radius:8px;padding:8px 10px;cursor:pointer}
+.check input{margin-top:4px;accent-color:var(--gold);width:18px;height:18px;flex:none}
+.note{font-size:13px;color:var(--dim)}
+
+footer{margin-top:40px;text-align:center;font-size:13px;color:var(--dim)}
+
+@media (max-width:760px){.road{grid-template-columns:1fr 1fr}}
+@media (max-width:460px){.road{grid-template-columns:1fr}.chead{flex-wrap:wrap}.tiles{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Cuentópolis · 15 de septiembre – 15 de octubre</div>
+    <h1>Mi Mes de la Herencia Hispana</h1>
+    <p class="sub">Elige tu clase. Aquí están tu ruta, tus misiones y tus lecturas de Cuentópolis.</p>
+    <div class="bands" role="group" aria-label="Mi clase" id="bands"></div>
+  </header>
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+  <main id="main"></main>
+  <footer>¡Nos vemos en la gran fiesta del 10 de octubre! · Cuentópolis</footer>
+</div>
+<div class="overlay" id="overlay" hidden></div>
+
+<script>
+function star(cx,cy,R,fill){let r=R*.4,p=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r:R;p.push((cx+rr*Math.cos(a)).toFixed(1)+','+(cy+rr*Math.sin(a)).toFixed(1))}return `<polygon points="${p.join(' ')}" fill="${fill}"/>`}
+function hs(cols,w){w=w||cols.map(()=>1);const t=w.reduce((a,b)=>a+b,0);let y=0;return cols.map((c,i)=>{const h=200*w[i]/t;const s=`<rect x="0" y="${y.toFixed(2)}" width="300" height="${(h+.5).toFixed(2)}" fill="${c}"/>`;y+=h;return s}).join('')}
+function vs(cols){return cols.map((c,i)=>`<rect x="${i*100}" y="0" width="${i===cols.length-1?100:101}" height="200" fill="${c}"/>`).join('')}
+function emblem(fill,stroke){return `<circle cx="150" cy="100" r="20" fill="${fill}" stroke="${stroke||'#3d7a2e'}" stroke-width="4"/>`}
+function sun(cx,cy,r,c){let s='';for(let i=0;i<16;i++){const a=i*Math.PI/8;s+=`<line x1="${cx+r*Math.cos(a)}" y1="${cy+r*Math.sin(a)}" x2="${cx+r*1.75*Math.cos(a)}" y2="${cy+r*1.75*Math.sin(a)}" stroke="${c}" stroke-width="3"/>`}return s+`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}"/>`}
+const W='#FFFFFF';
+const FLAGS={
+ CR:()=>hs(['#002B7F',W,'#CE1126',W,'#002B7F'],[1,1,2,1,1]),
+ CU:()=>hs(['#002A8F',W,'#002A8F',W,'#002A8F'])+`<polygon points="0,0 0,200 173,100" fill="#CF142B"/>`+star(58,100,26,W),
+ MX:()=>vs(['#006847',W,'#CE1126'])+emblem('#B5793B'),
+ ES:()=>hs(['#AA151B','#F1BF00','#AA151B'],[1,2,1])+`<rect x="70" y="78" width="28" height="44" rx="6" fill="#AA151B" stroke="#8a6d00" stroke-width="3"/>`,
+ CL:()=>`<rect width="300" height="100" fill="${W}"/><rect y="100" width="300" height="100" fill="#D52B1E"/><rect width="100" height="100" fill="#0039A6"/>`+star(50,50,24,W),
+ VE:()=>{let s=hs(['#FFCC00','#00247D','#CF142B']);for(let i=0;i<8;i++){const a=(-160+i*20)*Math.PI/180;s+=star(150+52*Math.cos(a),128+52*Math.sin(a),7,W)}return s},
+ UY:()=>{let s='';for(let i=0;i<9;i++)s+=`<rect y="${i*200/9}" width="300" height="${200/9+.5}" fill="${i%2?'#0038A8':W}"/>`;return s+`<rect width="112" height="${5*200/9}" fill="${W}"/>`+sun(56,55,17,'#FCD116')},
+ PA:()=>`<rect width="300" height="200" fill="${W}"/><rect x="150" width="150" height="100" fill="#D21034"/><rect y="100" width="150" height="100" fill="#005293"/>`+star(75,50,20,'#005293')+star(225,150,20,'#D21034'),
+ DO:()=>`<rect width="300" height="200" fill="${W}"/><rect width="133" height="85" fill="#002D62"/><rect x="167" width="133" height="85" fill="#CE1126"/><rect y="115" width="133" height="85" fill="#CE1126"/><rect x="167" y="115" width="133" height="85" fill="#002D62"/><circle cx="150" cy="100" r="11" fill="#3d7a2e"/>`,
+ PY:()=>hs(['#D52B1E',W,'#0038A8'])+`<circle cx="150" cy="100" r="18" fill="none" stroke="#3d7a2e" stroke-width="3"/>`+star(150,100,7,'#F2C100'),
+ SV:()=>hs(['#0F47AF',W,'#0F47AF'])+`<circle cx="150" cy="100" r="19" fill="none" stroke="#3d7a2e" stroke-width="4"/><polygon points="150,87 162,108 138,108" fill="#0F47AF"/>`,
+ AR:()=>hs(['#74ACDF',W,'#74ACDF'])+sun(150,100,12,'#F6B40E'),
+ BO:()=>hs(['#D52B1E','#F9E300','#007934']),
+ CO:()=>hs(['#FCD116','#003893','#CE1126'],[2,1,1]),
+ EC:()=>hs(['#FFD100','#034EA2','#ED1C24'],[2,1,1])+`<ellipse cx="150" cy="100" rx="17" ry="22" fill="#6FB7F2" stroke="#7a5a1a" stroke-width="3"/>`,
+ GT:()=>vs(['#4997D0',W,'#4997D0'])+`<circle cx="150" cy="100" r="20" fill="none" stroke="#3d7a2e" stroke-width="5"/>`,
+ GQ:()=>hs(['#3E9A00',W,'#E32118'])+`<polygon points="0,0 0,200 75,100" fill="#0073CE"/><rect x="138" y="86" width="24" height="28" rx="3" fill="none" stroke="#777" stroke-width="3"/>`,
+ HN:()=>hs(['#0073CF',W,'#0073CF'])+[[150,100],[118,84],[182,84],[118,116],[182,116]].map(p=>star(p[0],p[1],9,'#0073CF')).join(''),
+ NI:()=>hs(['#0067C6',W,'#0067C6'])+`<polygon points="150,84 167,113 133,113" fill="none" stroke="#C8A000" stroke-width="4"/>`,
+ PE:()=>vs(['#D91023',W,'#D91023']),
+ PR:()=>hs(['#ED0000',W,'#ED0000',W,'#ED0000'])+`<polygon points="0,0 0,200 173,100" fill="#0050F0"/>`+star(58,100,26,W)
+};
+function flagSVG(code){return `<svg viewBox="0 0 300 200" role="img" aria-label="Bandera"><rect width="300" height="200" fill="#fff"/>${FLAGS[code]()}</svg>`}
+
+const BASE='https://ariadnaroberson-collab.github.io/cuentopolis/';
+const VIKI='https://es.vikidia.org/wiki/';
+
+const C={
+ MX:{n:'México',cap:'Ciudad de México',reg:'Norteamérica',idi:'español',vk:'M%C3%A9xico',
+   ficha:['México está en Norteamérica. La capital es la Ciudad de México.','Una comida famosa es el taco. Otra comida famosa es el mole.','El águila real está en la bandera de México. ¡También vive allí el ajolote, un animal muy curioso!','En noviembre, las familias celebran el Día de Muertos con flores, velas y comida.','¿Sabías que el chocolate viene de esta región? Los pueblos antiguos ya tomaban cacao.']},
+ GT:{n:'Guatemala',cap:'Ciudad de Guatemala',reg:'Centroamérica',idi:'español y lenguas mayas',vk:'Guatemala',
+   ficha:['Guatemala está en Centroamérica, al lado de Belice. La capital es la Ciudad de Guatemala.','Una comida típica es el pepián, un guiso con semillas y chiles.','El ave nacional es el quetzal. ¡El dinero de Guatemala también se llama quetzal!','Muchas personas son mayas. Hablan español y también lenguas mayas.','Las mujeres mayas tejen huipiles de muchos colores.']},
+ HN:{n:'Honduras',cap:'Tegucigalpa',reg:'Centroamérica',idi:'español',vk:'Honduras',
+   ficha:['Honduras está en Centroamérica. La capital es Tegucigalpa.','Una comida muy popular es la baleada: una tortilla de harina con frijoles y queso.','El ave nacional es la guacamaya roja.','En la costa viven los garífunas, como en Belice. Tienen su propia música: la punta.','En Copán hay ruinas mayas muy antiguas.']},
+ SV:{n:'El Salvador',cap:'San Salvador',reg:'Centroamérica',idi:'español',vk:'El_Salvador',
+   ficha:['El Salvador está en Centroamérica. La capital es San Salvador.','Es el país más pequeño de Centroamérica, ¡pero tiene muchos volcanes!','La comida más famosa es la pupusa: una tortilla gruesa con queso, frijoles o chicharrón.','El ave nacional es el torogoz. Tiene una cola larga y muy bonita.','El Cipitío es un personaje famoso de sus leyendas.']},
+ NI:{n:'Nicaragua',cap:'Managua',reg:'Centroamérica',idi:'español',vk:'Nicaragua',
+   ficha:['Nicaragua está en Centroamérica. La capital es Managua.','Tiene el lago más grande de Centroamérica: el lago de Nicaragua.','Una comida típica es el gallo pinto: arroz con frijoles.','El ave nacional es el guardabarranco.','En Diriamba bailan El Güegüense, una obra con máscaras de madera.']},
+ CR:{n:'Costa Rica',cap:'San José',reg:'Centroamérica',idi:'español',vk:'Costa_Rica',
+   ficha:['Costa Rica está en Centroamérica. La capital es San José.','La gente dice mucho "¡Pura vida!". Quiere decir que todo está bien.','Una comida típica es el gallo pinto, con arroz y frijoles.','En sus bosques viven perezosos, monos y ranas de muchos colores.','Costa Rica no tiene ejército desde 1948.']},
+ PA:{n:'Panamá',cap:'Ciudad de Panamá',reg:'Centroamérica',idi:'español',vk:'Panam%C3%A1',
+   ficha:['Panamá está en Centroamérica. La capital es la Ciudad de Panamá.','El Canal de Panamá une dos océanos: el Atlántico y el Pacífico. ¡Los barcos pasan por el canal!','Una comida típica es el sancocho, una sopa de pollo.','El ave nacional es el águila harpía, un águila muy grande.','Las mujeres guna hacen molas: arte de tela de muchos colores.']},
+ CU:{n:'Cuba',cap:'La Habana',reg:'el Caribe',idi:'español',vk:'Cuba',
+   ficha:['Cuba es una isla en el Caribe. La capital es La Habana.','En La Habana hay muchos carros antiguos de colores.','Una comida típica es arroz con frijoles negros.','El ave nacional es el tocororo. ¡Tiene los colores de la bandera de Cuba: azul, blanco y rojo!','La música es muy importante: el son cubano y la salsa nacieron allí.']},
+ DO:{n:'República Dominicana',cap:'Santo Domingo',reg:'el Caribe',idi:'español',vk:'Rep%C3%BAblica_Dominicana',
+   ficha:['La República Dominicana está en una isla del Caribe. La capital es Santo Domingo.','El merengue y la bachata son de aquí.','Una comida típica se llama "la bandera": arroz, habichuelas (frijoles) y carne.','El béisbol es el deporte favorito. ¡Muchos jugadores famosos son dominicanos!','El ave nacional es la cigua palmera.']},
+ PR:{n:'Puerto Rico',cap:'San Juan',reg:'el Caribe',idi:'español e inglés',vk:'Puerto_Rico',
+   ficha:['Puerto Rico es una isla en el Caribe. La capital es San Juan.','En Puerto Rico se habla español e inglés.','Una comida famosa es el mofongo: plátano verde machacado con ajo.','El coquí es una ranita muy pequeña. Por la noche canta: "¡co-quí, co-quí!"','En el carnaval salen los vejigantes, con máscaras de muchos cuernos.']},
+ CO:{n:'Colombia',cap:'Bogotá',reg:'Sudamérica',idi:'español',vk:'Colombia',
+   ficha:['Colombia está en Sudamérica. La capital es Bogotá.','El café de Colombia es famoso en todo el mundo.','Una comida típica es la arepa, hecha de maíz.','Colombia tiene más tipos de aves que cualquier otro país. El ave nacional es el cóndor de los Andes.','La cumbia es una música muy alegre de Colombia.']},
+ VE:{n:'Venezuela',cap:'Caracas',reg:'Sudamérica',idi:'español',vk:'Venezuela',
+   ficha:['Venezuela está en Sudamérica. La capital es Caracas.','Allí está el Salto Ángel, la cascada más alta del mundo.','Una comida típica es la arepa, con muchos rellenos.','El ave nacional es el turpial, amarillo y negro.','El béisbol es muy popular.']},
+ EC:{n:'Ecuador',cap:'Quito',reg:'Sudamérica',idi:'español y quichua',vk:'Ecuador',
+   ficha:['Ecuador está en Sudamérica. La capital es Quito.','Se llama Ecuador porque la línea del ecuador pasa por el país.','En las islas Galápagos viven tortugas gigantes.','Una comida típica es el locro de papa, una sopa con queso.','Tiene montañas, playas, islas y selva amazónica.']},
+ PE:{n:'Perú',cap:'Lima',reg:'Sudamérica',idi:'español y quechua',vk:'Per%C3%BA',
+   ficha:['Perú está en Sudamérica. La capital es Lima.','Machu Picchu es una ciudad inca antigua en las montañas.','Una comida famosa es el ceviche: pescado con limón.','En los Andes viven llamas y alpacas.','¡En Perú hay miles de tipos de papas!']},
+ BO:{n:'Bolivia',cap:'Sucre y La Paz',reg:'Sudamérica',idi:'español, quechua, aimara y más',vk:'Bolivia',
+   ficha:['Bolivia está en Sudamérica. Tiene dos capitales: Sucre y La Paz.','El Salar de Uyuni es el desierto de sal más grande del mundo.','Una comida típica es la salteña, una empanada con caldo adentro.','Comparte el lago Titicaca con Perú.','En las montañas viven llamas y cóndores.']},
+ CL:{n:'Chile',cap:'Santiago',reg:'Sudamérica',idi:'español',vk:'Chile',
+   ficha:['Chile está en Sudamérica. La capital es Santiago.','Chile es un país muy largo y muy delgado.','En el norte está el desierto de Atacama, uno de los lugares más secos del mundo.','Una comida típica es la empanada de pino (carne, cebolla, huevo y aceituna).','El baile nacional es la cueca. Se baila con un pañuelo.']},
+ AR:{n:'Argentina',cap:'Buenos Aires',reg:'Sudamérica',idi:'español',vk:'Argentina',
+   ficha:['Argentina está en Sudamérica. La capital es Buenos Aires.','El tango es un baile famoso de Buenos Aires.','Una comida típica es el asado. También las empanadas.','Mucha gente toma mate, una bebida caliente que se comparte.','El ave nacional es el hornero: ¡hace su casa de barro!']},
+ UY:{n:'Uruguay',cap:'Montevideo',reg:'Sudamérica',idi:'español',vk:'Uruguay',
+   ficha:['Uruguay está en Sudamérica. La capital es Montevideo.','En 1930, Uruguay organizó y ganó el primer Mundial de fútbol.','Una comida típica es el chivito, un sándwich muy grande.','Mucha gente lleva su mate a todas partes.','El candombe es una música con tambores, de raíz africana.']},
+ PY:{n:'Paraguay',cap:'Asunción',reg:'Sudamérica',idi:'español y guaraní',vk:'Paraguay',
+   ficha:['Paraguay está en Sudamérica. La capital es Asunción.','En Paraguay hay dos idiomas oficiales: el español y el guaraní.','La "sopa paraguaya" no es una sopa: ¡es un pan de maíz y queso!','Otra comida típica es la chipa, un pancito de queso.','El Pombero es un personaje famoso de sus leyendas.']},
+ ES:{n:'España',cap:'Madrid',reg:'Europa',idi:'español y otras lenguas',vk:'Espa%C3%B1a',
+   ficha:['España está en Europa. La capital es Madrid.','El idioma español nació en España.','Una comida famosa es la paella, de arroz. Otra es la tortilla de patatas.','El flamenco es un baile y una música del sur de España.','El lince ibérico es un gato salvaje que vive solo en esta región.']},
+ GQ:{n:'Guinea Ecuatorial',cap:'Malabo',reg:'África',idi:'español, francés y portugués',vk:'Guinea_Ecuatorial',
+   ficha:['Guinea Ecuatorial está en África. La capital es Malabo, en la isla de Bioko.','Es el único país de África donde el español es idioma oficial.','Se comen mucho el pescado, el plátano y la yuca.','Las tortugas marinas llegan a las playas de Bioko.','Su día de independencia es el 12 de octubre. En Navidad se baila el balélé.']}
+};
+const ORDER=['MX','GT','HN','SV','NI','CR','PA','CU','DO','PR','CO','VE','EC','PE','BO','CL','AR','UY','PY','ES','GQ'];
+
+const R=(file,title,book)=>({u:BASE+file,t:title,b:book});
+const MEM='Memorias de pueblos perdidos', ENT='Entrevistas callejeras', REC='La Receta de la Abuela', FVR='Biblioteca FVR · Leyendas', BAUL='El Baúl de Emilio';
+const READS={
+ MX:[R('pueblosperdidos_historia4_reader_El_Camino_de_Sewa.html','El Camino de Sewá',MEM),R('entrevistas_historia3_reader_Las_Calaveras_de_Dona_Carmela.html','Las Calaveras de Doña Carmela',ENT),R('recetaabuela_historia4_reader_El_Mole_de_Rosario.html','El Mole de Rosario',REC),R('la-llorona.html','La Llorona',FVR),R('alebrije_reader.html','El Alebrije',FVR),R('baul_de_emilio_episodio2_reader_Frida_Kahlo.html','Frida Kahlo',BAUL)],
+ GT:[R('pueblosperdidos_historia5_reader_El_Telar_de_Ixchel.html','El Telar de Ixchel',MEM),R('recetaabuela_historia7_reader_El_Tueste_de_Cristina.html','El Tueste de Cristina',REC)],
+ HN:[R('recetaabuela_historia9_reader_El_Hudut_de_Lucas.html','El Hudut de Lucas',REC)],
+ SV:[R('cipitio_reader.html','El Cipitío',FVR)],
+ NI:[R('entrevistas_historia11_reader_La_Mascara_de_Alvaro.html','La Máscara de Álvaro',ENT)],
+ CR:[R('entrevistas_historia1_reader_El_Primer_Microfono_de_Ramon.html','El Primer Micrófono de Ramón',ENT),R('baul_de_emilio_episodio6_reader_Franklin_Chang_Diaz.html','Franklin Chang Díaz',BAUL)],
+ PA:[R('entrevistas_historia8_reader_La_Mola_de_Olowaili.html','La Mola de Olowaili',ENT)],
+ CU:[R('entrevistas_historia2_reader_El_Son_de_Don_Eusebio.html','El Son de Don Eusebio',ENT),R('baul_de_emilio_episodio3_reader_Celia_Cruz.html','Celia Cruz',BAUL),R('baul_de_emilio_episodio4_reader_Jose_Marti.html','José Martí',BAUL)],
+ DO:[R('entrevistas_historia9_reader_El_Compas_de_Rafael.html','El Compás de Rafael',ENT)],
+ PR:[R('entrevistas_historia12_reader_El_Vejigante_de_Valeria.html','El Vejigante de Valeria',ENT),R('recetaabuela_historia5_reader_El_Pilon_de_Ismael.html','El Pilón de Ismael',REC),R('baul_de_emilio_episodio5_reader_Sonia_Sotomayor.html','Sonia Sotomayor',BAUL)],
+ CO:[R('pueblosperdidos_historia3_reader_El_Puente_de_Camilo.html','El Puente de Camilo',MEM),R('recetaabuela_historia3_reader_La_Arepa_de_Yolanda.html','La Arepa de Yolanda',REC),R('baul_de_emilio_episodio7_reader_Shakira.html','Shakira',BAUL)],
+ VE:[R('entrevistas_historia6_reader_El_Terreno_de_Maikel.html','El Terreno de Maikel',ENT)],
+ EC:[R('pueblosperdidos_historia8_reader_La_Canoa_Solar_de_Yankuam.html','La Canoa Solar de Yankuam',MEM)],
+ PE:[R('pueblosperdidos_historia1_reader_El_Camino_de_Killa.html','El Camino de Killa',MEM),R('recetaabuela_historia1_reader_El_Ceviche_de_Fernanda.html','El Ceviche de Fernanda',REC)],
+ BO:[R('pueblosperdidos_historia2_reader_El_Lago_de_Wara.html','El Lago de Wara',MEM),R('recetaabuela_historia6_reader_El_Secreto_de_Veronica.html','El Secreto de Verónica',REC)],
+ CL:[R('entrevistas_historia5_reader_La_Collera_de_Javiera.html','La Collera de Javiera',ENT)],
+ AR:[R('pueblosperdidos_historia7_reader_El_Viento_de_Tomas.html','El Viento de Tomás',MEM),R('recetaabuela_historia2_reader_El_Repulgue_de_Joaquin.html','El Repulgue de Joaquín',REC),R('baul_de_emilio_episodio1_reader_Lionel_Messi.html','Lionel Messi',BAUL)],
+ UY:[R('entrevistas_historia7_reader_La_Ronda_de_Bruno.html','La Ronda de Bruno',ENT)],
+ PY:[R('pombero_reader.html','El Pombero',FVR)],
+ ES:[R('entrevistas_historia4_reader_El_Duende_de_Rocio.html','El Duende de Rocío',ENT),R('recetaabuela_historia8_reader_El_Socarrat_de_Vicente.html','El Socarrat de Vicente',REC),R('baul_de_emilio_episodio8_reader_Rafael_Nadal.html','Rafael Nadal',BAUL)],
+ GQ:[R('entrevistas_historia10_reader_El_Balele_de_Anita.html','El Balélé de Anita',ENT)]
+};
+const PERSONAS=[
+ ['Lionel Messi','AR','el fútbol','baul_de_emilio_episodio1_reader_Lionel_Messi.html',1],
+ ['Frida Kahlo','MX','el arte','baul_de_emilio_episodio2_reader_Frida_Kahlo.html',2],
+ ['Celia Cruz','CU','la música','baul_de_emilio_episodio3_reader_Celia_Cruz.html',3],
+ ['José Martí','CU','la literatura','baul_de_emilio_episodio4_reader_Jose_Marti.html',4],
+ ['Sonia Sotomayor','PR','la justicia','baul_de_emilio_episodio5_reader_Sonia_Sotomayor.html',5],
+ ['Franklin Chang Díaz','CR','el espacio','baul_de_emilio_episodio6_reader_Franklin_Chang_Diaz.html',6],
+ ['Shakira','CO','la música','baul_de_emilio_episodio7_reader_Shakira.html',7],
+ ['Rafael Nadal','ES','el tenis','baul_de_emilio_episodio8_reader_Rafael_Nadal.html',8]
+];
+const LEYENDAS=[['La Llorona','MX','la-llorona.html'],['El Alebrije','MX','alebrije_reader.html'],['El Pombero','PY','pombero_reader.html'],['El Cipitío','SV','cipitio_reader.html']];
+const MEMORIAS=[['PE','El Camino de Killa','pueblosperdidos_historia1_reader_El_Camino_de_Killa.html'],['BO','El Lago de Wara','pueblosperdidos_historia2_reader_El_Lago_de_Wara.html'],['CO','El Puente de Camilo','pueblosperdidos_historia3_reader_El_Puente_de_Camilo.html'],['MX','El Camino de Sewá','pueblosperdidos_historia4_reader_El_Camino_de_Sewa.html'],['GT','El Telar de Ixchel','pueblosperdidos_historia5_reader_El_Telar_de_Ixchel.html'],['BZ','La Luz de Marisol','pueblosperdidos_historia6_reader_La_Luz_de_Marisol.html'],['AR','El Viento de Tomás','pueblosperdidos_historia7_reader_El_Viento_de_Tomas.html'],['EC','La Canoa Solar de Yankuam','pueblosperdidos_historia8_reader_La_Canoa_Solar_de_Yankuam.html']];
+
+const BANDS={
+ u35:{tab:'3-5',name:'Upper Elementary',
+  road:[['Semana 1','El sorteo','Tu pareja recibe una persona especial de El Baúl de Emilio.','misiones'],['Semana 2','El Baúl de Emilio','Lees el episodio de tu persona especial: ¿cómo era a tu edad?','misiones'],['Semana 3','¡Perú!','Leemos sobre Perú y hacemos el póster de la clase.','misiones'],['10 de octubre','La gran fiesta','Presentas tu persona especial y el póster de Perú a las familias.',null]],
+  missions:['persona','peru']},
+ ms:{tab:'6-8',name:'Middle School',
+  road:[['Semana 1','Doble sorteo','Una leyenda para tu pareja y un país para ti.','misiones'],['Semana 2','Leyendas y países','Lees tu leyenda en la Biblioteca FVR. Empiezas tu Pasaporte del País.','paises'],['Semana 3','¡Chile!','Investigamos Chile para el proyecto de la clase. Terminas tu pasaporte.','misiones'],['10 de octubre','La gran fiesta','Cuentas tu leyenda y muestras tu país y Chile a las familias.',null]],
+  missions:['leyenda','pasaporte','chile']},
+ sec:{tab:'9-11',name:'Secundaria',
+  road:[['Semana 1','El sorteo','Recibes un país de Memorias de pueblos perdidos.','misiones'],['Semana 2','Tu historia','Lees la historia de tu país e investigas: geografía, escuela, cultura y retos.','paises'],['Semana 3','Máscaras de Puerto Rico','Leemos El Vejigante de Valeria y hacemos las máscaras.','misiones'],['10 de octubre','La gran fiesta','Presentas tu país y mostramos las máscaras a las familias.',null]],
+  missions:['memorias','pasaporte','pr']}
+};
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const flag=code=>FLAGS[code]?flagSVG(code):'<svg viewBox="0 0 300 200" role="img" aria-label="Belice"><rect width="300" height="200" fill="#003F87"/><rect y="0" width="300" height="24" fill="#CE1126"/><rect y="176" width="300" height="24" fill="#CE1126"/><circle cx="150" cy="100" r="52" fill="#fff"/><circle cx="150" cy="100" r="44" fill="none" stroke="#3d7a2e" stroke-width="6"/></svg>';
+const cname=code=>code==='BZ'?'Belice':C[code].n;
+const pick=(href,code,title,sub)=>`<a class="pick" href="${href}" target="_blank" rel="noopener">${flag(code)}<div><b>${title}</b><span>${sub}</span></div><span class="arrow" aria-hidden="true">→</span></a>`;
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+let band=null, tab='ruta', filter='Todos', q='';
+const hash=(location.hash||'').slice(1);
+const HMAP={tres:'u35',ms:'ms',sec:'sec'};
+band=HMAP[hash]||store.get('hhm-est-band','u35');
+
+function renderBands(){
+  $('#bands').innerHTML=Object.entries(BANDS).map(([k,b])=>`<button class="band" data-b="${k}" aria-pressed="${k===band}">${b.tab} · ${b.name}</button>`).join('');
+}
+function renderTabs(){
+  const T=[['ruta','Mi ruta'],['misiones','Mis misiones'],['paises','Explorador de países']];
+  $('#tabs').innerHTML=T.map(([k,l])=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${l}</button>`).join('');
+}
+
+/* ---------- views ---------- */
+function vRuta(B){
+  return `<section class="view"><div><div class="eyebrow">${B.tab} · ${B.name}</div><h2>Mi ruta hacia la fiesta</h2></div>
+  <p class="lead">Toca cada parada para ver qué hacemos.</p>
+  <div class="road">${B.road.map((r,i)=>`<button class="stop${r[3]?'':' fiesta'}" ${r[3]?`data-go="${r[3]}"`:''}><span class="when">${r[0]}</span><h3>${r[1]}</h3><p>${r[2]}</p>${r[3]?`<span class="go">Ver →</span>`:''}</button>`).join('')}</div></section>`;
+}
+const M={
+ persona:()=>`<article class="mission"><div class="mhead"><h3>Mi persona especial</h3><span class="tag">En pareja</span></div>
+   <p class="lead">Busca a la persona especial que te tocó en el sorteo. Toca su nombre para leer su episodio de <b>El Baúl de Emilio</b>.</p>
+   <div class="grid">${PERSONAS.map(p=>pick(BASE+p[3],p[1],p[0],`Episodio ${p[4]} · ${p[2]}`)).join('')}</div>
+   <ol class="steps"><li><b>Lee</b> el episodio con tu pareja.</li><li><b>Busca:</b> ¿cómo era a tu edad? ¿Qué le gustaba?</li><li><b>Dibuja</b> y escribe 3 datos para la fiesta.</li></ol></article>`,
+ peru:()=>`<article class="mission"><div class="mhead"><h3>El póster de Perú</h3><span class="tag">Toda la clase</span></div>
+   <p class="lead">Vamos a hacer un póster gigante de Perú. Lee y busca ideas: comida, animales, lugares.</p>
+   <div class="grid">${pick(READS.PE[0].u,'PE','El Camino de Killa','Memorias de pueblos perdidos')}${pick(READS.PE[1].u,'PE','El Ceviche de Fernanda','La Receta de la Abuela')}</div>
+   <div class="row"><button class="btn" data-country="PE">Ficha de Perú</button></div></article>`,
+ leyenda:()=>`<article class="mission"><div class="mhead"><h3>Mi leyenda hispana</h3><span class="tag">En pareja</span></div>
+   <p class="lead">Busca la leyenda que te tocó en el sorteo. Está en la <b>Biblioteca FVR</b> de Cuentópolis.</p>
+   <div class="grid">${LEYENDAS.map(l=>pick(BASE+l[2],l[1],l[0],'Leyenda de '+C[l[1]].n)).join('')}</div>
+   <ol class="steps"><li><b>Lean</b> la leyenda juntos.</li><li><b>Cuenten</b> la historia con sus palabras: ¿quién?, ¿dónde?, ¿qué pasa?</li><li><b>Preparen</b> la leyenda para contarla en la fiesta.</li></ol></article>`,
+ pasaporte:()=>`<article class="mission"><div class="mhead"><h3>Mi Pasaporte del País</h3><span class="tag">Individual</span></div>
+   <p class="lead">Busca tu país en el <b>Explorador de países</b>. Allí encuentras su ficha, las historias de Cuentópolis y más lecturas.</p>
+   <div class="row"><button class="btn" data-go="paises">Ir al Explorador de países →</button></div></article>`,
+ chile:()=>`<article class="mission"><div class="mhead"><h3>Proyecto de la clase: Chile</h3><span class="tag">Toda la clase</span></div>
+   <p class="lead">Investigamos Chile juntos para nuestro proyecto y manualidad.</p>
+   <div class="grid">${pick(READS.CL[0].u,'CL','La Collera de Javiera','Entrevistas callejeras · rodeo y cueca')}<a class="pick" href="${VIKI+'Chile'}" target="_blank" rel="noopener">${flag('CL')}<div><b>Chile en Vikidia</b><span>Enciclopedia para jóvenes</span></div><span class="arrow" aria-hidden="true">→</span></a></div>
+   <div class="row"><button class="btn" data-country="CL">Ficha de Chile</button></div></article>`,
+ memorias:()=>`<article class="mission"><div class="mhead"><h3>Mi país en Memorias de pueblos perdidos</h3><span class="tag">Individual</span></div>
+   <p class="lead">Busca el país que te tocó en el sorteo y abre su historia. Cada historia cuenta cómo un niño o una niña llega a la escuela.</p>
+   <div class="grid">${MEMORIAS.map(m=>pick(BASE+m[2],m[0],m[1],cname(m[0]))).join('')}</div>
+   <ol class="steps"><li><b>Lee</b> tu historia en el nivel que te asignó tu maestra.</li><li><b>Investiga</b> tu país en el Explorador: geografía, cultura y comida.</li><li><b>Prepara</b> tu presentación: ¿qué reto tiene el protagonista?</li></ol></article>`,
+ pr:()=>`<article class="mission"><div class="mhead"><h3>Máscaras de Puerto Rico</h3><span class="tag">Toda la clase</span></div>
+   <p class="lead">Antes de hacer nuestras máscaras de vejigante, leemos cómo las hace Valeria en Ponce.</p>
+   <div class="grid">${pick(READS.PR[0].u,'PR','El Vejigante de Valeria','Entrevistas callejeras · máscaras de Ponce')}${pick(READS.NI[0].u,'NI','La Máscara de Álvaro','Entrevistas callejeras · otra tradición de máscaras')}</div>
+   <div class="row"><button class="btn" data-country="PR">Ficha de Puerto Rico</button></div></article>`
+};
+function vMisiones(B){return `<section class="view"><div><div class="eyebrow">${B.tab} · ${B.name}</div><h2>Mis misiones</h2></div>${B.missions.map(m=>M[m]()).join('')}</section>`}
+function vPaises(){
+  const regs=['Todos','Norteamérica','Centroamérica','el Caribe','Sudamérica','Europa','África'];
+  const list=ORDER.filter(k=>(filter==='Todos'||C[k].reg===filter)&&C[k].n.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q));
+  return `<section class="view"><div><div class="eyebrow">21 países</div><h2>Explorador de países</h2></div>
+  <p class="lead">Toca un país para ver su ficha, sus historias en Cuentópolis y dónde leer más.</p>
+  <div class="tools"><label class="note" for="search" style="flex:none">Buscar</label><input id="search" type="search" placeholder="Escribe un país…" value="${q}" autocomplete="off"></div>
+  <div class="filters" role="group" aria-label="Región">${regs.map(r=>`<button data-f="${r}" aria-pressed="${r===filter}">${r==='el Caribe'?'Caribe':r}</button>`).join('')}</div>
+  <div class="tiles" id="tiles">${list.map(k=>`<button class="tile" data-country="${k}">${flag(k)}<b>${C[k].n}</b><span>${C[k].reg}</span></button>`).join('')||'<p class="none">No hay países con ese nombre.</p>'}</div></section>`;
+}
+const QS=['¿Cuál es la capital?','¿Qué idioma o idiomas se hablan?','¿Cuál es una comida típica?','¿Qué animal es especial en este país?','¿Qué música, baile o tradición tiene?','Un dato curioso que me sorprendió'];
+function openCountry(k){
+  const c=C[k],reads=READS[k]||[],done=store.get('hhm-est-check',{})[k]||[];
+  const o=$('#overlay'); o.hidden=false;
+  o.innerHTML=`<div class="card" role="dialog" aria-modal="true" aria-label="${c.n}">
+   <div class="chead">${flag(k)}<div><div class="eyebrow">${c.reg}</div><h2>${c.n}</h2></div><button class="close" id="close">Cerrar ✕</button></div>
+   <div class="facts"><div class="fact"><small>Capital</small>${c.cap}</div><div class="fact"><small>Idioma</small>${c.idi}</div><div class="fact"><small>Región</small>${c.reg}</div></div>
+   <div class="sect"><h3>Ficha rápida</h3><div class="ficha">${c.ficha.map(f=>`<p>${f}</p>`).join('')}</div></div>
+   <div class="sect"><h3>Lee en Cuentópolis</h3>${reads.length?`<div class="links">${reads.map(r=>`<a class="link" href="${r.u}" target="_blank" rel="noopener"><div><b>${r.t}</b><span>${r.b}</span></div><span class="arrow">Abrir →</span></a>`).join('')}</div>`:'<p class="none">Todavía no hay una historia de este país en Cuentópolis.</p>'}</div>
+   <div class="sect"><h3>Lee más</h3><div class="links"><a class="link" href="${VIKI+c.vk}" target="_blank" rel="noopener"><div><b>${c.n} en Vikidia</b><span>Enciclopedia en español para jóvenes de 8 a 13 años</span></div><span class="arrow">Abrir →</span></a></div></div>
+   <div class="sect"><h3>Mi Pasaporte del País</h3><p class="note">Marca cada pregunta cuando encuentres la respuesta y escríbela en tu pasaporte.</p>
+    <div class="check">${QS.map((qq,i)=>`<label><input type="checkbox" id="q-${k}-${i}" data-q="${i}" ${done.includes(i)?'checked':''}>${qq}</label>`).join('')}</div></div>
+  </div>`;
+  o.dataset.k=k; $('#close').focus();
+}
+function closeCountry(){$('#overlay').hidden=true;$('#overlay').innerHTML=''}
+
+function render(){
+  renderBands(); renderTabs();
+  const B=BANDS[band];
+  $('#main').innerHTML=tab==='ruta'?vRuta(B):tab==='misiones'?vMisiones(B):vPaises();
+}
+$('#bands').addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(!b)return;band=b.dataset.b;store.set('hhm-est-band',band);tab='ruta';render()});
+$('#tabs').addEventListener('click',e=>{const t=e.target.closest('[data-t]');if(!t)return;tab=t.dataset.t;render()});
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]'); if(g){tab=g.dataset.go;render();window.scrollTo(0,0);return}
+  const c=e.target.closest('[data-country]'); if(c){openCountry(c.dataset.country);return}
+  const f=e.target.closest('[data-f]'); if(f){filter=f.dataset.f;render();return}
+  if(e.target.id==='close'||e.target.id==='overlay'){closeCountry()}
+});
+document.addEventListener('input',e=>{if(e.target.id==='search'){q=e.target.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');const pos=e.target.selectionStart;render();const s=$('#search');s.focus();s.setSelectionRange(pos,pos)}});
+document.addEventListener('change',e=>{const i=e.target.dataset.q;if(i==null)return;const k=$('#overlay').dataset.k;const all=store.get('hhm-est-check',{});const set=new Set(all[k]||[]);e.target.checked?set.add(+i):set.delete(+i);all[k]=[...set];store.set('hhm-est-check',all)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#overlay').hidden)closeCountry()});
+render();
+</script>
