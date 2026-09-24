@@ -108,6 +108,24 @@ h2{font-size:clamp(24px,3.2vw,34px);font-weight:800}
 .check input{margin-top:4px;accent-color:var(--gold);width:18px;height:18px;flex:none}
 .note{font-size:13px;color:var(--dim)}
 
+/* ruleta */
+.rgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;align-items:start}
+.wheelbox{position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:1}
+.wheelbox canvas{width:100%;height:100%;display:block}
+.pointer{position:absolute;left:50%;top:-4px;transform:translateX(-50%);border-left:16px solid transparent;border-right:16px solid transparent;border-top:30px solid var(--gold2);z-index:2}
+.hub{position:absolute;left:50%;top:50%;width:22%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:var(--bg);border:4px solid var(--gold);display:flex;align-items:center;justify-content:center;text-align:center;font-family:var(--display);font-weight:800;color:var(--gold2);font-size:clamp(13px,1.6vw,18px);line-height:1.05}
+.rctrl{display:grid;gap:12px}
+.rctrl input{width:100%;background:var(--panel);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;font-size:18px;color:var(--parch)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.alist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.alist li{display:flex;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:14px}
+.alist li svg{width:40px;height:27px;flex:none;border-radius:2px}
+.alist li span{display:block;color:var(--dim);font-size:12px}
+.linkbtn{background:none;border:0;color:var(--dim);text-decoration:underline;font-size:14px;padding:0}
+.win{background:var(--parch);color:#1b1712;border-radius:18px;padding:24px;max-width:560px;width:100%;margin:40px auto;display:grid;gap:12px;justify-items:center;text-align:center}
+.win svg{width:min(280px,70%);height:auto;border-radius:6px}
+.win h2{color:#1b1712;font-size:clamp(32px,5vw,48px)}
+@media (max-width:760px){.rgrid{grid-template-columns:1fr}}
 footer{margin-top:40px;text-align:center;font-size:13px;color:var(--dim)}
 
 @media (max-width:760px){.road{grid-template-columns:1fr 1fr}}
@@ -273,6 +291,7 @@ let band=null, tab='ruta', filter='Todos', q='';
 const ss={get(k){try{return JSON.parse(sessionStorage.getItem(k))}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const hash=(location.hash||'').slice(1);
 const HMAP={tres:'u35',ms:'ms',sec:'sec'};
+if(hash==='ruleta')tab='ruleta';
 band=HMAP[hash]||store.get('hhm-est-band','u35');
 const back=ss.get('hhm-est-state'); let reopen=null;
 if(back&&(!HMAP[hash]||HMAP[hash]===back.band)){band=back.band;tab=back.tab;filter=back.filter||'Todos';reopen=back.country||null}
@@ -281,7 +300,7 @@ function renderBands(){
   $('#bands').innerHTML=Object.entries(BANDS).map(([k,b])=>`<button class="band" data-b="${k}" aria-pressed="${k===band}">${b.tab} · ${b.name}</button>`).join('');
 }
 function renderTabs(){
-  const T=[['ruta','Mi ruta'],['misiones','Mis misiones'],['paises','Explorador de países']];
+  const T=[['ruta','Mi ruta'],['misiones','Mis misiones'],['paises','Explorador de países'],['ruleta','Ruleta de países']];
   $('#tabs').innerHTML=T.map(([k,l])=>`<button role="tab" data-t="${k}" aria-selected="${k===tab}">${l}</button>`).join('');
 }
 
@@ -321,6 +340,63 @@ const M={
    <div class="row"><button class="btn" data-country="PR">Ficha de Puerto Rico</button></div></article>`
 };
 function vMisiones(B){return `<section class="view"><div><div class="eyebrow">${B.tab} · ${B.name}</div><h2>Mis misiones</h2></div>${B.missions.map(m=>M[m]()).join('')}</section>`}
+/* ---------- RULETA (16 países: 3-5 y Middle School) ---------- */
+const RPOOL=['CR','CU','ES','CL','VE','UY','PA','DO','PY','SV','AR','BO','GQ','HN','NI','PR'];
+let rdraw=store.get('hhm-ruleta16',[]), rangle=0, rspin=false, rconfirm=false;
+const rleft=()=>RPOOL.filter(k=>!rdraw.some(d=>d.k===k));
+function vRuleta(){
+  const left=rleft();
+  return `<section class="view"><div><div class="eyebrow">3-5 y Middle School · 16 países</div><h2>Ruleta de países</h2></div>
+  <p class="lead">Cada estudiante gira una vez. El país que te toca es el país de tu póster de investigación. Los países que ya salieron desaparecen de la ruleta.</p>
+  <div class="rgrid"><div class="wheelbox"><div class="pointer" aria-hidden="true"></div><canvas id="rwheel" width="520" height="520" aria-label="Ruleta de países"></canvas><div class="hub" id="rhub"></div></div>
+  <div class="rctrl"><label class="note" for="rname">Tu nombre</label><input id="rname" autocomplete="off" placeholder="Escribe tu nombre">
+   <div class="row"><button class="btn" id="rspin" ${left.length?'':'disabled'}>¡Girar!</button></div>
+   <div class="row" style="justify-content:space-between"><span class="note">Asignados: ${rdraw.length} · Quedan: ${left.length}</span>
+    <span class="row">${rconfirm?`<span class="note">¿Borrar todo?</span><button class="linkbtn" id="ryes">Sí, borrar</button><button class="linkbtn" id="rno">No</button>`:`<button class="linkbtn" id="rundo" ${rdraw.length?'':'disabled'}>Deshacer el último</button><button class="linkbtn" id="rreset" ${rdraw.length?'':'disabled'}>Reiniciar</button>`}</span></div>
+   <ul class="alist">${rdraw.map(d=>`<li>${flag(d.k)}<div><b>${C[d.k].n}</b><span>${d.w||'—'}</span></div></li>`).join('')}</ul>
+  </div></div></section>`;
+}
+const RCOL=['#c9a24b','#5f9a6e','#8fb8d8','#d98b5f','#b58fd1','#e3c878'];
+function drawWheel(){
+  const cv=$('#rwheel'); if(!cv)return; const x=cv.getContext('2d'), dpr=window.devicePixelRatio||1, S=520;
+  cv.width=S*dpr; cv.height=S*dpr; x.setTransform(dpr,0,0,dpr,0,0);
+  const p=rleft(), n=p.length, R=S/2-6, c=S/2; x.clearRect(0,0,S,S);
+  x.beginPath(); x.arc(c,c,R+4,0,Math.PI*2); x.fillStyle='#c9a24b'; x.fill();
+  const hub=$('#rhub');
+  if(!n){x.beginPath();x.arc(c,c,R,0,Math.PI*2);x.fillStyle='#2d271e';x.fill();if(hub)hub.textContent='¡Listo!';return}
+  const a=Math.PI*2/n;
+  for(let i=0;i<n;i++){const s0=rangle+i*a-Math.PI/2;x.beginPath();x.moveTo(c,c);x.arc(c,c,R,s0,s0+a);x.closePath();
+    x.fillStyle=RCOL[(n%RCOL.length===1&&i===n-1)?2:i%RCOL.length];x.fill();x.strokeStyle='#1b1712';x.lineWidth=2;x.stroke();
+    x.save();x.translate(c,c);x.rotate(s0+a/2);x.textAlign='right';x.textBaseline='middle';x.fillStyle='#1b1712';
+    let lab=C[p[i]].n; if(lab==='República Dominicana')lab='Rep. Dominicana';
+    let f=n>12?16:n>6?19:22; const room=R-14-S*0.13; do{x.font=`700 ${f}px "Public Sans","Segoe UI",sans-serif`;f--}while(x.measureText(lab).width>room&&f>10);
+    x.fillText(lab,R-14,0);x.restore();}
+  if(hub)hub.innerHTML=`${n}<br>${n===1?'queda':'quedan'}`;
+}
+function rgo(){
+  if(rspin)return; const p=rleft(), n=p.length; if(!n)return; rspin=true; $('#rspin').disabled=true;
+  const who=($('#rname').value||'').trim(), t=Math.floor(Math.random()*n), a=Math.PI*2/n;
+  const start=rangle; let end=-(t*a+a/2)+(Math.random()-.5)*a*.6; while(end<start+5*Math.PI*2)end+=Math.PI*2;
+  const dur=matchMedia('(prefers-reduced-motion: reduce)').matches?500:4500, t0=performance.now();
+  (function fr(now){const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,4);rangle=start+(end-start)*e;drawWheel();
+    if(k<1)requestAnimationFrame(fr);else{rangle%=Math.PI*2;rspin=false;const key=p[t];rdraw.push({k:key,w:who});store.set('hhm-ruleta16',rdraw);rwin(key,who)}})(t0);
+}
+function rwin(k,who){
+  const o=$('#overlay'); o.hidden=false; o.dataset.k='';
+  o.innerHTML=`<div class="win" role="dialog" aria-modal="true" aria-label="${C[k].n}"><div>${who?who+', tu país es…':'El país es…'}</div>${flag(k)}<h2>${C[k].n}</h2><p>Capital: <b>${C[k].cap}</b> · ${C[k].reg}</p>
+   <div class="row" style="justify-content:center"><button class="btn" data-country="${k}">Ver su ficha</button><button class="btn ghost" id="rnext" style="color:#1b1712;border-color:#1b1712">Siguiente</button></div></div>`;
+}
+document.addEventListener('click',e=>{
+  const id=e.target.id;
+  if(id==='rspin'){rgo();return}
+  if(id==='rundo'){rdraw.pop();store.set('hhm-ruleta16',rdraw);render();return}
+  if(id==='rreset'){rconfirm=true;render();return}
+  if(id==='rno'){rconfirm=false;render();return}
+  if(id==='ryes'){rdraw=[];rconfirm=false;store.set('hhm-ruleta16',rdraw);render();return}
+  if(id==='rnext'){closeCountry();render();const i=$('#rname');if(i)i.focus();return}
+});
+document.addEventListener('keydown',e=>{if(e.target.id==='rname'&&e.key==='Enter'){e.preventDefault();rgo()}});
+
 function vPaises(){
   const regs=['Todos','Norteamérica','Centroamérica','el Caribe','Sudamérica','Europa','África'];
   const list=ORDER.filter(k=>(filter==='Todos'||C[k].reg===filter)&&C[k].n.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q));
@@ -350,7 +426,8 @@ function closeCountry(){$('#overlay').hidden=true;$('#overlay').innerHTML=''}
 function render(){
   renderBands(); renderTabs();
   const B=BANDS[band];
-  $('#main').innerHTML=tab==='ruta'?vRuta(B):tab==='misiones'?vMisiones(B):vPaises();
+  $('#main').innerHTML=tab==='ruta'?vRuta(B):tab==='misiones'?vMisiones(B):tab==='ruleta'?vRuleta():vPaises();
+  if(tab==='ruleta')drawWheel();
 }
 $('#bands').addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(!b)return;band=b.dataset.b;store.set('hhm-est-band',band);tab='ruta';render()});
 $('#tabs').addEventListener('click',e=>{const t=e.target.closest('[data-t]');if(!t)return;tab=t.dataset.t;render()});
