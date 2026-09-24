@@ -343,6 +343,8 @@ function vMisiones(B){return `<section class="view"><div><div class="eyebrow">${
 /* ---------- RULETA (16 países: 3-5 y Middle School) ---------- */
 const RPOOL=['CR','CU','ES','CL','VE','UY','PA','DO','PY','SV','AR','BO','GQ','HN','NI','PR'];
 let rdraw=store.get('hhm-ruleta16',[]), rangle=0, rspin=false, rconfirm=false;
+const SECP=['GT','EC','CO','MX','PE']; let secNames=store.get('hhm-sec5',{});
+document.addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.sec;if(!k)return;secNames[k]=e.target.value;store.set('hhm-sec5',secNames)});
 const rleft=()=>RPOOL.filter(k=>!rdraw.some(d=>d.k===k));
 function vRuleta(){
   const left=rleft();
@@ -354,7 +356,11 @@ function vRuleta(){
    <div class="row" style="justify-content:space-between"><span class="note">Asignados: ${rdraw.length} · Quedan: ${left.length}</span>
     <span class="row">${rconfirm?`<span class="note">¿Borrar todo?</span><button class="linkbtn" id="ryes">Sí, borrar</button><button class="linkbtn" id="rno">No</button>`:`<button class="linkbtn" id="rundo" ${rdraw.length?'':'disabled'}>Deshacer el último</button><button class="linkbtn" id="rreset" ${rdraw.length?'':'disabled'}>Reiniciar</button>`}</span></div>
    <ul class="alist">${rdraw.map(d=>`<li>${flag(d.k)}<div><b>${C[d.k].n}</b><span>${d.w||'—'}</span></div></li>`).join('')}</ul>
-  </div></div></section>`;
+  </div></div>
+  <div class="mission"><div class="mhead"><h3>Secundaria · países ya asignados</h3><span class="tag">Escribe los nombres</span></div>
+   <p class="lead">Estos 5 países no están en la ruleta. Escribe el nombre de cada estudiante; se guarda en esta computadora.</p>
+   <ul class="alist">${SECP.map(k=>`<li>${flag(k)}<div style="flex:1;min-width:0"><b>${C[k].n}</b><input id="sec-${k}" data-sec="${k}" value="${(secNames[k]||'').replace(/"/g,'&quot;')}" placeholder="Nombre" autocomplete="off" style="width:100%;margin-top:4px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 8px;color:var(--parch);font-size:14px"></div></li>`).join('')}</ul></div>
+  </section>`;
 }
 const RCOL=['#c9a24b','#5f9a6e','#8fb8d8','#d98b5f','#b58fd1','#e3c878'];
 function drawWheel(){
