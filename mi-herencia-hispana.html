@@ -182,6 +182,18 @@ function flagSVG(code){return `<svg viewBox="0 0 300 200" role="img" aria-label=
 
 const BASE='https://ariadnaroberson-collab.github.io/cuentopolis/';
 const VIKI='https://es.vikidia.org/wiki/';
+const AUTORES=[
+ {n:'Miguel de Cervantes',code:'ES',anio:'1547–1616',vk:'Miguel_de_Cervantes_Saavedra',obras:[['Don Quijote','quijote_reader.html']],
+  datos:['Nació en Alcalá de Henares, España.','En una batalla perdió el uso de la mano izquierda.','Estuvo 5 años prisionero en Argel.','Su Don Quijote pelea contra molinos: ¡cree que son gigantes!']},
+ {n:'Pedro Antonio de Alarcón',code:'ES',anio:'1833–1891',vk:'',obras:[['El sombrero de tres picos','sombrero_reader.html']],
+  datos:['Nació en Guadix, en el sur de España.','Fue periodista y viajó mucho.','Escribió El sombrero de tres picos en 1874.','Su historia se convirtió en un ballet con música de Manuel de Falla.']},
+ {n:'Federico García Lorca',code:'ES',anio:'1898–1936',vk:'',obras:[['Mariposa del aire','mariposa_del_aire_reader.html']],
+  datos:['Nació en Fuente Vaqueros, Granada.','Además de poeta, tocaba el piano y dibujaba.','Con su grupo de teatro, La Barraca, llevó obras a los pueblos de España.','Sus poemas parecen canciones: ¡léelos en voz alta!']},
+ {n:'Horacio Quiroga',code:'UY',anio:'1878–1937',vk:'',obras:[['Cuentos de la selva','cuentos_de_la_selva_reader.html?story=medias-flamencos']],
+  datos:['Nació en Salto, Uruguay.','Vivió muchos años en la selva de Misiones, en Argentina.','Escribió Cuentos de la selva (1918) para sus hijos.','Le gustaban la fotografía, las motos y construir cosas.']},
+ {n:'José Martí',code:'CU',anio:'1853–1895',vk:'',obras:[['Los Zapaticos de Rosa','los-zapaticos-de-rosa.html'],['El Baúl de Emilio','baul_de_emilio_episodio4_reader_Jose_Marti.html']],
+  datos:['Nació en La Habana, Cuba.','A los 16 años ya publicaba un periódico.','Creó La Edad de Oro, una revista para niños.','Sus Versos sencillos inspiraron la canción "Guantanamera".']}
+];
 
 const C={
  MX:{n:'México',cap:'Ciudad de México',reg:'Norteamérica',idi:'español',vk:'M%C3%A9xico',
@@ -276,7 +288,7 @@ const BANDS={
   missions:['leyenda','pasaporte','chile']},
  sec:{tab:'9-11',name:'Secundaria',
   road:[['Semana 1','El sorteo','Recibes un país de Memorias de pueblos perdidos.','misiones'],['Semana 2','Tu historia','Lees la historia de tu país e investigas: geografía, escuela, cultura y retos.','paises'],['Semana 3','Máscaras de Puerto Rico','Leemos El Vejigante de Valeria y hacemos las máscaras.','misiones'],['10 de octubre','La gran fiesta','Presentas tu país y mostramos las máscaras a las familias.',null]],
-  missions:['memorias','pasaporte','pr']}
+  missions:['memorias','autor','pasaporte','pr']}
 };
 
 /* ---------- helpers ---------- */
@@ -334,6 +346,14 @@ const M={
    <p class="lead">Busca el país que te tocó en el sorteo y abre su historia. Cada historia cuenta cómo un niño o una niña llega a la escuela.</p>
    <div class="grid">${MEMORIAS.map(m=>pick(BASE+m[2],m[0],m[1],cname(m[0]))).join('')}</div>
    <ol class="steps"><li><b>Lee</b> tu historia en el nivel que te asignó tu maestra.</li><li><b>Investiga</b> tu país en el Explorador: geografía, cultura y comida.</li><li><b>Prepara</b> tu presentación: ¿qué reto tiene el protagonista?</li></ol></article>`,
+ autor:()=>`<article class="mission"><div class="mhead"><h3>Persona de la literatura</h3><span class="tag">Individual</span></div>
+   <p class="lead">Cada estudiante es un autor. Lee su obra, busca su escena favorita y 3 datos curiosos. Después haz su <b>perfil de LetraGram</b> y su <b>monólogo de 60 segundos</b> para la fiesta.</p>
+   <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">${AUTORES.map(a=>`<div class="pick" style="display:grid;gap:8px;align-items:start">
+     <div style="display:flex;gap:10px;align-items:center">${flag(a.code)}<div><b>${a.n}</b><span>${C[a.code].n} · ${a.anio}</span></div></div>
+     <ul class="steps" style="padding-left:1.1em;font-size:14px">${a.datos.map(d=>`<li>${d}</li>`).join('')}</ul>
+     <div class="row">${a.obras.map(o=>`<a class="btn" style="padding:6px 12px;font-size:14px" href="${BASE+o[1]}">${o[0]}</a>`).join('')}
+     ${a.vk?`<a class="btn ghost" style="padding:6px 12px;font-size:14px" href="${VIKI+a.vk}" target="_blank" rel="noopener">Vikidia ↗</a>`:''}</div></div>`).join('')}</div>
+   <ol class="steps"><li><b>Lee</b> la obra de tu autor y escoge tu escena favorita.</li><li><b>Completa</b> el perfil de LetraGram (3 publicaciones).</li><li><b>Prepara</b> tu monólogo de 60 segundos con un objeto.</li></ol></article>`,
  pr:()=>`<article class="mission"><div class="mhead"><h3>Máscaras de Puerto Rico</h3><span class="tag">Toda la clase</span></div>
    <p class="lead">Antes de hacer nuestras máscaras de vejigante, leemos cómo las hace Valeria en Ponce.</p>
    <div class="grid">${pick(READS.PR[0].u,'PR','El Vejigante de Valeria','Entrevistas callejeras · máscaras de Ponce')}${pick(READS.NI[0].u,'NI','La Máscara de Álvaro','Entrevistas callejeras · otra tradición de máscaras')}</div>
