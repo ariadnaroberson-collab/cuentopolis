@@ -211,7 +211,7 @@ const C={
  EC:{n:'Ecuador',cap:'Quito',reg:'Sudamérica',idi:'español y quichua',vk:'Ecuador',
    ficha:['Ecuador está en Sudamérica. La capital es Quito.','Se llama Ecuador porque la línea del ecuador pasa por el país.','En las islas Galápagos viven tortugas gigantes.','Una comida típica es el locro de papa, una sopa con queso.','Tiene montañas, playas, islas y selva amazónica.']},
  PE:{n:'Perú',cap:'Lima',reg:'Sudamérica',idi:'español y quechua',vk:'Per%C3%BA',
-   ficha:['Perú está en Sudamérica. La capital es Lima.','Machu Picchu es una ciudad inca antigua en las montañas.','Una comida famosa es el ceviche: pescado con limón.','En los Andes viven llamas y alpacas.','¡En Perú hay miles de tipos de papas!']},
+   ficha:['Perú está en Sudamérica. La capital es Lima.','Machu Picchu es una ciudad inca antigua en las montañas.','Una comida famosa es el ceviche: pescado con limón.','En los Andes viven llamas y alpacas.','¡En Perú hay miles de tipos de papas!','En Ayacucho hacen retablos: cajas de madera con puertas y escenas pequeñas adentro.']},
  BO:{n:'Bolivia',cap:'Sucre y La Paz',reg:'Sudamérica',idi:'español, quechua, aimara y más',vk:'Bolivia',
    ficha:['Bolivia está en Sudamérica. Tiene dos capitales: Sucre y La Paz.','El Salar de Uyuni es el desierto de sal más grande del mundo.','Una comida típica es la salteña, una empanada con caldo adentro.','Comparte el lago Titicaca con Perú.','En las montañas viven llamas y cóndores.']},
  CL:{n:'Chile',cap:'Santiago',reg:'Sudamérica',idi:'español',vk:'Chile',
@@ -245,7 +245,7 @@ const READS={
  CO:[R('pueblosperdidos_historia3_reader_El_Puente_de_Camilo.html','El Puente de Camilo',MEM),R('recetaabuela_historia3_reader_La_Arepa_de_Yolanda.html','La Arepa de Yolanda',REC),R('baul_de_emilio_episodio7_reader_Shakira.html','Shakira',BAUL)],
  VE:[R('entrevistas_historia6_reader_El_Terreno_de_Maikel.html','El Terreno de Maikel',ENT)],
  EC:[R('pueblosperdidos_historia8_reader_La_Canoa_Solar_de_Yankuam.html','La Canoa Solar de Yankuam',MEM)],
- PE:[R('pueblosperdidos_historia1_reader_El_Camino_de_Killa.html','El Camino de Killa',MEM),R('recetaabuela_historia1_reader_El_Ceviche_de_Fernanda.html','El Ceviche de Fernanda',REC)],
+ PE:[R('pueblosperdidos_historia1_reader_El_Camino_de_Killa.html','El Camino de Killa',MEM),R('retablo_reader_El_Retablo_de_Mateo.html','El Retablo de Mateo','Biblioteca FVR · Arte y artesanía'),R('recetaabuela_historia1_reader_El_Ceviche_de_Fernanda.html','El Ceviche de Fernanda',REC)],
  BO:[R('pueblosperdidos_historia2_reader_El_Lago_de_Wara.html','El Lago de Wara',MEM),R('recetaabuela_historia6_reader_El_Secreto_de_Veronica.html','El Secreto de Verónica',REC)],
  CL:[R('entrevistas_historia5_reader_La_Collera_de_Javiera.html','La Collera de Javiera',ENT),R('arpilleras_reader_Los_Retazos_de_Florencia.html','Los Retazos de Florencia','Biblioteca FVR · Arte y artesanía')],
  AR:[R('pueblosperdidos_historia7_reader_El_Viento_de_Tomas.html','El Viento de Tomás',MEM),R('recetaabuela_historia2_reader_El_Repulgue_de_Joaquin.html','El Repulgue de Joaquín',REC),R('baul_de_emilio_episodio1_reader_Lionel_Messi.html','Lionel Messi',BAUL)],
@@ -269,7 +269,7 @@ const MEMORIAS=[['PE','El Camino de Killa','pueblosperdidos_historia1_reader_El_
 
 const BANDS={
  u35:{tab:'3-5',name:'Upper Elementary',
-  road:[['Semana 1','El sorteo','Tu pareja recibe una persona especial de El Baúl de Emilio.','misiones'],['Semana 2','El Baúl de Emilio','Lees el episodio de tu persona especial: ¿cómo era a tu edad?','misiones'],['Semana 3','¡Perú!','Leemos sobre Perú y hacemos el póster de la clase.','misiones'],['10 de octubre','La gran fiesta','Presentas tu persona especial y el póster de Perú a las familias.',null]],
+  road:[['Semana 1','El sorteo','Tu pareja recibe una persona especial de El Baúl de Emilio.','misiones'],['Semana 2','El Baúl de Emilio','Lees el episodio de tu persona especial: ¿cómo era a tu edad?','misiones'],['Semana 3','Retablos de Perú','Leemos El Retablo de Mateo y hacemos nuestros retablos de la vida en familia.','misiones'],['10 de octubre','La gran fiesta','Presentas tu persona especial y tu retablo a las familias.',null]],
   missions:['persona','peru']},
  ms:{tab:'6-8',name:'Middle School',
   road:[['Semana 1','Doble sorteo','Una leyenda para tu pareja y un país para ti.','misiones'],['Semana 2','Leyendas y países','Lees tu leyenda en la Biblioteca FVR. Empiezas tu Pasaporte del País.','paises'],['Semana 3','Arpilleras de Chile','Leemos Los Retazos de Florencia y hacemos nuestras arpilleras. Terminas tu pasaporte.','misiones'],['10 de octubre','La gran fiesta','Cuentas tu leyenda y muestras tu país y Chile a las familias.',null]],
@@ -315,9 +315,9 @@ const M={
    <p class="lead">Busca a la persona especial que te tocó en el sorteo. Toca su nombre para leer su episodio de <b>El Baúl de Emilio</b>.</p>
    <div class="grid">${PERSONAS.map(p=>pick(BASE+p[3],p[1],p[0],`Episodio ${p[4]} · ${p[2]}`)).join('')}</div>
    <ol class="steps"><li><b>Lee</b> el episodio con tu pareja.</li><li><b>Busca:</b> ¿cómo era a tu edad? ¿Qué le gustaba?</li><li><b>Dibuja</b> y escribe 3 datos para la fiesta.</li></ol></article>`,
- peru:()=>`<article class="mission"><div class="mhead"><h3>El póster de Perú</h3><span class="tag">Toda la clase</span></div>
-   <p class="lead">Vamos a hacer un póster gigante de Perú. Lee y busca ideas: comida, animales, lugares.</p>
-   <div class="grid">${pick(READS.PE[0].u,'PE','El Camino de Killa','Memorias de pueblos perdidos')}${pick(READS.PE[1].u,'PE','El Ceviche de Fernanda','La Receta de la Abuela')}</div>
+ peru:()=>`<article class="mission"><div class="mhead"><h3>Retablos de Perú</h3><span class="tag">Manualidad</span></div>
+   <p class="lead">Vamos a hacer retablos: cajas con puertas y una escena de la vida en familia adentro. Primero lee cómo Mateo hace el suyo con su abuelo.</p>
+   <div class="grid">${pick(READS.PE[1].u,'PE','El Retablo de Mateo','Biblioteca FVR · retablos')}${pick(READS.PE[0].u,'PE','El Camino de Killa','Memorias de pueblos perdidos')}${pick(READS.PE[2].u,'PE','El Ceviche de Fernanda','La Receta de la Abuela')}</div>
    <div class="row"><button class="btn" data-country="PE">Ficha de Perú</button></div></article>`,
  leyenda:()=>`<article class="mission"><div class="mhead"><h3>Mi leyenda hispana</h3><span class="tag">En pareja</span></div>
    <p class="lead">Busca la leyenda que te tocó en el sorteo. Está en la <b>Biblioteca FVR</b> de Cuentópolis.</p>

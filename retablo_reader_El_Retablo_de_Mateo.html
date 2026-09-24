@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Retablo de Mateo — Biblioteca FVR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+<style>.cp-back{display:inline-flex;align-items:center;gap:6px;font-family:"Space Mono",monospace;font-size:13px;color:#e3c878;text-decoration:none;border:1px solid #c9a24b;border-radius:999px;padding:6px 14px;margin:0 0 14px}.cp-back:hover{background:rgba(201,162,75,.15)}</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="cp-back" href="biblioteca-fvr.html" onclick="if(document.referrer&&document.referrer.indexOf(location.host)>-1&&history.length>1){history.back();return false;}">← Volver</a>
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Arte y artesanía</div>
+    <h1>El Retablo de Mateo</h1>
+    <div class="subtitle">Una historia de Ayacucho, Perú</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Mateo tiene nueve años. Vive en Ayacucho, una ciudad en las montañas de Perú.</p>
+        <p>El abuelo de Mateo se llama Julián. El abuelo Julián hace retablos.</p>
+        <p>Un retablo es una caja de madera con dos puertas. Adentro hay una escena pequeña, con figuritas.</p>
+        <p>Los domingos, toda la familia come junta en la casa del abuelo. Hay sopa, papas y choclo. Mateo está muy feliz los domingos.</p>
+        <p>Mateo dice: "Abuelo, quiero hacer un retablo del almuerzo del domingo."</p>
+        <p>El abuelo sonríe: "¡Muy buena idea! Vamos al taller."</p>
+        <p>Primero, el abuelo le da una caja de madera. Mateo pone la caja de pie.</p>
+        <p>Después, ponen dos puertas pequeñas, una a cada lado. Arriba ponen un techo en forma de triángulo.</p>
+        <p>Mateo pinta la caja de rojo y amarillo. En las puertas pinta flores, hojas y puntos de muchos colores.</p>
+        <p>Después hacen las figuritas. El abuelo dice: "Mis figuritas son de papa y yeso." Mateo hace a su mamá, a su papá, a su abuela y a su hermana.</p>
+        <p>También hace una mesa pequeña, una olla de sopa y un perro: Chaski, el perro de la familia.</p>
+        <p>Al final, Mateo hace una figurita más: un niño que da la mano a un abuelo. "Somos tú y yo," dice Mateo.</p>
+        <p>El domingo, Mateo abre las puertas del retablo en la mesa.</p>
+        <p>La abuela mira y dice: "¡Es nuestro almuerzo!" Todos aplauden.</p>
+        <p>El abuelo dice: "Un retablo guarda un recuerdo para siempre."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Mateo tiene nueve años y vive en Ayacucho, una ciudad en las montañas de Perú. Su abuelo Julián es retablista: hace retablos en un pequeño taller detrás de su casa.</p>
+        <p>Un retablo es una caja de madera con dos puertas. Cuando abres las puertas, adentro hay una escena pequeña llena de figuritas de colores: personas, animales y cosas de la vida diaria.</p>
+        <p>Todos los domingos, la familia de Mateo almuerza junta en la casa del abuelo. Comen sopa, papas y choclo, hablan mucho y se ríen. Para Mateo, es el mejor momento de la semana.</p>
+        <p>Un domingo, Mateo tiene una idea: "Abuelo, ¿me enseñas a hacer un retablo? Quiero hacer uno del almuerzo del domingo." El abuelo sonríe: "Vamos al taller."</p>
+        <p>Primero, ponen la caja de madera de pie. Después, pegan dos puertas pequeñas, una a cada lado, y arriba ponen un techo en forma de triángulo.</p>
+        <p>Luego Mateo pinta la caja de rojo y amarillo. Las puertas son muy importantes, explica el abuelo, porque es lo primero que la gente ve. Mateo las decora con flores grandes, hojas verdes, puntos y rayas de colores.</p>
+        <p>Después hacen las figuritas. El abuelo le enseña su secreto: una pasta de papa y yeso. Mateo hace a su mamá, a su papá, a su abuela, a su hermana, una mesa con una olla de sopa y a Chaski, el perro de la familia.</p>
+        <p>Al final, Mateo hace una figurita más: un niño que da la mano a un abuelo. "Somos tú y yo," le dice. El abuelo no dice nada, pero sus ojos brillan.</p>
+        <p>El domingo siguiente, Mateo pone el retablo en la mesa y abre las puertas despacio. "¡Es nuestro almuerzo!" dice la abuela, y todos aplauden. El abuelo explica: "Un retablo guarda un recuerdo para siempre."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Mateo tenía nueve años y vivía en Ayacucho, una ciudad en las montañas del sur de Perú, famosa por sus retablos. Su abuelo Julián era retablista y trabajaba en un pequeño taller detrás de la casa, entre pinceles, cajas de madera y frascos de pintura.</p>
+        <p>Un retablo es una caja de madera con dos puertas. Al abrirlas, aparece una escena pequeña llena de figuritas de colores. Hace muchos años, los retablos eran cajas que los viajeros llevaban por los caminos de los Andes; hoy muestran escenas de la vida diaria: el mercado, el campo, las familias.</p>
+        <p>Todos los domingos, la familia de Mateo almorzaba en la casa del abuelo: sopa, papas, choclo y muchas conversaciones. Para Mateo era el mejor momento de la semana, y un domingo decidió que quería guardarlo para siempre. "Abuelo, ¿me enseñas a hacer un retablo del almuerzo?" le preguntó. El abuelo sonrió y lo llevó al taller.</p>
+        <p>Primero pusieron la caja de pie. Después pegaron dos puertas pequeñas, una a cada lado, y arriba colocaron un techo en forma de triángulo. Mateo pintó la caja de rojo y amarillo.</p>
+        <p>"Ahora las puertas," dijo el abuelo. "Son la cara del retablo: cuando está cerrado, es lo primero que la gente ve." Mateo las decoró con flores grandes, hojas verdes, puntos y rayas de todos los colores.</p>
+        <p>Luego el abuelo le enseñó su secreto: una pasta hecha de papa y yeso para modelar las figuritas. Mateo hizo a su mamá, a su papá, a su abuela y a su hermana, una mesa con una olla de sopa y a Chaski, el perro de la familia. Cada figurita era más pequeña que un dedo.</p>
+        <p>Al final, Mateo modeló una figura más: un niño dándole la mano a un abuelo. "Somos tú y yo," explicó. El abuelo no respondió, pero se le llenaron los ojos de lágrimas.</p>
+        <p>El domingo siguiente, Mateo puso el retablo en el centro de la mesa y abrió las puertas despacio. "¡Es nuestro almuerzo!" exclamó la abuela, y toda la familia aplaudió. El abuelo le puso la mano en el hombro: "Un retablo guarda un recuerdo para siempre."</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Mateo tenía nueve años y vivía en Ayacucho, una ciudad enclavada en las montañas del sur de Perú y célebre por sus retablos. Su abuelo Julián era retablista y pasaba los días en un pequeño taller detrás de la casa, rodeado de pinceles, cajas de madera y frascos de pintura de todos los colores.</p>
+        <p>Un retablo es una caja de madera con dos puertas que, al abrirse, revela una escena en miniatura poblada de figuritas. Hace siglos, los retablos eran cajas pequeñas que los viajeros transportaban por los caminos de los Andes; con el tiempo, los artesanos de Ayacucho los transformaron en un arte popular lleno de escenas cotidianas: el mercado, el trabajo en el campo, la vida en familia.</p>
+        <p>Cada domingo, la familia de Mateo se reunía a almorzar en casa del abuelo: sopa humeante, papas, choclo y largas sobremesas llenas de risas. Para Mateo, era el mejor momento de la semana, y un domingo decidió que quería conservarlo para siempre. "Abuelo, ¿me enseñas a hacer un retablo del almuerzo?" le pidió. El abuelo, sonriendo, lo condujo al taller.</p>
+        <p>Primero colocaron la caja de pie. Después fijaron dos puertas pequeñas, una a cada lado, y coronaron la caja con un techo triangular. Mateo pintó el conjunto de rojo y amarillo intensos.</p>
+        <p>"Ahora, las puertas," indicó el abuelo. "Son el rostro del retablo: cuando está cerrado, es lo primero que se ve." Mateo las adornó con flores grandes, hojas verdes, puntos y rayas de colores vivos.</p>
+        <p>A continuación, el abuelo le reveló su secreto: una pasta elaborada con papa y yeso para modelar las figuritas. Mateo dio forma a su madre, a su padre, a su abuela y a su hermana, a una mesa con una olla de sopa y a Chaski, el perro de la familia; ninguna figura era más grande que un dedo.</p>
+        <p>Por último, modeló una figura más: un niño que le daba la mano a un anciano. "Somos tú y yo," explicó. El abuelo no dijo nada, pero los ojos se le humedecieron.</p>
+        <p>El domingo siguiente, Mateo colocó el retablo en el centro de la mesa y abrió las puertas lentamente. "¡Es nuestro almuerzo!" exclamó la abuela, y la familia entera estalló en aplausos. El abuelo le apoyó la mano en el hombro: "Un retablo guarda un recuerdo para siempre."</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el retablo</span> — small wooden box with doors and a scene inside</div>
+      <div><span class="term">el/la retablista</span> — retablo maker</div>
+      <div><span class="term">el taller</span> — workshop</div>
+      <div><span class="term">la caja</span> — box</div>
+      <div><span class="term">la puerta</span> — door</div>
+      <div><span class="term">el techo</span> — roof</div>
+      <div><span class="term">la figurita</span> — small figure</div>
+      <div><span class="term">el yeso</span> — plaster</div>
+      <div><span class="term">el choclo</span> — large-kernel Andean corn</div>
+      <div><span class="term">el recuerdo</span> — memory, keepsake</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>un retablo es una caja con...</span>
+      <span>primero..., después..., al final...</span>
+      <span>pinto las puertas con...</span>
+      <span>hago a mi mamá, a mi papá...</span>
+      <span>somos tú y yo</span>
+      <span>un retablo guarda un recuerdo</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué es un retablo? Explica los pasos para hacerlo en orden.</div>
+    <div class="comp-q"><span class="num">2.</span>¿Por qué hace Mateo una figurita de un niño y un abuelo?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El Retablo de Mateo</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR → Arte y artesanía (texto independiente)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Arte y tradición cultural — el retablo de Ayacucho (Perú) como forma de guardar recuerdos de la vida diaria y familiar; el aprendizaje de un oficio en familia. Texto base de la manualidad de retablos de Upper Elementary (3-5).</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Describir un objeto artesanal (partes, colores, materiales); narrar un proceso en orden; nombrar a los miembros de la familia; explicar por qué un objeto guarda un recuerdo.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>un retablo es una caja con... · primero..., después..., al final... · pinto las puertas con... · hago a mi mamá, a mi papá... · somos tú y yo · un retablo guarda un recuerdo.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente simple, oraciones muy cortas; vocabulario de la familia, colores y partes del retablo; ideal para 3-5.<br>
+    <strong>A2:</strong> se añaden el taller, la importancia de las puertas y el secreto de la pasta de papa y yeso; conectores simples.<br>
+    <strong>B1:</strong> se introduce el pasado y un dato breve del origen de los retablos (cajas que viajaban por los Andes).<br>
+    <strong>B2:</strong> registro cercano al texto fuente; vocabulario artesanal más preciso; reflexión sobre el arte como memoria familiar.</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Por decisión de la maestra, el retablo se presenta solo con temas de la vida diaria y familiar, sin contenido religioso: no se mencionan santos ni el uso religioso original de los retablos, ni en el texto ni en estas notas. El retablo es de un solo piso, como la manualidad de la clase. Datos reales: Ayacucho (Perú) es famoso por sus retablos; son cajas de madera con dos puertas decoradas y escenas en miniatura; las figuritas tradicionales se modelan con una pasta de papa y yeso; hoy muestran escenas de la vida diaria. Mateo, el abuelo Julián y su familia son personajes ficticios.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Abuelo Julián</strong> — retablista de Ayacucho. Detalle propio: guarda en su taller el primer retablo que hizo de niño, "para recordar que todos empezamos pequeños".</p>
+    <p><strong>(Sin visitante internacional)</strong> — El espacio se mantiene según el formato.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>recuerdo</em> — cognado parcial con "record"; lo que el retablo "guarda" en la historia.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>Si hicieras un retablo de un momento de tu familia, ¿qué escena pondrías adentro? ¿Quiénes estarían?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Texto independiente, junto a Los Retazos de Florencia en el estante Arte y artesanía. Paralelo intencional con Florencia: una niña y su abuela en Chile / un niño y su abuelo en Perú; dos artes que "guardan historias". Conexión con Perú: El Camino de Killa (Memorias) y El Ceviche de Fernanda (La Receta de la Abuela).</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>
