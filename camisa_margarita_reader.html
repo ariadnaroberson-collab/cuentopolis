@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La camisa de Margarita — Biblioteca FVR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+<style>.cp-back{display:inline-flex;align-items:center;gap:6px;font-family:"Space Mono",monospace;font-size:13px;color:#e3c878;text-decoration:none;border:1px solid #c9a24b;border-radius:999px;padding:6px 14px;margin:0 0 14px}.cp-back:hover{background:rgba(201,162,75,.15)}</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="cp-back" href="biblioteca-fvr.html" onclick="if(document.referrer&&document.referrer.indexOf(location.host)>-1&&history.length>1){history.back();return false;}">← Volver</a>
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Tradición peruana</div>
+    <h1>La camisa de Margarita</h1>
+    <div class="subtitle">Ricardo Palma (Perú), Tradiciones peruanas — versión nivelada</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>En Lima, Perú, hay un dicho famoso. Cuando algo es muy, muy caro, la gente dice: "¡Es más caro que la camisa de Margarita Pareja!" ¿Por qué? Aquí está la historia.</p>
+        <p>Margarita Pareja vive en Lima hace muchos años, en 1765. Tiene dieciocho años. Es muy bonita. Su papá, don Raimundo, es muy rico.</p>
+        <p>Un día, Margarita conoce a un joven. Se llama Luis Alcázar. Luis es simpático y guapo. Margarita y Luis se enamoran.</p>
+        <p>Pero hay un problema: Luis es pobre. No tiene dinero. Luis tiene un tío muy rico, don Honorato, pero el dinero es del tío, no de Luis.</p>
+        <p>Luis va a la casa de don Raimundo. Dice: "Quiero casarme con Margarita." Don Raimundo dice: "¡No! Tú eres pobre. Mi hija no se casa con un pobre."</p>
+        <p>El tío Honorato está muy enojado. "¿Mi sobrino no es bueno para ella? ¡Qué orgulloso es ese señor!"</p>
+        <p>Margarita está muy triste. Llora todo el día. No come. Se enferma. El doctor dice: "Ella solo necesita una medicina: casarse con Luis."</p>
+        <p>Don Raimundo quiere mucho a su hija. Va a la casa del tío Honorato. Dice: "Está bien. Luis y Margarita se pueden casar."</p>
+        <p>El tío Honorato dice: "Sí, pero hay una condición. Usted no puede dar nada a Margarita. Ni dinero, ni casa, ni nada. Ella viene solo con la camisa que lleva puesta."</p>
+        <p>Don Raimundo dice: "Prometo no dar nada. Solo la camisa de la boda."</p>
+        <p>Luis y Margarita se casan. Todos están felices. Y don Raimundo cumple su promesa: no da dinero. Solo da una camisa.</p>
+        <p>Pero… ¡qué camisa! Es de encaje muy fino. Y en el cuello tiene una cadena de diamantes. ¡La camisa cuesta treinta mil pesos!</p>
+        <p>Por eso, en Lima, cuando algo es carísimo, la gente todavía dice: "¡Es más caro que la camisa de Margarita Pareja!"</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>En Lima, la capital de Perú, las personas mayores usan un dicho cuando algo es carísimo: "¡Es más caro que la camisa de Margarita Pareja!" Esta es la historia de esa camisa.</p>
+        <p>En 1765, Margarita Pareja tenía dieciocho años. Era la hija consentida de don Raimundo Pareja, un hombre muy rico que cobraba los impuestos en el puerto del Callao. Margarita era tan bonita que todos los jóvenes de Lima querían casarse con ella.</p>
+        <p>Un día, en una fiesta, Margarita conoció a Luis Alcázar. Luis era guapo, simpático y muy orgulloso. Los dos se enamoraron. Pero Luis tenía un problema: era pobre. Su tío, don Honorato, era riquísimo, pero Luis no tenía nada.</p>
+        <p>Luis fue a hablar con don Raimundo: "Señor, quiero casarme con su hija." Don Raimundo respondió que no: su hija no se iba a casar con un joven sin dinero.</p>
+        <p>Cuando el tío Honorato supo la respuesta, se puso furioso. "¿Cómo? ¿Mi sobrino no es bueno para esa muchacha? ¡Muchos padres quieren a Luis para sus hijas!"</p>
+        <p>Margarita, mientras tanto, lloraba, gritaba y no quería comer. Se puso pálida y enferma. Los médicos dijeron: "Para esta enfermedad solo hay una medicina: casarse con Luis."</p>
+        <p>Don Raimundo quería mucho a su hija, así que fue a la casa del tío Honorato. "Está bien," dijo. "Que se casen."</p>
+        <p>Pero el tío Honorato, muy orgulloso, puso una condición: "Acepto, pero usted no le va a dar nada a su hija. Ni un centavo. Margarita va a venir a la casa de mi sobrino solo con la camisa que lleva puesta." Don Raimundo prometió: "No le voy a dar nada, solo la camisa de novia."</p>
+        <p>Luis y Margarita se casaron y don Raimundo cumplió su promesa: no dio ni un centavo. Pero la camisa de novia era de un encaje finísimo, y en el cuello tenía una cadena de diamantes. ¡Valía treinta mil pesos!</p>
+        <p>Por eso, todavía hoy, cuando algo cuesta demasiado, en Lima dicen: "¡Es más caro que la camisa de Margarita Pareja!"</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Cuando en Lima una persona mayor quiere decir que algo es carísimo, suele exclamar: "¡Qué! Si esto es más caro que la camisa de Margarita Pareja." Ricardo Palma, curioso por saber quién era esa Margarita, investigó la historia, y esto fue lo que descubrió.</p>
+        <p>En 1765, Margarita Pareja era la hija mimada de don Raimundo Pareja, un señor muy rico que cobraba los impuestos del puerto del Callao. Tenía dieciocho años, unos ojos negros preciosos y una sonrisa que enamoraba a todos los jóvenes de Lima.</p>
+        <p>En esa época llegó a Lima un joven llamado Luis Alcázar. Tenía un tío soltero y riquísimo, don Honorato, que algún día le iba a dejar su fortuna. Pero mientras tanto, Luis era pobre como una rata, aunque orgulloso como su tío.</p>
+        <p>Luis y Margarita se conocieron en una fiesta y se enamoraron enseguida. Luis, sin pensarlo mucho, fue a pedir la mano de Margarita. Pero a don Raimundo no le gustó nada la idea de un yerno sin dinero, y le dijo que su hija era todavía muy joven para casarse.</p>
+        <p>El tío Honorato se sintió ofendido. "¿Rechazar a mi sobrino? ¡No hay en todo Lima un joven mejor que él!" Mientras tanto, Margarita lloraba, se arrancaba el pelo, no comía y amenazaba con enfermarse de verdad. Y así fue: se puso pálida y débil. Los médicos declararon que el único remedio era casarla con Luis.</p>
+        <p>Don Raimundo, asustado, fue a ver al tío Honorato. "Está bien," le dijo, "su sobrino se puede casar con mi hija." Pero el tío, que era orgulloso, puso una condición: "Solo si usted jura que no le va a dar a su hija ni un centavo. Margarita va a llegar a la casa de mi sobrino con la camisa que lleva puesta, y nada más." Don Raimundo lo juró.</p>
+        <p>Se celebró la boda y don Raimundo cumplió su promesa al pie de la letra: no le dio a su hija ni dinero, ni muebles, ni joyas. Solo le regaló la camisa de novia.</p>
+        <p>Pero esa camisa estaba hecha de un encaje finísimo, y el cordón del cuello era una cadena de diamantes que valía treinta mil pesos. Así, sin romper su promesa, el padre le dio a su hija una pequeña fortuna.</p>
+        <p>Por eso, más de doscientos años después, los limeños todavía dicen: "¡Es más caro que la camisa de Margarita Pareja!"</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Cuando en Lima una persona mayor quiere ponderar lo subido del precio de un artículo, exclama: "¡Qué! Si esto es más caro que la camisa de Margarita Pareja." Picado por la curiosidad de saber quién fue aquella Margarita cuya camisa anda en boca de todos, Ricardo Palma se puso a investigar, y así nació esta tradición.</p>
+        <p>Margarita Pareja era, allá por el año 1765, la hija más mimada de don Raimundo Pareja, colector general del Callao. La muchacha tenía dieciocho años y era una de esas limeñas que cautivan a todos por su belleza: tenía un par de ojos negros que eran como dos torpedos cargados de dinamita y que hacían explosión en el alma de los galanes de la ciudad.</p>
+        <p>Por entonces llegó de España un arrogante mancebo llamado Luis Alcázar. Tenía en Lima un tío solterón y acaudalado, don Honorato, de quien sería heredero; pero, mientras tanto, el sobrino era más pobre que una rata, aunque tan orgulloso como su tío.</p>
+        <p>Luis y Margarita se conocieron en una fiesta y el flechazo fue inmediato. Luis, que no tenía un centavo pero tampoco vergüenza, se presentó ante don Raimundo a pedir la mano de su hija. Al padre no le hizo gracia un yerno tan pobre, y con toda cortesía le contestó que la niña era aún muy joven para casarse.</p>
+        <p>Aquella respuesta llegó a oídos de don Honorato, que se sintió ofendido: "¿Rechazar a mi sobrino, el mejor partido de Lima?" Margarita, por su parte, lloró, se arrancó el pelo, dejó de comer y fue perdiendo el color, hasta que los médicos declararon que el único remedio era casarla con el hombre que amaba.</p>
+        <p>Don Raimundo, temiendo por la salud de su hija, fue a buscar a don Honorato para aceptar el matrimonio. El tío, sin embargo, impuso una condición: "Consiento, siempre que usted jure no dar a su hija ni un centavo. Margarita ha de venir a casa de mi sobrino con la camisa que lleva puesta, y nada más." Don Raimundo juró solemnemente cumplirlo.</p>
+        <p>Se celebró la boda, y el padre cumplió su juramento al pie de la letra: ni dinero, ni muebles, ni joyas. Lo único que regaló a la novia fue la camisa nupcial. Pero aquella camisa era de un encaje de Flandes finísimo, y el cordoncillo del cuello era una cadeneta de brillantes valorada en treinta mil pesos.</p>
+        <p>Así, sin faltar a su palabra, el padre dejó a su hija bien protegida. Y desde entonces, para decir que algo cuesta un disparate, los limeños exclaman: "¡Es más caro que la camisa de Margarita Pareja!"</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el dicho</span> — saying</div>
+      <div><span class="term">la camisa</span> — shirt (here, a wedding shirt/blouse)</div>
+      <div><span class="term">caro / carísimo</span> — expensive / very expensive</div>
+      <div><span class="term">rico / pobre</span> — rich / poor</div>
+      <div><span class="term">casarse</span> — to get married</div>
+      <div><span class="term">la boda</span> — wedding</div>
+      <div><span class="term">la condición</span> — condition</div>
+      <div><span class="term">prometer / la promesa</span> — to promise / promise</div>
+      <div><span class="term">el encaje</span> — lace</div>
+      <div><span class="term">los diamantes</span> — diamonds</div>
+      <div><span class="term">el tío / el sobrino</span> — uncle / nephew</div>
+      <div><span class="term">orgulloso</span> — proud</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>es más caro que...</span>
+      <span>quiero casarme con...</span>
+      <span>es pobre / es rico</span>
+      <span>hay una condición</span>
+      <span>prometo no dar nada</span>
+      <span>cumple su promesa</span>
+      <span>por eso, la gente dice...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Cuál es la condición del tío Honorato? ¿Por qué pone esa condición?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cómo cumple don Raimundo su promesa y, al mismo tiempo, ayuda a su hija? ¿Es un truco inteligente?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — La camisa de Margarita</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR → Tradiciones peruanas (texto independiente)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Mes de la Herencia Hispana — Persona de la literatura (Secundaria): texto del autor Ricardo Palma. Conexión con Perú.</p>
+
+    <h4>Nivel original</h4>
+    <p>Texto fuente auténtico, nivelado hacia abajo de B2 a A1.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Comparar con "más... que"; contar una historia en orden; explicar el origen de un dicho; reconocer un truco o giro final.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>es más caro que... · quiero casarme con... · hay una condición · prometo... · cumple su promesa · por eso....</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente, oraciones muy cortas; la historia empieza y termina con el dicho para que el final se entienda. Ideal para principiantes.<br>
+    <strong>A2:</strong> pasado simple; se añade el puerto del Callao y la reacción del tío.<br>
+    <strong>B1:</strong> se recupera la voz de Palma (él investiga el dicho) y el juramento.<br>
+    <strong>B2:</strong> registro cercano al original, con expresiones de Palma ("ojos como dos torpedos cargados de dinamita", encaje de Flandes).</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Se omite la referencia religiosa del original (la procesión donde se conocen y la amenaza de Margarita de hacerse monja): aquí se conocen "en una fiesta". Datos reales: Ricardo Palma (Lima, 1833–1919) escribió las Tradiciones peruanas, historias cortas y divertidas sobre la Lima antigua; el dicho de la camisa de Margarita Pareja es real y sigue vivo en Perú.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Ricardo Palma</strong> — aparece en B1 y B2 como el narrador curioso que investiga el dicho, como hace en el original.</p>
+    <p><strong>(Sin visitante internacional)</strong> — El espacio se mantiene según el formato.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>la promesa</em> — el padre cumple su promesa… pero a su manera: el truco de toda la historia.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Conoces un dicho de tu país o de tu familia? ¿Sabes de dónde viene?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Texto independiente. Autor del Explorador de autores en Mi Herencia Hispana (Secundaria). Conexión con Perú: El Camino de Killa (Memorias), El Ceviche de Fernanda (La Receta de la Abuela) y El Retablo de Mateo.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

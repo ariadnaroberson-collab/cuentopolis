@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lazarillo de Tormes — Biblioteca FVR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+<style>.cp-back{display:inline-flex;align-items:center;gap:6px;font-family:"Space Mono",monospace;font-size:13px;color:#e3c878;text-decoration:none;border:1px solid #c9a24b;border-radius:999px;padding:6px 14px;margin:0 0 14px}.cp-back:hover{background:rgba(201,162,75,.15)}</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="cp-back" href="biblioteca-fvr.html" onclick="if(document.referrer&&document.referrer.indexOf(location.host)>-1&&history.length>1){history.back();return false;}">← Volver</a>
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Novela clásica (versión abreviada)</div>
+    <h1>Lazarillo de Tormes</h1>
+    <div class="subtitle">Anónimo (España, 1554) — un niño pícaro y un ciego muy listo</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Lázaro es un niño. Vive en España, cerca de un río que se llama Tormes. Por eso lo llaman Lazarillo de Tormes.</p>
+        <p>La familia de Lázaro es muy pobre. Su mamá no tiene dinero para comida. Un día, llega un hombre ciego. La mamá dice: "Lázaro, ahora vas a trabajar con este señor. Vas a ser su guía."</p>
+        <p>Lázaro y el ciego salen de la ciudad. Hay un toro de piedra al lado de un puente. El ciego dice: "Lázaro, pon la oreja en el toro. Hay un ruido adentro."</p>
+        <p>Lázaro pone la oreja en el toro. ¡PUM! El ciego empuja la cabeza de Lázaro contra la piedra. ¡Duele mucho! El ciego se ríe: "Aprende, niño: el guía de un ciego tiene que ser muy listo."</p>
+        <p>Lázaro piensa: "Es verdad. Tengo que ser listo." El ciego es muy tacaño. Tiene comida, pero da muy poca a Lázaro. Lázaro siempre tiene hambre.</p>
+        <p>Un día, les dan un racimo de uvas. El ciego dice: "Vamos a comer una uva cada uno. Yo una, tú una." Pero el ciego come dos uvas. Lázaro ve el truco… y come tres.</p>
+        <p>Al final, el ciego dice: "Lázaro, tú comes tres uvas." "¿Por qué?", pregunta Lázaro. "Porque yo como dos… ¡y tú no dices nada!"</p>
+        <p>Otro día, el ciego tiene una salchicha. Lázaro tiene mucha hambre. Toma la salchicha y la come. En su lugar, pone un nabo. El ciego muerde el nabo: "¡Esto no es una salchicha!"</p>
+        <p>El ciego está muy enojado. Pone la nariz en la boca de Lázaro. ¡Huele a salchicha! El ciego le pega a Lázaro.</p>
+        <p>Lázaro dice: "¡Basta! Ahora yo tengo un plan." Un día llueve mucho. Hay un arroyo en la calle. Lázaro pone al ciego enfrente de un poste de piedra.</p>
+        <p>Lázaro dice: "Señor, salte fuerte. ¡Salte ahora!" El ciego salta… ¡PUM! Su cabeza choca contra el poste.</p>
+        <p>Lázaro grita: "¿Cómo? ¿Usted huele la salchicha y no huele el poste?" Y Lázaro corre y se va. Nunca más trabaja para el ciego.</p>
+        <p>Después, Lázaro trabaja para otros amos. Siempre tiene hambre, pero siempre es listo. Por eso, en español, un "lazarillo" es una persona o un perro que guía a un ciego.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Lázaro nació en España, en un molino al lado del río Tormes, cerca de Salamanca. Por eso lo llaman Lazarillo de Tormes. Su familia era muy pobre. Un día, su mamá conoció a un hombre ciego que necesitaba un guía, y le dijo a Lázaro: "Hijo, vas a trabajar con este señor. Él te va a cuidar."</p>
+        <p>Al salir de Salamanca, pasaron al lado de un toro de piedra. El ciego le dijo: "Lázaro, acerca la oreja al toro. Vas a oír un gran ruido adentro." Lázaro, inocente, puso la oreja en la piedra. Entonces el ciego le empujó la cabeza contra el toro. "Aprende," le dijo riéndose, "el guía de un ciego tiene que saber más que el diablo."</p>
+        <p>En ese momento, Lázaro abrió los ojos: "Tengo que estar despierto, porque estoy solo en el mundo." El ciego era muy listo, pero también muy tacaño. Guardaba el pan en un saco cerrado y le daba a Lázaro poquísima comida. Lázaro siempre tenía hambre.</p>
+        <p>El ciego tenía un jarro de vino. Lázaro bebía a escondidas con una paja. Cuando el ciego lo descubrió, Lázaro hizo un agujero pequeño en el fondo del jarro y lo tapó con cera. Pero un día el ciego lo sintió beber… y le tiró el jarro en la cara.</p>
+        <p>Un día, en un pueblo, les dieron un racimo de uvas. El ciego dijo: "Vamos a comer una uva cada uno, sin engañar." Pero pronto el ciego empezó a comer de dos en dos. Lázaro lo notó y comió de tres en tres. Al final, el ciego dijo: "Lázaro, me engañaste. Comiste de tres en tres." "¿Por qué dice eso?" "Porque yo comía de dos en dos… y tú no decías nada."</p>
+        <p>Otro día, el ciego estaba cocinando una salchicha. Lázaro, con mucha hambre, cambió la salchicha por un nabo y se comió la salchicha. Cuando el ciego mordió el nabo, gritó: "¿Qué es esto? ¡Lázaro!" Le abrió la boca, metió la nariz y olió la salchicha. Estaba furioso.</p>
+        <p>Lázaro decidió vengarse. Un día de lluvia, había un arroyo en la calle. Lázaro llevó al ciego justo enfrente de un poste de piedra. "Señor, aquí el arroyo es más estrecho. ¡Salte con fuerza!" El ciego saltó con todas sus fuerzas y chocó contra el poste.</p>
+        <p>"¿Cómo? ¿Olió la salchicha y no olió el poste?", le gritó Lázaro, y salió corriendo. Nunca volvió con el ciego.</p>
+        <p>Después, Lázaro tuvo otros amos, todos con problemas y con poca comida. Pero de todos aprendió algo. Por eso, hoy en español, un "lazarillo" es la persona o el perro que guía a un ciego.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Lázaro nació en un molino, en medio del río Tormes, cerca de Salamanca, y por eso lo llamaron Lazarillo de Tormes. Su padre murió cuando él era muy pequeño y su madre apenas tenía para comer. Un día llegó un ciego que buscaba un muchacho que lo guiara, y la madre se lo entregó: "Hijo, sé bueno. Ya no te voy a ver más; busca tu vida."</p>
+        <p>Al salir de Salamanca, llegaron a un puente donde había un toro de piedra. El ciego le dijo: "Lázaro, pon el oído junto al toro y vas a oír un gran ruido dentro." El niño, inocente, se acercó, y el ciego le dio un golpe tan fuerte contra la piedra que le dolió durante tres días. "Necio," le dijo, "aprende que el guía de un ciego tiene que saber un poco más que el diablo."</p>
+        <p>Aquel golpe despertó a Lázaro: entendió que estaba solo y que tenía que defenderse. El ciego era astuto, pero también terriblemente tacaño. Guardaba el pan y la carne en un saco que cerraba con un candado, y a Lázaro casi lo mataba de hambre. Así que el niño abría el saco por una costura, sacaba un poco de comida y lo cosía de nuevo.</p>
+        <p>El ciego nunca soltaba su jarro de vino. Lázaro bebía a escondidas con una paja larga, hasta que el ciego empezó a tapar el jarro con la mano. Entonces Lázaro le hizo un agujerito en el fondo, lo tapó con cera y, sentado entre las piernas del ciego como si tuviera frío, dejaba caer el vino directamente en su boca. El ciego no entendía cómo se acababa el vino, hasta que descubrió el agujero. Un día, cuando Lázaro bebía feliz con la cara hacia arriba, el ciego levantó el jarro y lo dejó caer con fuerza sobre su cara.</p>
+        <p>En un pueblo llamado Almorox les regalaron un racimo de uvas. "Vamos a comer una uva cada uno," propuso el ciego, "y tú prometes no tomar más de una." Pero muy pronto el ciego empezó a tomarlas de dos en dos. Lázaro, al verlo, las tomó de tres en tres. Al terminar, el ciego sonrió: "Lázaro, me engañaste: comiste las uvas de tres en tres." "No es verdad. ¿Por qué lo cree?" "Porque yo las comía de dos en dos, y tú te callabas."</p>
+        <p>Otro día, el ciego asaba una longaniza. Lázaro, muerto de hambre, la cambió por un nabo viejo. El ciego mordió, sintió el nabo y lo entendió todo. Agarró a Lázaro, le abrió la boca y metió su larga nariz para oler. Con el susto, a Lázaro le vino la longaniza de vuelta, y el ciego lo castigó delante de todo el mundo.</p>
+        <p>Entonces Lázaro decidió dejarlo, pero no sin vengarse primero. En Escalona, un día de mucha lluvia, había un arroyo grande en la calle. Lázaro colocó al ciego justo enfrente de un poste de piedra y le dijo: "Aquí es más estrecho. Salte con todas sus fuerzas." El ciego retrocedió para tomar impulso, saltó… y se dio con la cabeza contra el poste.</p>
+        <p>"¿Cómo? ¿Olió la longaniza y no olió el poste? ¡Huela, huela!", le gritó Lázaro, y se fue corriendo. Nunca más supo de él.</p>
+        <p>Después, Lázaro sirvió a otros amos, entre ellos un escudero orgulloso que se paseaba como un gran señor, pero no tenía ni para comer. Con todos aprendió a sobrevivir. Por eso, todavía hoy, un "lazarillo" es la persona o el perro que guía a un ciego.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Lázaro de Tormes nació dentro de un molino, en el mismo río Tormes, junto a Salamanca: de ahí su nombre. Huérfano de padre desde muy niño y con una madre que apenas lograba sobrevivir, su suerte cambió el día en que un ciego se hospedó en su casa y pidió un muchacho que lo guiara. La madre se lo encomendó con lágrimas: "Hijo, ya sé que no te veré más. Procura ser bueno, y Dios te guíe."</p>
+        <p>Al salir de Salamanca, llegaron al puente, a cuya entrada había un animal de piedra con forma de toro. "Lázaro," dijo el ciego, "llega el oído a este toro y oirás gran ruido dentro de él." El niño, ingenuo, obedeció, y el ciego le dio tal calabazada contra la piedra que le duró el dolor más de tres días. "Necio," le dijo riendo, "aprende que el mozo del ciego un punto ha de saber más que el diablo." En ese instante, dice Lázaro, despertó de la simpleza en que dormía.</p>
+        <p>El ciego era un maestro de la astucia, pero también el hombre más avaro que Lázaro conoció jamás. Guardaba el pan en un fardel de lienzo cerrado con candado, y el muchacho, para no morir de hambre, descosía una costura, sacaba lo necesario y volvía a coserla.</p>
+        <p>Tampoco soltaba nunca su jarrillo de vino. Lázaro bebía de él con una paja de centeno; cuando el ciego empezó a taparlo con la mano, el niño le abrió un agujerito en el fondo, lo cubrió con cera y, fingiendo frío, se sentaba entre sus piernas para recibir el vino directamente en la boca. Descubierta la trampa, el ciego esperó el momento oportuno: un día, mientras Lázaro bebía con la cara hacia arriba, alzó el jarro y lo dejó caer con todas sus fuerzas sobre su rostro.</p>
+        <p>En Almorox les regalaron un racimo de uvas. "Comamos una cada uno," propuso el ciego, "y prométeme no tomar más." Pronto, sin embargo, empezó a tomarlas de dos en dos; Lázaro, que lo notó, pasó a tomarlas de tres en tres. Acabado el racimo, el ciego sentenció: "Lázaro, me has engañado: juraré que comiste las uvas de tres en tres." "No las comí; ¿por qué sospecha eso?" "¿Sabes en qué lo veo? En que yo comía de dos en dos, y tú callabas."</p>
+        <p>Otro día el ciego asaba una longaniza, y Lázaro, empujado por el hambre, la sustituyó por un nabo viejo. Al primer bocado, el ciego descubrió el engaño, agarró al muchacho, le abrió la boca y metió en ella su larga nariz; con la angustia, la longaniza salió de vuelta, y el castigo fue público y humillante.</p>
+        <p>Lázaro resolvió dejarlo, no sin antes vengarse. En Escalona, un día de lluvia torrencial, llevó al ciego frente a un poste de piedra de la plaza y le indicó que allí el arroyo era más estrecho. "Salte con todas sus fuerzas," le dijo. El ciego retrocedió un paso para tomar impulso, saltó como un toro y dio con la cabeza contra el poste. "¿Cómo? ¿Olió la longaniza y no el poste? ¡Oled, oled!", le gritó Lázaro antes de huir para siempre.</p>
+        <p>Luego vendrían otros amos y otras hambres, entre ellos un escudero que presumía de noble mientras no tenía qué comer. El libro, publicado en 1554 sin nombre de autor, inauguró la novela picaresca, y su protagonista dejó una palabra en el idioma: todavía hoy, un "lazarillo" es quien guía a un ciego.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el ciego</span> — blind man</div>
+      <div><span class="term">el guía</span> — guide</div>
+      <div><span class="term">listo / astuto</span> — clever / cunning</div>
+      <div><span class="term">tacaño / avaro</span> — stingy</div>
+      <div><span class="term">el toro de piedra</span> — stone bull</div>
+      <div><span class="term">el racimo de uvas</span> — bunch of grapes</div>
+      <div><span class="term">la salchicha / la longaniza</span> — sausage</div>
+      <div><span class="term">el nabo</span> — turnip</div>
+      <div><span class="term">oler</span> — to smell</div>
+      <div><span class="term">el poste</span> — post, pillar</div>
+      <div><span class="term">saltar</span> — to jump</div>
+      <div><span class="term">vengarse</span> — to get revenge</div>
+      <div><span class="term">el pícaro</span> — clever rascal</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>tengo hambre</span>
+      <span>tengo que ser listo</span>
+      <span>una uva cada uno</span>
+      <span>¿Por qué?</span>
+      <span>¡Esto no es una salchicha!</span>
+      <span>¡Salte ahora!</span>
+      <span>¿Huele la salchicha y no huele el poste?</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué aprende Lázaro con el toro de piedra? ¿Cómo cambia después?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Cómo sabe el ciego que Lázaro come tres uvas? ¿Es justo el final con el poste? ¿Por qué?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Lazarillo de Tormes</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR → Novela clásica (versión abreviada): tratado primero (Lázaro y el ciego) y una mención breve de los demás amos</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Mes de la Herencia Hispana — Persona de la literatura (Secundaria): obra anónima. El estudiante puede ser "el autor misterioso" ("Nadie sabe quién soy…") o hablar como Lázaro en primera persona, como en el libro.</p>
+
+    <h4>Nivel original</h4>
+    <p>Texto fuente auténtico, nivelado hacia abajo de B2 a A1.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar trucos en orden (primero, después, al final); expresar necesidad ("tengo hambre", "tengo que..."); entender causa y efecto; opinar si algo es justo.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>tengo hambre · tengo que ser listo · una... cada uno · ¿Por qué? · ¡Esto no es...! · ¡Salte! · ¿Huele... y no huele...?.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente, oraciones muy cortas; cuatro episodios: el toro, las uvas, la salchicha y el poste. Ideal para principiantes.<br>
+    <strong>A2:</strong> pasado; se añade el jarro de vino y el nombre de Salamanca.<br>
+    <strong>B1:</strong> se añaden el saco de pan, los pueblos reales (Almorox, Escalona) y el escudero.<br>
+    <strong>B2:</strong> registro cercano al original, con frases célebres ("un punto ha de saber más que el diablo", "¡Oled, oled!").</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Hay violencia cómica (golpes del ciego, el jarro en la cara, el golpe contra el poste), como en el original; no hay detalles gráficos. El jarro de vino aparece desde A2; puede omitirse con A1. Se omiten los amos religiosos (el clérigo y otros) y la trama adulta del final del libro; B2 conserva solo la despedida de la madre ("Dios te guíe"). Datos reales: publicado en 1554 sin autor; estuvo prohibido en España durante años; es la primera novela picaresca; "lazarillo" es hoy una palabra común.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>El escudero</strong> — tercer amo de Lázaro, pobre pero orgulloso; aparece en B1 y B2.</p>
+    <p><strong>(Sin visitante internacional)</strong> — El espacio se mantiene según el formato.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>lazarillo</em> — nombre del protagonista que se convirtió en palabra: persona o perro que guía a un ciego.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Lázaro es un héroe o un tramposo? ¿Qué harías tú en su lugar?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Texto independiente. Obra del Explorador de autores en Mi Herencia Hispana (Secundaria). Vecino natural de Don Quijote y El sombrero de tres picos en la Biblioteca FVR (literatura española).</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>

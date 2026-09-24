@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Las medias de los flamencos — Biblioteca FVR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+</style>
+<style>.cp-back{display:inline-flex;align-items:center;gap:6px;font-family:"Space Mono",monospace;font-size:13px;color:#e3c878;text-decoration:none;border:1px solid #c9a24b;border-radius:999px;padding:6px 14px;margin:0 0 14px}.cp-back:hover{background:rgba(201,162,75,.15)}</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="cp-back" href="biblioteca-fvr.html" onclick="if(document.referrer&&document.referrer.indexOf(location.host)>-1&&history.length>1){history.back();return false;}">← Volver</a>
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Cuentos de la selva · versión nivelada</div>
+    <h1>Las medias de los flamencos</h1>
+    <div class="subtitle">Horacio Quiroga (Uruguay), Cuentos de la selva, 1918 — versión nivelada</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="story-panel">
+
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Hace mucho tiempo, los flamencos tienen las patas blancas. No son rojas. Son blancas.</p>
+        <p>Un día, las víboras hacen un baile grande. Invitan a las ranas, a los sapos, a los yacarés, a los peces y a los flamencos.</p>
+        <p>Todos los animales se ponen ropa bonita. Los yacarés llevan un collar de bananas. Las ranas llevan una luz pequeña: una luciérnaga.</p>
+        <p>Las víboras de coral son las más bonitas. Llevan ropa roja, blanca y negra. Bailan muy bien. Todos aplauden.</p>
+        <p>Los flamencos están tristes. No tienen ropa bonita. Un flamenco dice: "¡Ya sé! Vamos a comprar medias rojas, blancas y negras. Así las víboras de coral nos van a querer."</p>
+        <p>Los flamencos van a una tienda. "Toc, toc. ¿Tiene medias rojas, blancas y negras?" El hombre de la tienda dice: "¡No! ¿Están locos?"</p>
+        <p>Van a otra tienda, y a otra. Siempre dicen: "¡No! ¡Están locos!" Un hombre saca a los flamencos con una escoba.</p>
+        <p>Un tatú ve a los flamencos. El tatú quiere hacer una broma. Dice: "Mi cuñada, la lechuza, tiene medias así."</p>
+        <p>La lechuza les da las medias. Pero no son medias. ¡Son pieles de víboras de coral!</p>
+        <p>La lechuza dice: "Bailen toda la noche. ¡No paren nunca!" Los flamencos se ponen las medias. Están muy contentos.</p>
+        <p>En el baile, los flamencos bailan y bailan. Todos los miran. Pero las víboras miran las medias… y tienen dudas.</p>
+        <p>Los flamencos están muy cansados. Un flamenco se cae. Las víboras miran sus patas con luz. Gritan: "¡No son medias! ¡Son pieles de víboras!"</p>
+        <p>Las víboras están muy enojadas. Muerden las patas de los flamencos. ¡Duele mucho!</p>
+        <p>Los flamencos corren al agua. Sus patas ya no son blancas. Ahora son rojas.</p>
+        <p>Por eso, hoy los flamencos tienen las patas rojas. Y por eso están siempre en el agua: el agua fría calma el dolor.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Hace muchísimo tiempo, los flamencos tenían las patas blancas. Un día, las víboras organizan un gran baile a la orilla del río. Invitan a las ranas, a los sapos, a los yacarés, a los peces y a los flamencos.</p>
+        <p>Todos se preparan para la fiesta. Los yacarés se ponen un collar de bananas. Las ranas se perfuman y llevan una luciérnaga como una pequeña lámpara. Los peces no pueden bailar, porque no caminan, pero miran desde el agua y aplauden con la cola.</p>
+        <p>Las víboras llevan vestidos de bailarina, del mismo color que su piel. Pero las más elegantes son las víboras de coral: llevan telas largas, rojas, blancas y negras, y bailan como serpentinas de fiesta.</p>
+        <p>Solo los flamencos están tristes, porque no saben cómo decorarse. Tienen envidia, sobre todo de las víboras de coral. Un flamenco tiene una idea: "Vamos a ponernos medias rojas, blancas y negras. ¡Así las víboras de coral se van a enamorar de nosotros!"</p>
+        <p>Los flamencos vuelan al pueblo y tocan la puerta de una tienda: "¿Tiene medias rojas, blancas y negras?" El vendedor responde: "¿Están locos? No hay medias así en ninguna parte." En todas las tiendas pasa lo mismo, y un vendedor los saca con una escoba.</p>
+        <p>Entonces un tatú quiere burlarse de ellos. Les dice: "Yo sé lo que buscan. Mi cuñada, la lechuza, tiene medias así." Los flamencos le dan las gracias y vuelan a la cueva de la lechuza.</p>
+        <p>La lechuza sale y vuelve con las "medias". Pero no son medias: son pieles de víboras de coral. La lechuza les da un consejo: "Bailen toda la noche sin parar. Si paran, en vez de bailar, van a llorar." Los flamencos no entienden el peligro. Se ponen las pieles como medias y se van felices al baile.</p>
+        <p>En el baile, todos admiran las medias de los flamencos. Como los flamencos mueven las patas todo el tiempo, las víboras no pueden ver bien de qué son. Pero poco a poco, las víboras de coral empiezan a sospechar.</p>
+        <p>Los flamencos están cansadísimos. Al final, un flamenco se tropieza y se cae. Las víboras de coral iluminan sus patas con las luciérnagas y gritan: "¡No son medias! ¡Son las pieles de nuestras hermanas!"</p>
+        <p>Las víboras, furiosas, se enroscan en las patas de los flamencos, rompen las medias y les muerden las patas. Los flamencos saltan de dolor. Luego corren al río y meten las patas en el agua.</p>
+        <p>Sus patas, que eran blancas, ahora están rojas por el veneno. Por eso, todavía hoy, los flamencos tienen las patas rojas y pasan casi todo el día en el agua: quieren calmar el ardor que sienten. Y a veces, del dolor, se quedan horas en una sola pata.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Una vez, las víboras dieron un gran baile a la orilla del río. Invitaron a las ranas, a los sapos, a los flamencos, a los yacarés y a los peces. Los peces no podían bailar, porque no caminan, pero se asomaban a la arena y aplaudían con la cola.</p>
+        <p>Todos se adornaron para la fiesta. Los yacarés se pusieron un collar de bananas en el cuello. Los sapos se pegaron escamas de pescado en el cuerpo y caminaban moviéndose como si nadaran. Las ranas se perfumaron y llevaban colgada una luciérnaga, como un farolito.</p>
+        <p>Pero las más hermosas eran las víboras, vestidas de bailarinas, cada una del color de su piel. Y las más espléndidas de todas eran las víboras de coral, con largas telas rojas, blancas y negras. Cuando bailaban y daban vueltas sobre la punta de la cola, todos los invitados aplaudían como locos.</p>
+        <p>Solo los flamencos, que entonces tenían las patas blancas, estaban tristes: no habían sabido cómo adornarse. Envidiaban a todos, y sobre todo a las víboras de coral. Entonces un flamenco dijo: "Ya sé qué vamos a hacer. Vamos a ponernos medias rojas, blancas y negras, y las víboras de coral se van a enamorar de nosotros."</p>
+        <p>Volaron al pueblo y fueron de tienda en tienda preguntando por medias rojas, blancas y negras. Todos los vendedores les decían que estaban locos, y uno hasta los echó con la escoba.</p>
+        <p>Un tatú que tomaba agua en el río se quiso burlar de ellos: "Buenas noches, señores flamencos. No van a encontrar esas medias en ninguna tienda, pero mi cuñada, la lechuza, tiene medias así." Los flamencos le dieron las gracias y volaron a la cueva de la lechuza.</p>
+        <p>La lechuza se fue volando y al rato volvió con las "medias". Pero no eran medias: eran pieles de víboras de coral que ella había cazado. "No se preocupen por nada," les dijo, "solo por una cosa: bailen toda la noche sin parar, porque si paran, en vez de bailar, van a llorar." Los flamencos, que no entendieron el peligro, se pusieron las pieles como medias y se fueron felices al baile.</p>
+        <p>Todos los invitados envidiaron sus medias, y las víboras solo querían bailar con ellos. Como los flamencos no dejaban de mover las patas, nadie podía ver bien de qué eran. Pero poco a poco las víboras de coral empezaron a desconfiar: se agachaban para mirar y trataban de tocar las medias con la lengua.</p>
+        <p>Los flamencos estaban agotados. Las víboras de coral pidieron a las ranas sus luciérnagas y esperaron. Por fin, un flamenco tropezó con el cigarro de un yacaré y se cayó. Las víboras iluminaron sus patas y lanzaron un silbido enorme: "¡No son medias! ¡Nos han engañado! ¡Son las pieles de nuestras hermanas!"</p>
+        <p>Los flamencos quisieron volar, pero estaban tan cansados que no podían. Las víboras se enroscaron en sus patas, rompieron las medias a mordiscos y les mordieron las patas. Los flamencos, locos de dolor, corrieron a meterse en el río.</p>
+        <p>No murieron, pero sus patas blancas quedaron rojas por el veneno. Por eso los flamencos todavía pasan el día con las patas en el agua, tratando de calmar el ardor. Los peces saben por qué y se burlan de ellos… pero los flamencos, cuando un pececito se acerca demasiado, se lo comen.</p>
+      </div>
+    </div>
+
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>Cierta vez las víboras dieron un gran baile a la orilla del río, al que invitaron a las ranas, a los sapos, a los flamencos, a los yacarés y a los peces. Estos últimos, como no caminan, no pudieron bailar; pero se asomaban a la arena y aplaudían con la cola.</p>
+        <p>Cada invitado se adornó a su manera: los yacarés lucían un collar de bananas en el pescuezo; los sapos se habían pegado escamas de pescado por todo el cuerpo y caminaban meneándose, como si nadaran; las ranas, perfumadas, caminaban en dos pies y llevaban colgada una luciérnaga que se balanceaba como un farolito.</p>
+        <p>Pero las verdaderamente hermosas eran las víboras, vestidas de bailarinas, cada una del color de su piel. Las más espléndidas eran las víboras de coral, envueltas en larguísimas gasas rojas, blancas y negras, que bailaban como serpentinas. Cuando giraban apoyadas en la punta de la cola, los invitados aplaudían como locos.</p>
+        <p>Solo los flamencos, que entonces tenían las patas blancas, estaban tristes, porque no habían sabido cómo adornarse. Envidiaban el traje de todos, y sobre todo el de las víboras de coral. Por fin, uno de ellos propuso: "Pongámonos medias rojas, blancas y negras, y las víboras de coral se enamorarán de nosotros."</p>
+        <p>Cruzaron el río volando y recorrieron todos los almacenes del pueblo. "¿Tiene medias rojas, blancas y negras?", preguntaban. "¿Están locos?", les respondían. "No hay medias así en ninguna parte." Y en el último almacén, el dueño los echó a escobazos.</p>
+        <p>Un tatú que había bajado a beber al río decidió burlarse de ellos. Con una gran reverencia, les dijo: "No encontrarán esas medias en ningún almacén. Pero mi cuñada, la lechuza, tiene medias así. Pídanselas." Los flamencos le agradecieron y volaron hasta la cueva de la lechuza.</p>
+        <p>La lechuza se alejó volando y al rato regresó con las medias. Solo que no eran medias, sino cueros de víboras de coral, recién sacados a las víboras que ella había cazado. "No se preocupen de nada," les advirtió, "sino de una sola cosa: bailen toda la noche, sin parar un momento, porque si se detienen, en vez de bailar, van a llorar." Pero los flamencos, que no comprendieron el peligro, se calzaron los cueros como si fueran tubos y volaron, locos de alegría, al baile.</p>
+        <p>Todos envidiaron aquellas medias maravillosas, y las víboras solo querían bailar con los flamencos. Como estos no dejaban de mover las patas ni un instante, nadie alcanzaba a ver de qué estaban hechas. Sin embargo, las víboras de coral empezaron a desconfiar: se agachaban hasta el suelo y estiraban la lengua, que para ellas es como la mano para las personas, intentando tocarlas.</p>
+        <p>Los flamencos, agotados, ya no podían más. Las víboras de coral pidieron a las ranas sus luciérnagas y esperaron. Un minuto después, un flamenco tropezó con el cigarro de un yacaré y cayó de costado. Las víboras alumbraron sus patas y lanzaron un silbido que se oyó hasta la otra orilla del Paraná: "¡No son medias! ¡Nos han engañado! ¡Se han puesto los cueros de nuestras hermanas!"</p>
+        <p>Los flamencos quisieron huir volando, pero el cansancio no les permitió levantar ni una pata. Las víboras se enroscaron en sus patas, les deshicieron las medias a mordiscones y les mordieron también las patas. Locos de dolor, los flamencos corrieron a echarse al agua.</p>
+        <p>No murieron, pero sus patas, que habían sido blancas, quedaron coloradas por el veneno. Desde entonces, los flamencos pasan casi todo el día con las patas metidas en el agua para calmar el ardor, y a veces encogen una pata y se quedan así horas enteras. Los peces conocen la historia y se burlan de ellos; pero los flamencos no pierden ocasión de vengarse, comiéndose a cuanto pececito se acerca demasiado.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el flamenco</span> — flamingo</div>
+      <div><span class="term">la víbora de coral</span> — coral snake</div>
+      <div><span class="term">el baile</span> — dance party</div>
+      <div><span class="term">las medias</span> — socks, stockings</div>
+      <div><span class="term">la piel / el cuero</span> — skin</div>
+      <div><span class="term">el tatú</span> — armadillo</div>
+      <div><span class="term">la lechuza</span> — owl</div>
+      <div><span class="term">la luciérnaga</span> — firefly</div>
+      <div><span class="term">morder</span> — to bite</div>
+      <div><span class="term">la envidia</span> — envy, jealousy</div>
+      <div><span class="term">el veneno</span> — venom, poison</div>
+      <div><span class="term">el ardor</span> — burning feeling</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>hace mucho tiempo...</span>
+      <span>tienen las patas blancas / rojas</span>
+      <span>¿Tiene medias...?</span>
+      <span>¡Están locos!</span>
+      <span>bailen toda la noche</span>
+      <span>¡No son medias!</span>
+      <span>por eso...</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué los flamencos quieren medias rojas, blancas y negras? ¿Qué pasa en las tiendas?</div>
+    <div class="comp-q"><span class="num">2.</span>Explica con tus palabras: ¿por qué hoy los flamencos tienen las patas rojas y están en el agua?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Las medias de los flamencos</h3>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR → Cuentos de la selva (versión nivelada de un cuento de la colección)</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Mes de la Herencia Hispana — Persona de la literatura (Secundaria): texto del autor Horacio Quiroga. También sirve para FVR general y unidades de colores, ropa y animales.</p>
+
+    <h4>Nivel original</h4>
+    <p>Texto fuente auténtico, nivelado hacia abajo de B2 a A1.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <p>Narrar un cuento de origen ("por eso..."); describir animales y ropa con colores; entender y repetir diálogos cortos; explicar causa y efecto.</p>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>hace mucho tiempo... · tienen las patas... · ¿Tiene...? · ¡Están locos! · bailen sin parar · ¡No son medias! · por eso....</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> presente, oraciones muy cortas; se quitan sapos, escamas y cigarros; el engaño y el final quedan claros. Ideal para principiantes de Secundaria.<br>
+    <strong>A2:</strong> presente con algo de pasado ("eran blancas"); se añade el consejo de la lechuza y el porqué de estar en una pata.<br>
+    <strong>B1:</strong> pasado narrativo; vuelven los sapos, la lengua de las víboras y el final con los peces.<br>
+    <strong>B2:</strong> muy cercano al texto de Quiroga, con su vocabulario rioplatense (pescuezo, almacén, colorado).</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Las víboras muerden a los flamencos y la lechuza entrega pieles de víboras que cazó; se mantiene como en el cuento original, sin detalles gráficos. En B1 y B2 un yacaré tiene un cigarro (del texto original). La versión auténtica completa sigue disponible en el lector Cuentos de la selva.</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>La lechuza</strong> — cuñada del tatú; da el consejo clave: "bailen sin parar".</p>
+    <p><strong>(Sin visitante internacional)</strong> — El espacio se mantiene según el formato.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>envidia</em> — lo que sienten los flamencos al ver a las víboras de coral; el motor de todo el cuento.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>¿Alguna vez quisiste algo solo porque otra persona lo tenía? ¿Qué pasó?</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Versión nivelada de "Las medias de los flamencos"; el lector Cuentos de la selva conserva el texto auténtico. Autor del Explorador de autores en Mi Herencia Hispana (Secundaria).</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes()">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  function copyNotes(){
+    const modal = document.querySelector('#teacherModal .modal');
+    const text = modal.innerText;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = event.target;
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>
