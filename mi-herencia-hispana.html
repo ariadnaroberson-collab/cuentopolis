@@ -59,6 +59,10 @@ h2{font-size:clamp(24px,3.2vw,34px);font-weight:800}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
 .pick{display:flex;gap:12px;align-items:center;text-decoration:none;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px}
 .pick:hover{border-color:var(--gold)}
+.pcard{display:grid;gap:6px;align-content:start}
+.more{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--dim);padding-left:4px}
+.chip{border:1px solid var(--gold);color:var(--gold2);border-radius:999px;padding:3px 10px;font-size:13px;font-weight:700;text-decoration:none}
+.chip:hover{background:rgba(201,162,75,.15)}
 .pick svg{width:48px;height:32px;flex:none;border-radius:3px;outline:1px solid rgba(255,255,255,.2)}
 .pick b{display:block;font-size:16px}
 .pick span{display:block;font-size:13px;color:var(--dim)}
@@ -183,17 +187,17 @@ function flagSVG(code){return `<svg viewBox="0 0 300 200" role="img" aria-label=
 const BASE='https://ariadnaroberson-collab.github.io/cuentopolis/';
 const VIKI='https://es.vikidia.org/wiki/';
 const AUTORES=[
- {n:'Miguel de Cervantes',code:'ES',anio:'1547–1616',vk:'Miguel_de_Cervantes_Saavedra',obras:[['Don Quijote','quijote_reader.html']],
+ {n:'Miguel de Cervantes',kd:'Miguel_de_Cervantes',code:'ES',anio:'1547–1616',vk:'Miguel_de_Cervantes_Saavedra',obras:[['Don Quijote','quijote_reader.html']],
   datos:['Nació en Alcalá de Henares, España.','En una batalla perdió el uso de la mano izquierda.','Estuvo 5 años prisionero en Argel.','Su Don Quijote pelea contra molinos: ¡cree que son gigantes!']},
  {n:'Pedro Antonio de Alarcón',code:'ES',anio:'1833–1891',vk:'',obras:[['El sombrero de tres picos','sombrero_reader.html']],
   datos:['Nació en Guadix, en el sur de España.','Fue periodista y viajó mucho.','Escribió El sombrero de tres picos en 1874.','Su historia se convirtió en un ballet con música de Manuel de Falla.']},
- {n:'Ricardo Palma',code:'PE',anio:'1833–1919',vk:'',obras:[['La camisa de Margarita','camisa_margarita_reader.html']],
+ {n:'Ricardo Palma',kd:'Ricardo_Palma',code:'PE',anio:'1833–1919',vk:'',obras:[['La camisa de Margarita','camisa_margarita_reader.html']],
   datos:['Nació en Lima, Perú.','Escribió las Tradiciones peruanas: historias cortas y divertidas sobre la Lima de antes.','Fue director de la Biblioteca Nacional del Perú.','Después de una guerra, la biblioteca quedó casi vacía. Palma pidió libros a todo el mundo y la llenó otra vez: le decían "el bibliotecario mendigo".']},
- {n:'Autor anónimo',code:'ES',anio:'1554',vk:'',obras:[['Lazarillo de Tormes','lazarillo_reader.html']],
+ {n:'Autor anónimo',kd:'La_vida_de_Lazarillo_de_Tormes',code:'ES',anio:'1554',vk:'',obras:[['Lazarillo de Tormes','lazarillo_reader.html']],
   datos:['El libro se publicó en España en 1554.','Nadie sabe quién lo escribió: ¡es un misterio!','Es la primera novela picaresca: la historia de un pícaro, un niño pobre y muy listo.','Estuvo prohibido en España durante muchos años.']},
- {n:'Horacio Quiroga',code:'UY',anio:'1878–1937',vk:'',obras:[['Las medias de los flamencos','medias_flamencos_reader.html'],['Versión original','cuentos_de_la_selva_reader.html?story=medias-flamencos']],
+ {n:'Horacio Quiroga',kd:'Horacio_Quiroga',code:'UY',anio:'1878–1937',vk:'',obras:[['Las medias de los flamencos','medias_flamencos_reader.html'],['Versión original','cuentos_de_la_selva_reader.html?story=medias-flamencos']],
   datos:['Nació en Salto, Uruguay.','Vivió muchos años en la selva de Misiones, en Argentina.','Escribió Cuentos de la selva (1918) para sus hijos.','Le gustaban la fotografía, las motos y construir cosas.']},
- {n:'José Martí',code:'CU',anio:'1853–1895',vk:'',obras:[['Los Zapaticos de Rosa','los-zapaticos-de-rosa.html'],['El Baúl de Emilio','baul_de_emilio_episodio4_reader_Jose_Marti.html']],
+ {n:'José Martí',kd:'Jos%C3%A9_Mart%C3%AD',code:'CU',anio:'1853–1895',vk:'',obras:[['Los Zapaticos de Rosa','los-zapaticos-de-rosa.html'],['El Baúl de Emilio','baul_de_emilio_episodio4_reader_Jose_Marti.html']],
   datos:['Nació en La Habana, Cuba.','A los 16 años ya publicaba un periódico.','Creó La Edad de Oro, una revista para niños.','Sus Versos sencillos inspiraron la canción "Guantanamera".']}
 ];
 
@@ -330,12 +334,14 @@ function vRuta(B){
   <p class="lead">Toca cada parada para ver qué hacemos.</p>
   <div class="road">${B.road.map((r,i)=>`<button class="stop${r[3]?'':' fiesta'}" ${r[3]?`data-go="${r[3]}"`:''}><span class="when">${r[0]}</span><h3>${r[1]}</h3><p>${r[2]}</p>${r[3]?`<span class="go">Ver →</span>`:''}</button>`).join('')}</div></section>`;
 }
+const MAS={"Lionel Messi": {"v": "https://www.youtube.com/watch?v=IF52eo2twAk", "k": null, "w": "Lionel_Messi"}, "Frida Kahlo": {"v": "https://www.youtube.com/watch?v=40sZNGOXEBw", "k": null, "w": "Frida_Kahlo"}, "Celia Cruz": {"v": "https://www.youtube.com/watch?v=u1hKPlSZ_e0", "k": null}, "José Martí": {"v": null, "k": "https://ninos.kiddle.co/Jos%C3%A9_Mart%C3%AD"}, "Sonia Sotomayor": {"v": "https://www.youtube.com/watch?v=F1ZrIbtadS8", "k": "https://ninos.kiddle.co/Sonia_Sotomayor"}, "Franklin Chang Díaz": {"v": null, "k": "https://ninos.kiddle.co/Franklin_Chang-D%C3%ADaz"}, "Shakira": {"v": "https://www.youtube.com/watch?v=G_KGqatcc1g", "k": null, "w": "Shakira"}, "Rafael Nadal": {"v": "https://www.youtube.com/watch?v=WXJkXsFVt3k", "k": null, "w": "Rafael_Nadal"}, "José Andrés": {"v": null, "k": "https://ninos.kiddle.co/Jos%C3%A9_Andr%C3%A9s"}, "Lamine Yamal": {"v": "https://www.youtube.com/watch?v=ioa_-8uIyGo", "k": "https://ninos.kiddle.co/Lamine_Yamal"}, "Juan Soto": {"v": "https://www.youtube.com/watch?v=lGr1B2NR0gk", "k": "https://ninos.kiddle.co/Juan_Soto_(beisbolista)"}, "Lin-Manuel Miranda": {"v": "https://www.youtube.com/watch?v=iPVND8W7Y7c", "k": "https://ninos.kiddle.co/Lin-Manuel_Miranda"}};
+const pcard=p=>{const m=MAS[p[0]]||{};const L=[];if(m.v)L.push(`<a class="chip" href="${m.v}" target="_blank" rel="noopener">▶ Video</a>`);if(m.w)L.push(`<a class="chip" href="${VIKI+m.w}" target="_blank" rel="noopener">Vikidia ↗</a>`);if(m.k)L.push(`<a class="chip" href="${m.k}" target="_blank" rel="noopener">Kiddle ↗</a>`);return `<div class="pcard">${pick(BASE+p[3],p[1],p[0],`Episodio ${p[4]} · ${p[2]}`)}${L.length?`<div class="more"><span>¿Quieres saber más?</span>${L.join('')}</div>`:''}</div>`};
 const M={
  persona:()=>`<article class="mission"><div class="mhead"><h3>Mi persona especial</h3><span class="tag">En pareja</span></div>
-   <p class="lead">Busca a la persona especial que te tocó en el sorteo. Toca su nombre para leer su episodio de <b>El Baúl de Emilio</b>.</p>
-   <div class="grid">${PERSONAS.map(p=>pick(BASE+p[3],p[1],p[0],`Episodio ${p[4]} · ${p[2]}`)).join('')}</div>
+   <p class="lead">Busca a la persona especial que te tocó en el sorteo. Toca su nombre para leer su episodio de <b>El Baúl de Emilio</b>. Después, si quieres saber más, mira su video o lee su biografía.</p>
+   <div class="grid">${PERSONAS.map(pcard).join('')}</div>
    <div><div class="eyebrow" style="margin-bottom:8px">Episodios extra · nuevas personas especiales</div><p class="note" style="margin-bottom:10px">¿Terminaste tu episodio? Lee otra persona especial.</p>
-   <div class="grid">${PERSONAS_EXTRA.map(p=>pick(BASE+p[3],p[1],p[0],`Episodio ${p[4]} · ${p[2]}`)).join('')}</div></div>
+   <div class="grid">${PERSONAS_EXTRA.map(pcard).join('')}</div></div>
    <ol class="steps"><li><b>Lee</b> el episodio con tu pareja.</li><li><b>Busca:</b> ¿cómo era a tu edad? ¿Qué le gustaba?</li><li><b>Dibuja</b> y escribe 3 datos para la fiesta.</li></ol></article>`,
  peru:()=>`<article class="mission"><div class="mhead"><h3>Retablos de Perú</h3><span class="tag">Manualidad</span></div>
    <p class="lead">Vamos a hacer retablos: cajas con puertas y una escena de la vida en familia adentro. Primero lee cómo Mateo hace el suyo con su abuelo.</p>
@@ -362,6 +368,7 @@ const M={
      <div style="display:flex;gap:10px;align-items:center">${flag(a.code)}<div><b>${a.n}</b><span>${C[a.code].n} · ${a.anio}</span></div></div>
      <ul class="steps" style="padding-left:1.1em;font-size:14px">${a.datos.map(d=>`<li>${d}</li>`).join('')}</ul>
      <div class="row">${a.obras.map(o=>`<a class="btn" style="padding:6px 12px;font-size:14px" href="${BASE+o[1]}">${o[0]}</a>`).join('')}
+     ${a.kd?`<a class="btn ghost" style="padding:6px 12px;font-size:14px" href="https://ninos.kiddle.co/${a.kd}" target="_blank" rel="noopener">Kiddle ↗</a>`:''}
      ${a.vk?`<a class="btn ghost" style="padding:6px 12px;font-size:14px" href="${VIKI+a.vk}" target="_blank" rel="noopener">Vikidia ↗</a>`:''}</div></div>`).join('')}</div>
    <ol class="steps"><li><b>Lee</b> la obra de tu autor y escoge tu escena favorita.</li><li><b>Completa</b> el perfil de LetraGram (3 publicaciones).</li><li><b>Prepara</b> tu monólogo de 60 segundos con un objeto.</li></ol></article>`,
  pr:()=>`<article class="mission"><div class="mhead"><h3>Máscaras de Puerto Rico</h3><span class="tag">Toda la clase</span></div>
