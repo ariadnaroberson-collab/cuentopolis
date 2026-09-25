@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Baúl de Emilio — Episodio 12: Lin-Manuel Miranda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #171512;
+    --bg-panel: #1f1c18;
+    --parchment: #f3ecd9;
+    --parchment-dim: #d8cfb4;
+    --navy: #26344d;
+    --gold: #c9a24b;
+    --gold-soft: #8a734a;
+    --lamp: #e7b96b;
+    --green: #4c7a5e;
+    --border: #3a352c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(ellipse at 20% -10%, #2a2620 0%, var(--bg) 55%);
+    color: var(--parchment);
+    font-family: 'Public Sans', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 32px 20px 80px; }
+  header.top {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .eyebrow {
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  h1.title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 42px);
+    margin: 0 0 6px;
+    color: var(--parchment);
+  }
+  .subtitle {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 19px;
+    color: var(--parchment-dim);
+  }
+  .baul-icon { font-size: 34px; margin-bottom: 8px; display:block; }
+
+  .levels {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 22px 0 30px;
+  }
+  .pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--gold-soft);
+    background: transparent;
+    color: var(--parchment-dim);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .pill:hover { border-color: var(--gold); color: var(--parchment); }
+  .pill.active {
+    background: var(--gold);
+    color: #211c12;
+    border-color: var(--gold);
+    font-weight: 700;
+  }
+
+  .card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 30px 34px;
+    position: relative;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    border-radius: 10px 10px 0 0;
+  }
+
+  .story {
+    font-family: 'Source Serif 4', serif;
+    font-size: 19px;
+    color: var(--parchment);
+  }
+  .story p { margin: 0 0 16px; }
+  .story .level-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  section.block { margin-top: 34px; }
+  h2.block-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    color: var(--gold);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px 24px;
+  }
+  .glossary-grid .term { font-weight: 700; color: var(--lamp); }
+  .glossary-grid .def { color: var(--parchment-dim); font-size: 14px; }
+
+  .wordbank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .wordbank span {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    background: rgba(201,162,75,0.12);
+    border: 1px solid var(--gold-soft);
+    color: var(--parchment);
+    padding: 5px 12px;
+    border-radius: 6px;
+  }
+
+  .comp-q {
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.03);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+  }
+  .comp-q .num { font-family:'Space Mono', monospace; color: var(--gold); margin-right: 8px; }
+
+  .figura-card {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: rgba(38,52,77,0.35);
+    border: 1px solid var(--navy);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .figura-card .flag { font-size: 30px; }
+  .figura-card .fname { font-family:'Fraunces', serif; font-size: 18px; font-weight:700; color: var(--parchment); }
+  .figura-card .fmeta { font-size: 14px; color: var(--parchment-dim); margin-top: 4px;}
+
+  .baul-word {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .footer-nav {
+    text-align: center;
+    margin-top: 40px;
+  }
+  .modal-btn {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    background: var(--green);
+    color: #eef5ef;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .modal-btn:hover { filter: brightness(1.1); }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,9,7,0.75);
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--green);
+    border-radius: 10px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 84vh;
+    overflow-y: auto;
+    padding: 28px 30px;
+  }
+  .modal-box h3 { font-family:'Fraunces', serif; color: var(--green); margin-top:0; }
+  .modal-box h4 { color: var(--gold); font-size: 14px; margin: 18px 0 6px; }
+  .modal-box p, .modal-box li { font-size: 14px; color: var(--parchment-dim); }
+  .modal-actions { display:flex; gap:10px; margin-top:20px; }
+  .modal-actions button {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--gold-soft);
+    background: transparent;
+    color: var(--parchment);
+    cursor: pointer;
+  }
+  .modal-actions button:hover { border-color: var(--gold); }
+
+  @media (max-width: 600px) {
+    .card { padding: 22px 18px; }
+  }
+</style>
+<style>.cp-back{display:inline-flex;align-items:center;gap:6px;font-family:"Space Mono",monospace;font-size:13px;color:#e3c878;text-decoration:none;border:1px solid #c9a24b;border-radius:999px;padding:6px 14px;margin:0 0 14px}.cp-back:hover{background:rgba(201,162,75,.15)}</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="cp-back" href="baul-de-emilio.html" onclick="if(document.referrer&&document.referrer.indexOf(location.host)>-1&&history.length>1){history.back();return false;}">← Volver</a>
+  <header class="top">
+    <span class="baul-icon">🧳</span>
+    <div class="eyebrow">Cuentópolis · Hispanic Heritage Month</div>
+    <h1 class="title">El Baúl de Emilio</h1>
+    <div class="subtitle">Episodio 12: “Lin-Manuel Miranda”</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="card">
+    <div class="story" id="story">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <section class="block">
+    <h2 class="block-title">📖 Glosario</h2>
+    <div class="glossary-grid">
+      <div><span class="term">el cuaderno</span><br><span class="def">libro con hojas para escribir</span></div>
+      <div><span class="term">la canción</span><br><span class="def">música con palabras</span></div>
+      <div><span class="term">el musical</span><br><span class="def">obra de teatro con canciones y baile</span></div>
+      <div><span class="term">escribir</span><br><span class="def">poner palabras en papel</span></div>
+      <div><span class="term">los abuelos</span><br><span class="def">los papás de tu mamá o de tu papá</span></div>
+      <div><span class="term">el verano</span><br><span class="def">estación del año con mucho calor; vacaciones</span></div>
+      <div><span class="term">el barrio</span><br><span class="def">parte de una ciudad donde vive una comunidad</span></div>
+      <div><span class="term">la película</span><br><span class="def">historia que vemos en el cine o en la televisión</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🗂️ Banco de palabras</h2>
+    <div class="wordbank">
+      <span>un cuaderno viejo</span><span>Nueva York</span><span>Puerto Rico</span><span>Vega Alta</span><span>los abuelos</span><span>el verano</span><span>escribir canciones</span><span>un musical</span><span>Moana</span><span>Encanto</span><span>¿sabías que...?</span>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">✅ Comprensión</h2>
+    <div class="comp-q"><span class="num">1.</span>¿Dónde pasaba Lin-Manuel los veranos, y con quién?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué canciones famosas escribió Lin-Manuel para películas?</div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🌟 Figura Destacada</h2>
+    <div class="figura-card">
+      <span class="flag">🇵🇷</span>
+      <div>
+        <div class="fname">Lin-Manuel Miranda</div>
+        <div class="fmeta">Nueva York, EE. UU. · familia de Puerto Rico</div>
+        <div class="fmeta">Compositor y actor. Escribió las canciones de Moana y Encanto ("No se habla de Bruno"). De niño pasaba los veranos con sus abuelos en Vega Alta, Puerto Rico, y ya escribía musicales en la escuela.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🔑 Palabra del Baúl</h2>
+    <div class="baul-word">Imaginación</div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">💭 Pregunta del Baúl</h2>
+    <p style="font-family:'Fraunces',serif; font-style:italic; font-size:17px; color:var(--parchment-dim);">
+      Lin-Manuel escribió un musical sobre su barrio. Si tú escribieras una canción sobre tu barrio o tu familia, ¿de qué hablaría?
+    </p>
+  </section>
+
+  <div class="footer-nav">
+    <button class="modal-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal-box">
+    <h3>🎓 Notas del maestro</h3>
+
+    <h4>Unidad curricular</h4>
+    <p>Hispanic Heritage Month — Figuras destacadas del mundo hispano: la música, el teatro y la escritura</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <ul>
+      <li>Presentar a una persona: origen, familia y lugares importantes</li>
+      <li>Contar lo que alguien hacía de niño (escribía, pasaba, visitaba)</li>
+      <li>Hablar de música, películas y creatividad</li>
+    </ul>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <ul>
+      <li>"A los ___ años..."</li>
+      <li>"Cuando tenía ___ años..."</li>
+      <li>"Igual que tú / igual que ustedes..."</li>
+      <li>"Aunque..., él/ella..."</li>
+    </ul>
+
+    <h4>CEFR pacing notes</h4>
+    <ul>
+      <li><b>A1</b> — Presente, oraciones cortas, vocabulario básico, mucha repetición.</li>
+      <li><b>A2</b> — Pasado simple limitado (era, tenía, jugaba/hacía); comparaciones sencillas.</li>
+      <li><b>B1</b> — Pasado (pretérito/imperfecto) con más detalle; conectores (aunque, pero, porque).</li>
+      <li><b>B2</b> — Registro más cercano a una biografía real; vocabulario más rico, matices emocionales.</li>
+    </ul>
+
+    <h4>Preguntas de comprensión (banco completo)</h4>
+    <ul>
+      <li>¿Dónde pasaba Lin-Manuel los veranos, y con quién?</li>
+      <li>¿Qué canciones famosas escribió Lin-Manuel para películas?</li>
+      <li>¿De dónde viene el nombre de Lin-Manuel?</li>
+      <li>¿Qué escribía Lin-Manuel en la escuela cuando era niño?</li>
+    </ul>
+
+    <h4>Content sensitivity flags</h4>
+    <p>Sin contenido sensible. Se mencionan Moana y Encanto (películas para toda la familia); Hamilton solo aparece en B1 y B2, sin detalles. Datos reales: nació en Nueva York el 16 de enero de 1980, hijo de padres puertorriqueños; su nombre viene de un poema del escritor puertorriqueño José Manuel Torres Santiago; creció en el barrio de Inwood (Manhattan) y cada año pasaba al menos un mes con sus abuelos en Vega Alta, Puerto Rico; empezó a escribir musicales en la escuela; escribió la primera versión de In the Heights a los 19 años, en la universidad; compuso las canciones de Moana (2016) y Encanto (2021).</p>
+
+    <h4>Notas de continuidad / serie</h4>
+    <ul>
+      <li>Nomenclatura de la serie: "Figura Destacada" reemplaza a "Huellas del Viajero" (figura real, no personaje ficticio visitante); "Palabra del Baúl" reemplaza a "Palabra del Bosque"; "Pregunta del Baúl" reemplaza a "Pregunta de Don Pico".</li>
+      <li>Formato de narración: estilo podcast "Hispano del día — ¿Sabías que...?" con dirección directa al oyente; el contenido se enfoca en la niñez de la figura en vez de repetir su fama adulta ya conocida.</li>
+      <li>Lineup: Episodio 1 Lionel Messi (fútbol), Episodio 2 Frida Kahlo (arte), Episodio 3 Celia Cruz (música), Episodio 4 José Martí (literatura), Episodio 5 Sonia Sotomayor (derecho/justicia), Episodio 6 Franklin Chang-Díaz (ciencia/espacio), Episodio 7 Shakira (música), Episodio 8 Rafael Nadal (deporte/tenis). Episodios extra (2026): Episodio 9 José Andrés (cocina), Episodio 10 Lamine Yamal (fútbol), Episodio 11 Juan Soto (béisbol), Episodio 12 Lin-Manuel Miranda (música y teatro).</li>
+      <li>Emilio: 9 años, de Colombia, curioso y un poco despistado/soñador; su baúl heredado de su abuela es el disparador de cada episodio.</li>
+    </ul>
+
+    <div class="modal-actions">
+      <button onclick="copyNotes()">📋 Copiar notas</button>
+      <button onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORY = {
+  A1: `
+    <span class="level-tag">NIVEL A1 · 🎙️ HISPANO DEL DÍA</span>
+    <p>¡Hola! Soy Emilio. Hoy abro mi baúl. Encuentro un cuaderno viejo con canciones. ¿Conoces la canción "No se habla de Bruno", de la película Encanto? ¿Sabes quién la escribe? ¡Lin-Manuel Miranda!</p>
+    <p>Lin-Manuel nace en Nueva York, en Estados Unidos. Su mamá y su papá son de Puerto Rico.</p>
+    <p>¿Sabes qué? Su nombre viene de un poema. ¡Un poema de un escritor de Puerto Rico!</p>
+    <p>Todos los veranos, Lin-Manuel va a Puerto Rico. Visita a sus abuelos en un pueblo que se llama Vega Alta. Allí escucha música y habla español.</p>
+    <p>En la escuela, a Lin-Manuel le encanta escribir. Escribe canciones. Escribe obras de teatro. ¡Escribe musicales con sus amigos!</p>
+    <p>A los diecinueve años, Lin-Manuel escribe un musical sobre su barrio en Nueva York. Se llama "In the Heights".</p>
+    <p>Después, Lin-Manuel escribe canciones para películas: Moana y Encanto. ¡Millones de niños cantan sus canciones!</p>
+    <p>¿Te imaginas? ¡Escribir canciones en un cuaderno y cantar con todo el mundo!</p>
+    <p>Soy Emilio. Esto es Hispano del día. ¡Hasta mañana!</p>
+  `,
+  A2: `
+    <span class="level-tag">NIVEL A2 · 🎙️ HISPANO DEL DÍA</span>
+    <p>¡Hola! Soy Emilio. Hoy abrí mi baúl y encontré un cuaderno viejo lleno de canciones... ¿Sabías que el hombre que escribió "No se habla de Bruno" empezó a escribir musicales cuando era niño?</p>
+    <p>Se llama Lin-Manuel Miranda. Nació en Nueva York, pero sus padres son de Puerto Rico. ¡Y su nombre viene de un poema de un escritor puertorriqueño!</p>
+    <p>Lin-Manuel creció en un barrio de Nueva York donde vivían muchas familias latinas. Allí escuchaba música en español y en inglés todo el tiempo.</p>
+    <p>Todos los veranos, viajaba a Puerto Rico para pasar las vacaciones con sus abuelos en Vega Alta, un pueblo de la isla. Esos veranos fueron muy importantes para él.</p>
+    <p>En la escuela, le encantaba escribir canciones y obras de teatro. Con sus compañeros, preparaba musicales y pequeñas películas.</p>
+    <p>Cuando tenía diecinueve años, en la universidad, escribió un musical sobre un barrio latino de Nueva York: "In the Heights".</p>
+    <p>Años después, escribió las canciones de las películas Moana y Encanto. Hoy, niños de todo el mundo cantan sus canciones.</p>
+    <p>Bueno, ya sabes el resto de la historia... pero eso lo dejamos para otro día. Soy Emilio, y esto fue Hispano del día. ¡Nos escuchamos mañana!</p>
+  `,
+  B1: `
+    <span class="level-tag">NIVEL B1 · 🎙️ HISPANO DEL DÍA</span>
+    <p>¡Hola a todos! Soy Emilio, y hoy encontré en mi baúl un cuaderno viejo lleno de canciones escritas a mano... ¿Sabían que el autor de "No se habla de Bruno" ya escribía musicales cuando era un niño?</p>
+    <p>Se llama Lin-Manuel Miranda. Nació en 1980 en Nueva York, hijo de padres puertorriqueños. Sus padres le pusieron ese nombre por un poema de un escritor de Puerto Rico.</p>
+    <p>Creció en Inwood, un barrio del norte de Manhattan con muchas familias latinas, donde la música en español sonaba en las casas, en las tiendas y en la calle.</p>
+    <p>Cada verano pasaba por lo menos un mes con sus abuelos en Vega Alta, un pueblo de Puerto Rico. Allí se conectó con la cultura y el idioma de su familia, algo que aparece después en muchas de sus canciones.</p>
+    <p>En la escuela empezó a escribir canciones y musicales, y con sus amigos hacía pequeñas películas. A los diecinueve años, en la universidad, escribió la primera versión de "In the Heights", un musical sobre un barrio latino de Nueva York.</p>
+    <p>Después vinieron "Hamilton", un musical que se hizo famoso en todo el mundo, y las canciones de las películas de Disney Moana y Encanto. "No se habla de Bruno" llegó al número uno en Estados Unidos.</p>
+    <p>Bueno, ya conocen el resto de la historia... pero eso lo dejamos para otro día. Soy Emilio, y esto fue Hispano del día. ¡Nos escuchamos pronto!</p>
+  `,
+  B2: `
+    <span class="level-tag">NIVEL B2 · 🎙️ HISPANO DEL DÍA</span>
+    <p>¡Hola a todos! Soy Emilio, y hoy rescaté de mi baúl un cuaderno con las esquinas dobladas, lleno de letras de canciones escritas a mano... ¿Sabían que el autor de "No se habla de Bruno" empezó a componer musicales siendo apenas un niño?</p>
+    <p>Se llama Lin-Manuel Miranda. Nació en 1980 en Nueva York, en el seno de una familia puertorriqueña, y sus padres le pusieron ese nombre inspirados en un poema del escritor puertorriqueño José Manuel Torres Santiago.</p>
+    <p>Se crio en Inwood, un barrio del norte de Manhattan donde convivían numerosas familias latinas y donde la música en español formaba parte del paisaje cotidiano.</p>
+    <p>Cada verano pasaba al menos un mes con sus abuelos en Vega Alta, en Puerto Rico. Aquellas temporadas en la isla lo conectaron profundamente con la lengua y la cultura de su familia, una herencia que más tarde se reflejaría en su obra.</p>
+    <p>Durante sus años escolares escribió canciones, musicales y pequeñas películas con sus compañeros. Con diecinueve años, siendo estudiante universitario, escribió el primer borrador de "In the Heights", un musical que retrata la vida de un barrio latino de Nueva York.</p>
+    <p>Más tarde llegaron "Hamilton", un fenómeno teatral a nivel mundial, y las canciones de las películas de Disney Moana y Encanto. "No se habla de Bruno" se convirtió en su primera canción en llegar al número uno de las listas de Estados Unidos.</p>
+    <p>Bueno, ya conocen el resto de esta historia... pero eso, mis amigos, lo dejaremos para otro día. Soy Emilio, y esto fue Hispano del día. ¡Nos escuchamos muy pronto!</p>
+  `
+};
+
+function renderLevel(level) {
+  document.getElementById('story').innerHTML = STORY[level];
+  document.querySelectorAll('.pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.level === level);
+  });
+}
+document.querySelectorAll('.pill').forEach(p => {
+  p.addEventListener('click', () => renderLevel(p.dataset.level));
+});
+renderLevel('A1');
+
+function copyNotes() {
+  const text = document.querySelector('.modal-box').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Notas copiadas.');
+  });
+}
+</script>
+</body>
+</html>

@@ -278,6 +278,12 @@ const PERSONAS=[
  ['Shakira','CO','la música','baul_de_emilio_episodio7_reader_Shakira.html',7],
  ['Rafael Nadal','ES','el tenis','baul_de_emilio_episodio8_reader_Rafael_Nadal.html',8]
 ];
+const PERSONAS_EXTRA=[
+ ['José Andrés','ES','la cocina','baul_de_emilio_episodio9_reader_Jose_Andres.html',9],
+ ['Lamine Yamal','ES','el fútbol','baul_de_emilio_episodio10_reader_Lamine_Yamal.html',10],
+ ['Juan Soto','DO','el béisbol','baul_de_emilio_episodio11_reader_Juan_Soto.html',11],
+ ['Lin-Manuel Miranda','PR','la música y el teatro','baul_de_emilio_episodio12_reader_Lin_Manuel_Miranda.html',12]
+];
 const LEYENDAS=[['La Llorona','MX','la-llorona.html'],['El Alebrije','MX','alebrije_reader.html'],['El Pombero','PY','pombero_reader.html'],['El Cipitío','SV','cipitio_reader.html']];
 const MEMORIAS=[['PE','El Camino de Killa','pueblosperdidos_historia1_reader_El_Camino_de_Killa.html'],['BO','El Lago de Wara','pueblosperdidos_historia2_reader_El_Lago_de_Wara.html'],['CO','El Puente de Camilo','pueblosperdidos_historia3_reader_El_Puente_de_Camilo.html'],['MX','El Camino de Sewá','pueblosperdidos_historia4_reader_El_Camino_de_Sewa.html'],['GT','El Telar de Ixchel','pueblosperdidos_historia5_reader_El_Telar_de_Ixchel.html'],['BZ','La Luz de Marisol','pueblosperdidos_historia6_reader_La_Luz_de_Marisol.html'],['AR','El Viento de Tomás','pueblosperdidos_historia7_reader_El_Viento_de_Tomas.html'],['EC','La Canoa Solar de Yankuam','pueblosperdidos_historia8_reader_La_Canoa_Solar_de_Yankuam.html']];
 
@@ -328,6 +334,8 @@ const M={
  persona:()=>`<article class="mission"><div class="mhead"><h3>Mi persona especial</h3><span class="tag">En pareja</span></div>
    <p class="lead">Busca a la persona especial que te tocó en el sorteo. Toca su nombre para leer su episodio de <b>El Baúl de Emilio</b>.</p>
    <div class="grid">${PERSONAS.map(p=>pick(BASE+p[3],p[1],p[0],`Episodio ${p[4]} · ${p[2]}`)).join('')}</div>
+   <div><div class="eyebrow" style="margin-bottom:8px">Episodios extra · nuevas personas especiales</div><p class="note" style="margin-bottom:10px">¿Terminaste tu episodio? Lee otra persona especial.</p>
+   <div class="grid">${PERSONAS_EXTRA.map(p=>pick(BASE+p[3],p[1],p[0],`Episodio ${p[4]} · ${p[2]}`)).join('')}</div></div>
    <ol class="steps"><li><b>Lee</b> el episodio con tu pareja.</li><li><b>Busca:</b> ¿cómo era a tu edad? ¿Qué le gustaba?</li><li><b>Dibuja</b> y escribe 3 datos para la fiesta.</li></ol></article>`,
  peru:()=>`<article class="mission"><div class="mhead"><h3>Retablos de Perú</h3><span class="tag">Manualidad</span></div>
    <p class="lead">Vamos a hacer retablos: cajas con puertas y una escena de la vida en familia adentro. Primero lee cómo Mateo hace el suyo con su abuelo.</p>

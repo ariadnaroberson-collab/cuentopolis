@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Baúl de Emilio — Episodio 10: Lamine Yamal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #171512;
+    --bg-panel: #1f1c18;
+    --parchment: #f3ecd9;
+    --parchment-dim: #d8cfb4;
+    --navy: #26344d;
+    --gold: #c9a24b;
+    --gold-soft: #8a734a;
+    --lamp: #e7b96b;
+    --green: #4c7a5e;
+    --border: #3a352c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(ellipse at 20% -10%, #2a2620 0%, var(--bg) 55%);
+    color: var(--parchment);
+    font-family: 'Public Sans', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 32px 20px 80px; }
+  header.top {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .eyebrow {
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  h1.title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 42px);
+    margin: 0 0 6px;
+    color: var(--parchment);
+  }
+  .subtitle {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 19px;
+    color: var(--parchment-dim);
+  }
+  .baul-icon { font-size: 34px; margin-bottom: 8px; display:block; }
+
+  .levels {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 22px 0 30px;
+  }
+  .pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--gold-soft);
+    background: transparent;
+    color: var(--parchment-dim);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .pill:hover { border-color: var(--gold); color: var(--parchment); }
+  .pill.active {
+    background: var(--gold);
+    color: #211c12;
+    border-color: var(--gold);
+    font-weight: 700;
+  }
+
+  .card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 30px 34px;
+    position: relative;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    border-radius: 10px 10px 0 0;
+  }
+
+  .story {
+    font-family: 'Source Serif 4', serif;
+    font-size: 19px;
+    color: var(--parchment);
+  }
+  .story p { margin: 0 0 16px; }
+  .story .level-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  section.block { margin-top: 34px; }
+  h2.block-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    color: var(--gold);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px 24px;
+  }
+  .glossary-grid .term { font-weight: 700; color: var(--lamp); }
+  .glossary-grid .def { color: var(--parchment-dim); font-size: 14px; }
+
+  .wordbank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .wordbank span {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    background: rgba(201,162,75,0.12);
+    border: 1px solid var(--gold-soft);
+    color: var(--parchment);
+    padding: 5px 12px;
+    border-radius: 6px;
+  }
+
+  .comp-q {
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.03);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+  }
+  .comp-q .num { font-family:'Space Mono', monospace; color: var(--gold); margin-right: 8px; }
+
+  .figura-card {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: rgba(38,52,77,0.35);
+    border: 1px solid var(--navy);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .figura-card .flag { font-size: 30px; }
+  .figura-card .fname { font-family:'Fraunces', serif; font-size: 18px; font-weight:700; color: var(--parchment); }
+  .figura-card .fmeta { font-size: 14px; color: var(--parchment-dim); margin-top: 4px;}
+
+  .baul-word {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .footer-nav {
+    text-align: center;
+    margin-top: 40px;
+  }
+  .modal-btn {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    background: var(--green);
+    color: #eef5ef;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .modal-btn:hover { filter: brightness(1.1); }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,9,7,0.75);
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--green);
+    border-radius: 10px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 84vh;
+    overflow-y: auto;
+    padding: 28px 30px;
+  }
+  .modal-box h3 { font-family:'Fraunces', serif; color: var(--green); margin-top:0; }
+  .modal-box h4 { color: var(--gold); font-size: 14px; margin: 18px 0 6px; }
+  .modal-box p, .modal-box li { font-size: 14px; color: var(--parchment-dim); }
+  .modal-actions { display:flex; gap:10px; margin-top:20px; }
+  .modal-actions button {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--gold-soft);
+    background: transparent;
+    color: var(--parchment);
+    cursor: pointer;
+  }
+  .modal-actions button:hover { border-color: var(--gold); }
+
+  @media (max-width: 600px) {
+    .card { padding: 22px 18px; }
+  }
+</style>
+<style>.cp-back{display:inline-flex;align-items:center;gap:6px;font-family:"Space Mono",monospace;font-size:13px;color:#e3c878;text-decoration:none;border:1px solid #c9a24b;border-radius:999px;padding:6px 14px;margin:0 0 14px}.cp-back:hover{background:rgba(201,162,75,.15)}</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="cp-back" href="baul-de-emilio.html" onclick="if(document.referrer&&document.referrer.indexOf(location.host)>-1&&history.length>1){history.back();return false;}">← Volver</a>
+  <header class="top">
+    <span class="baul-icon">🧳</span>
+    <div class="eyebrow">Cuentópolis · Hispanic Heritage Month</div>
+    <h1 class="title">El Baúl de Emilio</h1>
+    <div class="subtitle">Episodio 10: “Lamine Yamal”</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+
+  <div class="card">
+    <div class="story" id="story">
+      <!-- filled by JS -->
+    </div>
+  </div>
+
+  <section class="block">
+    <h2 class="block-title">📖 Glosario</h2>
+    <div class="glossary-grid">
+      <div><span class="term">la foto</span><br><span class="def">imagen que se hace con una cámara</span></div>
+      <div><span class="term">la bañera</span><br><span class="def">lugar con agua para bañar a una persona</span></div>
+      <div><span class="term">el barrio</span><br><span class="def">parte de una ciudad donde vive una comunidad</span></div>
+      <div><span class="term">zurdo/a</span><br><span class="def">persona que usa más la mano o el pie izquierdo</span></div>
+      <div><span class="term">el gol</span><br><span class="def">cuando la pelota entra en la portería</span></div>
+      <div><span class="term">el código postal</span><br><span class="def">número de una zona para enviar cartas</span></div>
+      <div><span class="term">el equipo</span><br><span class="def">grupo de jugadores</span></div>
+      <div><span class="term">ganar</span><br><span class="def">ser el mejor en un partido o torneo</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🗂️ Banco de palabras</h2>
+    <div class="wordbank">
+      <span>una foto vieja</span><span>un bebé</span><span>Lionel Messi</span><span>Rocafonda</span><span>el barrio</span><span>304</span><span>La Masía</span><span>a los siete años</span><span>zurdo</span><span>el gol</span><span>¿sabías que...?</span>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">✅ Comprensión</h2>
+    <div class="comp-q"><span class="num">1.</span>¿Quién está en la foto vieja con el bebé Lamine?</div>
+    <div class="comp-q"><span class="num">2.</span>¿Qué significa el número 304 para Lamine?</div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🌟 Figura Destacada</h2>
+    <div class="figura-card">
+      <span class="flag">🇪🇸</span>
+      <div>
+        <div class="fname">Lamine Yamal</div>
+        <div class="fmeta">Esplugues de Llobregat, España · familia de Guinea Ecuatorial y Marruecos</div>
+        <div class="fmeta">Futbolista zurdo. De bebé salió en una foto con Lionel Messi. Creció en el barrio de Rocafonda y siempre celebra sus goles con el número 304, por el código postal de su barrio.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">🔑 Palabra del Baúl</h2>
+    <div class="baul-word">Raíces</div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">💭 Pregunta del Baúl</h2>
+    <p style="font-family:'Fraunces',serif; font-style:italic; font-size:17px; color:var(--parchment-dim);">
+      Lamine celebra sus goles con el número de su barrio. Si tú hicieras un gesto especial, ¿qué número o símbolo usarías? ¿Por qué?
+    </p>
+  </section>
+
+  <div class="footer-nav">
+    <button class="modal-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal-box">
+    <h3>🎓 Notas del maestro</h3>
+
+    <h4>Unidad curricular</h4>
+    <p>Hispanic Heritage Month — Figuras destacadas del mundo hispano: el deporte (fútbol) y el orgullo por el barrio y la familia</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <ul>
+      <li>Presentar a una persona: origen, familia y barrio</li>
+      <li>Contar hechos de la niñez con edades (a los siete años...)</li>
+      <li>Explicar el significado de un símbolo personal</li>
+    </ul>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <ul>
+      <li>"A los ___ años..."</li>
+      <li>"Cuando tenía ___ años..."</li>
+      <li>"Igual que tú / igual que ustedes..."</li>
+      <li>"Aunque..., él/ella..."</li>
+    </ul>
+
+    <h4>CEFR pacing notes</h4>
+    <ul>
+      <li><b>A1</b> — Presente, oraciones cortas, vocabulario básico, mucha repetición.</li>
+      <li><b>A2</b> — Pasado simple limitado (era, tenía, jugaba/hacía); comparaciones sencillas.</li>
+      <li><b>B1</b> — Pasado (pretérito/imperfecto) con más detalle; conectores (aunque, pero, porque).</li>
+      <li><b>B2</b> — Registro más cercano a una biografía real; vocabulario más rico, matices emocionales.</li>
+    </ul>
+
+    <h4>Preguntas de comprensión (banco completo)</h4>
+    <ul>
+      <li>¿Quién está en la foto vieja con el bebé Lamine?</li>
+      <li>¿Qué significa el número 304 para Lamine?</li>
+      <li>¿De dónde es la familia de Lamine?</li>
+      <li>¿Qué parte de tu barrio o de tu casa te gustaría recordar siempre?</li>
+    </ul>
+
+    <h4>Content sensitivity flags</h4>
+    <p>Sin contenido sensible. Conexión intencional con el Episodio 1 (Lionel Messi). Datos reales: nació el 13 de julio de 2007; su madre, Sheila Ebana, es de Guinea Ecuatorial y su padre, Mounir Nasraoui, de Marruecos; en 2007 Messi, con 20 años, se fotografió bañando al bebé Lamine para un calendario solidario de UNICEF; creció en Rocafonda (Mataró), código postal 08304, y celebra sus goles haciendo el número 304 con los dedos; entró en La Masía de niño; debutó con el primer equipo del Barcelona a los 15 años; ganó la Eurocopa 2024 con España a los 16. En 2026, España le ganó la final de la Copa del Mundo a Argentina, y Lamine y Messi se abrazaron en el campo.</p>
+
+    <h4>Notas de continuidad / serie</h4>
+    <ul>
+      <li>Nomenclatura de la serie: "Figura Destacada" reemplaza a "Huellas del Viajero" (figura real, no personaje ficticio visitante); "Palabra del Baúl" reemplaza a "Palabra del Bosque"; "Pregunta del Baúl" reemplaza a "Pregunta de Don Pico".</li>
+      <li>Formato de narración: estilo podcast "Hispano del día — ¿Sabías que...?" con dirección directa al oyente; el contenido se enfoca en la niñez de la figura en vez de repetir su fama adulta ya conocida.</li>
+      <li>Lineup: Episodio 1 Lionel Messi (fútbol), Episodio 2 Frida Kahlo (arte), Episodio 3 Celia Cruz (música), Episodio 4 José Martí (literatura), Episodio 5 Sonia Sotomayor (derecho/justicia), Episodio 6 Franklin Chang-Díaz (ciencia/espacio), Episodio 7 Shakira (música), Episodio 8 Rafael Nadal (deporte/tenis). Episodios extra (2026): Episodio 9 José Andrés (cocina), Episodio 10 Lamine Yamal (fútbol), Episodio 11 Juan Soto (béisbol), Episodio 12 Lin-Manuel Miranda (música y teatro).</li>
+      <li>Emilio: 9 años, de Colombia, curioso y un poco despistado/soñador; su baúl heredado de su abuela es el disparador de cada episodio.</li>
+    </ul>
+
+    <div class="modal-actions">
+      <button onclick="copyNotes()">📋 Copiar notas</button>
+      <button onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORY = {
+  A1: `
+    <span class="level-tag">NIVEL A1 · 🎙️ HISPANO DEL DÍA</span>
+    <p>¡Hola! Soy Emilio. Hoy abro mi baúl. Encuentro una foto vieja. En la foto hay un bebé en una bañera... ¡y un futbolista muy famoso! ¿Sabes quién es el futbolista? ¡Es Lionel Messi! ¿Y el bebé? ¡Es Lamine Yamal!</p>
+    <p>Lamine nace en España en 2007. Su mamá es de Guinea Ecuatorial. Su papá es de Marruecos.</p>
+    <p>En 2007, Messi tiene veinte años. Hace fotos para ayudar a los niños del mundo. En una foto, Messi baña a un bebé: ¡Lamine!</p>
+    <p>Lamine vive en un barrio que se llama Rocafonda, cerca de Barcelona. Todos los días juega al fútbol en la calle con sus amigos.</p>
+    <p>A los siete años, Lamine entra a La Masía. La Masía es la escuela de fútbol del Barcelona.</p>
+    <p>Lamine es zurdo: juega con el pie izquierdo. ¡Como Messi!</p>
+    <p>Cuando Lamine mete un gol, hace un número con los dedos: 304. ¿Por qué? Es el número del código postal de su barrio. Lamine no olvida su barrio.</p>
+    <p>A los quince años, Lamine juega con el Barcelona. A los dieciséis años, gana la Eurocopa con España. ¡Y en 2026, España gana la Copa del Mundo contra Argentina... contra Messi!</p>
+    <p>¿Te imaginas? ¡El bebé de la foto y el futbolista de la foto, otra vez juntos!</p>
+    <p>Soy Emilio. Esto es Hispano del día. ¡Hasta mañana!</p>
+  `,
+  A2: `
+    <span class="level-tag">NIVEL A2 · 🎙️ HISPANO DEL DÍA</span>
+    <p>¡Hola! Soy Emilio. Hoy abrí mi baúl y encontré una foto muy vieja: un joven futbolista baña a un bebé en una bañera... ¿Sabías que el futbolista es Lionel Messi y el bebé es Lamine Yamal?</p>
+    <p>Lamine nació en España en 2007. Su mamá es de Guinea Ecuatorial, el único país de África donde se habla español, y su papá es de Marruecos.</p>
+    <p>Ese año, Messi tenía veinte años y participó en unas fotos para ayudar a los niños del mundo. Una familia ganó la oportunidad de hacer una foto con él... y el bebé de esa familia era Lamine.</p>
+    <p>Lamine creció en Rocafonda, un barrio cerca de Barcelona. Jugaba al fútbol todos los días en la calle y en el parque con sus amigos.</p>
+    <p>Cuando tenía siete años, entró a La Masía, la famosa escuela de fútbol del Barcelona, la misma escuela donde aprendió Messi. Igual que Messi, Lamine es zurdo.</p>
+    <p>Lamine nunca olvida de dónde viene. Cuando mete un gol, hace con los dedos el número 304: son los últimos números del código postal de su barrio.</p>
+    <p>A los quince años jugó por primera vez con el primer equipo del Barcelona, y a los dieciséis ganó la Eurocopa con España. En 2026, España ganó la Copa del Mundo contra Argentina, y al final Lamine y Messi se abrazaron en el campo.</p>
+    <p>Bueno, ya sabes el resto de la historia... pero eso lo dejamos para otro día. Soy Emilio, y esto fue Hispano del día. ¡Nos escuchamos mañana!</p>
+  `,
+  B1: `
+    <span class="level-tag">NIVEL B1 · 🎙️ HISPANO DEL DÍA</span>
+    <p>¡Hola a todos! Soy Emilio, y hoy encontré en mi baúl una foto que parece normal: un joven futbolista baña a un bebé... ¿Sabían que ese futbolista es Lionel Messi y que ese bebé se convirtió, años después, en una estrella del fútbol?</p>
+    <p>El bebé se llama Lamine Yamal. Nació en España en 2007. Su mamá es de Guinea Ecuatorial y su papá es de Marruecos, así que Lamine creció con tres culturas.</p>
+    <p>En 2007, Messi tenía veinte años y participó en una sesión de fotos para un calendario que ayudaba a los niños del mundo. La familia de Lamine ganó un sorteo para salir en las fotos, y así Messi terminó bañando al pequeño Lamine. Nadie imaginaba lo que iba a pasar después.</p>
+    <p>Lamine creció en Rocafonda, un barrio de la ciudad de Mataró, cerca de Barcelona. Pasaba horas jugando al fútbol en la calle con sus amigos, y a los siete años entró a La Masía, la escuela de fútbol del Barcelona donde también se formó Messi.</p>
+    <p>Lamine es zurdo, como Messi, y es muy rápido con la pelota. Pero lo que más le gusta a la gente es su celebración: cuando mete un gol, forma con los dedos el número 304, por el código postal de su barrio. Es su forma de decir: "Nunca olvido de dónde vengo."</p>
+    <p>Con solo quince años jugó con el primer equipo del Barcelona, y a los dieciséis ganó la Eurocopa con España. En 2026, España le ganó la final de la Copa del Mundo a Argentina, y Lamine y Messi se dieron un abrazo en el campo. ¡La foto del baúl, casi veinte años después!</p>
+    <p>Bueno, ya conocen el resto de la historia... pero eso lo dejamos para otro día. Soy Emilio, y esto fue Hispano del día. ¡Nos escuchamos pronto!</p>
+  `,
+  B2: `
+    <span class="level-tag">NIVEL B2 · 🎙️ HISPANO DEL DÍA</span>
+    <p>¡Hola a todos! Soy Emilio, y hoy rescaté del fondo de mi baúl una fotografía que, a primera vista, parece una más: un joven futbolista baña a un bebé en una bañera de plástico... ¿Sabían que ese joven es Lionel Messi y que aquel bebé se convertiría en uno de los futbolistas más brillantes de su generación?</p>
+    <p>El bebé se llama Lamine Yamal. Nació en España en 2007, hijo de una madre de Guinea Ecuatorial y de un padre marroquí, de modo que creció entre tres culturas y tres maneras de ver el mundo.</p>
+    <p>Ese mismo año, un Messi de apenas veinte años posó para un calendario solidario de UNICEF. La familia de Lamine resultó elegida en un sorteo para participar, y así quedó registrada la imagen de Messi bañando al pequeño, sin que nadie sospechara la historia que aquella foto guardaba.</p>
+    <p>Lamine se crio en Rocafonda, un barrio humilde de Mataró, cerca de Barcelona, donde pasaba las tardes jugando al fútbol en la calle. A los siete años ingresó en La Masía, la cantera del Barcelona en la que también se había formado Messi.</p>
+    <p>Zurdo, veloz y atrevido, Lamine es conocido además por un gesto que dice mucho de él: cada vez que marca un gol, forma con los dedos el número 304, en referencia al código postal de su barrio. Es su manera de recordar que sus raíces viajan con él a cada estadio.</p>
+    <p>Debutó con el primer equipo del Barcelona con apenas quince años y, a los dieciséis, conquistó la Eurocopa con España. En 2026, España derrotó a Argentina en la final de la Copa del Mundo, y al terminar el partido Lamine y Messi se fundieron en un abrazo: casi veinte años después, la foto del baúl se completaba.</p>
+    <p>Bueno, ya conocen el resto de esta historia... pero eso, mis amigos, lo dejaremos para otro día. Soy Emilio, y esto fue Hispano del día. ¡Nos escuchamos muy pronto!</p>
+  `
+};
+
+function renderLevel(level) {
+  document.getElementById('story').innerHTML = STORY[level];
+  document.querySelectorAll('.pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.level === level);
+  });
+}
+document.querySelectorAll('.pill').forEach(p => {
+  p.addEventListener('click', () => renderLevel(p.dataset.level));
+});
+renderLevel('A1');
+
+function copyNotes() {
+  const text = document.querySelector('.modal-box').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Notas copiadas.');
+  });
+}
+</script>
+</body>
+</html>
