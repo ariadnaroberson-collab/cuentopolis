@@ -294,13 +294,13 @@ const MEMORIAS=[['PE','El Camino de Killa','pueblosperdidos_historia1_reader_El_
 const BANDS={
  u35:{tab:'3-5',name:'Upper Elementary',
   road:[['Semana 1','El sorteo','Tu pareja recibe una persona especial de El Baúl de Emilio.','misiones'],['Semana 2','El Baúl de Emilio','Lees el episodio de tu persona especial: ¿cómo era a tu edad?','misiones'],['Semana 3','Retablos de Perú','Leemos El Retablo de Mateo y hacemos nuestros retablos de la vida en familia.','misiones'],['10 de octubre','La gran fiesta','Presentas tu persona especial y tu retablo a las familias.',null]],
-  missions:['persona','peru']},
+  missions:['persona','peru','juego']},
  ms:{tab:'6-8',name:'Middle School',
   road:[['Semana 1','Doble sorteo','Una leyenda para tu pareja y un país para ti.','misiones'],['Semana 2','Leyendas y países','Lees tu leyenda en la Biblioteca FVR. Empiezas tu Pasaporte del País.','paises'],['Semana 3','Arpilleras de Chile','Leemos Los Retazos de Florencia y hacemos nuestras arpilleras. Terminas tu pasaporte.','misiones'],['10 de octubre','La gran fiesta','Cuentas tu leyenda y muestras tu país y Chile a las familias.',null]],
-  missions:['leyenda','pasaporte','chile']},
+  missions:['leyenda','pasaporte','chile','juego']},
  sec:{tab:'9-11',name:'Secundaria',
   road:[['Semana 1','El sorteo','Recibes un país de Memorias de pueblos perdidos.','misiones'],['Semana 2','Tu historia','Lees la historia de tu país e investigas: geografía, escuela, cultura y retos.','paises'],['Semana 3','Máscaras de Puerto Rico','Leemos El Vejigante de Valeria y hacemos las máscaras.','misiones'],['10 de octubre','La gran fiesta','Presentas tu país y mostramos las máscaras a las familias.',null]],
-  missions:['memorias','autor','pasaporte','pr']}
+  missions:['memorias','autor','pasaporte','pr','juego']}
 };
 
 /* ---------- helpers ---------- */
@@ -371,6 +371,9 @@ const M={
      ${a.kd?`<a class="btn ghost" style="padding:6px 12px;font-size:14px" href="https://ninos.kiddle.co/${a.kd}" target="_blank" rel="noopener">Kiddle ↗</a>`:''}
      ${a.vk?`<a class="btn ghost" style="padding:6px 12px;font-size:14px" href="${VIKI+a.vk}" target="_blank" rel="noopener">Vikidia ↗</a>`:''}</div></div>`).join('')}</div>
    <ol class="steps"><li><b>Lee</b> la obra de tu autor y escoge tu escena favorita.</li><li><b>Completa</b> el perfil de LetraGram (3 publicaciones).</li><li><b>Prepara</b> tu monólogo de 60 segundos con un objeto.</li></ol></article>`,
+ juego:()=>`<article class="mission"><div class="mhead"><h3>🌎 The Passport Game</h3><span class="tag">Toda la clase</span></div>
+   <p class="lead">Gira la rueda de países, busca el país en el <b>mapa</b>, adivina las banderas y explora con videos: paisajes, animales, comida, ropa típica y cultura.</p>
+   <div class="row"><a class="btn" href="https://ariadnaroberson-collab.github.io/centro-de-clase/passport-game.html" target="_blank" rel="noopener">Abrir The Passport Game ↗</a></div></article>`,
  pr:()=>`<article class="mission"><div class="mhead"><h3>Máscaras de Puerto Rico</h3><span class="tag">Toda la clase</span></div>
    <p class="lead">Antes de hacer nuestras máscaras de vejigante, leemos cómo las hace Valeria en Ponce.</p>
    <div class="grid">${pick(READS.PR[0].u,'PR','El Vejigante de Valeria','Entrevistas callejeras · máscaras de Ponce')}${pick(READS.NI[0].u,'NI','La Máscara de Álvaro','Entrevistas callejeras · otra tradición de máscaras')}</div>
