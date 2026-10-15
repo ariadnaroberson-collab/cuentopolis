@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Don Pico nos enseña sobre… — Cuentópolis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono&display=swap');
+  :root {
+    --bg: #171512; --bg-panel: #1f1c18; --parchment: #f3ecd9; --parchment-dim: #d8cfb4;
+    --navy: #26344d; --gold: #c9a24b; --gold-soft: #8a734a; --lamp: #e7b96b;
+    --green: #4c7a5e; --border: #3a352c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Public Sans', sans-serif; background: var(--bg); color: var(--parchment); min-height: 100vh; padding: 40px 20px 60px; }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  .back { display: inline-block; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold); text-decoration: none; margin-bottom: 22px; }
+  .eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.3rem; }
+  .subtitle { color: var(--parchment-dim); font-size: 0.95rem; margin-top: 8px; font-style: italic; }
+
+  .hero-banner {
+    position: relative; border-radius: 14px; overflow: hidden; margin-bottom: 30px; min-height: 280px;
+    display: flex; align-items: flex-end; padding: 28px 30px;
+    /* gradient on top of the image; if the image is missing, the green fallback shows instead */
+    background:
+      linear-gradient(0deg, rgba(23,21,18,0.97) 10%, rgba(23,21,18,0.35) 60%, rgba(23,21,18,0.1) 100%),
+      url('covers/don-pico.jpg'),
+      linear-gradient(135deg, #2f4a38 0%, #1f1c18 100%);
+    background-size: cover; background-position: center 30%;
+  }
+  .hero-banner h1 { margin-top: 4px; }
+
+  .volume { margin-top: 34px; }
+  .vol-head { display: flex; align-items: baseline; gap: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; }
+  .vol-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.35rem; }
+  .vol-ages { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--gold-soft); }
+  .vol-note { font-size: 0.85rem; color: var(--parchment-dim); font-style: italic; margin-bottom: 12px; line-height: 1.5; }
+  .vol-note a { color: var(--lamp); }
+
+  .list { display: flex; flex-direction: column; gap: 10px; }
+  .ep { display: flex; align-items: center; gap: 18px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; text-decoration: none; color: var(--parchment); transition: border-color 0.15s ease; }
+  .ep.active:hover { border-color: var(--gold); }
+  .ep.soon { opacity: 0.5; border-style: dashed; cursor: default; }
+  .ep-num { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--gold-soft); min-width: 78px; }
+  .ep-main { flex: 1; }
+  .ep-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.05rem; }
+  .ep-meta { font-family: 'Space Mono', monospace; font-size: 10.5px; color: var(--parchment-dim); margin-top: 3px; }
+  .season { color: var(--lamp); }
+  .ep-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--lamp); white-space: nowrap; }
+  .ep.soon .ep-tag { color: var(--parchment-dim); }
+
+  @media (max-width: 560px) {
+    .ep { gap: 12px; padding: 12px 14px; }
+    .ep-num { min-width: 52px; }
+    h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="series-curriculares.html">← Series curriculares</a>
+
+  <div class="hero-banner">
+    <div>
+      <p class="eyebrow">Series curriculares · Elementary</p>
+      <h1>Don Pico nos enseña sobre…</h1>
+      <p class="subtitle">Bajo la Gran Ceiba, Don Pico enseña a sus alumnos el vocabulario de cada unidad — cuentos cortos, nivel A1.</p>
+    </div>
+  </div>
+
+  <!-- ========== EXPOSURE (K–1) ========== -->
+  <section class="volume" id="exposure">
+    <div class="vol-head"><span class="vol-title">Exposure</span><span class="vol-ages">K + 1st</span></div>
+    <p class="vol-note">Este año, Exposure usa los cuentos de <a href="#espanol-2">Español 2</a>.</p>
+  </section>
+
+  <!-- ========== ESPAÑOL 2 ========== -->
+  <section class="volume" id="espanol-2">
+    <div class="vol-head"><span class="vol-title">Español 2</span><span class="vol-ages">7 años</span></div>
+    <div class="list">
+      <div class="ep soon">
+        <span class="ep-num">E02</span>
+        <span class="ep-main">
+          <span class="ep-title">Don Pico nos enseña sobre la escuela</span>
+          <span class="ep-meta" style="display:block;">A1 · ~4 min</span>
+        </span>
+        <span class="ep-tag">Próximamente</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ESPAÑOL 3–5 ========== -->
+  <section class="volume" id="espanol-3-5">
+    <div class="vol-head"><span class="vol-title">Español 3–5</span><span class="vol-ages">8–10 años</span></div>
+    <p class="vol-note">Un solo juego de cuentos para los tres niveles; cada nivel se evalúa en su propia meta.</p>
+    <div class="list">
+      <div class="ep soon">
+        <span class="ep-num">Cuento 1</span>
+        <span class="ep-main"><span class="ep-title">Un día de lluvia</span><span class="ep-meta" style="display:block;">A1 · 3–4 min</span></span>
+        <span class="ep-tag">Próximamente</span>
+      </div>
+      <div class="ep soon">
+        <span class="ep-num">Cuento 2</span>
+        <span class="ep-main"><span class="ep-title">¡Salió el sol!</span><span class="ep-meta" style="display:block;">A1 · 3–4 min</span></span>
+        <span class="ep-tag">Próximamente</span>
+      </div>
+      <div class="ep soon">
+        <span class="ep-num">Cuento 3</span>
+        <span class="ep-main"><span class="ep-title">Una mariposa perdida</span><span class="ep-meta" style="display:block;">A1 · 3–4 min · <span class="season">🍂 El otoño</span></span></span>
+        <span class="ep-tag">Próximamente</span>
+      </div>
+      <div class="ep soon">
+        <span class="ep-num">Cuento 4</span>
+        <span class="ep-main"><span class="ep-title">¿Adónde vas, mariposa?</span><span class="ep-meta" style="display:block;">A1 · 3–4 min · <span class="season">🍂 El otoño</span></span></span>
+        <span class="ep-tag">Próximamente</span>
+      </div>
+      <div class="ep soon">
+        <span class="ep-num">Cuento 5</span>
+        <span class="ep-main"><span class="ep-title">La primavera y el papalote</span><span class="ep-meta" style="display:block;">A1 · 3–4 min</span></span>
+        <span class="ep-tag">Próximamente</span>
+      </div>
+      <div class="ep soon">
+        <span class="ep-num">Cuento 6</span>
+        <span class="ep-main"><span class="ep-title">La pasarela de Don Pico</span><span class="ep-meta" style="display:block;">A1 · 3–4 min</span></span>
+        <span class="ep-tag">Próximamente</span>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>
