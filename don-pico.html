@@ -27,7 +27,7 @@
       linear-gradient(0deg, rgba(23,21,18,0.97) 10%, rgba(23,21,18,0.35) 60%, rgba(23,21,18,0.1) 100%),
       url('covers/don-pico.jpg'),
       linear-gradient(135deg, #2f4a38 0%, #1f1c18 100%);
-    background-size: cover; background-position: center 30%;
+    background-size: cover; background-position: center 8%;
   }
   .hero-banner h1 { margin-top: 4px; }
 
@@ -38,6 +38,8 @@
   .vol-note { font-size: 0.85rem; color: var(--parchment-dim); font-style: italic; margin-bottom: 12px; line-height: 1.5; }
   .vol-note a { color: var(--lamp); }
 
+  .sub-head { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin: 24px 0 10px; }
+  .sub-head span { text-transform: none; letter-spacing: 0; color: var(--parchment-dim); font-family: 'Public Sans', sans-serif; font-style: italic; }
   .list { display: flex; flex-direction: column; gap: 10px; }
   .ep { display: flex; align-items: center; gap: 18px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; text-decoration: none; color: var(--parchment); transition: border-color 0.15s ease; }
   .ep.active:hover { border-color: var(--gold); }
@@ -79,12 +81,41 @@
   <section class="volume" id="espanol-2">
     <div class="vol-head"><span class="vol-title">Español 2</span><span class="vol-ages">7 años</span></div>
     <div class="list">
-      <div class="ep soon">
+      <a class="ep active" href="donpico_e02_reader_La_Escuela.html">
         <span class="ep-num">E02</span>
         <span class="ep-main">
           <span class="ep-title">Don Pico nos enseña sobre la escuela</span>
           <span class="ep-meta" style="display:block;">A1 · ~4 min</span>
         </span>
+        <span class="ep-tag">Abrir →</span>
+      </a>
+    </div>
+
+    <div class="sub-head">Mini-cuentos <span>· cuentos muy cortos para más exposición</span></div>
+    <div class="list">
+      <div class="ep soon">
+        <span class="ep-num">Mini 1</span>
+        <span class="ep-main"><span class="ep-title">Los colores</span><span class="ep-meta" style="display:block;">A1 · 1–2 min</span></span>
+        <span class="ep-tag">Próximamente</span>
+      </div>
+      <div class="ep soon">
+        <span class="ep-num">Mini 2</span>
+        <span class="ep-main"><span class="ep-title">Los números</span><span class="ep-meta" style="display:block;">A1 · 1–2 min</span></span>
+        <span class="ep-tag">Próximamente</span>
+      </div>
+      <div class="ep soon">
+        <span class="ep-num">Mini 3</span>
+        <span class="ep-main"><span class="ep-title">Las formas</span><span class="ep-meta" style="display:block;">A1 · 1–2 min</span></span>
+        <span class="ep-tag">Próximamente</span>
+      </div>
+      <div class="ep soon">
+        <span class="ep-num">Mini 4</span>
+        <span class="ep-main"><span class="ep-title">Los días de la semana</span><span class="ep-meta" style="display:block;">A1 · 1–2 min</span></span>
+        <span class="ep-tag">Próximamente</span>
+      </div>
+      <div class="ep soon">
+        <span class="ep-num">Mini 5</span>
+        <span class="ep-main"><span class="ep-title">El alfabeto con los alfamigos</span><span class="ep-meta" style="display:block;">A1 · libro de imágenes · A–Z</span></span>
         <span class="ep-tag">Próximamente</span>
       </div>
     </div>
