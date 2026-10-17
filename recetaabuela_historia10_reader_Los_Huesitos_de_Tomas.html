@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Huesitos de Tomás — La Receta de la Abuela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .listen-row{text-align:center;margin:-8px 0 22px;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:999px;
+    border:1px solid var(--gold);background:rgba(201,162,75,0.10);
+    font-family:'Public Sans',sans-serif;font-size:0.9rem;color:var(--gold-soft);cursor:pointer;
+  }
+  .listen-btn:hover{background:rgba(201,162,75,0.2);}
+  .listen-btn.playing{background:var(--gold);color:#1b1712;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  .modal ul{padding-left:20px;margin-top:4px;}
+  .modal a{color:var(--gold-soft);}
+  @media (max-width:600px){
+    body{padding:16px;}
+    h1{font-size:1.9rem;}
+    .story-panel{padding:22px 18px;}
+    section.card{padding:20px 18px;}
+    .glossary-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="collection-tag">Panorama Cultural · La Receta de la Abuela · Historia 10</div>
+    <h1>Los Huesitos de Tomás</h1>
+    <div class="subtitle">Una historia de San Andrés Mixquic, Ciudad de México</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+  <div class="listen-row">
+    <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
+  </div>
+
+  <div class="story-panel">
+
+    <!-- ============ A1 ============ -->
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Me llamo Tomás Galicia. Soy panadero. Vivo en San Andrés Mixquic, un pueblo de la Ciudad de México.</p>
+        <p>Tengo una panadería. La panadería es de mi familia. Es de mi abuela, doña Chabela. Mi abuela tiene noventa y un años. Todos los días, ella se sienta en su silla, cerca del <span class="gloss" title="lugar muy caliente donde se cocina el pan">horno</span>, y mira el pan.</p>
+        <p>En octubre, hacemos <span class="gloss" title="pan dulce y redondo para el Día de Muertos">pan de muerto</span>. ¡Hacemos miles de panes! Empezamos a las cinco de la mañana. La panadería huele a naranja y a <span class="gloss" title="flor del naranjo; tiene un olor especial">azahar</span>.</p>
+        <p>Mi abuela tiene una regla: "Nadie toca mi <span class="gloss" title="harina, huevo y mantequilla antes del horno">masa</span>." De niño, yo solo miraba.</p>
+        <p>El pan de muerto tiene cuatro partes. Cada parte es un símbolo.</p>
+        <p>El pan es redondo. El círculo representa la vida.</p>
+        <p>Arriba hay cuatro <span class="gloss" title="tiras de masa en forma de hueso">huesitos</span> en cruz. Los huesitos representan los huesos de nuestros muertos.</p>
+        <p>En el centro hay una <span class="gloss" title="pequeña bola de masa">bolita</span>. La bolita representa el cráneo.</p>
+        <p>Y el azahar representa el recuerdo.</p>
+        <p>Mi abuela dice: "Cada pan cuenta una historia. Esto nunca cambia."</p>
+        <p>Yo formo los huesitos con las manos. Abro los dedos, y el huesito tiene forma de hueso. Pongo cuatro huesitos en cruz. Pongo la bolita. Al final, pongo azúcar. Esto nunca cambia.</p>
+        <p>Pero tengo una idea nueva: un taller para niños. Los domingos, los niños forman los huesitos de su pan. El pan es para la <span class="gloss" title="altar con fotos, flores y comida para los muertos">ofrenda</span> de su familia.</p>
+        <p>Mi abuela dice: "¿Niños? ¡No! ¡Nadie toca mi masa!"</p>
+        <p>El domingo, llegan los niños. Tienen harina en las manos, en la cara, ¡en todas partes! Sus huesitos son feos. Mi abuela mira y mira. Al final, se levanta. Ayuda a los niños con los huesitos. Les explica: "El círculo representa la vida..."</p>
+        <p>Una niña se llama Itzel. Tiene siete años. Su pan es el más feo. Mi abuela toma el pan de Itzel y dice: "Este pan es para la ofrenda de Ramiro." Ramiro es mi abuelo. Él murió hace muchos años.</p>
+        <p>El 2 de noviembre es la <span class="gloss" title="noche con velas en el panteón de Mixquic">alumbrada</span>. En la noche, el <span class="gloss" title="cementerio">panteón</span> de Mixquic tiene muchas velas. Hay pan de muerto en las ofrendas. Yo veo huesitos feos... ¡Son los huesitos de los niños!</p>
+        <p>Mi abuela sonríe y dice: "Ahora sí, mijo, la masa ya es de todos."</p>
+      </div>
+    </div>
+
+    <!-- ============ A2 ============ -->
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Me llamo Tomás Galicia y soy panadero en San Andrés Mixquic, un pueblo antiguo al sur de la Ciudad de México. Aquí el Día de Muertos es muy famoso. La panadería es de mi familia: la abrió mi abuela, doña Chabela, hace más de sesenta años. Ella tiene noventa y un años y todavía viene todos los días. Se sienta en su silla, junto al <span class="gloss" title="lugar muy caliente donde se cocina el pan">horno</span>, y revisa cada charola de pan.</p>
+        <p>En octubre empezamos a trabajar a las cinco de la mañana, porque hacemos miles de <span class="gloss" title="pan dulce y redondo para el Día de Muertos">panes de muerto</span>. La panadería huele a mantequilla, a naranja y a <span class="gloss" title="flor del naranjo; tiene un olor especial">azahar</span>.</p>
+        <p>Cuando yo era niño, mi abuela tenía una regla muy famosa en el pueblo: "Nadie toca mi <span class="gloss" title="harina, huevo y mantequilla antes del horno">masa</span>." Yo solo miraba. Cuando tenía doce años, por fin me dejó formar mi primera <span class="gloss" title="un huesito de masa">canilla</span>. ¡Era horrible! Estaba torcida y gorda. Mi abuela se rio mucho. Después me explicó que cada parte del pan es un símbolo:</p>
+        <p>"El círculo representa el ciclo de la vida. Los cuatro huesitos, en cruz, representan los huesos de nuestros muertos. La bolita de arriba representa el cráneo. Y el azahar es para el recuerdo. Cada pan cuenta una historia, mijo. Por eso la forma nunca cambia."</p>
+        <p>Todavía tengo mi primera canilla, dura y seca, en un frasco de vidrio arriba del horno.</p>
+        <p>Hoy hago el pan exactamente como ella. Formo cada huesito a mano: abro los dedos sobre la masa, y así el huesito tiene forma de hueso. Pongo cuatro huesitos en cruz, la bolita en el centro y, después del horno, mantequilla y azúcar. Esto nunca cambia.</p>
+        <p>El pan de muerto tiene una historia muy larga. Antes de los españoles, aquí se hacían panes de maíz y de amaranto para los muertos. El trigo llegó con los españoles, y con el tiempo nació el pan redondo con huesitos.</p>
+        <p>Este año tengo una idea nueva: un taller los domingos para los niños del pueblo. Cada niño forma los huesitos de su propio pan para la <span class="gloss" title="altar con fotos, flores y comida para los muertos">ofrenda</span> de su familia.</p>
+        <p>—¿Un taller? ¿Con niños? —dice mi abuela—. ¡Nadie toca mi masa!</p>
+        <p>El primer domingo llegan doce niños. En diez minutos hay harina en las mesas, en el piso y en las caras. Los huesitos salen torcidos, gordos y flacos. Mi abuela mira desde su silla, muy seria. Pero no puede resistir: se levanta, se sienta con los niños y corrige los huesitos, uno por uno. Y les explica el círculo, los huesitos, la bolita y el azahar, igual que a mí.</p>
+        <p>Itzel, una niña de siete años, hace el pan más feo del día. Mi abuela lo toma con cuidado y dice:</p>
+        <p>—Este va en la ofrenda de Ramiro.</p>
+        <p>Ramiro era mi abuelo. En la panadería tenemos una ofrenda con su foto, y el primer pan de la temporada siempre es para él.</p>
+        <p>La noche del 2 de noviembre es la <span class="gloss" title="noche con velas en el panteón de Mixquic">alumbrada</span> de Mixquic. Las familias iluminan las tumbas con velas, y el <span class="gloss" title="cementerio">panteón</span>, alrededor de la iglesia, brilla con muchísimas luces. Camino con mi abuela entre las ofrendas, y en muchas veo panes con huesitos torcidos. Son los panes de los niños.</p>
+        <p>Mi abuela me toma del brazo y sonríe:</p>
+        <p>—Ahora sí, mijo, la masa ya es de todos.</p>
+      </div>
+    </div>
+
+    <!-- ============ B1 ============ -->
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Todavía recuerdo el día de mi primera canilla. Tenía doce años y llevaba toda la vida mirando a mi abuela desde un banquito, junto al <span class="gloss" title="lugar muy caliente donde se cocina el pan">horno</span> de la panadería que ella abrió en San Andrés Mixquic, un pueblo antiguo al sur de la Ciudad de México. Doña Chabela tenía una regla que todo el pueblo conocía: "Nadie toca mi <span class="gloss" title="harina, huevo y mantequilla antes del horno">masa</span>." Ni mis tíos, ni mi mamá, ni yo.</p>
+        <p>Pero una mañana de octubre, sin decir nada, me puso un pedacito de masa en la mano.</p>
+        <p>—A ver, Tomás. Hazme un huesito.</p>
+        <p>Lo enrollé con todo mi cuidado... y me salió torcido, gordo de un lado y flaco del otro. Parecía más un gusano que un hueso. Mi abuela se rio tanto que tuvo que sentarse. Después me tomó las manos y me enseñó a abrir los dedos sobre la masa para que se marcaran los "nudillos" del hueso. Mientras trabajábamos, me explicó lo que significaba cada parte del <span class="gloss" title="pan dulce y redondo para el Día de Muertos">pan de muerto</span>:</p>
+        <p>—El pan es redondo porque la vida es un círculo. Los cuatro huesitos van en cruz: son los huesos de nuestros muertos. La bolita de arriba es el cráneo. Y el <span class="gloss" title="flor del naranjo; tiene un olor especial">azahar</span> es para el recuerdo, para que el pan huela a los que queremos. Cada pan cuenta una historia, mijo. Por eso la forma nunca cambia.</p>
+        <p>Todavía guardo aquella canilla, dura y seca, en un frasco de vidrio arriba del horno. Para no olvidar que todos empezamos así.</p>
+        <p>Hoy tengo cuarenta años y soy el panadero de la familia. Mi abuela tiene noventa y uno, y todavía llega cada mañana, se sienta en su silla junto al horno y revisa cada charola con ojos de águila. En octubre empezamos a las cinco de la mañana y hacemos miles de panes de muerto. Yo los hago exactamente como ella me enseñó: cada huesito formado a mano, cuatro en cruz, la bolita en el centro y, al salir del horno, mantequilla y azúcar.</p>
+        <p>Este año, sin embargo, tuve una idea. Muchos niños del pueblo nunca habían hecho su propio pan de muerto. ¿Y si abría un taller los domingos, para que cada niño formara los huesitos del pan para la <span class="gloss" title="altar con fotos, flores y comida para los muertos">ofrenda</span> de su familia?</p>
+        <p>Se lo conté a mi abuela una tarde, con un poco de miedo.</p>
+        <p>—¿Niños? ¿En mi panadería? —me miró como si le hubiera propuesto vender la casa—. ¡Nadie toca mi masa!</p>
+        <p>Abrí el taller de todos modos. El primer domingo llegaron doce niños, y en diez minutos había harina en las mesas, en el piso, en el pelo y hasta en el gato. Los huesitos salían torcidos, gordos, flacos y rotos. Mi abuela miraba desde su silla con los brazos cruzados. Aguantó media hora. Luego se levantó, se sentó con los niños y empezó a corregir huesitos, uno por uno, mientras les contaba lo del círculo, la cruz, la bolita y el azahar. Exactamente como me lo había contado a mí.</p>
+        <p>Al final del día, Itzel, una niña de siete años, sacó del horno el pan más feo que yo había visto en mi vida. Los huesitos se habían inflado en el horno y ya no parecían huesos: parecían una araña. Los otros niños se rieron, y Itzel estaba a punto de llorar.</p>
+        <p>Entonces bajé el frasco de vidrio de la repisa y saqué mi primera canilla.</p>
+        <p>—Mira, Itzel. Este huesito lo hice yo, cuando tenía doce años. ¿Ves qué feo está? Y hoy soy el panadero.</p>
+        <p>Itzel miró mi canilla, me miró a mí y, por fin, se rio. En ese momento, mi abuela se acercó y tomó el pan de Itzel con mucho cuidado.</p>
+        <p>—Este va en la ofrenda de Ramiro —dijo.</p>
+        <p>Ramiro era mi abuelo. Murió hace muchos años, y en la panadería tenemos una pequeña ofrenda con su foto. El primer pan de cada temporada siempre es para él. Ese año, fue el de Itzel.</p>
+        <p>La noche del 2 de noviembre fue la <span class="gloss" title="noche con velas en el panteón de Mixquic">alumbrada</span>. En Mixquic, el <span class="gloss" title="cementerio">panteón</span> rodea la vieja iglesia de San Andrés, y esa noche las familias iluminan las tumbas con velas, llevan comida y escuchan música hasta tarde. Caminé entre las ofrendas con mi abuela del brazo. En una tumba vi un pan con los huesitos torcidos. Luego otro. Y otro más. Eran los panes de los niños del taller.</p>
+        <p>Mi abuela se detuvo, miró las velas y sonrió.</p>
+        <p>—Ahora sí, mijo —me dijo—, la masa ya es de todos.</p>
+      </div>
+    </div>
+
+    <!-- ============ B2 ============ -->
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p>En San Andrés Mixquic, al sur de la Ciudad de México, octubre huele a <span class="gloss" title="flor del naranjo; tiene un olor especial">azahar</span>. Lo digo con conocimiento de causa: desde que tengo memoria, mis octubres empiezan a las cinco de la mañana, entre costales de harina, cáscaras de naranja y el calor del <span class="gloss" title="lugar muy caliente donde se cocina el pan">horno</span> de la panadería que fundó mi abuela hace más de sesenta años. Me llamo Tomás Galicia, tengo cuarenta años y soy panadero, como ella. Doña Chabela tiene noventa y uno y, aunque ya no amasa, sigue llegando cada mañana a sentarse en su silla junto al horno, desde donde inspecciona cada charola con una mirada que haría temblar a cualquier chef de televisión.</p>
+        <p>Durante décadas, en esta panadería rigió una sola ley, que en el pueblo todos conocían: "Nadie toca mi <span class="gloss" title="harina, huevo y mantequilla antes del horno">masa</span>." Ni mis tíos, ni mi madre, ni mucho menos yo. Me pasé la infancia sentado en un banquito, mirando cómo sus manos enrollaban canillas a una velocidad imposible, sin que me dejara acercarme.</p>
+        <p>Hasta que una mañana, cuando yo tenía doce años, me puso un pedacito de masa en la palma de la mano, sin ceremonia.</p>
+        <p>—Ándale, Tomás. Hazme un huesito.</p>
+        <p>Le eché todas las ganas del mundo, y aun así me salió un engendro: torcido, panzón de un lado y flaquito del otro, más parecido a un gusano que a un hueso. Mi abuela soltó una carcajada que se oyó hasta la plaza. Luego, ya más seria, me tomó las manos, me enseñó a abrir los dedos sobre la masa para que se marcaran los nudillos del hueso y, mientras trabajábamos, me fue explicando, pieza por pieza, lo que yo hoy repito cada octubre:</p>
+        <p>—El pan es redondo porque la vida es un círculo, mijo: se nace, se muere y se vuelve. Los cuatro huesitos van en cruz, y son los huesos de nuestros difuntos. La bolita de arriba es el cráneo; hay quien dice que es una lágrima, pero en esta casa no lloramos tanto. Y el azahar es para el recuerdo: para que el pan huela a los que ya se fueron. Cada pan cuenta una historia. Por eso la forma no se toca.</p>
+        <p>Aquella primera canilla, dura como piedra y seca como un hueso de verdad, la conservo en un frasco de vidrio en la repisa de arriba del horno. No es un adorno: es un recordatorio de que todos empezamos así.</p>
+        <p>Con los años aprendí también que esa forma "que no se toca" tiene una historia larguísima. Mucho antes de que llegaran los españoles, en estas tierras ya se ofrecían a los muertos y a los dioses panes de maíz tostado y de amaranto con miel; había incluso uno, el papalotlaxcalli, el "pan de mariposa". El trigo llegó con la Conquista, y con los siglos ambas tradiciones se fueron mezclando hasta dar con este pan redondo, coronado de huesitos, que hoy no puede faltar en una <span class="gloss" title="altar con fotos, flores y comida para los muertos">ofrenda</span> mexicana. Mi abuela no lo inventó, claro. Pero ella me lo entregó, y yo lo hago tal cual: cada canilla formada a mano, cuatro en cruz, la bolita al centro y, al salir del horno, una capa de mantequilla y azúcar.</p>
+        <p>Por eso me costó tanto proponerle mi idea. Me había fijado en que muchos niños del pueblo, que crecen rodeados de ofrendas, jamás habían metido las manos en la masa. Quería abrir un taller los domingos para que cada uno formara los huesitos del pan para la ofrenda de su propia familia. Gratis, de mi bolsillo. Se lo planteé una tarde, mientras ella revisaba las charolas.</p>
+        <p>—¿Niños? ¿Aquí? ¿Con mi masa? —me miró como si le hubiera propuesto vender la casa—. Ni loca, Tomás. Nadie toca mi masa.</p>
+        <p>Lo abrí de todos modos. El primer domingo llegaron doce niños, y en diez minutos había harina en las mesas, en el piso, en las pestañas y hasta en el gato. Los huesitos salían como les daba la gana: torcidos, panzones, partidos a la mitad. Mi abuela observaba desde su silla con los brazos cruzados y la boca apretada. Aguantó, calculo, media hora. Después se levantó sin decir palabra, arrimó un banco a la mesa de los niños y empezó a corregir canillas una por una, abriéndoles los dedos sobre la masa como había hecho conmigo y contándoles lo del círculo, la cruz, la bolita y el azahar. Palabra por palabra.</p>
+        <p>Al final de la tarde, Itzel, una niña de siete años, sacó del horno el pan más chueco que he visto en mi vida. Los huesitos se le habían esponjado en el horno hasta perder toda forma de hueso; más bien parecía una araña con sobrepeso. Un par de niños soltaron la risa, y a Itzel se le llenaron los ojos de lágrimas.</p>
+        <p>Sin pensarlo mucho, bajé el frasco de la repisa, lo destapé y le puse en la mano mi primera canilla, la del gusano.</p>
+        <p>—Mira, Itzel. Esta la hice yo, a los doce años. Mi abuela se rio tanto que casi se cae de la silla. Y ya ves: hoy el panadero soy yo.</p>
+        <p>Itzel le dio vueltas a mi canilla entre los dedos, la comparó con su pan y, muy seria, dictaminó que la mía estaba peor. Todos nos reímos, ella la primera. Fue entonces cuando mi abuela se acercó y tomó el pan de Itzel con las dos manos, como si fuera de cristal.</p>
+        <p>—Este va en la ofrenda de Ramiro —sentenció.</p>
+        <p>Ramiro era mi abuelo. Murió hace muchos años, y en un rincón de la panadería le tenemos una ofrendita con su foto. Por tradición, el primer pan de cada temporada es para él. Aquel año, por primera vez en la historia de la familia, no lo hizo ninguno de nosotros.</p>
+        <p>La noche del 2 de noviembre fue la <span class="gloss" title="noche con velas en el panteón de Mixquic">alumbrada</span>. En Mixquic, el <span class="gloss" title="cementerio">panteón</span> rodea la vieja iglesia de San Andrés, y esa noche las familias encienden cientos de velas sobre las tumbas, llevan la comida favorita de sus difuntos y se quedan hasta tarde, entre rezos, pláticas y música. Caminé entre las ofrendas con mi abuela colgada de mi brazo. En una tumba distinguí un pan con los huesitos chuecos. Luego otro. Y otro más. Los panes de los niños del taller estaban repartidos por todo el panteón.</p>
+        <p>Mi abuela se detuvo frente a una de esas tumbas, miró las velas un buen rato y sonrió.</p>
+        <p>—Ahora sí, mijo —me dijo—, la masa ya es de todos.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">el pan de muerto</span> — "bread of the dead," sweet round loaf</div>
+      <div><span class="term">los huesitos / las canillas</span> — dough "bones" on top of the bread</div>
+      <div><span class="term">la bolita</span> — small dough ball on top (the skull)</div>
+      <div><span class="term">el azahar</span> — orange blossom</div>
+      <div><span class="term">la masa</span> — dough</div>
+      <div><span class="term">amasar / enrollar</span> — to knead / to roll</div>
+      <div><span class="term">el horno</span> — oven</div>
+      <div><span class="term">la charola</span> — baking tray (Mexico)</div>
+      <div><span class="term">el taller</span> — workshop</div>
+      <div><span class="term">la ofrenda</span> — Day of the Dead altar</div>
+      <div><span class="term">la alumbrada</span> — candle-lit night at Mixquic's cemetery (Nov 2)</div>
+      <div><span class="term">torcido / chueco</span> — crooked</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>mi abuela siempre decía…</span>
+      <span>representa… / significa…</span>
+      <span>nadie toca mi masa</span>
+      <span>esto nunca cambia</span>
+      <span>formamos los huesitos</span>
+      <span>con las manos</span>
+      <span>para la ofrenda</span>
+      <span>por primera vez</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Qué representa cada parte del pan de muerto: el círculo, los huesitos, la bolita y el azahar?</div>
+    <div class="comp-q"><span class="num">2.</span>En la panadería de Tomás, ¿qué nunca cambia y qué es nuevo?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — Los Huesitos de Tomás</h3>
+
+    <h4>Colección</h4>
+    <p>Panorama Cultural → La Receta de la Abuela → Historia 10 (nueva última historia del libro, después de El Hudut de Lucas).</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Gastronomía y tradición cultural · Las celebraciones (Día de Muertos) · Los oficios (el panadero). El pan de muerto clásico de la Ciudad de México y el significado de cada una de sus partes.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (texto fuente, antes de nivelar hacia abajo).</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <ul>
+      <li>Comprender una narración en primera persona sobre un oficio familiar y explicar qué simboliza cada parte del pan de muerto.</li>
+      <li>Describir un proceso paso a paso en presente (formo, pongo, abro los dedos).</li>
+      <li>Expresar significado y reglas: "representa…", "significa…", "nunca cambia", "nadie toca…".</li>
+      <li>Narrar un recuerdo en pasado (B1/B2) y contar lo que alguien decía ("mi abuela siempre decía que…").</li>
+      <li>Cultural: comparar una tradición familiar que "nunca cambia" con un toque nuevo que la mantiene viva.</li>
+    </ul>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>mi abuela siempre decía… · representa… / significa… · nadie toca mi masa · esto nunca cambia · formamos los huesitos · con las manos · para la ofrenda · por primera vez.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> ≈ 360 palabras. Solo presente, oraciones cortas; cada parte del pan con "representa…". Recuerdo de la infancia como bloque fijo ("De niño, yo solo miraba"). Mucha repetición de "nadie toca mi masa" y "esto nunca cambia".<br>
+    <strong>A2:</strong> ≈ 540 palabras. Marco en presente con imperfecto para los recuerdos (era, tenía, miraba). Contexto histórico sencillo: panes de maíz y amaranto antes de los españoles; el trigo llegó con ellos.<br>
+    <strong>B1:</strong> ≈ 740 palabras. Narración en pasado de dos escenas: la primera canilla a los doce años y el primer taller de los domingos (con la canilla del frasco que Tomás le enseña a Itzel). Contraste pretérito / imperfecto; el significado del pan en las palabras de doña Chabela.<br>
+    <strong>B2:</strong> ≈ 1,070 palabras. Registro cercano al español de la Ciudad de México: "con conocimiento de causa", "le eché todas las ganas", "de mi bolsillo", "ni loca", "como les daba la gana", "chueco". Vocabulario de panadería (canillas, charolas, repisa) y un poco de historia (papalotlaxcalli, el trigo de la Conquista).</p>
+
+    <h4>Contenido sensible</h4>
+    <p>Bajo. La abuela está viva: es una historia cálida y con humor sobre un oficio familiar. La muerte aparece solo de forma suave: el simbolismo del pan (huesos, cráneo) se presenta como celebración de la vida y la memoria, y el abuelo Ramiro aparece solo en la ofrenda de la panadería, sin describir su muerte. Las familias en Belice tienen creencias distintas: presente el Día de Muertos como una tradición mexicana para conocer, no como una práctica que los estudiantes deben adoptar.</p>
+    <p>Datos reales y documentados: el simbolismo del pan (círculo = ciclo de la vida; huesitos o canillas = huesos de los difuntos; bolita = cráneo, o una lágrima según algunos; azahar = recuerdo); los panes rituales de maíz y amaranto antes de la Conquista, incluido el papalotlaxcalli; el trigo traído por los españoles; San Andrés Mixquic como pueblo originario de la alcaldía Tláhuac, con su panteón alrededor de la iglesia y la alumbrada del 2 de noviembre (velas, comida y música en las tumbas). Tomás Galicia, doña Chabela, Itzel y la panadería son ficticios.</p>
+
+    <h4>Respuestas esperadas (comprensión)</h4>
+    <p>1. El círculo representa la vida (el ciclo de la vida); los huesitos, los huesos de los muertos; la bolita, el cráneo; el azahar, el recuerdo.<br>
+    2. Nunca cambia la forma del pan y su significado, y cada huesito se sigue formando a mano. Lo nuevo es el taller de los domingos, donde los niños hacen su propio pan para la ofrenda de su familia.</p>
+
+    <h4>Preguntas extra (discusión o diario)</h4>
+    <p>¿Por qué no dejaba doña Chabela que nadie tocara su masa? ¿Qué pasó con la primera canilla de Tomás? · ¿Por qué crees que doña Chabela escoge el pan más feo del taller para la ofrenda del abuelo Ramiro? (respuesta abierta)</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p><strong>Chef Tomás Galicia</strong> — panadero de San Andrés Mixquic, Ciudad de México, que aprendió de su abuela, doña Chabela, en la panadería que ella fundó. Detalle propio: guarda su primera canilla, torcida, dura y seca, en un frasco de vidrio arriba del horno, "para no olvidar que todos empezamos así".</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>el símbolo</em> — cognado (symbol). Cada parte del pan de muerto es un símbolo, y eso es lo que nunca cambia.</p>
+
+    <h4>Pregunta de Don Pico</h4>
+    <p>En tu familia, ¿hay una tradición o una receta que nunca cambia? Si tú pudieras añadirle algo nuevo, ¿qué añadirías?</p>
+
+    <h4>Lectura en pareja: Día de Muertos</h4>
+    <p><a href="altar_reader_El_Altar_de_Mama_Tona.html">El altar de Mamá Toña</a> (Biblioteca FVR → Leyendas Latinoamericanas, Pátzcuaro, Michoacán): la ofrenda de una familia y el recuerdo de una abuela. Juntas forman una pareja para la semana del Día de Muertos: la ofrenda (Mamá Toña) y el pan que va en ella (Tomás).</p>
+
+    <h4>Nota de continuidad</h4>
+    <p>Se añade al final del libro, después de El Hudut de Lucas (Historia 9). Segunda historia de México en el libro, junto a El Mole de Rosario (Historia 4): Rosario cambia la tradición escribiendo la receta; Tomás la cambia abriendo la masa a otros. Para no repetir El Pilón de Ismael (un objeto heredado) ni El Hudut de Lucas (un proceso a mano), aquí lo que nunca cambia es una forma y su significado, y el toque moderno es compartir la masa, no un plato nuevo.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes(event)">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      stopListen();
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  document.getElementById('teacherModal').addEventListener('click', (e) => {
+    if (e.target.id === 'teacherModal') { e.target.classList.remove('open'); }
+  });
+
+  function copyNotes(ev){
+    const modal = document.querySelector('#teacherModal .modal');
+    const btn = ev.target;
+    navigator.clipboard.writeText(modal.innerText).then(()=>{
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+
+  // ---- Narración (TTS) — lee el nivel activo, párrafo por párrafo ----
+  const RATES = {A1:0.8, A2:0.88, B1:0.95, B2:1.0};
+  let listening = false;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function resetBtn(){
+    const btn = document.getElementById('listenBtn');
+    listening = false;
+    btn.classList.remove('playing');
+    btn.textContent = '🔊 Escuchar narración';
+  }
+  function stopListen(){
+    if('speechSynthesis' in window) speechSynthesis.cancel();
+    resetBtn();
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    if(listening){ stopListen(); return; }
+    const block = document.querySelector('.level-block.active');
+    const level = block.id.replace('level-','');
+    const paras = [...block.querySelectorAll('.story-text p')].map(p => p.innerText.trim()).filter(Boolean);
+    speechSynthesis.cancel();
+    paras.forEach((text, i) => {
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'es-MX';
+      u.rate = RATES[level] || 0.92;
+      if(spanishVoice) u.voice = spanishVoice;
+      if(i === paras.length - 1){ u.onend = resetBtn; }
+      u.onerror = (e) => { if(e.error !== 'interrupted' && e.error !== 'canceled') resetBtn(); };
+      speechSynthesis.speak(u);
+    });
+    listening = true;
+    const btn = document.getElementById('listenBtn');
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+</script>
+
+</body>
+</html>
