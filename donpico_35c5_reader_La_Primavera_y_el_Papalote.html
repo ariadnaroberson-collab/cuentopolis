@@ -342,7 +342,7 @@ const G = {
   "mapache": "🦝 animal gris con antifaz negro",
   "creativo": "💡 tiene ideas nuevas",
   "papalote": "🪁 vuela en el viento con una cuerda",
-  "orquídea negra": "🌺 la flor nacional de Belice",
+  "orquídea negra": "<svg width=\"22\" height=\"22\" viewBox=\"0 0 40 40\" aria-label=\"orquídea negra\" style=\"vertical-align:middle\"><g stroke=\"#6f8a2e\" stroke-width=\"0.8\" fill=\"#c9dc8f\"><path d=\"M20 20 C14 14 9 9 6 4 C12 7 17 12 20 20Z\"/><path d=\"M20 20 C26 14 31 9 34 4 C28 7 23 12 20 20Z\"/><path d=\"M20 20 C13 22 7 26 3 31 C10 29 16 25 20 20Z\"/><path d=\"M20 20 C27 22 33 26 37 31 C30 29 24 25 20 20Z\"/><path d=\"M20 22 C19 28 19 33 20 38 C21 33 21 28 20 22Z\"/></g><ellipse cx=\"20\" cy=\"15\" rx=\"7\" ry=\"8.5\" fill=\"#2a1030\" stroke=\"#4a1f52\" stroke-width=\"0.8\"/><path d=\"M20 8 V22 M15.5 10 Q17 16 18 21 M24.5 10 Q23 16 22 21\" stroke=\"#7b4a86\" stroke-width=\"0.7\" fill=\"none\"/><circle cx=\"20\" cy=\"21\" r=\"1.6\" fill=\"#e8d66a\"/></svg> la flor nacional de Belice",
   "Belice": "🇧🇿 ¡nuestro país!",
   "vuela": "🪽 se mueve por el aire",
   "alto": "⬆️ muy arriba",
@@ -403,7 +403,7 @@ function renderStory(){
 /* ---------------- COMPREHENSION ---------------- */
 const COMP = [
 { q:'1. ¿Cuál es la estación favorita de Mora?', options:[{emo:'❄️', text:'el invierno', correct:false},{emo:'🌸', text:'la primavera', correct:true},{emo:'☀️', text:'el verano', correct:false}], result:'¡Sí! A Mora le gusta la primavera.' },
-  { q:'2. ¿Qué flor tiene el papalote de Arlo?', options:[{emo:'🌻', text:'un girasol', correct:false},{emo:'🌺', text:'una orquídea negra', correct:true}], result:'¡Muy bien! Tiene una orquídea negra.' },
+  { q:'2. ¿Qué flor tiene el papalote de Arlo?', options:[{emo:'🌻', text:'un girasol', correct:false},{emo:'<svg width="54" height="54" viewBox="0 0 40 40" aria-label="orquídea negra" style="vertical-align:middle"><g stroke="#6f8a2e" stroke-width="0.8" fill="#c9dc8f"><path d="M20 20 C14 14 9 9 6 4 C12 7 17 12 20 20Z"/><path d="M20 20 C26 14 31 9 34 4 C28 7 23 12 20 20Z"/><path d="M20 20 C13 22 7 26 3 31 C10 29 16 25 20 20Z"/><path d="M20 20 C27 22 33 26 37 31 C30 29 24 25 20 20Z"/><path d="M20 22 C19 28 19 33 20 38 C21 33 21 28 20 22Z"/></g><ellipse cx="20" cy="15" rx="7" ry="8.5" fill="#2a1030" stroke="#4a1f52" stroke-width="0.8"/><path d="M20 8 V22 M15.5 10 Q17 16 18 21 M24.5 10 Q23 16 22 21" stroke="#7b4a86" stroke-width="0.7" fill="none"/><circle cx="20" cy="21" r="1.6" fill="#e8d66a"/></svg>', text:'una orquídea negra', correct:true}], result:'¡Muy bien! Tiene una orquídea negra.' },
 ];
 const answered = {};
 function renderComp(){
