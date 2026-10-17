@@ -227,9 +227,9 @@
       <div class="rail-title">🌎 La pasarela en el mapa</div>
       <div class="rail-meta-row"><span>huipil</span><b>Guatemala</b></div>
       <div class="rail-meta-row"><span>guayabera</span><b>Belice</b></div>
-      <div class="rail-meta-row"><span>pollera</span><b>Panamá</b></div>
+      <div class="rail-meta-row"><span>corona de flores</span><b>México</b></div>
       <div class="rail-meta-row"><span>poncho</span><b>Perú</b></div>
-      <div class="rail-meta-row"><span>rebozo</span><b>México</b></div>
+      <div class="rail-meta-row"><span>pollera</span><b>Panamá</b></div>
       <div class="rail-meta-row"><span>sombrero vueltiao</span><b>Colombia</b></div>
       <div class="rail-meta-row"><span>ropa garífuna</span><b>Belice</b></div>
     </div>
@@ -304,7 +304,7 @@
 
       <h4>Preguntas orales extra</h4>
       <ul>
-        <li>¿De dónde es la pollera? (de Panamá)</li>
+        <li>¿De dónde es la pollera de Iggy? (de Panamá)</li>
         <li>¿Cómo es Nico? (dos opciones a la vez: alegre · triste / café · verde)</li>
       </ul>
 
@@ -314,7 +314,7 @@
         <li><b>Guayabera:</b> camisa ligera con bolsillos y pliegues, de Cuba, México y Belice; para ocasiones especiales.</li>
         <li><b>Pollera:</b> vestido nacional de Panamá, blanco con bordados de colores; para festivales.</li>
         <li><b>Poncho:</b> manta de lana con abertura para la cabeza, de los Andes (Perú, Bolivia, Ecuador).</li>
-        <li><b>Rebozo:</b> chal largo de las mujeres de México, tejido a mano, con flecos; para abrigarse, cargar bebés y para las fiestas.</li>
+        <li><b>Corona de flores:</b> en Oaxaca (Istmo de Tehuantepec, México), las mujeres llevan una corona o tocado de flores con su traje de fiesta. Mora la lleva porque una mariposa no puede llevar vestido.</li>
         <li><b>Sombrero vueltiao:</b> símbolo de Colombia, tejido por el pueblo zenú con caña flecha, blanco y negro.</li>
         <li><b>Ropa garífuna:</b> amarilla, blanca y negra (colores de la bandera garífuna), en celebraciones como el Día del Asentamiento Garífuna, 19 de noviembre.</li>
       </ul>
@@ -331,7 +331,7 @@
       <div class="flag-box">Cada prenda se presenta con su nombre real y su país, como la ropa que la gente lleva para celebrar su cultura; nunca como disfraz ni como chiste. Evitar la palabra “disfraz”: usar “ropa típica” o “ropa tradicional”. Belice aparece dos veces (guayabera y ropa garífuna).</div>
 
       <h4>Nota de continuidad</h4>
-      <div class="flag-box">El huipil, la pollera y el rebozo son ropa de mujer: los llevan Chica, Mora e Iggy (Iggy es hembra; las iguanas verdes son las hembras y los garrobos anaranjados son los machos). Nico es un coatí con su canasta de fruta.</div>
+      <div class="flag-box">El huipil y la pollera son ropa de mujer: los llevan Chica e Iggy; Mora, por ser mariposa, lleva solo una corona de flores (Iggy es hembra; las iguanas verdes son las hembras y los garrobos anaranjados son los machos). Nico es un coatí con su canasta de fruta.</div>
     </div>
   </div>
 </div>
@@ -350,7 +350,7 @@ const G = {
   "poncho": "🧣 manta de lana para el frío",
   "Perú": "🇵🇪 país con montañas altas",
   "montañas": "⛰️ tierra muy, muy alta",
-  "rebozo": "🧣 chal largo de México",
+  "corona de flores": "💐 flores que se llevan en la cabeza",
   "sombrero": "👒 ropa para la cabeza",
   "Colombia": "🇨🇴 país en Sudamérica",
   "garífuna": "🥁 pueblo y cultura de Belice",
@@ -375,15 +375,15 @@ const PAGES = [
   { lines:[`Arlo lleva una ${g('guayabera')} de Belice.`,'La guayabera es blanca.','—¡Me gusta su guayabera! —dice Mora.'],
     alt:'Arlo con una guayabera blanca; Mora aplaude.',
     circle:['¿Qué lleva Arlo?','¿La guayabera es de Belice? ¿Sí o no?','¿De qué color es?','¿A Mora le gusta la guayabera?'] },
-  { lines:[`Mora lleva una ${g('pollera')} de ${g('Panamá')}.`,'La pollera es blanca y muy bonita.'],
-    alt:'Mora con una pequeña pollera blanca con bordados de colores.',
-    circle:['¿Qué lleva Mora?','¿De dónde es la pollera?','¿La pollera es blanca o negra?'] },
+  { lines:[`Mora lleva una ${g('corona de flores')} de México.`,'¡Es de muchos colores y muy bonita!'],
+    alt:'Mora vuela con una pequeña corona de flores entre las antenas.',
+    circle:['¿Qué lleva Mora?','¿La corona es de México o de Perú?','¿Es de un color o de muchos colores?'] },
   { lines:[`Teo lleva un ${g('poncho')} de ${g('Perú')}.`,`En las ${g('montañas')} de Perú hace frío.`],
     alt:'Teo con un poncho de lana de colores; detrás, las montañas.',
     circle:['¿Qué lleva Teo?','¿El poncho es de Perú o de Panamá?','¿En las montañas de Perú hace frío o calor?','¿En Belice hace frío o calor?'] },
-  { lines:[`Iggy lleva un ${g('rebozo')} de México.`,'Es largo y de muchos colores.'],
-    alt:'Iggy con un rebozo largo de colores sobre los hombros.',
-    circle:['¿Qué lleva Iggy?','¿El rebozo es de México o de Colombia?','¿Es largo o corto?'] },
+  { lines:[`Iggy lleva una ${g('pollera')} de ${g('Panamá')}.`,'La pollera es blanca y muy bonita.'],
+    alt:'Iggy con una pollera blanca completa con bordados de flores.',
+    circle:['¿Qué lleva Iggy?','¿De dónde es la pollera?','¿La pollera es blanca o negra?'] },
   { lines:[`Bruno lleva un ${g('sombrero')} de ${g('Colombia')}.`,'El sombrero es blanco y negro.'],
     alt:'Bruno con un sombrero vueltiao blanco y negro, saludando.',
     circle:['¿Qué lleva Bruno?','¿De dónde es el sombrero?','¿El sombrero es blanco y negro o rojo y verde?','➜ Momento de gramática: blanco / blanca'] },
