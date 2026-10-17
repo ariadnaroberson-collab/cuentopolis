@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Adónde vas, mariposa? — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c1024; --ink-2:#12172e; --ink-3:#1a2040;
+    --lamp:#e8a94c; --lamp-dim:#c98a34; --coral:#e8735c;
+    --parchment:#f3e9d6; --parchment-dim:#e4d6b8; --page:#faf3e4;
+    --slate:#8891a8; --slate-dim:#5c6480;
+    --leaf:#5fa876; --leaf-dim:#3d7d55;
+    --line: rgba(232,169,76,0.16);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--ink);color:var(--parchment);font-family:'Public Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:'Public Sans',sans-serif;cursor:pointer;}
+
+  /* ---------- TOP BAR ---------- */
+  .toolbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:16px;padding:12px 24px;background:rgba(9,12,26,0.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .back-link{display:flex;align-items:center;gap:6px;font-size:13.5px;color:var(--slate);border:1px solid var(--line);padding:7px 12px;border-radius:20px;background:rgba(255,255,255,0.03);}
+  .back-link:hover{color:var(--parchment);border-color:var(--lamp-dim);}
+  .toolbar-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;}
+  .toolbar-series{font-size:11px;color:var(--slate);}
+  .toolbar-level{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:1.5px solid var(--lamp);color:var(--lamp);border-radius:5px;padding:2px 7px;}
+  .toolbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .tool-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;transition:background .15s, border-color .15s;}
+  .tool-btn:hover{background:rgba(255,255,255,0.08);border-color:var(--lamp-dim);}
+  .tool-btn.on{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+  .tool-btn.teacher{border-color:var(--leaf-dim);color:var(--leaf);}
+  .tool-btn.teacher:hover{background:rgba(95,168,118,0.12);}
+  .tool-btn.project{border-color:var(--lamp-dim);color:var(--lamp);}
+  .font-controls{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  .font-controls button{background:rgba(255,255,255,0.03);color:var(--parchment);border:none;padding:8px 12px;font-size:13px;}
+  .font-controls button:hover{background:rgba(255,255,255,0.1);}
+  .font-controls .divider{width:1px;background:var(--line);align-self:stretch;}
+  .progress-rail{height:3px;background:var(--ink-3);position:sticky;top:57px;z-index:39;}
+  .progress-rail-fill{height:100%;background:linear-gradient(90deg,var(--lamp),var(--coral));width:0%;transition:width .1s linear;}
+
+  .level-strip{display:flex;align-items:center;gap:10px;justify-content:center;padding:18px 24px 4px;flex-wrap:wrap;}
+  .level-strip-label{font-size:12.5px;color:var(--slate);}
+  .level-pill{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:6px 13px;border-radius:20px;background:var(--lamp);color:#26160a;border:1.5px solid var(--lamp);}
+
+  /* ---------- LAYOUT ---------- */
+  .reader-layout{display:flex;justify-content:center;gap:28px;padding:20px 24px 80px;max-width:1180px;margin:0 auto;}
+  .page-wrap{flex:1 1 680px;max-width:680px;}
+  .page{background:var(--page);color:#2c2412;border-radius:14px;padding:44px 52px;box-shadow:0 30px 60px rgba(0,0,0,0.4);font-family:'Source Serif 4', serif;line-height:1.7;position:relative;}
+  .page::before{content:'';position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--lamp),var(--coral));border-radius:14px 14px 0 0;}
+  .story-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lamp-dim);margin-bottom:6px;}
+  .story-heading{font-family:'Fraunces',serif;font-size:30px;margin:0 0 6px;color:#241d0e;}
+  .story-subheading{font-family:'Public Sans',sans-serif;font-size:13.5px;color:#8a7a52;margin-bottom:26px;font-weight:600;}
+
+  /* ---------- PICTURE PAGES ---------- */
+  .spage{margin:0 0 34px;}
+  .spage-num{font-family:'Space Mono',monospace;font-size:10.5px;color:#a8966a;letter-spacing:1px;margin-bottom:8px;}
+  .pic{width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#efe4cc;border:1.5px dashed #d2bf91;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+  .pic img{width:100%;height:100%;object-fit:cover;display:block;}
+  .pic.has-img{border:none;}
+  .pic-ph{text-align:center;padding:18px;font-family:'Public Sans',sans-serif;color:#9a8758;font-size:12.5px;line-height:1.5;max-width:420px;}
+  .pic-ph .ico{font-size:30px;display:block;margin-bottom:6px;}
+  .lines p{margin:0 0 6px;font-size:1em;}
+  .story-body{font-size:22px;}
+
+  .gloss{border-bottom:2px dotted var(--coral);cursor:help;position:relative;color:#241d0e;font-weight:600;}
+  .gloss:hover, .gloss.tapped{background:rgba(232,115,92,0.16);}
+  .gloss-tooltip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--ink-2);color:var(--parchment);border:1px solid var(--line);border-radius:8px;padding:9px 13px;font-family:'Public Sans',sans-serif;font-size:14px;font-weight:500;line-height:1.4;white-space:nowrap;box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:10;}
+  .gloss-tooltip .arrow{position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink-2);}
+  .gloss:hover .gloss-tooltip, .gloss.tapped .gloss-tooltip{display:block;}
+
+  /* ---------- COMPREHENSION (picture + word) ---------- */
+  .comp-check{margin-top:8px;padding-top:28px;border-top:1px dashed var(--parchment-dim);font-family:'Public Sans',sans-serif;}
+  .comp-title{font-family:'Fraunces',serif;font-size:21px;margin:0 0 4px;color:#241d0e;}
+  .comp-sub{font-size:13px;color:#6b5e42;margin-bottom:18px;}
+  .comp-q{font-size:18px;font-weight:700;color:#241d0e;margin-bottom:12px;}
+  .comp-options{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px;}
+  .comp-opt{flex:1 1 140px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 10px;border-radius:12px;border:2px solid #d8cba3;background:#fffaf0;font-size:16px;font-weight:600;color:#3a3120;}
+  .comp-opt .emo{font-size:38px;line-height:1;}
+  .comp-opt:hover{border-color:var(--coral);}
+  .comp-opt.correct{background:#dff1e2;border-color:#6fae7a;}
+  .comp-opt.incorrect{background:#f6dcd6;border-color:var(--coral);}
+  .comp-result{display:none;font-size:15px;color:#4b6b4f;margin-top:-10px;margin-bottom:16px;font-weight:600;}
+  .finish-bar{display:flex;align-items:center;gap:14px;margin-top:24px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:8px;font-size:14px;font-weight:600;border:none;transition:transform .12s;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--lamp);color:#26160a;}
+  .btn-primary:hover{background:#f0b768;}
+  .btn-outline{background:transparent;border:1.5px solid #c9b98a;color:#4a3f26;}
+
+  /* ---------- SIDE RAIL ---------- */
+  .side-rail{flex:0 0 250px;display:flex;flex-direction:column;gap:16px;}
+  .rail-card{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .rail-title{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--slate);margin-bottom:10px;font-weight:600;display:flex;align-items:center;gap:6px;}
+  .word-chip{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .word-chip:last-child{border-bottom:none;}
+  .word-en{color:var(--parchment);font-weight:600;}
+  .word-def{color:var(--slate);font-size:11.5px;}
+  .save-word{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--slate);font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .save-word.saved{background:var(--coral);border-color:var(--coral);color:#2a0f0a;}
+  .rail-meta-row{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--slate);padding:5px 0;}
+  .rail-meta-row b{color:var(--parchment);font-weight:600;text-align:right;}
+  .listen-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--parchment);font-size:13px;}
+  .listen-btn:hover{border-color:var(--lamp-dim);}
+  .listen-btn.playing{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
+  .pico-q{font-size:13px;color:var(--parchment);line-height:1.55;padding:12px;background:rgba(232,169,76,0.06);border-radius:8px;border-left:3px solid var(--lamp);font-style:italic;}
+
+  /* ---------- TEACHER NOTES MODAL ---------- */
+  .modal-overlay{position:fixed;inset:0;background:rgba(6,8,18,0.78);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;max-width:620px;width:100%;max-height:86vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.6);}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--ink-2);}
+  .modal-head h3{margin:0;font-size:16.5px;color:var(--leaf);}
+  .modal-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid var(--line);color:var(--parchment);font-size:13px;}
+  .copy-btn{padding:6px 10px;border-radius:8px;border:1px solid var(--leaf-dim);background:transparent;color:var(--leaf);font-size:12px;margin-left:auto;}
+  .modal-body{padding:20px 22px 26px;font-size:13.5px;line-height:1.7;color:#c9cfe0;}
+  .modal-body h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--leaf);margin:18px 0 6px;}
+  .modal-body h4:first-child{margin-top:0;}
+  .modal-body ul{margin:4px 0;padding-left:20px;}
+  .modal-body table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .modal-body td{border-bottom:1px solid rgba(255,255,255,0.06);padding:5px 4px;vertical-align:top;}
+  .flag-box{background:rgba(232,115,92,0.08);border:1px solid rgba(232,115,92,0.25);border-radius:8px;padding:10px 12px;font-size:12.5px;color:#e3b3a6;margin-top:6px;}
+
+  /* ---------- PROJECTOR MODE ---------- */
+  .proj{position:fixed;inset:0;z-index:200;background:#0a0d1c;display:none;flex-direction:column;}
+  .proj.open{display:flex;}
+  .proj-top{display:flex;align-items:center;gap:10px;padding:10px 18px;color:var(--slate);font-size:13px;}
+  .proj-top .count{font-family:'Space Mono',monospace;}
+  .proj-top .sp{flex:1;}
+  .proj-btn{padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,0.04);color:var(--parchment);font-size:13px;}
+  .proj-btn.on{background:var(--leaf-dim);border-color:var(--leaf);}
+  .proj-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 80px 10px;min-height:0;}
+  .proj-pic{width:100%;max-width:1100px;flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;}
+  .proj-pic img{max-width:100%;max-height:100%;border-radius:14px;object-fit:contain;}
+  .proj-pic .pic-ph{color:var(--slate);font-size:16px;border:2px dashed var(--line);border-radius:14px;padding:40px;}
+  .proj-text{font-family:'Source Serif 4',serif;color:var(--page);font-size:clamp(24px,3.4vw,44px);line-height:1.3;text-align:center;padding:16px 10px 8px;max-width:1100px;}
+  .proj-text p{margin:0 0 4px;}
+  .proj-text .gloss{color:var(--page);border-bottom-color:var(--lamp);}
+  .proj-text .gloss-tooltip{font-size:18px;}
+  .proj-nav{position:absolute;top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,0.06);color:var(--parchment);font-size:24px;}
+  .proj-nav.prev{left:14px;} .proj-nav.next{right:14px;}
+  .circle-panel{display:none;position:absolute;right:18px;top:58px;width:min(380px,90vw);background:var(--ink-2);border:1px solid var(--leaf-dim);border-radius:12px;padding:14px 16px;font-size:15px;color:#d9ddea;box-shadow:0 20px 40px rgba(0,0,0,0.5);}
+  .circle-panel.open{display:block;}
+  .circle-panel h5{margin:0 0 6px;font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--leaf);}
+  .circle-panel ul{margin:0;padding-left:18px;line-height:1.55;}
+
+  @media(max-width:920px){
+    .reader-layout{flex-direction:column;align-items:center;}
+    .side-rail{flex:none;width:100%;max-width:680px;}
+    
+    .page{padding:30px 22px;}
+    .story-body{font-size:20px;}
+    .proj-stage{padding:0 14px 10px;}
+    .proj-nav{top:auto;bottom:16px;transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <a class="back-link" href="don-pico.html">← Don Pico</a>
+  <div>
+    <div class="toolbar-title">¿Adónde vas, mariposa?</div>
+    <div class="toolbar-series">Don Pico nos enseña sobre… · Español 3–5 · Cuento 4</div>
+  </div>
+  <span class="toolbar-level">A1</span>
+  <div class="toolbar-right">
+    <div class="font-controls">
+      <button onclick="changeFont(-1)" title="Texto más pequeño">A−</button>
+      <div class="divider"></div>
+      <button onclick="changeFont(1)" title="Texto más grande">A+</button>
+    </div>
+    <button class="tool-btn on" id="glossToggle" onclick="toggleGloss()">🔤 Glosario: Activado</button>
+    <button class="tool-btn" id="nightToggle" onclick="toggleNight()">🌙 Luz de lámpara</button>
+    <button class="tool-btn project" onclick="openProjector(0)">📽 Modo proyector</button>
+    <button class="tool-btn teacher" onclick="openTeacherNotes()">🎓 Notas del maestro</button>
+  </div>
+</div>
+<div class="progress-rail"><div class="progress-rail-fill" id="progressFill"></div></div>
+
+<div class="level-strip">
+  <span class="level-strip-label">Nivel:</span>
+  <span class="level-pill">A1</span>
+  <span class="level-strip-label" style="margin-left:6px;">— un cuento corto para escuchar, mirar y hablar</span>
+</div>
+
+<div class="reader-layout">
+  <div class="page-wrap">
+    <div class="page" id="pageContent">
+      <div class="story-eyebrow">Don Pico nos enseña sobre el otoño · Español 3–5</div>
+      <h1 class="story-heading">¿Adónde vas, mariposa?</h1>
+      <div class="story-subheading">Cuento 4 — El otoño y el invierno</div>
+      <div class="story-body" id="storyBody"><!-- filled by JS --></div>
+
+      <div class="comp-check">
+        <div class="comp-title">Chequeo rápido</div>
+        <div class="comp-sub">Escucha la pregunta y toca la respuesta.</div>
+        <div id="compContainer"></div>
+        <div class="finish-bar">
+          <button class="btn btn-primary" id="finishBtn" onclick="finishStory()">✓ Marcar como completado</button>
+          <a class="btn btn-outline" href="don-pico.html">Volver a Don Pico</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="side-rail">
+    <div class="rail-card">
+      <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar el cuento</button>
+    </div>
+    <div class="rail-card">
+            <div class="rail-title">Datos del cuento</div>
+      <div class="rail-meta-row"><span>Nivel</span><b>A1</b></div>
+      <div class="rail-meta-row"><span>Lectura en voz alta</span><b>3–4 min</b></div>
+      <div class="rail-meta-row"><span>Lugar</span><b>La Gran Ceiba y Canadá</b></div>
+      <div class="rail-meta-row"><span>Estaciones</span><b>Otoño e invierno</b></div>
+      <div class="rail-meta-row"><span>También para</span><b>K–2 (escuchar)</b></div>
+    </div>
+    <div class="rail-card">
+      <div class="rail-title">🦜 La Pregunta de Don Pico</div>
+      <div class="pico-q">“¿Adónde vas tú en las vacaciones?”</div>
+    </div>
+    <div class="rail-card">
+      <div class="rail-title">Banco de palabras — este cuento</div>
+      <div id="wordBank"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTOR MODE -->
+<div class="proj" id="proj">
+  <div class="proj-top">
+    <span class="count" id="projCount">1 / 9</span>
+    <span class="sp"></span>
+    <button class="proj-btn" onclick="speakPage()">🔊 Leer página</button>
+    <button class="proj-btn" id="circleBtn" onclick="toggleCircle()">🎓 Preguntas para circular</button>
+    <button class="proj-btn" onclick="closeProjector()">✕ Salir</button>
+  </div>
+  <div class="proj-stage">
+    <div class="proj-pic" id="projPic"></div>
+    <div class="proj-text" id="projText"></div>
+  </div>
+  <button class="proj-nav prev" onclick="projGo(-1)" aria-label="Página anterior">‹</button>
+  <button class="proj-nav next" onclick="projGo(1)" aria-label="Página siguiente">›</button>
+  <div class="circle-panel" id="circlePanel"><h5>Preguntas para circular</h5><ul id="circleList"></ul></div>
+</div>
+
+<!-- TEACHER NOTES MODAL -->
+<div class="modal-overlay" id="teacherModal" onclick="if(event.target===this) closeTeacherNotes()">
+  <div class="modal">
+    <div class="modal-head"><h3>🎓 Notas del maestro — Cuento 4</h3><button class="copy-btn" onclick="copyNotes(this)">📋 Copiar notas</button><button class="modal-close" onclick="closeTeacherNotes()">✕</button></div>
+    <div class="modal-body" id="notesBody">
+      <h4>Unidad curricular</h4>
+      <div>Español 3–5 · Cuento 4 · Estaciones: el otoño y el invierno · la ropa de invierno · la migración · Canadá y Belice · Nivel A1 (único)</div>
+
+      <h4>Objetivos (Puedo…)</h4>
+      <ul>
+        <li>Puedo nombrar dos estaciones: el otoño y el invierno.</li>
+        <li>Puedo decir qué tiempo hace en una estación: “En el invierno hace frío. Hay nieve.”</li>
+        <li>Puedo decir qué ropa se necesita en el invierno: “Necesita un abrigo.”</li>
+        <li>Puedo preguntar y decir adónde va alguien: “¿Adónde vas?” “Va a México.”</li>
+        <li>Puedo comparar: “En Belice no hay nieve.”</li>
+      </ul>
+
+      <h4>Vocabulario nuevo (7) y gestos TPR</h4>
+      <table>
+        <tr><td>el otoño</td><td>dedos que caen despacio como hojas</td></tr>
+        <tr><td>el invierno</td><td>abrazarse y temblar mucho</td></tr>
+        <tr><td>la nieve</td><td>dedos que bajan como copos</td></tr>
+        <tr><td>el abrigo</td><td>ponerse un abrigo largo</td></tr>
+        <tr><td>la bufanda</td><td>enrollarse una bufanda</td></tr>
+        <tr><td>los guantes</td><td>ponerse guantes dedo por dedo</td></tr>
+        <tr><td>el mapa</td><td>abrir un papel grande</td></tr>
+      </table>
+
+      <h4>Estructuras de alta frecuencia</h4>
+      <div>¿Adónde vas? / Voy a ___ / Va a ___ · En el invierno hace frío · Hay nieve / No hay nieve · Necesitan ___ · … porque ___</div>
+
+      <h4>Momento de gramática (30 seg)</h4>
+      <div>Después de la página 5: “<u>En el</u> otoño…” y “<u>En el</u> invierno…” = durante esa estación. Siempre “en el” delante de la estación. “En el invierno, en Canadá, ¿hace frío o hace calor?” Solo se nota; no se practica ni se evalúa.</div>
+
+      <h4>Ritmo por nivel</h4>
+      <ul>
+        <li><b>Español 3:</b> opción (“¿En el invierno hay nieve o hay sol?” “¿Un abrigo o una gorra?”); una palabra.</li>
+        <li><b>Español 4:</b> oración completa y comparar: “En Canadá hay nieve. En Belice no hay nieve.”</li>
+        <li><b>Español 5 (techo bajo):</b> modelo del colibrí (página 8): “Es muy pequeño y muy rápido.” Primero elegir entre dos; marco “___ es ___. Es ___.” Vale oral, señalar o Seesaw.</li>
+      </ul>
+
+      <h4>K–2: cuento para escuchar</h4>
+      <div>El mejor cuento de la serie para K–2: páginas 4, 5 y 7 son muy visuales. Leer en 📽 Modo proyector con los gestos (nieve, frío, abrigo). Preguntas de sí/no y de señalar: “Señala la nieve.” “¿Hace frío o hace calor?” “¿Te gusta la nieve?” El chequeo con imágenes es opcional y en grupo.</div>
+
+      <h4>Modo proyector</h4>
+      <div>📽 muestra una página a la vez. Flechas o ‹ › para avanzar. “🎓 Preguntas para circular” abre las preguntas de cada página.</div>
+
+      <h4>Preguntas orales extra</h4>
+      <ul>
+        <li>¿Adónde va Marisol? (a México)</li>
+        <li>¿Cómo es el colibrí? (dos opciones a la vez: pequeño · grande / rápido · lento)</li>
+      </ul>
+
+      <h4>Ciencia y cultura</h4>
+      <div>Las monarcas del este de Norteamérica pasan el invierno en los bosques de las montañas del centro de México (Michoacán y Estado de México); muchas llegan a principios de noviembre. El colibrí garganta de rubí viaja cada otoño hasta Centroamérica, incluida Belice, y vuelve al norte en la primavera. Belice tiene una estación seca y una estación de lluvias; las estaciones con nieve son una referencia que los niños conocen por medio de Marisol.</div>
+
+      <h4>Actividades de seguimiento</h4>
+      <ul>
+        <li>Seesaw: vestir al niño para el invierno y grabar “En el invierno necesita ___.”</li>
+        <li>Canva Picture Talk: las 7 palabras + “¿Y en otros lugares?” (el mismo árbol en otoño y en invierno) + la ruta de la monarca.</li>
+        <li>Imprimible: mapa sencillo para trazar la ruta de Marisol (Canadá → México, con Belice marcado) y dibujar la ropa de invierno.</li>
+        <li>Sin Wayground (K–5).</li>
+      </ul>
+
+      <h4>Sensibilidad de contenido</h4>
+      <div class="flag-box">Ninguna escena delicada. La despedida es alegre; Marisol vuelve a saludar en el Cuento 5. La página 7 muestra niños humanos en Canadá, felices y bien abrigados.</div>
+
+      <h4>Nota de continuidad</h4>
+      <div class="flag-box">Ocurre el día después del Cuento 3; Marisol ya no está cansada. El mapa de Don Pico no lleva nombres escritos en la imagen. Nico es un coatí con su canasta de fruta.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- GLOSSARY ---------------- */
+const G = {
+  "nuevo": "✨ que empieza ahora",
+  "adónde": "🧭 ¿a qué lugar?",
+  "mapa": "🗺️ dibujo de los países",
+  "países": "🌎 como Belice o México",
+  "llega": "🚪 viene, aparece",
+  "invierno": "❄️ la estación más fría",
+  "otoño": "🍂 estación de las hojas que caen",
+  "nieve": "❄️ agua fría y blanca que cae",
+  "cielo": "☁️ arriba, donde están las nubes",
+  "abrigo": "🧥 ropa grande para el frío",
+  "bufanda": "🧣 ropa para el cuello",
+  "guantes": "🧤 ropa para las manos",
+  "colibrí": "🐦 pájaro muy pequeño",
+  "rápido": "⚡ no es lento",
+  "adiós": "👋 lo que dices cuando te vas",
+};
+function g(word, shown){
+  shown = shown || word;
+  return `<span class="gloss" data-word="${word}">${shown}<span class="gloss-tooltip">${G[word]}<span class="arrow"></span></span></span>`;
+}
+
+/* ---------------- STORY (A1) ---------------- */
+const PAGES = [
+{ lines:[`Es un ${g('nuevo')} día. Marisol no está cansada.`,`—¿${g('adónde','Adónde')} vas, mariposa? —pregunta Bruno.`,'—¡Voy a México!'],
+    alt:'Mañana soleada en la Gran Ceiba. Marisol abre las alas; Bruno pregunta.',
+    circle:['¿Marisol está cansada hoy? (No)','¿Quién pregunta?','¿Adónde va Marisol?','(Repaso) ¿De dónde es Marisol?'] },
+  { lines:[`Don Pico tiene un ${g('mapa')}.`,`En el mapa hay tres ${g('países')}: Canadá, México y Belice.`],
+    alt:'Don Pico extiende un mapa grande en el suelo; los amigos y Marisol miran.',
+    circle:['¿Quién tiene un mapa?','¿Cuántos países hay en el mapa?','¿Dónde está Belice en el mapa? (señalar)'] },
+  { lines:['—¿Por qué vas a México? —pregunta Chica.',`—Porque en Canadá ${g('llega')} el ${g('invierno')} —dice Marisol.`],
+    alt:'Chica pregunta; Marisol señala el norte del mapa.',
+    circle:['¿Quién pregunta “¿Por qué?”?','¿Qué llega en Canadá? ¿El invierno o el verano?','¿Por qué va Marisol a México?'] },
+  { lines:[`En el ${g('otoño')}, en Canadá, hace frío.`,'Las hojas son rojas y anaranjadas.'],
+    alt:'Un bosque de Canadá en otoño: árboles rojos, anaranjados y amarillos.',
+    circle:['¿Es el otoño o el invierno?','¿Las hojas son rojas o azules?','¿Hace frío o hace calor?','¿En Belice las hojas son rojas en el otoño?'] },
+  { lines:['En el invierno, en Canadá, hace mucho frío.',`¡Hay ${g('nieve')}!`],
+    alt:'El mismo bosque de Canadá en invierno: todo blanco con nieve.',
+    circle:['¿Hay nieve? ¿Sí o no?','¿La nieve es blanca o verde?','¿Hace mucho frío?','➜ Momento de gramática: en el otoño / en el invierno','K–2: ¡Hagan nieve! (dedos que bajan)'] },
+  { lines:['—¿Qué es la nieve? —pregunta Nico.',`—Es agua muy fría. Es blanca y cae del ${g('cielo')} —dice Don Pico.`],
+    alt:'Nico, sorprendido, mira copos de nieve que Don Pico le muestra.',
+    circle:['¿Quién pregunta “¿Qué es la nieve?”?','¿La nieve es fría o caliente?','¿La nieve es blanca o negra?','¿Tú ves nieve en Belice?'] },
+  { lines:[`En el invierno, los niños de Canadá necesitan un ${g('abrigo')},`,`una ${g('bufanda')} y ${g('guantes')}.`],
+    alt:'Niños en la nieve de Canadá, con abrigo, bufanda y guantes de colores.',
+    circle:['¿Qué necesitan? ¿Un abrigo o pantalones cortos?','¿Dónde va la bufanda? (señalar el cuello)','¿Dónde van los guantes? (señalar las manos)','(Repaso) ¿Qué necesita Nico en “Un día de lluvia”?'] },
+  { lines:['En Belice no hay nieve.',`En el otoño llega el ${g('colibrí')}. Es muy pequeño y muy ${g('rápido')}.`],
+    alt:'De vuelta en la Gran Ceiba, soleado. Un colibrí pequeño y brillante llega volando.',
+    circle:['¿En Belice hay nieve?','¿Quién llega a Belice en el otoño?','¿El colibrí es pequeño o grande?','➜ Español 5: ¿Cómo es el colibrí?'] },
+  { lines:[`—¡${g('adiós','Adiós')}, Marisol! —dicen los amigos.`,'Marisol va al norte, a México.'],
+    alt:'Marisol vuela hacia el norte; todos los amigos la despiden.',
+    circle:['¿Qué dicen los amigos?','¿Marisol va al norte o al sur?','🦜 ¿Adónde vas tú en las vacaciones?'] },
+];
+const imgSrc = i => `covers/donpico-35c4-${String(i+1).padStart(2,'0')}.jpg`;
+
+function picHTML(i){
+  return `<img src="${imgSrc(i)}" alt="${PAGES[i].alt}" onload="this.parentElement.classList.add('has-img')" onerror="if(this.parentElement)this.parentElement.innerHTML='<div class=&quot;pic-ph&quot;><span class=&quot;ico&quot;>🖼️</span>Imagen ${i+1} — próximamente</div>'">`;
+}
+
+function renderStory(){
+  document.getElementById('storyBody').innerHTML = PAGES.map((pg,i)=>`
+    <div class="spage" data-page="${i}">
+      <div class="spage-num">PÁGINA ${i+1}</div>
+      <div class="pic" onclick="openProjector(${i})" title="Ver en Modo proyector" style="cursor:zoom-in;">${picHTML(i)}</div>
+      <div class="lines">${pg.lines.map(l=>`<p>${l}</p>`).join('')}</div>
+    </div>`).join('');
+  applyGlossState();
+  buildWordBank();
+}
+
+/* ---------------- COMPREHENSION ---------------- */
+const COMP = [
+{ q:'1. ¿Hay nieve en Belice?', options:[{emo:'❄️', text:'sí', correct:false},{emo:'🌴', text:'no', correct:true}], result:'¡Sí! En Belice no hay nieve.' },
+  { q:'2. En el invierno, en Canadá, ¿qué necesitan los niños?', options:[{emo:'🩳', text:'pantalones cortos', correct:false},{emo:'🧥', text:'un abrigo', correct:true},{emo:'🧢', text:'una gorra', correct:false}], result:'¡Muy bien! Necesitan un abrigo.' },
+];
+const answered = {};
+function renderComp(){
+  const c = document.getElementById('compContainer');
+  c.innerHTML = '';
+  COMP.forEach((item, idx)=>{
+    const qid = 'q'+idx;
+    const qDiv = document.createElement('div'); qDiv.className='comp-q'; qDiv.textContent=item.q; c.appendChild(qDiv);
+    const o = document.createElement('div'); o.className='comp-options';
+    item.options.forEach(opt=>{
+      const b = document.createElement('button'); b.className='comp-opt';
+      b.innerHTML = `<span class="emo">${opt.emo}</span>${opt.text}`;
+      b.onclick = ()=>answer(b, opt.correct, qid, idx);
+      o.appendChild(b);
+    });
+    c.appendChild(o);
+    const r = document.createElement('div'); r.className='comp-result'; r.id=qid+'result'; r.textContent=item.result; c.appendChild(r);
+  });
+}
+function answer(btn, isCorrect, qid, idx){
+  if(answered[qid]) return;
+  answered[qid] = true;
+  const opts = btn.parentElement.querySelectorAll('.comp-opt');
+  opts.forEach(o=>o.disabled=true);
+  btn.classList.add(isCorrect?'correct':'incorrect');
+  if(!isCorrect) opts.forEach((o,i)=>{ if(COMP[idx].options[i].correct) o.classList.add('correct'); });
+  document.getElementById(qid+'result').style.display='block';
+}
+function finishStory(){
+  if(Object.keys(answered).length < COMP.length){
+    alert('Responde las dos preguntas primero. ¡Solo toma un momento!');
+    return;
+  }
+  const b = document.getElementById('finishBtn');
+  b.textContent = '✓ ¡Completado!'; b.style.background = '#6fae7a';
+}
+
+/* ---------------- TOOLS ---------------- */
+let fontSize = 22, glossOn = true;
+const savedWords = new Set();
+function changeFont(d){ fontSize = Math.min(32, Math.max(16, fontSize + d*2)); document.getElementById('storyBody').style.fontSize = fontSize+'px'; }
+function toggleGloss(){
+  glossOn = !glossOn;
+  const b = document.getElementById('glossToggle');
+  b.textContent = glossOn ? '🔤 Glosario: Activado' : '🔤 Glosario: Desactivado';
+  b.classList.toggle('on', glossOn);
+  applyGlossState();
+}
+function applyGlossState(){
+  document.querySelectorAll('.gloss').forEach(el=>{
+    el.style.borderBottomColor = glossOn ? '' : 'transparent';
+    el.style.cursor = glossOn ? 'help' : 'text';
+    el.style.fontWeight = glossOn ? '600' : 'inherit';
+    el.querySelector('.gloss-tooltip').style.visibility = glossOn ? '' : 'hidden';
+    if(!glossOn) el.classList.remove('tapped');
+  });
+}
+document.addEventListener('click', e=>{
+  const el = e.target.closest('.gloss');
+  if(el && glossOn) el.classList.toggle('tapped');
+});
+function toggleNight(){
+  const b = document.getElementById('nightToggle');
+  b.classList.toggle('on');
+  const on = b.classList.contains('on');
+  document.getElementById('pageContent').style.filter = on ? 'invert(1) hue-rotate(180deg)' : 'none';
+  document.querySelectorAll('#pageContent img').forEach(i=>i.style.filter = on ? 'invert(1) hue-rotate(180deg)' : 'none');
+  b.textContent = on ? '☀ Luz brillante' : '🌙 Luz de lámpara';
+}
+function buildWordBank(){
+  const bank = document.getElementById('wordBank'); bank.innerHTML='';
+  const seen = new Set();
+  document.querySelectorAll('#storyBody .gloss').forEach(w=>{
+    const word = w.dataset.word;
+    if(seen.has(word)) return; seen.add(word);
+    const row = document.createElement('div'); row.className='word-chip';
+    row.innerHTML = `<div><div class="word-en">${word}</div><div class="word-def">${G[word]}</div></div>
+      <button class="save-word ${savedWords.has(word)?'saved':''}">${savedWords.has(word)?'✓':'+'}</button>`;
+    row.querySelector('button').onclick = function(){ toggleSaveWord(word, this); };
+    bank.appendChild(row);
+  });
+}
+function toggleSaveWord(word, btn){
+  if(savedWords.has(word)){ savedWords.delete(word); btn.classList.remove('saved'); btn.textContent='+'; }
+  else { savedWords.add(word); btn.classList.add('saved'); btn.textContent='✓'; }
+}
+function openTeacherNotes(){ document.getElementById('teacherModal').classList.add('open'); }
+function closeTeacherNotes(){ document.getElementById('teacherModal').classList.remove('open'); }
+function copyNotes(btn){
+  const text = document.getElementById('notesBody').innerText;
+  const done = ()=>{ btn.textContent='✓ Copiado'; setTimeout(()=>btn.textContent='📋 Copiar notas',1600); };
+  if(navigator.clipboard) navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text,done));
+  else fallbackCopy(text,done);
+}
+function fallbackCopy(text, done){
+  const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); done(); }catch(e){ alert('No se pudo copiar.'); }
+  ta.remove();
+}
+
+/* ---------------- AUDIO (browser text-to-speech) ---------------- */
+let spanishVoice = null, listening = false;
+function pickSpanishVoice(){
+  const v = speechSynthesis.getVoices();
+  spanishVoice = v.find(x=>x.lang==='es-MX') || v.find(x=>x.lang==='es-US') || v.find(x=>x.lang && x.lang.startsWith('es')) || null;
+}
+if('speechSynthesis' in window){ pickSpanishVoice(); speechSynthesis.onvoiceschanged = pickSpanishVoice; }
+function plainText(el){
+  const c = el.cloneNode(true);
+  c.querySelectorAll('.gloss-tooltip, .spage-num, .pic').forEach(x=>x.remove());
+  return c.innerText;
+}
+function speak(text, onEnd){
+  if(!('speechSynthesis' in window)){ alert('Tu navegador no puede leer en voz alta. Prueba con Chrome, Edge o Safari.'); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'es-MX'; u.rate = 0.8; u.pitch = 1.0;
+  if(spanishVoice) u.voice = spanishVoice;
+  u.onend = u.onerror = onEnd || null;
+  speechSynthesis.speak(u);
+}
+function resetListenBtn(){ listening=false; const b=document.getElementById('listenBtn'); b.classList.remove('playing'); b.textContent='🔊 Escuchar el cuento'; }
+function toggleListen(){
+  if(listening){ speechSynthesis.cancel(); resetListenBtn(); return; }
+  speak(plainText(document.getElementById('storyBody')), resetListenBtn);
+  listening = true;
+  const b = document.getElementById('listenBtn'); b.classList.add('playing'); b.textContent='⏸ Detener';
+}
+
+/* ---------------- PROJECTOR MODE ---------------- */
+let projIndex = 0;
+function openProjector(i){
+  if(listening){ speechSynthesis.cancel(); resetListenBtn(); }
+  projIndex = i; renderProj();
+  document.getElementById('proj').classList.add('open');
+  const el = document.documentElement;
+  if(el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+}
+function closeProjector(){
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+  document.getElementById('proj').classList.remove('open');
+  if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+}
+function renderProj(){
+  const pg = PAGES[projIndex];
+  document.getElementById('projCount').textContent = `${projIndex+1} / ${PAGES.length}`;
+  document.getElementById('projPic').innerHTML = picHTML(projIndex);
+  document.getElementById('projText').innerHTML = pg.lines.map(l=>`<p>${l}</p>`).join('');
+  document.getElementById('circleList').innerHTML = pg.circle.map(q=>`<li>${q}</li>`).join('');
+  applyGlossState();
+}
+function projGo(d){
+  const n = projIndex + d;
+  if(n < 0 || n >= PAGES.length) return;
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+  projIndex = n; renderProj();
+}
+function speakPage(){ speak(plainText(document.getElementById('projText'))); }
+function toggleCircle(){
+  document.getElementById('circlePanel').classList.toggle('open');
+  document.getElementById('circleBtn').classList.toggle('on');
+}
+document.addEventListener('keydown', e=>{
+  if(!document.getElementById('proj').classList.contains('open')) return;
+  if(e.key==='ArrowRight' || e.key===' ' || e.key==='PageDown'){ e.preventDefault(); projGo(1); }
+  if(e.key==='ArrowLeft' || e.key==='PageUp'){ e.preventDefault(); projGo(-1); }
+  if(e.key==='Escape') closeProjector();
+});
+
+/* ---------------- SCROLL PROGRESS ---------------- */
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  const s = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('progressFill').style.width = Math.min(100, s)+'%';
+});
+
+renderStory();
+renderComp();
+</script>
+</body>
+</html>
