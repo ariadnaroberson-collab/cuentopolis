@@ -379,7 +379,7 @@ const PAGES = [
 const imgSrc = i => `covers/donpico-35c3-${String(i+1).padStart(2,'0')}.jpg`;
 
 function picHTML(i){
-  return `<img src="${imgSrc(i)}" alt="${PAGES[i].alt}" onload="this.parentElement.classList.add('has-img')" onerror="if(this.parentElement)this.parentElement.innerHTML='<div class=&quot;pic-ph&quot;><span class=&quot;ico&quot;>🖼️</span>Imagen ${i+1} — próximamente</div>'">`;
+  return `<img src="${imgSrc(i)}" alt="${PAGES[i].alt}" onload="if(this.parentElement)this.parentElement.classList.add('has-img')" onerror="if(this.parentElement)this.parentElement.innerHTML='<div class=&quot;pic-ph&quot;><span class=&quot;ico&quot;>🖼️</span>Imagen ${i+1} — próximamente</div>'">`;
 }
 
 function renderStory(){

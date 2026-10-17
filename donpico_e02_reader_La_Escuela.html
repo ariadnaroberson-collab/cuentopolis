@@ -350,7 +350,7 @@ const PAGES = [
     alt:'Página del libro: una maestra sonriente al frente del salón. Bruno mira con curiosidad.',
     circle:['¿Quién pregunta? ¿Bruno o Iggy?','¿Quién es? ¿Es la maestra o la enfermera?','¿Dónde está la maestra?','¿La maestra está en la cafetería? (No…)'] },
   { lines:[`—Es la ${g('biblioteca')} —dice Don Pico.`,`—¡La biblioteca tiene ${g('muchos')} libros! —dice Iggy.`],
-    alt:'Página del libro: una biblioteca con estantes llenos. Iggy, emocionado.',
+    alt:'Página del libro: una biblioteca con estantes llenos. Iggy, emocionada.',
     circle:['¿Es la biblioteca? ¿Sí o no?','¿La biblioteca tiene muchos libros o mucha fruta?','¿Quién dice “muchos libros”?','¿Nuestra escuela tiene biblioteca?'] },
   { lines:[`—Es la ${g('cafetería')} —dice Don Pico.`,'—¡La cafetería tiene fruta! —dice Teo.','—¡Mmm! —dice Nico.'],
     alt:'Página del libro: una cafetería con bandejas y fruta. Teo salta; Nico (coatí) abraza su canasta de fruta.',
@@ -371,7 +371,7 @@ const PAGES = [
 const imgSrc = i => `covers/donpico-e02-${String(i+1).padStart(2,'0')}.jpg`;
 
 function picHTML(i){
-  return `<img src="${imgSrc(i)}" alt="${PAGES[i].alt}" onload="this.parentElement.classList.add('has-img')" onerror="this.parentElement.innerHTML='<div class=&quot;pic-ph&quot;><span class=&quot;ico&quot;>🖼️</span>Imagen ${i+1} — próximamente</div>'">`;
+  return `<img src="${imgSrc(i)}" alt="${PAGES[i].alt}" onload="if(this.parentElement)this.parentElement.classList.add('has-img')" onerror="if(this.parentElement)this.parentElement.innerHTML='<div class=&quot;pic-ph&quot;><span class=&quot;ico&quot;>🖼️</span>Imagen ${i+1} — próximamente</div>'">`;
 }
 
 function renderStory(){

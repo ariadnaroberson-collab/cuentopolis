@@ -358,7 +358,7 @@ const PAGES = [
     alt:'Chica con una gorra roja, sonriendo bajo el sol.',
     circle:['¿Quién lleva una gorra?','¿Por qué lleva una gorra? (porque hace sol)','¿La gorra es roja o azul?','➜ Momento de gramática: lleva / tiene'] },
   { lines:[`Iggy está en una ${g('piedra')} ${g('caliente')}.`,'Iggy necesita el sol.'],
-    alt:'Iggy acostado en una piedra grande, bañado por el sol, muy feliz.',
+    alt:'Iggy acostada en una piedra grande, bañado por el sol, muy feliz.',
     circle:['¿Dónde está Iggy?','¿La piedra está caliente o fría?','¿Qué necesita Iggy?','(En inglés si hace falta) ¿Por qué necesita el sol una iguana?'] },
   { lines:['Bruno no está en el sol.',`Bruno está en la ${g('sombra')} porque tiene calor.`],
     alt:'Bruno descansando en la sombra fresca de la Ceiba, mientras Iggy sigue al sol.',
@@ -373,7 +373,7 @@ const PAGES = [
 const imgSrc = i => `covers/donpico-35c2-${String(i+1).padStart(2,'0')}.jpg`;
 
 function picHTML(i){
-  return `<img src="${imgSrc(i)}" alt="${PAGES[i].alt}" onload="this.parentElement.classList.add('has-img')" onerror="this.parentElement.innerHTML='<div class=&quot;pic-ph&quot;><span class=&quot;ico&quot;>🖼️</span>Imagen ${i+1} — próximamente</div>'">`;
+  return `<img src="${imgSrc(i)}" alt="${PAGES[i].alt}" onload="if(this.parentElement)this.parentElement.classList.add('has-img')" onerror="if(this.parentElement)this.parentElement.innerHTML='<div class=&quot;pic-ph&quot;><span class=&quot;ico&quot;>🖼️</span>Imagen ${i+1} — próximamente</div>'">`;
 }
 
 function renderStory(){
