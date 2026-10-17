@@ -157,6 +157,10 @@
     .proj-stage{padding:0 14px 10px;}
     .proj-nav{top:auto;bottom:16px;transform:none;}
   }
+
+  .en{color:#e7b96b;font-style:italic;font-weight:500;}
+  .word-def .en{color:#a2691f;}
+  body.no-en .en{display:none;}
 </style>
 </head>
 <body>
@@ -175,6 +179,7 @@
       <div class="divider"></div>
       <button onclick="changeFont(1)" title="Texto más grande">A+</button>
     </div>
+    <button class="tool-btn on" id="enToggle" onclick="toggleEN()">🇬🇧 English: On</button>
     <button class="tool-btn on" id="glossToggle" onclick="toggleGloss()">🔤 Glosario: Activado</button>
     <button class="tool-btn" id="nightToggle" onclick="toggleNight()">🌙 Luz de lámpara</button>
     <button class="tool-btn project" onclick="openProjector(0)">📽 Modo proyector</button>
@@ -361,6 +366,11 @@ const G = {
   "países": "🌎 como Belice o México",
   "la gente": "👨‍👩‍👧 las personas",
 };
+
+const EN = {"nube": "cloud", "lluvia": "rain", "coatí": "coati", "simpático": "nice, friendly", "mojado": "wet", "suéter": "sweater", "paraguas": "umbrella", "adentro": "inside", "juego": "game", "tic-tac-toe": "tic-tac-toe", "gana": "wins", "salió": "came out", "sol": "sun", "jabalí": "peccary (wild pig)", "fuerte": "strong", "activo": "active", "camiseta": "T-shirt", "pantalones cortos": "shorts", "gorra": "cap", "piedra": "rock", "caliente": "hot", "sombra": "shade", "afuera": "outside", "fútbol": "soccer", "todos": "everyone", "viento": "wind", "hojas": "leaves", "vuelan": "they fly", "monarca": "monarch butterfly", "anaranjada": "orange", "alas": "wings", "Canadá": "Canada", "norte": "north", "cansada": "tired", "perdida": "lost", "México": "Mexico", "flor": "flower", "bebe": "drinks", "valiente": "brave", "mañana": "tomorrow", "nuevo": "new", "adónde": "where to?", "mapa": "map", "países": "countries", "llega": "arrives", "invierno": "winter", "otoño": "fall / autumn", "nieve": "snow", "cielo": "sky", "abrigo": "coat", "bufanda": "scarf", "guantes": "gloves", "colibrí": "hummingbird", "rápido": "fast", "adiós": "goodbye", "primavera": "spring", "flores": "flowers", "estación": "season", "favorita": "favorite", "verano": "summer", "mapache": "raccoon", "creativo": "creative", "papalote": "kite", "orquídea negra": "black orchid", "Belice": "Belize", "vuela": "flies", "alto": "high", "también": "too, also", "pasarela": "runway", "ropa típica": "traditional clothing", "celebrar": "to celebrate", "huipil": "huipil (Maya blouse)", "Guatemala": "Guatemala", "guayabera": "guayabera (dress shirt)", "pollera": "pollera (Panamanian dress)", "Panamá": "Panama", "poncho": "poncho", "Perú": "Peru", "montañas": "mountains", "corona de flores": "flower crown", "sombrero": "hat", "Colombia": "Colombia", "garífuna": "Garifuna", "alegre": "cheerful", "baila": "dances", "la gente": "people", "roja": "red", "amarillo": "yellow", "verde": "green", "azul": "blue", "gris": "gray", "moradas": "purple", "arcoíris": "rainbow", "color": "color", "canasta": "basket", "recoge": "picks up", "come": "eats", "amigos": "friends", "dos": "two", "tres": "three", "cuatro": "four", "cinco": "five", "seis": "six", "siete": "seven", "ocho": "eight", "nueve": "nine", "diez": "ten", "cuántos": "how many?", "formas": "shapes", "forma": "shape", "círculo": "circle", "cuadrado": "square", "triángulo": "triangle", "rectángulo": "rectangle", "óvalo": "oval", "corazón": "heart", "rombo": "diamond", "estrella": "star", "sandía": "watermelon", "huevo": "egg", "caja": "box", "noche": "night", "semana": "week", "lunes": "Monday", "martes": "Tuesday", "miércoles": "Wednesday", "jueves": "Thursday", "viernes": "Friday", "sábado": "Saturday", "domingo": "Sunday", "lee": "reads", "corre": "runs", "pinta": "paints", "alfamigos": "alphabet friends", "mágico": "magic", "abracadabra": "abracadabra", "sale": "comes out", "abeja": "bee", "miel": "honey", "ballena": "whale", "mar": "sea", "camaleón": "chameleon", "delfín": "dolphin", "saltar": "to jump", "elefante": "elephant", "nariz": "nose", "trompa": "trunk", "flamenco": "flamingo", "pata": "leg", "duermo": "I sleep", "gorila": "gorilla", "hipopótamo": "hippo", "río": "river", "iguana": "iguana", "jaguar": "jaguar", "nadar": "to swim", "koala": "koala", "león": "lion", "rey": "king", "manatí": "manatee", "narval": "narwhal", "cuerno": "horn", "cuernos": "horns", "diente": "tooth", "dientes": "teeth", "piraña": "piranha", "ocelote": "ocelot", "pingüino": "penguin", "volar": "to fly", "quetzal": "quetzal", "cola": "tail", "rinoceronte": "rhino", "serpiente": "snake", "patas": "legs", "tucán": "toucan", "pico": "beak", "unicornio": "unicorn", "cuentos": "stories", "vicuña": "vicuña", "pelo": "hair, fur", "suave": "soft", "wombat": "wombat", "caca": "poop", "cuadrada": "square", "xoloitzcuintle": "Mexican hairless dog", "perro": "dog", "yak": "yak", "zorro": "fox", "chinchilla": "chinchilla", "arena": "sand", "llama": "llama", "escupo": "I spit", "burro": "donkey", "zanahorias": "carrots", "libro": "book", "busca": "look for", "árbol": "tree", "estaciones": "seasons", "caen": "they fall", "seca": "dry", "lluvias": "rains", "salón de clase": "classroom", "maestra": "teacher", "maestro": "teacher", "biblioteca": "library", "cafetería": "cafeteria", "enfermera": "nurse", "oficina": "office", "baño": "bathroom", "muchos": "many", "aquí": "here"};
+for (const k in EN) if (G[k] !== undefined && !String(G[k]).includes('class="en"')) G[k] += ' <span class="en">· ' + EN[k] + '</span>';
+function toggleEN(){ document.body.classList.toggle('no-en'); const on=!document.body.classList.contains('no-en');
+  const b=document.getElementById('enToggle'); b.textContent = on ? '🇬🇧 English: On' : '🇬🇧 English: Off'; b.classList.toggle('on', on); }
 function g(word, shown){
   shown = shown || word;
   return `<span class="gloss" data-word="${word}">${shown}<span class="gloss-tooltip">${G[word]}<span class="arrow"></span></span></span>`;
