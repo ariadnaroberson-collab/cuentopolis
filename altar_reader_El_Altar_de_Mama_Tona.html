@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El altar de Mamá Toña — Biblioteca FVR — Lector de Cuentópolis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1b1712;
+    --bg-panel:#241f18;
+    --parchment:#f4ecd8;
+    --parchment-dim:#d8cdb0;
+    --gold:#c9a24b;
+    --gold-soft:#e3c878;
+    --green:#3f6b4a;
+    --line:#3a3226;
+    --shadow:rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #2a241b 0%, var(--bg-deep) 70%);
+    color:var(--parchment);
+    font-family:'Public Sans', sans-serif;
+    padding:24px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  .back{display:inline-block;font-family:'Space Mono', monospace;font-size:12px;color:var(--gold);text-decoration:none;margin-bottom:14px;}
+  header{
+    text-align:center;
+    padding:28px 20px 20px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:24px;
+  }
+  .collection-tag{
+    font-family:'Space Mono', monospace;
+    font-size:0.75rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-size:2.4rem;
+    margin:8px 0 4px;
+    color:var(--parchment);
+  }
+  .subtitle{
+    font-family:'Public Sans', sans-serif;
+    color:var(--parchment-dim);
+    font-size:0.95rem;
+  }
+  .levels{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:22px 0 10px;
+    align-items:center;
+  }
+  .pill{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-soft);
+    cursor:pointer;
+    transition:all .2s ease;
+    position:relative;
+  }
+  .pill.active{
+    background:var(--gold);
+    color:#1b1712;
+    font-weight:700;
+  }
+  .listen-row{text-align:center;margin:0 0 22px;}
+  .listen-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:999px;
+    border:1px solid var(--gold);background:rgba(201,162,75,0.10);
+    font-family:'Public Sans',sans-serif;font-size:0.9rem;color:var(--gold-soft);cursor:pointer;
+  }
+  .listen-btn:hover{background:rgba(201,162,75,0.2);}
+  .listen-btn.playing{background:var(--gold);color:#1b1712;}
+  .story-panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 34px;
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .story-panel h2{
+    font-family:'Fraunces', serif;
+    font-size:1.3rem;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .story-text{
+    font-family:'Source Serif 4', serif;
+    font-size:1.15rem;
+    line-height:1.85;
+  }
+  .story-text p{margin:0 0 1.1em;}
+  .scene{font-family:'Space Mono', monospace;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin:1.6em 0 0.5em;}
+  .scene:first-child{margin-top:0;}
+  .origin-note{font-size:0.85rem;color:var(--parchment-dim);font-style:italic;margin-bottom:1.4em;}
+  .level-block{display:none;}
+  .level-block.active{display:block;}
+  .gloss{border-bottom:2px dotted var(--gold-soft);cursor:help;font-weight:600;}
+  section.card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 30px;
+    margin-top:22px;
+  }
+  section.card h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+    font-size:1.15rem;
+  }
+  .glossary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    font-size:0.95rem;
+  }
+  .glossary-grid .term{color:var(--gold-soft); font-weight:600;}
+  .wordbank{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .wordbank span{
+    font-family:'Space Mono', monospace;
+    font-size:0.85rem;
+    background:rgba(201,162,75,0.12);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 12px;
+    color:var(--parchment-dim);
+  }
+  .comp-q{margin-bottom:14px;}
+  .comp-q .num{color:var(--gold);font-weight:700;margin-right:8px;}
+  footer{
+    margin-top:30px;
+    text-align:center;
+  }
+  .teacher-btn{
+    font-family:'Public Sans', sans-serif;
+    background:var(--green);
+    color:#f4ecd8;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+  }
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.6);
+    align-items:center;justify-content:center;
+    padding:20px;
+    z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-panel);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    max-width:640px;width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    padding:28px 30px;
+  }
+  .modal h3{
+    font-family:'Fraunces', serif;
+    color:var(--gold-soft);
+    margin-top:0;
+  }
+  .modal h4{
+    color:var(--gold-soft);
+    font-size:0.95rem;
+    margin-bottom:4px;
+  }
+  .modal p, .modal li{font-size:0.9rem; color:var(--parchment-dim); line-height:1.6;}
+  .modal ul{padding-left:20px;margin-top:4px;}
+  .modal a{color:var(--gold-soft);}
+  .warn{border:1px solid var(--gold);border-radius:10px;padding:10px 14px;margin:6px 0 4px;}
+  .modal-actions{display:flex; gap:10px; margin-top:18px;}
+  .btn-small{
+    font-family:'Space Mono', monospace;
+    font-size:0.8rem;
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-soft);
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  @media (max-width:600px){
+    body{padding:16px;}
+    h1{font-size:1.9rem;}
+    .story-panel{padding:22px 18px;}
+    section.card{padding:20px 18px;}
+    .glossary-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="biblioteca-fvr.html" onclick="if(document.referrer&&document.referrer.indexOf(location.host)>-1&&history.length>1){history.back();return false;}">← Volver</a>
+
+  <header>
+    <div class="collection-tag">Biblioteca FVR · Leyendas Latinoamericanas · Día de Muertos</div>
+    <h1>El altar de Mamá Toña</h1>
+    <div class="subtitle">Pátzcuaro, Michoacán, México — una familia prepara la ofrenda para recordar a su abuela</div>
+  </header>
+
+  <div class="levels">
+    <button class="pill active" data-level="A1">A1</button>
+    <button class="pill" data-level="A2">A2</button>
+    <button class="pill" data-level="B1">B1</button>
+    <button class="pill" data-level="B2">B2</button>
+  </div>
+  <div class="listen-row">
+    <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar narración</button>
+  </div>
+
+  <div class="story-panel">
+
+    <!-- ============ A1 ============ -->
+    <div class="level-block active" id="level-A1">
+      <h2>Nivel A1</h2>
+      <div class="story-text">
+        <p>Me llamo Santiago. Tengo diez años. Vivo en Pátzcuaro, en México. Vivo con mi mamá, mi papá y mi hermanita Lupita. Lupita tiene cinco años.</p>
+        <p>Mi abuela se llama Mamá Toña. Mamá Toña murió hace dos años. Pero hoy no es un día triste. Hoy es el Día de Muertos. ¡Hoy recordamos a Mamá Toña!</p>
+        <p>Mi mamá tiene una foto de Mamá Toña. En la foto, Mamá Toña sonríe. Yo recuerdo su cocina. Mamá Toña cantaba. Mamá Toña cantaba y cocinaba tamales. ¡Mmm, los tamales de Mamá Toña!</p>
+        <p>Vamos al mercado. Compramos flores naranjas. Se llaman <span class="gloss" title="flor naranja de México">cempasúchil</span>. Compramos velas, <span class="gloss" title="pan dulce especial del Día de Muertos">pan de muerto</span> y <span class="gloss" title="papel de colores con figuras cortadas">papel picado</span>.</p>
+        <p>—¿Por qué compramos flores? —pregunta Lupita.</p>
+        <p>—Las flores son para Mamá Toña —digo yo—. Las flores son el camino a casa.</p>
+        <p>En casa, ponemos la <span class="gloss" title="mesa especial con fotos, flores y comida para recordar">ofrenda</span>. Ponemos la foto en la ofrenda. Ponemos agua: el camino es largo y Mamá Toña tiene sed. Ponemos velas y papel picado. Mi mamá pone tamales en la ofrenda. Mi abuelo Nacho pone el <span class="gloss" title="chal largo y tradicional de México">rebozo</span> de Mamá Toña. Lupita pone una <span class="gloss" title="cráneo pequeño de azúcar">calaverita de azúcar</span>. La calaverita dice "TOÑA". Yo pongo un dibujo: Mamá Toña canta en la cocina.</p>
+        <p>Lupita y yo ponemos pétalos de cempasúchil en el piso. Es un camino. El camino va de la puerta a la ofrenda.</p>
+        <p>—¿Por qué? —pregunta Lupita.</p>
+        <p>—Es para Mamá Toña. Así ella encuentra la casa.</p>
+        <p>En la noche, vamos al <span class="gloss" title="cementerio">panteón</span>. Mis tíos y mis primos también van al panteón. Hay muchas velas. Hay muchas flores. Mi abuelo toca la guitarra. Mi primo Diego cuenta una historia de Mamá Toña. ¡Todos reímos! Mi mamá canta la canción de Mamá Toña. Yo canto también.</p>
+        <p>Mamá Toña no está aquí. Pero está en sus canciones. Está en sus tamales. Está en nuestras historias. Recordamos a Mamá Toña. Por eso, Mamá Toña sigue con nosotros.</p>
+      </div>
+    </div>
+
+    <!-- ============ A2 ============ -->
+    <div class="level-block" id="level-A2">
+      <h2>Nivel A2</h2>
+      <div class="story-text">
+        <p>Me llamo Santiago y tengo diez años. Vivo en Pátzcuaro, un pueblo de Michoacán, en México, con mis papás y mi hermanita Lupita. Lupita tiene cinco años y pregunta "¿por qué?" todo el día.</p>
+        <p>Hoy es 31 de octubre. Mi mamá abre una caja y saca una foto. Es Mamá Toña, mi abuela. En México, muchos nietos llaman a la abuela "Mamá" con su nombre. Mamá Toña murió hace dos años, pero en mi casa hablamos de ella todo el tiempo.</p>
+        <p>Cuando miro la foto, recuerdo su cocina. Siempre olía a maíz y a chocolate. Mamá Toña cantaba mientras cocinaba. Hacía <span class="gloss" title="tamales de Michoacán con forma de triángulo">corundas</span>, unos tamales de Michoacán con forma de triángulo. Yo la ayudaba y ella me decía: "Santiago, la cocina sin canción no sabe a nada."</p>
+        <p>Por la tarde vamos al mercado. Hay flores naranjas por todas partes: es el <span class="gloss" title="flor naranja de México">cempasúchil</span>. Compramos muchas flores, velas, <span class="gloss" title="papel de colores con figuras cortadas">papel picado</span> de colores y <span class="gloss" title="pan dulce especial del Día de Muertos">pan de muerto</span>. En un puesto, una señora escribe nombres en <span class="gloss" title="cráneos pequeños de azúcar">calaveritas de azúcar</span>. Lupita escoge una y la señora escribe "TOÑA".</p>
+        <p>—¿Por qué compramos tantas flores? —pregunta Lupita.</p>
+        <p>—Porque su color y su olor guían a Mamá Toña a casa —le explico.</p>
+        <p>En casa, mi papá construye la <span class="gloss" title="mesa especial con fotos, flores y comida para recordar">ofrenda</span> con tres escalones. Todos ponemos algo en la ofrenda. Ponemos la foto en el centro, para saber a quién recordamos. Ponemos un vaso de agua, porque el camino es largo, y un poco de sal. Encendemos las velas: su luz también guía a Mamá Toña. El papel picado se mueve con el aire. Mi mamá prepara corundas con la receta de Mamá Toña y también pone una taza de chocolate. Mi abuelo Nacho pone el <span class="gloss" title="chal largo y tradicional de México">rebozo</span> azul de su esposa. Lupita pone su calaverita. Yo pongo un dibujo que hice: Mamá Toña cantando en su cocina.</p>
+        <p>Después, Lupita y yo hacemos un camino de pétalos desde la puerta hasta la ofrenda.</p>
+        <p>—Así no se pierde —dice Lupita, muy seria.</p>
+        <p>La noche del primero de noviembre vamos al <span class="gloss" title="cementerio">panteón</span> con mis tíos, Beto y Carmen, y mis primos, Diego y Sofi. El panteón está lleno de velas y de flores. Limpiamos la tumba de Mamá Toña y la decoramos con cempasúchil. Nadie se va a dormir: esta noche acompañamos a nuestros muertos.</p>
+        <p>Mi abuelo saca su guitarra vieja. Diego cuenta la historia del día que Mamá Toña persiguió a un gallo por toda la calle con una cuchara. ¡Todos reímos mucho! Luego mi mamá empieza la canción favorita de Mamá Toña. Primero canta sola, después canta mi abuelo, y al final canto yo también.</p>
+        <p>Cuando sale el sol, el 2 de noviembre, pienso en mi abuela. Mamá Toña ya no está aquí, pero vive en sus canciones, en sus corundas y en nuestras historias. Mientras la recordamos, sigue con nosotros.</p>
+      </div>
+    </div>
+
+    <!-- ============ B1 ============ -->
+    <div class="level-block" id="level-B1">
+      <h2>Nivel B1</h2>
+      <div class="story-text">
+        <p>Me llamo Santiago, tengo diez años y vivo en Pátzcuaro, Michoacán. Este año, por primera vez, mis papás me dejaron ayudar con toda la ofrenda, de principio a fin. Fue el segundo Día de Muertos sin Mamá Toña, mi abuela, y yo quería que todo quedara perfecto.</p>
+        <p>Todo empezó el 31 de octubre, cuando mi mamá sacó de una caja la foto de Mamá Toña. En la foto llevaba su <span class="gloss" title="chal largo y tradicional de México">rebozo</span> azul y sonreía como siempre, con los ojos casi cerrados. Al verla, recordé su cocina: olía a maíz cocido, a hojas de milpa y a chocolate. Mamá Toña siempre cantaba mientras cocinaba. Preparaba <span class="gloss" title="tamales triangulares de Michoacán">corundas</span>, los tamales triangulares de Michoacán, y yo le pasaba las hojas mientras ella cantaba canciones viejas de su pueblo. "La cocina sin canción no sabe a nada", decía.</p>
+        <p>Por la tarde fuimos al mercado. Era un mar naranja de <span class="gloss" title="flor naranja de México">cempasúchil</span>, y el aire olía a <span class="gloss" title="resina que se quema como incienso">copal</span> y a pan recién hecho. Compramos manojos de flores, velas blancas, <span class="gloss" title="papel de colores con figuras cortadas">papel picado</span> morado y rosa, y dos panes de muerto. En un puesto, una señora escribía nombres con azúcar en las calaveritas, y Lupita, mi hermanita de cinco años, eligió una para que dijera "TOÑA".</p>
+        <p>—¿Por qué necesitamos tantas flores? —me preguntó.</p>
+        <p>—Porque su color y su olor le enseñan el camino a casa —le expliqué, como Mamá Toña me lo había explicado a mí.</p>
+        <p>En casa, mi papá armó tres escalones con cajas y una mesa, y mi mamá los cubrió con un mantel blanco. Luego, cada uno puso algo. Pusimos la foto en el lugar más alto, para que se supiera a quién estaba dedicada la <span class="gloss" title="altar con fotos, flores y comida para los muertos">ofrenda</span>. Pusimos un vaso de agua, porque dicen que el camino es largo y las almas llegan con sed, y un platito de sal. Encendimos el copal y las velas. Colgamos el papel picado, que se movía cada vez que alguien abría la puerta. Mi mamá preparó corundas con la receta de Mamá Toña y sirvió una taza de chocolate caliente. Mi abuelo Nacho dobló con cuidado el rebozo azul y lo puso junto a la foto. Lupita puso su calaverita. Y yo puse un dibujo que había hecho en la escuela: Mamá Toña en su cocina, con la boca abierta, cantando.</p>
+        <p>Al final, Lupita y yo hicimos un camino de pétalos desde la puerta hasta la ofrenda. Lupita lo revisó tres veces.</p>
+        <p>—Para que no se pierda —dijo muy seria.</p>
+        <p>La noche del primero de noviembre fuimos al <span class="gloss" title="cementerio">panteón</span> con mis tíos Beto y Carmen y mis primos Diego y Sofi. Para llegar, caminamos por las calles empedradas del centro. En muchas casas había velas en las ventanas, y de las puertas abiertas salía olor a pan y a chocolate. Nadie caminaba solo: todas las familias iban hacia el mismo lugar. Cuando llegamos, ya había cientos de velas encendidas y familias enteras sentadas junto a las tumbas. Limpiamos la tumba de Mamá Toña, la cubrimos de cempasúchil y encendimos nuestras velas. Hacía frío, así que nos tapamos con cobijas y tomamos chocolate.</p>
+        <p>Mientras esperábamos, le pregunté a mi abuelo cómo había conocido a Mamá Toña. Él sonrió y me contó que, cuando eran jóvenes, ella vendía flores en el mercado de Pátzcuaro y cantaba para llamar a los clientes. Un día, él pasó por ahí y la escuchó cantar.</p>
+        <p>—No le hablé ese día —me dijo—. Le compré flores. Y le compré flores todos los días durante un año, hasta que por fin me atreví a hablarle.</p>
+        <p>Lupita, medio dormida en las piernas de mi mamá, abrió los ojos y preguntó: —¿Y por qué tardaste tanto? Todos se rieron, y mi abuelo dijo que todavía no tenía una buena respuesta.</p>
+        <p>Mi abuelo sacó su guitarra vieja y empezó a tocar despacio. Entonces Diego contó la historia de la vez que un gallo entró a la cocina de Mamá Toña y ella lo persiguió por toda la calle con una cuchara de madera en la mano, sin dejar de cantar. Nos reímos tanto que Sofi casi tiró su chocolate. Mi abuelo se rio más fuerte que nadie.</p>
+        <p>Después, mi mamá empezó la canción favorita de Mamá Toña. Al principio cantaba sola, pero poco a poco cantaron mis tíos, mi abuelo y, al final, yo también. No sabía toda la letra, pero no importaba.</p>
+        <p>Cuando salió el sol, el 2 de noviembre, entendí algo. Mamá Toña ya no está aquí, pero vive en sus canciones, en sus corundas y en las historias que contamos. Mientras la recordemos, sigue con nosotros.</p>
+      </div>
+    </div>
+
+    <!-- ============ B2 ============ -->
+    <div class="level-block" id="level-B2">
+      <h2>Nivel B2</h2>
+      <div class="story-text">
+        <p class="origin-note">Historia original de Cuentópolis, escrita en un registro cercano al español nativo de México.</p>
+        <p>Dicen en mi familia que la casa de Mamá Toña nunca estaba en silencio. Si no se oía el molcajete, se oía la radio; y si no se oía la radio, se oía a ella, cantando a todo pulmón mientras amasaba, picaba o revolvía la olla. Me llamo Santiago, tengo diez años y vivo en Pátzcuaro, junto al lago, en Michoacán. Mamá Toña era mi abuela —aquí muchos nietos les dicen así a sus abuelas: «Mamá» y el nombre—, y hace dos años que se nos fue. Este fue su segundo Día de Muertos con nosotros… de la otra manera. Y el primero en que me dejaron ayudar a armar la ofrenda de principio a fin.</p>
+        <p>Todo empezó el 31 de octubre, cuando mi mamá bajó del ropero la caja de cartón donde guarda las cosas importantes y sacó la foto. Ahí estaba Mamá Toña, con su <span class="gloss" title="chal largo y tradicional de México">rebozo</span> azul y esa sonrisa que le cerraba los ojos. Nomás de verla me llegó el olor de su cocina: maíz cocido, hojas de milpa, canela y chocolate. Ella hacía unas <span class="gloss" title="tamales triangulares de Michoacán">corundas</span> —los tamales triangulares de aquí— que no tenían comparación, y yo era su ayudante oficial: le pasaba las hojas mientras ella cantaba canciones de su pueblo que yo me sabía a medias. «Mijo, la cocina sin canción no sabe a nada», me decía, y me guiñaba un ojo.</p>
+        <p>Esa misma tarde fuimos al mercado. En estas fechas Pátzcuaro se pinta de naranja: había <span class="gloss" title="flor naranja de México">cempasúchil</span> por montones, en cubetas, amarrado en manojos que la gente cargaba en brazos como si fueran bebés. El aire olía a <span class="gloss" title="resina que se quema como incienso">copal</span> y a pan recién horneado. Compramos flores, velas, <span class="gloss" title="papel de colores con figuras cortadas">papel picado</span> morado y rosa mexicano, y un par de panes de muerto todavía calientitos. En un puesto, una señora escribía nombres con betún sobre calaveritas de azúcar, y Lupita, mi hermana de cinco años, eligió una y le pidió que escribiera «TOÑA» con letras bien grandes.</p>
+        <p>—¿Y por qué tantas flores? —me preguntó, porque Lupita pregunta «¿por qué?» unas cien veces al día.</p>
+        <p>—Porque su color y su olor le marcan el camino —le contesté, igualito a como Mamá Toña me lo había explicado a mí, años atrás, en ese mismo mercado.</p>
+        <p>En casa, mi papá armó los escalones con cajas y una mesa, y mi mamá los cubrió con un mantel blanco bordado. Luego cada quien puso lo suyo. La foto fue arriba, en el lugar de honor, para que no quedara duda de a quién esperábamos. Pusimos un vaso de agua para que calmara la sed del viaje, que dicen que es largo, y un platito de sal para purificar. Encendimos el copal, cuyo humo blanco se quedó flotando bajo el papel picado, que temblaba cada vez que alguien abría la puerta. Mi mamá preparó corundas siguiendo la receta de su madre al pie de la letra —bueno, casi: confesó que nunca le quedan iguales— y sirvió una taza de chocolate espumoso. Mi abuelo Nacho dobló el rebozo azul con una delicadeza que nunca le había visto y lo dejó junto a la foto. Lupita colocó su calaverita al frente, «para que la vea primero». Y yo puse mi dibujo: Mamá Toña en su cocina, con la cuchara en alto y la boca abierta, cantando.</p>
+        <p>Faltaba lo más importante. Lupita y yo deshojamos flores hasta tener las manos amarillas y trazamos un camino de pétalos desde la puerta de la calle hasta la <span class="gloss" title="altar con fotos, flores y comida para los muertos">ofrenda</span>. Lupita lo recorrió tres veces, de rodillas, tapando huecos.</p>
+        <p>—Para que no se pierda —dijo, muy seria.</p>
+        <p>Dicen los mayores que el primero de noviembre llegan los angelitos, los niños que se fueron temprano, y que el dos les toca a los adultos. Por eso la noche del primero al dos, la <span class="gloss" title="nombre tradicional de la noche de velación en Michoacán">Noche de Ánimas</span>, es la que más se espera aquí. Esa noche fuimos al <span class="gloss" title="cementerio">panteón</span> con mis tíos Beto y Carmen y mis primos Diego y Sofi, cargando flores, velas, cobijas y un termo de chocolate. Cuando llegamos, el panteón entero parecía un cielo al revés: cientos de velas encendidas y familias sentadas junto a sus tumbas, platicando bajito, rezando, algunas cantando.</p>
+        <p>Limpiamos la tumba de Mamá Toña, la cubrimos de cempasúchil y prendimos nuestras velas una por una. Fue entonces, viendo su nombre entre las flores, cuando se me hizo un nudo en la garganta. Mi abuelo, que todo lo nota, me pasó el brazo por los hombros sin decir nada.</p>
+        <p>Y justo en ese momento, Diego soltó:</p>
+        <p>—¿Se acuerdan del gallo?</p>
+        <p>Claro que nos acordábamos. Una mañana, el gallo del vecino se metió a la cocina de Mamá Toña y ella lo correteó por toda la calle con una cuchara de madera en la mano… sin dejar de cantar. Diego lo contó imitando al gallo, y Sofi casi tira su chocolate de la risa. Mi abuelo se rio tanto que tuvo que secarse los ojos. El nudo de la garganta se me deshizo sin darme cuenta.</p>
+        <p>Mientras el termo de chocolate pasaba de mano en mano, le pregunté a mi abuelo —por enésima vez, lo sé— cómo había conocido a Mamá Toña. Él se acomodó la cobija y se hizo el que no se acordaba, como siempre antes de contarlo. Cuando eran jóvenes, ella vendía flores en el mercado y cantaba para atraer a los clientes. Él pasó un día por casualidad, la oyó y se quedó parado como tonto en medio del pasillo.</p>
+        <p>—No me atreví a hablarle —confesó—. Así que le compré flores. Al día siguiente, otra vez. Y así, un año entero.</p>
+        <p>—¿Un año? —se escandalizó Lupita, que se suponía que estaba dormida en el regazo de mi mamá—. ¿Y por qué tardaste tanto?</p>
+        <p>Mi abuelo soltó una carcajada y admitió que, después de cincuenta años, todavía no tenía una buena respuesta.</p>
+        <p>Luego mi abuelo sacó su guitarra vieja y empezó a puntear despacio. Mi mamá reconoció la canción enseguida —la favorita de Mamá Toña— y empezó a cantar, primero sola, casi en un susurro. Después se le unieron mis tíos, luego mi abuelo, y al final yo también, aunque me sé la letra a medias, igual que cuando era su ayudante. Ojalá nos haya escuchado.</p>
+        <p>Cuando amaneció el 2 de noviembre y las velas ya eran puro cabito, me quedé mirando el lago con los ojos medio cerrados de sueño. Y entendí algo que no sé si habría entendido antes. Mamá Toña ya no está aquí, pero vive en sus canciones, en sus corundas y en cada historia que contamos de ella. Mientras la recordemos, sigue con nosotros.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="card">
+    <h3>Glosario</h3>
+    <div class="glossary-grid">
+      <div><span class="term">la ofrenda / el altar</span> — Day of the Dead altar with photos, food and flowers</div>
+      <div><span class="term">el cempasúchil</span> — Mexican marigold (orange flower)</div>
+      <div><span class="term">el papel picado</span> — cut-paper banners</div>
+      <div><span class="term">el pan de muerto</span> — sweet "bread of the dead"</div>
+      <div><span class="term">la calaverita de azúcar</span> — little sugar skull</div>
+      <div><span class="term">el copal</span> — resin burned like incense</div>
+      <div><span class="term">el rebozo</span> — traditional long shawl</div>
+      <div><span class="term">las corundas</span> — triangular tamales from Michoacán</div>
+      <div><span class="term">el panteón</span> — cemetery</div>
+      <div><span class="term">la Noche de Ánimas</span> — night of vigil, Nov 1–2</div>
+      <div><span class="term">Mamá Toña</span> — many Mexican grandchildren call their grandmother "Mamá" + her name</div>
+      <div><span class="term">hace dos años</span> — two years ago</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Banco de palabras — estructuras de alta frecuencia</h3>
+    <div class="wordbank">
+      <span>ponemos … en la ofrenda</span>
+      <span>es para…</span>
+      <span>recordamos a…</span>
+      <span>cantaba mientras cocinaba</span>
+      <span>vamos al panteón</span>
+      <span>¿Por qué…? — Porque…</span>
+      <span>la memoria</span>
+      <span>sigue con nosotros</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Comprensión</h3>
+    <div class="comp-q"><span class="num">1.</span>¿Por qué hacen Santiago y Lupita un camino de pétalos de cempasúchil desde la puerta hasta la ofrenda?</div>
+    <div class="comp-q"><span class="num">2.</span>Al final, Santiago dice que Mamá Toña "sigue con nosotros". ¿Cómo sigue con ellos?</div>
+  </section>
+
+  <footer>
+    <button class="teacher-btn" onclick="document.getElementById('teacherModal').classList.add('open')">🎓 Notas del maestro</button>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="teacherModal">
+  <div class="modal">
+    <h3>Notas del maestro — El altar de Mamá Toña</h3>
+
+    <h4>⚠ Contenido sensible</h4>
+    <div class="warn">
+      <p>Esta historia trata de recordar a una abuela que murió. Se presenta como una celebración de la memoria, no como tristeza: no se describe la enfermedad ni la muerte en ningún nivel (solo "murió hace dos años"). En B2 hay un breve momento de emoción en el panteón ("se me hizo un nudo en la garganta"), que enseguida se convierte en risa con la historia del gallo.</p>
+      <p>Algunos estudiantes pueden haber perdido a un ser querido recientemente. Invite a compartir solo si quieren ("Si quieres, puedes contarnos de alguien que tu familia recuerda"), nunca como requisito. Ofrezca una alternativa tranquila: dibujar un recuerdo o una comida favorita. Las familias en Belice tienen creencias distintas: presente el Día de Muertos como una tradición mexicana para conocer, no como una práctica que los estudiantes deben adoptar.</p>
+    </div>
+
+    <h4>Colección</h4>
+    <p>Biblioteca FVR — estante "Leyendas Latinoamericanas". Historia original de Cuentópolis para el Día de Muertos (1–2 de noviembre). Narrador: Santiago, 10 años, nieto de Mamá Toña.</p>
+
+    <h4>Unidad curricular</h4>
+    <p>Las celebraciones y las tradiciones · La familia · Calendario cultural (Día de Muertos). Lectura FVR, no ligada a una sola unidad.</p>
+
+    <h4>Nivel original</h4>
+    <p>B2 (historia original escrita primero en B2 y nivelada hacia abajo). Filosofía FVR: solo A1 se simplifica de verdad; A2 → B2 se enriquecen progresivamente, y B2 está en un registro cercano al español nativo de México. Sin etiqueta "Auténtico" porque es una historia original.</p>
+
+    <h4>Objetivos lingüísticos</h4>
+    <ul>
+      <li>Comprender una narración en primera persona sobre tradiciones familiares e identificar el propósito de cada elemento de la ofrenda.</li>
+      <li>Hablar de la familia (abuela, abuelo, nieto, hermanita, tíos, primos).</li>
+      <li>Describir lo que alguien hacía: imperfecto para recuerdos ("cantaba", "cocinaba", "decía").</li>
+      <li>Expresar propósito: "para + infinitivo" (A1/A2) y "para que + subjuntivo" (B1/B2).</li>
+      <li>Cultural: explicar cómo el Día de Muertos celebra la memoria y compararlo con cómo las familias de los estudiantes recuerdan a sus seres queridos.</li>
+    </ul>
+
+    <h4>Estructuras de alta frecuencia</h4>
+    <p>ponemos … en la ofrenda · es para… · recordamos a… · cantaba mientras cocinaba · vamos al panteón · ¿Por qué…? — Porque… · sigue con nosotros.</p>
+
+    <h4>Pacing CEFR</h4>
+    <p><strong>A1:</strong> ≈ 310 palabras. Solo presente, oraciones cortas, mucha repetición. Los recuerdos aparecen como un bloque fijo ("Mamá Toña cantaba"). Las preguntas de Lupita guían las explicaciones. Usa "tamales" (no "corundas"). Para estudiantes con menos apoyo, combine con Read Aloud.<br>
+    <strong>A2:</strong> ≈ 460 palabras. Marco en presente con imperfecto para los recuerdos. Cada elemento de la ofrenda con un propósito sencillo ("es para…"). Introduce "corundas" con explicación en contexto.<br>
+    <strong>B1:</strong> ≈ 750 palabras. Narración completa en pasado (pretérito vs. imperfecto). Más descripción del mercado y del panteón; la historia del gallo y la de cómo se conocieron los abuelos como mini-anécdotas.<br>
+    <strong>B2:</strong> ≈ 1,100 palabras. Registro nativo: expresiones idiomáticas ("a todo pulmón", "se me hizo un nudo en la garganta", "al pie de la letra", "puro cabito"), subjuntivo ("para que calmara", "ojalá nos haya escuchado"), mexicanismos (nomás, mijo, platicar, cobijas). Incluye angelitos (1 nov) / adultos (2 nov) y la Noche de Ánimas.</p>
+
+    <h4>Datos culturales (verificados)</h4>
+    <ul>
+      <li>La ofrenda se prepara antes del 1 y 2 de noviembre. La foto indica a quién está dedicada.</li>
+      <li>Cempasúchil: su color y su olor guían a los muertos; muchas familias hacen un camino de pétalos de la puerta a la ofrenda.</li>
+      <li>Velas: su luz guía a los muertos a casa (fuego). Agua: calma la sed después del largo viaje. Sal: purifica. Copal: perfuma y purifica.</li>
+      <li>Papel picado: representa el aire y la alegría. Pan de muerto: cariño y unión. Calaveritas de azúcar: unen el cráneo mesoamericano con la técnica europea del alfeñique.</li>
+      <li>En Pátzcuaro, el 1 de noviembre se recibe a los "muertos chiquitos" y el 2 a los adultos. La velación más importante de la región del lago es la noche del 1 al 2 (Noche de Ánimas, Patrimonio Cultural Inmaterial de la UNESCO).</li>
+      <li>Las costumbres varían: algunas familias no ponen ofrenda el primer año después de una muerte. Por eso la historia dice "hace dos años".</li>
+    </ul>
+
+    <h4>Conexión con Coco</h4>
+    <p>La historia comparte las tradiciones reales que muestra la película (la foto en la ofrenda, el camino de pétalos, la comida favorita, la música familiar, recordar para que el ser querido siga con nosotros), pero no usa nada de la película: ni personajes, ni trama, ni canciones. Idea antes de leer: use una escena corta de una ofrenda en Coco (con la licencia de la escuela) como Clip Chat o MovieTalk, y pregunte: "¿Qué ponen en la ofrenda? Ahora vamos a leer sobre la ofrenda de otra familia."</p>
+
+    <h4>Respuestas esperadas (comprensión)</h4>
+    <p>1. El color y el olor del cempasúchil guían a Mamá Toña a casa, hasta la ofrenda.<br>
+    2. Vive en la memoria de la familia: en sus canciones, en sus corundas/tamales y en las historias que cuentan. Mientras la recuerden, sigue con ellos.</p>
+
+    <h4>Preguntas extra (discusión o diario)</h4>
+    <p>¿Qué cosas especiales de Mamá Toña pone la familia en la ofrenda y por qué? · ¿Qué hace la familia en el panteón la noche del 1 de noviembre?</p>
+
+    <h4>Huellas del Viajero</h4>
+    <p>No aplica — no hay personaje visitante; todos son de la familia de Santiago en Pátzcuaro.</p>
+
+    <h4>Palabra del Bosque</h4>
+    <p><em>la memoria</em> — cognado (memory). Es el corazón de la historia y aparece en la frase final de Santiago.</p>
+
+    <h4>Pregunta de reflexión</h4>
+    <p>¿Cómo recuerda tu familia a una persona especial? ¿Qué canción, comida u objeto te hace pensar en esa persona?</p>
+
+    <h4>Lectura FVR de respaldo</h4>
+    <p><a href="recetaabuela_historia4_reader_El_Mole_de_Rosario.html">El Mole de Rosario</a> (La Receta de la Abuela, Puebla, México): misma idea de la receta de la abuela y la memoria familiar. Úsela como lectura FVR de respaldo hasta que se escriba la historia del pan de muerto, después del 2 de noviembre.</p>
+
+    <div class="modal-actions">
+      <button class="btn-small" onclick="copyNotes(event)">📋 Copiar notas</button>
+      <button class="btn-small" onclick="document.getElementById('teacherModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      stopListen();
+      document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.level-block').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('level-'+btn.dataset.level).classList.add('active');
+    });
+  });
+
+  document.getElementById('teacherModal').addEventListener('click', (e) => {
+    if (e.target.id === 'teacherModal') { e.target.classList.remove('open'); }
+  });
+
+  function copyNotes(ev){
+    const modal = document.querySelector('#teacherModal .modal');
+    const btn = ev.target;
+    navigator.clipboard.writeText(modal.innerText).then(()=>{
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(()=>{btn.textContent = original;}, 1500);
+    });
+  }
+
+  // ---- Narración (TTS) — lee el nivel activo, párrafo por párrafo ----
+  const RATES = {A1:0.8, A2:0.88, B1:0.95, B2:1.0};
+  let listening = false;
+  let spanishVoice = null;
+  if('speechSynthesis' in window){
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      spanishVoice = voices.find(v => v.lang === 'es-MX') || voices.find(v => v.lang === 'es-US') || voices.find(v => v.lang && v.lang.startsWith('es')) || null;
+    };
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function resetBtn(){
+    const btn = document.getElementById('listenBtn');
+    listening = false;
+    btn.classList.remove('playing');
+    btn.textContent = '🔊 Escuchar narración';
+  }
+  function stopListen(){
+    if('speechSynthesis' in window) speechSynthesis.cancel();
+    resetBtn();
+  }
+  function toggleListen(){
+    if(!('speechSynthesis' in window)){
+      alert('Tu navegador no permite leer en voz alta. Intenta con Chrome, Edge o Safari.');
+      return;
+    }
+    if(listening){ stopListen(); return; }
+    const block = document.querySelector('.level-block.active');
+    const level = block.id.replace('level-','');
+    const paras = [...block.querySelectorAll('.story-text p:not(.origin-note)')].map(p => p.innerText.trim()).filter(Boolean);
+    speechSynthesis.cancel();
+    paras.forEach((text, i) => {
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'es-MX';
+      u.rate = RATES[level] || 0.92;
+      if(spanishVoice) u.voice = spanishVoice;
+      if(i === paras.length - 1){ u.onend = resetBtn; }
+      u.onerror = (e) => { if(e.error !== 'interrupted' && e.error !== 'canceled') resetBtn(); };
+      speechSynthesis.speak(u);
+    });
+    listening = true;
+    const btn = document.getElementById('listenBtn');
+    btn.classList.add('playing');
+    btn.textContent = '⏸ Detener narración';
+  }
+</script>
+</body>
+</html>
