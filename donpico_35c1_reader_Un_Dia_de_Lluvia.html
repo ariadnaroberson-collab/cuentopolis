@@ -138,6 +138,7 @@
   .proj-pic .pic-ph{color:var(--slate);font-size:16px;border:2px dashed var(--line);border-radius:14px;padding:40px;}
   .proj-text{font-family:'Source Serif 4',serif;color:var(--page);font-size:clamp(24px,3.4vw,44px);line-height:1.3;text-align:center;padding:16px 10px 8px;max-width:1100px;}
   .proj-text p{margin:0 0 4px;}
+  .proj-text.hidden-text{visibility:hidden;}
   .proj-text .gloss{color:var(--page);border-bottom-color:var(--lamp);}
   .proj-text .gloss-tooltip{font-size:18px;}
   .proj-nav{position:absolute;top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,0.06);color:var(--parchment);font-size:24px;}
@@ -245,6 +246,7 @@
   <div class="proj-top">
     <span class="count" id="projCount">1 / 9</span>
     <span class="sp"></span>
+    <button class="proj-btn" id="hideTextBtn" onclick="toggleProjText()" title="Tecla T">🙈 Ocultar texto</button>
     <button class="proj-btn" onclick="speakPage()">🔊 Leer página</button>
     <button class="proj-btn" id="circleBtn" onclick="toggleCircle()">🎓 Preguntas para circular</button>
     <button class="proj-btn" onclick="closeProjector()">✕ Salir</button>
@@ -299,7 +301,7 @@
       </ul>
 
       <h4>Modo proyector</h4>
-      <div>📽 muestra una página a la vez para la lectura en clase. Flechas o ‹ › para avanzar. “🎓 Preguntas para circular” abre las preguntas de cada página.</div>
+      <div>📽 muestra una página a la vez para la lectura en clase. Flechas o ‹ › para avanzar. “🎓 Preguntas para circular” abre las preguntas de cada página. “🙈 Ocultar texto” (o la tecla T) esconde la oración: primero se circula la imagen y después se revela el texto.</div>
 
       <h4>Preguntas orales extra</h4>
       <ul>
@@ -548,6 +550,7 @@ function renderProj(){
   document.getElementById('projText').innerHTML = pg.lines.map(l=>`<p>${l}</p>`).join('');
   document.getElementById('circleList').innerHTML = pg.circle.map(q=>`<li>${q}</li>`).join('');
   applyGlossState();
+  if(typeof applyProjText==='function') applyProjText();
 }
 function projGo(d){
   const n = projIndex + d;
@@ -555,6 +558,14 @@ function projGo(d){
   if('speechSynthesis' in window) speechSynthesis.cancel();
   projIndex = n; renderProj();
 }
+let projTextHidden = false;
+function applyProjText(){
+  document.getElementById('projText').classList.toggle('hidden-text', projTextHidden);
+  const b = document.getElementById('hideTextBtn');
+  b.textContent = projTextHidden ? '👁 Mostrar texto' : '🙈 Ocultar texto';
+  b.classList.toggle('on', projTextHidden);
+}
+function toggleProjText(){ projTextHidden = !projTextHidden; applyProjText(); }
 function speakPage(){ speak(plainText(document.getElementById('projText'))); }
 function toggleCircle(){
   document.getElementById('circlePanel').classList.toggle('open');
@@ -565,6 +576,7 @@ document.addEventListener('keydown', e=>{
   if(e.key==='ArrowRight' || e.key===' ' || e.key==='PageDown'){ e.preventDefault(); projGo(1); }
   if(e.key==='ArrowLeft' || e.key==='PageUp'){ e.preventDefault(); projGo(-1); }
   if(e.key==='Escape') closeProjector();
+  if(e.key==='t' || e.key==='T'){ e.preventDefault(); toggleProjText(); }
 });
 
 /* ---------------- SCROLL PROGRESS ---------------- */
