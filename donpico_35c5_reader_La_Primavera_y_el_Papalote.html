@@ -318,7 +318,7 @@
       <ul>
         <li>Seesaw: arrastrar cada imagen a su estación y grabar “Mi estación favorita es ___ porque ___.”</li>
         <li>Canva Picture Talk: las 7 palabras + el mismo árbol en las cuatro estaciones + fotos reales de la orquídea negra.</li>
-        <li>Imprimible: diseñar un papalote con forma de flor y completar “Mi estación favorita es ___. Me gusta ___.”</li>
+        <li>Imprimible: decorar un papalote de rombo con tu flor favorita y completar “Mi estación favorita es ___. Me gusta ___.”</li>
         <li>Sin Wayground (K–5).</li>
       </ul>
 
@@ -326,7 +326,7 @@
       <div class="flag-box">Ninguna escena delicada.</div>
 
       <h4>Nota de continuidad</h4>
-      <div class="flag-box">Marisol (de los Cuentos 3–4) saluda de paso y cierra su historia. El papalote mantiene la misma forma de orquídea en las páginas 6, 7 y 8. Nico es un coatí con su canasta de fruta; Iggy es hembra.</div>
+      <div class="flag-box">Marisol (de los Cuentos 3–4) saluda de paso y cierra su historia. El papalote es de rombo (forma clásica) con la orquídea negra pintada en el centro; igual en las páginas 6, 7 y 8. Nico es un coatí con su canasta de fruta; Iggy es hembra.</div>
     </div>
   </div>
 </div>
@@ -370,9 +370,9 @@ const PAGES = [
   { lines:[`Arlo es un ${g('mapache')} gris.`,`Es muy ${g('creativo')}. ¡Arlo tiene un ${g('papalote')}!`],
     alt:'Arlo, el mapache, sonríe con un papalote grande.',
     circle:['¿Arlo es un mapache o un coatí?','¿Arlo es gris o verde?','¿Es creativo? ¿Sí o no?','➜ Español 5: ¿Cómo es Arlo?'] },
-  { lines:[`El papalote es una flor negra: ¡la ${g('orquídea negra')}!`,`La orquídea negra es la flor de ${g('Belice')}.`],
-    alt:'El papalote con forma de orquídea negra; los amigos lo admiran.',
-    circle:['¿El papalote es una flor o una mariposa?','¿Cuál es la flor de Belice?','¿La orquídea negra es completamente negra? (¡No!)'] },
+  { lines:[`El papalote tiene una flor: ¡la ${g('orquídea negra')}!`,`La orquídea negra es la flor de ${g('Belice')}.`],
+    alt:'El papalote de rombo con una orquídea negra pintada; los amigos lo admiran.',
+    circle:['¿El papalote tiene una flor o una mariposa?','¿Cuál es la flor de Belice?','¿La orquídea negra es completamente negra? (¡No!)'] },
   { lines:['Hace viento.',`El papalote ${g('vuela')} ${g('alto')}. ¡Muy alto!`],
     alt:'El papalote vuela muy alto sobre la Gran Ceiba.',
     circle:['¿Hace viento? ¿Sí o no?','¿El papalote vuela alto o bajo?','¿Quién tiene la cuerda? (Arlo)','K–2: ¡Muy alto! (estirar el brazo)'] },
@@ -403,7 +403,7 @@ function renderStory(){
 /* ---------------- COMPREHENSION ---------------- */
 const COMP = [
 { q:'1. ¿Cuál es la estación favorita de Mora?', options:[{emo:'❄️', text:'el invierno', correct:false},{emo:'🌸', text:'la primavera', correct:true},{emo:'☀️', text:'el verano', correct:false}], result:'¡Sí! A Mora le gusta la primavera.' },
-  { q:'2. ¿Qué forma tiene el papalote de Arlo?', options:[{emo:'🦋', text:'una mariposa', correct:false},{emo:'🌺', text:'una orquídea negra', correct:true}], result:'¡Muy bien! Es una orquídea negra.' },
+  { q:'2. ¿Qué flor tiene el papalote de Arlo?', options:[{emo:'🌻', text:'un girasol', correct:false},{emo:'🌺', text:'una orquídea negra', correct:true}], result:'¡Muy bien! Tiene una orquídea negra.' },
 ];
 const answered = {};
 function renderComp(){
