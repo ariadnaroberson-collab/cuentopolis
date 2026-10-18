@@ -126,6 +126,12 @@
   .listen-btn:hover{border-color:var(--lamp-dim);}
   .listen-btn.playing{background:var(--lamp);color:#26160a;border-color:var(--lamp);}
 
+  /* Conoce a... (new-character intro box) */
+  .meet-box{margin:0 0 26px;padding:16px 18px 6px;border-left:4px solid var(--leaf);background:rgba(95,168,118,0.10);border-radius:8px;font-family:'Public Sans',sans-serif;line-height:1.6;}
+  .meet-title{font-family:'Fraunces',serif;font-size:19px;color:#2f5a3c;margin:0 0 2px;}
+  .meet-sub{font-size:12px;color:#5c6b52;margin:0 0 10px;font-weight:600;}
+  .meet-row{display:flex;gap:10px;margin:0 0 10px;font-size:15px;color:#2c2412;}
+  .meet-row .who{flex:0 0 auto;font-weight:700;color:#241d0e;}
   /* Huellas del Viajero card */
   .traveler-card{background:linear-gradient(160deg, rgba(95,168,118,0.14), rgba(95,168,118,0.03));border-color:rgba(95,168,118,0.3);}
   .traveler-name{font-family:'Fraunces',serif;font-size:17px;color:var(--parchment);margin-bottom:2px;}
@@ -206,6 +212,7 @@
       <div class="story-eyebrow">Temporada 1 · Los Guardianes de Chiquibul</div>
       <h1 class="story-heading">El Gran Árbol</h1>
       <div class="story-subheading">Episodio 2 — Los colores y la naturaleza</div>
+      <div class="meet-box" id="meetBox"><!-- filled by JS --></div>
       <div class="story-body" id="storyBody"><!-- filled by JS --></div>
 
       <div class="comp-check">
@@ -290,7 +297,7 @@
       <div class="flag-box">Conflicto interpersonal leve: Bruno daña el entorno natural compartido por una idea bienintencionada pero equivocada (uniformidad = belleza). Se resuelve con disculpa y reparación en grupo, sin castigo. Sin peligro, pérdida ni violencia.</div>
 
       <h4>Nota de continuidad</h4>
-      <div class="flag-box">Este episodio no introduce ningún personaje nuevo, por lo que no tiene sección de Huellas del Viajero (a diferencia de los demás episodios de la temporada). El espacio se dejó intencionalmente vacío en el lector en vez de forzar un visitante que el texto no admite.</div>
+      <div class="flag-box">Este episodio no trae un visitante, por eso la sección de Huellas del Viajero está vacía. Pero Mora (mariposa azul), Iggy (iguana verde) y Teo (paca) aparecen aquí por primera vez en la serie, así que el recuadro “Conoce a…” los presenta arriba del cuento en cada nivel, y la narración lo lee primero. Arlo no aparece hasta el Episodio 3.</div>
     </div>
   </div>
 </div>
@@ -537,9 +544,19 @@ let currentLevel = 'A1';
 let answered = {};
 const savedWords = new Set();
 
+const MEET = {
+  'Nivel A': '<div class="meet-title">Conoce a...</div><div class="meet-sub">Amigos nuevos de Chica</div><div class="meet-row"><span class="who">🦋 Mora</span><span>Mora es una mariposa azul. Le gusta el color morado.</span></div><div class="meet-row"><span class="who">🦎 Iggy</span><span>Iggy es una iguana. Iggy es verde. Le gusta el sol.</span></div><div class="meet-row"><span class="who">🐾 Teo</span><span>Teo es una paca. ¡A Teo le encanta comer! Cuando está contento, salta.</span></div>',
+  'A1': '<div class="meet-title">Conoce a...</div><div class="meet-sub">Tres amigos de Chica aparecen hoy</div><div class="meet-row"><span class="who">🦋 Mora</span><span>Mora es una mariposa azul. Vuela entre las flores. Su color favorito es el morado.</span></div><div class="meet-row"><span class="who">🦎 Iggy</span><span>Iggy es una iguana verde, como las hojas. Le gusta descansar al sol.</span></div><div class="meet-row"><span class="who">🐾 Teo</span><span>Teo es una paca. Le encanta comer fruta. Cuando está contento, salta muy alto.</span></div>',
+  'A2': '<div class="meet-title">Conoce a...</div><div class="meet-sub">Tres amigos de Chica aparecen en este capítulo</div><div class="meet-row"><span class="who">🦋 Mora</span><span>Mora es una mariposa azul que vuela entre las flores de Chiquibul. Su color favorito es el morado.</span></div><div class="meet-row"><span class="who">🦎 Iggy</span><span>Iggy es una iguana verde. Pasa horas descansando al sol sobre las piedras.</span></div><div class="meet-row"><span class="who">🐾 Teo</span><span>Teo es una paca muy alegre. Le encanta comer fruta, y cuando está contento, salta tan alto que todos se ríen.</span></div>',
+  'B1': '<div class="meet-title">Conoce a...</div><div class="meet-sub">Tres amigos de Chica aparecen en este capítulo</div><div class="meet-row"><span class="who">🦋 Mora</span><span>Mora es una mariposa azul de alas brillantes. Conoce todas las flores de la selva, pero su color favorito es el morado.</span></div><div class="meet-row"><span class="who">🦎 Iggy</span><span>Iggy es una iguana verde. Dice que el sol es su mejor amigo: cada mañana busca una piedra caliente para descansar.</span></div><div class="meet-row"><span class="who">🐾 Teo</span><span>Teo es una paca. Para él, no hay mejor plan que una buena comida, y cuando algo lo emociona, salta tan alto que parece volar.</span></div>',
+  'B2': '<div class="meet-title">Conoce a...</div><div class="meet-sub">Tres amigos de Chica aparecen en este capítulo</div><div class="meet-row"><span class="who">🦋 Mora</span><span>Mora es una mariposa azul cuyas alas brillan como el cielo después de la lluvia. Aunque conoce cada flor de Chiquibul, siempre vuelve a las moradas, sus favoritas.</span></div><div class="meet-row"><span class="who">🦎 Iggy</span><span>Iggy es una iguana verde que se toma muy en serio sus siestas al sol: según él, una piedra caliente es el mejor lugar del mundo para pensar.</span></div><div class="meet-row"><span class="who">🐾 Teo</span><span>Teo es una paca de buen apetito y mejor humor. Si hay fruta cerca, la encuentra; y si algo lo alegra, salta tan alto que sus amigos no pueden evitar reírse.</span></div>',
+};
+
 function renderStory(level){
   stopListening();
   currentLevel = level;
+  const meet = document.getElementById('meetBox');
+  if(meet){ if(MEET[level]){ meet.innerHTML = MEET[level]; meet.style.display=''; } else { meet.innerHTML=''; meet.style.display='none'; } }
   document.getElementById('storyBody').innerHTML = VERSIONS[level].html;
   document.getElementById('storyBody').style.fontSize = fontSize+'px';
   document.getElementById('toolbarLevel').textContent = level;
@@ -637,7 +654,9 @@ if('speechSynthesis' in window){
 function getStoryPlainText(){
   const clone = document.getElementById('storyBody').cloneNode(true);
   clone.querySelectorAll('.gloss-tooltip').forEach(el => el.remove());
-  return clone.innerText;
+  const meet = document.getElementById('meetBox');
+  const intro = (meet && meet.style.display!=='none') ? meet.innerText.replace(/[\u{1F300}-\u{1FAFF}]/gu,'') + '\n\n' : '';
+  return intro + clone.innerText;
 }
 
 function stopListening(){
