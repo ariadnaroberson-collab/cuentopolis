@@ -166,6 +166,9 @@
   .bi-note{font-size:12px;color:var(--slate);margin-top:6px;text-align:center;}
   .spage.reading{outline:3px solid var(--lamp);outline-offset:8px;border-radius:10px;}
   .proj-text .en-line{color:var(--lamp);font-style:italic;font-size:.8em;}
+  .voice-row{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--slate);margin-top:12px;}
+  .voice-row select{font:inherit;font-size:13px;padding:6px;border-radius:6px;border:1px solid var(--line);background:var(--ink-2);color:var(--parchment);max-width:100%;}
+  .voice-test{margin-top:6px;width:100%;font-size:12.5px;padding:6px;border-radius:6px;border:1px solid var(--line);background:transparent;color:var(--parchment);}
 </style>
 </head>
 <body class="no-en">
@@ -223,6 +226,8 @@
       <button class="listen-btn" id="listenBtn" onclick="toggleListen()">🔊 Escuchar el cuento</button>
       <button class="listen-btn bi" id="biBtn" onclick="toggleBilingual()" style="margin-top:8px;">🔊 Español + English</button>
       <div class="bi-note">Cada página: primero en español, después en inglés.</div>
+      <label class="voice-row" for="voiceSel">Voz en español <select id="voiceSel"></select></label>
+      <button class="voice-test" type="button" onclick="testVoice()">Probar la voz</button>
     </div>
     <div class="rail-card">
       <div class="rail-title">Datos del cuento</div>
@@ -642,9 +647,9 @@ function speakQueue(items, onDone){
     if(it.page !== undefined) markPage(it.page);
     const u = new SpeechSynthesisUtterance(it.text);
     const es = it.lang.startsWith('es');
-    u.lang = it.lang; u.rate = es ? 0.8 : 0.9;
+    u.lang = it.lang; u.rate = es ? 0.92 : 0.95;
     const v = es ? spanishVoice : englishVoice; if(v) u.voice = v;
-    u.onend = u.onerror = ()=>setTimeout(next, es ? 350 : 650);
+    u.onend = u.onerror = ()=>setTimeout(next, 250);
     speechSynthesis.speak(u);
   };
   next();
@@ -670,6 +675,58 @@ const _projGo = projGo;
 projGo = function(d){ qToken++; _projGo(d); };
 const _closeProjector = closeProjector;
 closeProjector = function(){ qToken++; _closeProjector(); };
+
+/* ---------------- CLEARER VOICE: best voice first, one sentence at a time ---------------- */
+function voiceScore(v){
+  let n = 0; const name = (v.name||'').toLowerCase();
+  if(v.lang==='es-MX') n+=3; else if(v.lang==='es-US' || v.lang==='es-419') n+=2; else if((v.lang||'').startsWith('es')) n+=1;
+  if(/natural|neural|online/.test(name)) n+=6;
+  if(/google/.test(name)) n+=4;
+  if(/enhanced|premium|mejorad/.test(name)) n+=4;
+  if(/paulina|m[oó]nica|dalia|sabina|elvira|helena|jorge|ximena/.test(name)) n+=2;
+  if(/compact|espeak/.test(name)) n-=5;
+  return n;
+}
+function spanishVoices(){ try{ return speechSynthesis.getVoices().filter(v=>(v.lang||'').toLowerCase().startsWith('es')).sort((a,b)=>voiceScore(b)-voiceScore(a)); }catch(e){ return []; } }
+pickSpanishVoice = function(){
+  const list = spanishVoices(); if(!list.length) return;
+  let saved = null; try{ saved = localStorage.getItem('cuentopolisVoice'); }catch(e){}
+  spanishVoice = list.find(v=>v.name===saved) || list[0];
+  const sel = document.getElementById('voiceSel'); if(!sel) return;
+  sel.innerHTML = list.map(v=>`<option value="${v.name.replace(/"/g,'&quot;')}">${v.name} (${v.lang})</option>`).join('');
+  sel.value = spanishVoice.name;
+};
+if('speechSynthesis' in window){ pickSpanishVoice(); const prev2 = speechSynthesis.onvoiceschanged; speechSynthesis.onvoiceschanged = ()=>{ if(prev2) prev2(); pickSpanishVoice(); }; }
+document.getElementById('voiceSel').addEventListener('change', e=>{
+  spanishVoice = spanishVoices().find(v=>v.name===e.target.value) || spanishVoice;
+  try{ localStorage.setItem('cuentopolisVoice', spanishVoice.name); }catch(err){}
+});
+function testVoice(){ speakQueue([{text:'Hola, clase. Hoy les cuento sobre México.', lang:'es-MX'}]); }
+function sentences(t){ return String(t).replace(/\s+/g,' ').trim().split(/(?<=[.!?…])\s+(?=[A-ZÁÉÍÓÚÑ])/).filter(x=>x.trim()); }
+speak = function(text, onEnd){ speakQueue([{text:text, lang:'es-MX'}], onEnd); };
+const _speakQueue = speakQueue;
+/* text the voice should hear: no dashes, inverted marks, quotes, brackets or "Mmm" */
+function forSpeech(t){
+  return String(t)
+    .replace(/[¡¿]/g,'')
+    .replace(/\s*[—–]\s*/g,' ')
+    .replace(/["“”«»]/g,'')
+    .replace(/\[[^\]]*\]/g,'')
+    .replace(/\bM+m{2,}\b[!.]*/gi,'')
+    .replace(/\s+([.,!?])/g,'$1')
+    .replace(/\s+/g,' ').trim();
+}
+plainText = function(el){
+  const c = el.cloneNode(true);
+  c.querySelectorAll('.gloss-tooltip, .spage-num, .pic').forEach(x=>x.remove());
+  const ps = [...c.querySelectorAll('p')];
+  return (ps.length ? ps.map(p=>p.textContent.trim()).join(' ') : c.textContent).replace(/\s+/g,' ').trim();
+};
+speakQueue = function(items, onDone){
+  const out = [];
+  items.forEach(it=>sentences(forSpeech(it.text)).filter(t=>/[a-záéíóúñü]/i.test(t)).forEach((t,i)=>out.push({text:t, lang:it.lang, page:i===0?it.page:undefined})));
+  _speakQueue(out, onDone);
+};
 
 renderStory();
 renderComp();
