@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leaves Fall, Traditions Bloom</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: one centered phone-first card on a warm autumn night; falling leaves behind; progress = a row of leaves that bloom into marigolds. Single committed look (night), both host themes. */
+:root{
+  --night:#22142E; --night2:#2F1D3F; --card:#FFF7EC; --ink:#2A1A33; --muted:#6E5A72;
+  --marigold:#F7931E; --marigold-deep:#D9600B; --leaf:#B5652A; --rose:#E0457B; --teal:#1F9E9A; --ok:#2F8F4E; --no:#B23A48;
+  --display:"Lilita One","Arial Rounded MT Bold","Trebuchet MS",sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--night);color:var(--card);font-family:var(--body);font-size:17px;line-height:1.45;margin:0;overflow-x:hidden}
+#sky{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;min-height:100%;display:flex;flex-direction:column;align-items:center;padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.picado{display:flex;gap:6px;justify-content:center;margin-bottom:14px;width:100%;max-width:520px}
+.picado span{flex:1;height:34px;clip-path:polygon(0 0,100% 0,100% 100%,83% 82%,66% 100%,50% 82%,33% 100%,17% 82%,0 100%)}
+.picado span:nth-child(5n+1){background:var(--rose)}.picado span:nth-child(5n+2){background:var(--marigold)}.picado span:nth-child(5n+3){background:var(--teal)}.picado span:nth-child(5n+4){background:#8E5BD6}.picado span:nth-child(5n+5){background:#E8C43A}
+.card{width:100%;max-width:520px;background:var(--card);color:var(--ink);border-radius:22px;padding:24px 20px 22px;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,8vw,42px);line-height:1.02;margin:0;color:var(--marigold-deep);text-wrap:balance}
+.es{font-style:italic;color:var(--muted)}
+.sub{margin:6px 0 0;font-size:19px;text-wrap:balance}
+.kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:700}
+.intro{margin:16px 0 20px;display:grid;gap:6px}
+.btn{font:inherit;font-weight:700;font-size:18px;border:0;border-radius:14px;padding:14px 18px;cursor:pointer;background:var(--marigold);color:#2A1A33;width:100%;transition:transform .12s ease,background .12s ease}
+.btn:hover{background:#FFA638}.btn:active{transform:scale(.98)}
+.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+.progress{display:flex;gap:6px;justify-content:center;margin:0 0 16px}
+.progress svg{width:30px;height:30px}
+.q{font-family:var(--display);font-weight:400;font-size:clamp(22px,6vw,27px);line-height:1.15;margin:0;text-wrap:balance}
+.qen{margin:4px 0 16px;font-size:17px}
+.opts{display:grid;gap:10px}
+.opt{font:inherit;text-align:left;border:2px solid #E7D7C2;background:#fff;color:var(--ink);border-radius:14px;padding:12px 14px;cursor:pointer;display:grid;gap:2px;transition:border-color .12s ease,background .12s ease}
+.opt:hover:not(:disabled){border-color:var(--marigold)}
+.opt b{font-size:18px}.opt span{font-size:15px;color:var(--muted)}
+.opt.right{border-color:var(--ok);background:#E8F5EC}.opt.wrong{border-color:var(--no);background:#FBEAEC}
+.opt:disabled{cursor:default}
+.fact{margin:16px 0 0;padding:14px;border-radius:14px;background:#FCEBD3;display:grid;gap:6px}
+.fact .verdict{font-family:var(--display);font-size:22px}
+.fact .verdict.ok{color:var(--ok)}.fact .verdict.no{color:var(--no)}
+.fact p{margin:0}
+.next{margin-top:14px}
+.end-bloom{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:14px 0}
+.end-bloom svg{width:40px;height:40px}
+.score{font-family:var(--display);font-size:44px;color:var(--marigold-deep);margin:4px 0 0;text-align:center}
+.foot{margin-top:16px;font-size:13px;color:#D9C8E0;text-align:center;max-width:520px}
+@media (prefers-reduced-motion:reduce){.btn,.opt{transition:none}}
+</style>
+</head>
+<body>
+
+
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="wrap">
+  <div class="picado" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <main class="card" id="app" aria-live="polite"></main>
+  <p class="foot">Spanish Department · Fall Festival · Departamento de Español · Feria de Otoño</p>
+</div>
+
+<script>
+const Q = [
+  { es:'¿Para qué sirve la flor de cempasúchil en el altar?', en:'What is the marigold for on the altar?',
+    o:[['Para decorar un pastel','To decorate a cake'],['Su color y su olor guían el camino a casa','Its color and smell guide the way home'],['Para regalar en una boda','To give at a wedding']], a:1,
+    f:['Las familias hacen un camino de pétalos desde la puerta hasta el altar.','Families make a path of petals from the door to the altar.'] },
+  { es:'¿Cuándo se celebra el Día de Muertos?', en:'When is Día de Muertos celebrated?',
+    o:[['El 1 y 2 de noviembre','November 1 and 2'],['El 15 de septiembre','September 15'],['El 25 de diciembre','December 25']], a:0,
+    f:['Es una fiesta alegre para recordar a las personas que queremos.','It is a happy celebration to remember the people we love.'] },
+  { es:'¿Quién dibujó la primera Catrina?', en:'Who drew the first Catrina?',
+    o:[['Frida Kahlo','Frida Kahlo'],['Diego Rivera','Diego Rivera'],['José Guadalupe Posada','José Guadalupe Posada']], a:2,
+    f:['Posada la dibujó hace más de cien años. En 1947, Diego Rivera le puso un vestido y el nombre "Catrina".','Posada drew her over 100 years ago. In 1947, Diego Rivera gave her a dress and the name "Catrina."'] },
+  { es:'Un alebrije es…', en:'An alebrije is…',
+    o:[['Un pan dulce','A sweet bread'],['Un animal imaginario de muchos colores','A colorful imaginary animal'],['Una flor naranja','An orange flower']], a:1,
+    f:['El artista Pedro Linares soñó con animales imposibles que gritaban "¡Alebrijes!" y después los hizo de papel.','Artist Pedro Linares dreamed of impossible animals shouting "¡Alebrijes!" and then made them out of paper.'] },
+  { es:'¿Qué tiene el pan de muerto encima?', en:'What does pan de muerto have on top?',
+    o:[['Formas de huesitos y azúcar','Little bone shapes and sugar'],['Chocolate y fresas','Chocolate and strawberries'],['Queso','Cheese']], a:0,
+    f:['Es un pan dulce que se comparte con la familia en esta temporada.','It is a sweet bread families share during this season.'] },
+  { es:'En México, la calabaza en tacha es…', en:'In Mexico, calabaza en tacha is…',
+    o:[['Una sopa picante','A spicy soup'],['Una calabaza con cara','A pumpkin with a face'],['Calabaza dulce que se pone en el altar','Sweet pumpkin placed on the altar']], a:2,
+    f:['Se cocina con piloncillo y canela. ¡El otoño también llega al altar!','It is cooked with raw cane sugar (piloncillo) and cinnamon. Fall reaches the altar too!'] },
+  { es:'¿Qué significa "Recordar es amar"?', en:'What does "Recordar es amar" mean?',
+    o:[['Remember to eat','Recuerda comer'],['To remember is to love','Recordar es amar'],['Love the autumn','Ama el otoño']], a:1,
+    f:['Ese es el corazón del Día de Muertos.','That is the heart of Día de Muertos.'] },
+];
+
+const leafSVG = (c='#B5652A') => `<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 4 L23 13 L31 10 L28 18 L36 20 L28 24 L31 31 L23 28 L20 36 L17 28 L9 31 L12 24 L4 20 L12 18 L9 10 L17 13 Z" fill="${c}"/><path d="M20 12 V38" stroke="#6b3a17" stroke-width="2"/></svg>`;
+const bloomSVG = () => { let p=''; for(let i=0;i<10;i++){const a=i*Math.PI/5; p+=`<circle cx="${20+8*Math.cos(a)}" cy="${20+8*Math.sin(a)}" r="7" fill="${i%2?'#F7931E':'#FFB347'}"/>`;} return `<svg viewBox="0 0 40 40" aria-hidden="true">${p}<circle cx="20" cy="20" r="6" fill="#D9600B"/></svg>`; };
+
+const app = document.getElementById('app');
+let i = 0, score = 0, results = [];
+
+function progress(){
+  return `<div class="progress" aria-label="Pregunta ${i+1} de ${Q.length}">${Q.map((_,k)=> results[k]===true ? bloomSVG() : leafSVG(k===i ? '#E0A040' : (results[k]===false ? '#8a6a4a' : '#B5652A'))).join('')}</div>`;
+}
+function start(){
+  i=0; score=0; results=[];
+  app.innerHTML = `<p class="kicker">Día de Muertos · Fall Festival</p>
+    <h1>Leaves fall,<br>traditions bloom</h1>
+    <p class="sub es">Las hojas caen, las tradiciones florecen</p>
+    <div class="intro"><p style="margin:0">7 preguntas. Cada respuesta correcta convierte una hoja en una flor de cempasúchil.</p>
+    <p class="es" style="margin:0">7 questions. Every right answer turns a leaf into a marigold.</p></div>
+    <div class="progress">${Q.map(()=>leafSVG()).join('')}</div>
+    <button class="btn" id="go">¡Empezar! · Start</button>`;
+  document.getElementById('go').onclick = show;
+}
+function show(){
+  const q = Q[i];
+  app.innerHTML = `${progress()}<p class="kicker">Pregunta ${i+1} de ${Q.length} · Question ${i+1} of ${Q.length}</p>
+    <h2 class="q">${q.es}</h2><p class="qen es">${q.en}</p>
+    <div class="opts">${q.o.map((o,k)=>`<button class="opt" id="opt${k}" data-k="${k}"><b>${o[0]}</b><span>${o[1]}</span></button>`).join('')}</div>
+    <div id="fb"></div>`;
+  app.querySelectorAll('.opt').forEach(b => b.onclick = () => answer(+b.dataset.k));
+  app.querySelector('.opt').focus({preventScroll:true});
+}
+function answer(k){
+  const q = Q[i], ok = k === q.a;
+  results[i] = ok; if (ok) score++;
+  app.querySelectorAll('.opt').forEach(b => { b.disabled = true; const n=+b.dataset.k; if(n===q.a) b.classList.add('right'); else if(n===k) b.classList.add('wrong'); });
+  app.querySelector('.progress').outerHTML = progress();
+  const last = i === Q.length-1;
+  document.getElementById('fb').innerHTML = `<div class="fact"><div class="verdict ${ok?'ok':'no'}">${ok?'¡Muy bien! · Well done!':'¡Casi! · Almost!'}</div>
+    <p>${q.f[0]}</p><p class="es">${q.f[1]}</p></div>
+    <button class="btn next" id="next">${last?'Ver mis flores · See my flowers':'Siguiente · Next'}</button>`;
+  const nx = document.getElementById('next'); nx.onclick = () => { if(last) end(); else { i++; show(); } }; nx.focus({preventScroll:true});
+}
+function end(){
+  const msg = score >= 6 ? ['¡Eres experto en Día de Muertos!','You are a Día de Muertos expert!'] : score >= 4 ? ['¡Tus tradiciones florecen!','Your traditions are blooming!'] : ['¡Cada hoja es una nueva flor por aprender!','Every leaf is a new flower to learn!'];
+  app.innerHTML = `<p class="kicker">¡Felicidades! · Congratulations!</p>
+    <h1>${msg[0]}</h1><p class="sub es">${msg[1]}</p>
+    <div class="end-bloom">${results.map(r=> r? bloomSVG(): leafSVG()).join('')}</div>
+    <p class="score">${score} / ${Q.length}</p>
+    <p style="text-align:center;margin:0 0 18px">flores de cempasúchil · marigolds bloomed</p>
+    <button class="btn" id="again">Jugar otra vez · Play again</button>`;
+  document.getElementById('again').onclick = start;
+}
+start();
+
+// falling leaves → petals
+(function(){
+  const cv=document.getElementById('sky'), ctx=cv.getContext('2d');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W,H,items=[];
+  const cols=['#B5652A','#D98A2B','#8C4A1F','#F7931E','#FFB347'];
+  function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+  size(); addEventListener('resize',size);
+  for(let k=0;k<26;k++) items.push({x:Math.random(),y:Math.random(),s:.6+Math.random()*.9,v:.0006+Math.random()*.0012,r:Math.random()*6,c:cols[k%cols.length],w:Math.random()*6});
+  function leaf(p){
+    const x=p.x*W, y=p.y*H, s=10*p.s*devicePixelRatio;
+    ctx.save(); ctx.translate(x,y); ctx.rotate(p.r); ctx.globalAlpha=.55; ctx.fillStyle=p.c;
+    ctx.beginPath(); ctx.ellipse(0,0,s,s*.55,0,0,Math.PI*2); ctx.fill(); ctx.restore();
+  }
+  function frame(t){
+    ctx.clearRect(0,0,W,H);
+    items.forEach(p=>{ if(!reduce){ p.y+=p.v; p.x+=Math.sin(t/1600+p.w)*.0004; p.r+=.01; if(p.y>1.05){p.y=-.05;p.x=Math.random();} } leaf(p); });
+    if(!reduce) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body>
+</html>
