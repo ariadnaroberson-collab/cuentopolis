@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solo Detective · El caso de las huellas gigantes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Public+Sans:wght@400;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#17130e; --bg2:#221b13; --paper:#f4e8cf; --paper2:#ead9b5; --ink:#2b2117;
+  --gold:#c9a14a; --gold2:#e3c27a; --jungle:#2f6b4f; --jungle2:#4f9a73; --red:#a8402f;
+  --muted:#7a6a55;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:radial-gradient(ellipse at top,#2a2117 0%,var(--bg) 60%);color:var(--paper);font-family:"Public Sans",system-ui,sans-serif;min-height:100%}
+body{padding:18px 14px 60px}
+.wrap{max-width:760px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.brand{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold2)}
+.prog{font-family:"Space Mono",monospace;font-size:12px;color:var(--gold2);white-space:nowrap}
+.dots{display:flex;gap:6px;margin-top:6px}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--gold);background:transparent}
+.dot.done{background:var(--gold)}
+.dot.now{box-shadow:0 0 0 3px rgba(201,161,74,.35)}
+.file{background:linear-gradient(180deg,var(--paper) 0%,var(--paper2) 100%);color:var(--ink);border-radius:6px 14px 14px 14px;padding:26px 24px 24px;position:relative;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.file:before{content:attr(data-tab);position:absolute;top:-30px;left:0;background:var(--paper);color:var(--ink);font-family:"Space Mono",monospace;font-size:12px;font-weight:700;padding:7px 14px;border-radius:10px 10px 0 0;letter-spacing:.06em}
+h1{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(26px,5vw,38px);line-height:1.08;margin:4px 0 6px}
+h2{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(22px,4vw,28px);margin:0 0 4px}
+.kicker{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);font-weight:700}
+.story{font-family:"Source Serif 4",Georgia,serif;font-size:19px;line-height:1.6}
+.story p{margin:0 0 12px}
+.story b{color:#5a2d16}
+.say{background:rgba(47,107,79,.10);border-left:4px solid var(--jungle);padding:8px 12px;border-radius:0 8px 8px 0;margin:0 0 12px}
+.evidence{border:2px dashed var(--muted);border-radius:10px;padding:12px 14px;margin:6px 0 14px;background:rgba(255,255,255,.35);font-family:"Space Mono",monospace;font-size:15px;line-height:1.55}
+.evidence .lbl{font-weight:700;font-size:12px;letter-spacing:.08em;color:var(--red);display:block;margin-bottom:4px}
+.u{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.challenge{margin-top:18px;border-top:2px solid rgba(43,33,23,.18);padding-top:16px}
+.challenge .q{font-weight:700;font-size:18px;margin-bottom:10px}
+input[type=text]{width:100%;font-size:20px;padding:12px 14px;border:2px solid var(--ink);border-radius:10px;background:#fffaf0;font-family:"Space Mono",monospace;text-transform:uppercase;letter-spacing:.12em}
+select{font-size:16px;padding:8px;border:2px solid var(--ink);border-radius:8px;background:#fffaf0;width:100%}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+button{font-family:"Public Sans",sans-serif;font-weight:700;font-size:16px;border:0;border-radius:10px;padding:12px 18px;cursor:pointer}
+.btn{background:var(--jungle);color:#fff}
+.btn:hover{background:var(--jungle2)}
+.ghost{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+.gold{background:var(--gold);color:var(--ink)}
+.msg{margin-top:12px;font-weight:700;min-height:24px}
+.msg.ok{color:var(--jungle)}
+.msg.no{color:var(--red)}
+.hint{display:none;margin-top:10px;background:#fff3cf;border:2px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:16px}
+.hint.show{display:block}
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:420px;margin:8px auto 4px}
+.cell{aspect-ratio:1;border:2px solid var(--ink);border-radius:10px;background:#fffaf0;font-size:clamp(20px,6vw,30px);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:2px;transition:transform .1s}
+.cell small{font-size:9px;font-family:"Space Mono",monospace;line-height:1;margin-top:2px;text-align:center}
+.cell:hover{transform:scale(1.05)}
+.cell.start{background:#dff0e6}
+.cell.pick{outline:4px solid var(--red)}
+.compass{text-align:center;font-family:"Space Mono",monospace;font-size:13px;margin-bottom:4px}
+.match{display:grid;grid-template-columns:1fr;gap:10px}
+.match .m{background:rgba(255,255,255,.45);border-radius:10px;padding:10px 12px}
+.match .m p{margin:0 0 6px;font-size:16px}
+.stamp{float:right;margin:0 0 10px 12px;transform:rotate(6deg);border:3px solid var(--red);color:var(--red);font-family:"Space Mono",monospace;font-weight:700;padding:4px 10px;border-radius:6px;font-size:13px;letter-spacing:.1em;opacity:.85}
+.stamp.solved{border-color:var(--jungle);color:var(--jungle)}
+.cast{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px}
+.chip{background:rgba(43,33,23,.08);border-radius:20px;padding:5px 10px;font-size:14px}
+.final-q li{margin-bottom:10px;font-size:17px}
+.word{display:inline-block;font-family:"Fraunces",serif;font-size:30px;font-weight:800;color:var(--jungle);letter-spacing:.06em}
+.foot{margin-top:18px;text-align:center;font-size:12px;color:var(--gold2);font-family:"Space Mono",monospace}
+.reset{background:transparent;color:var(--gold2);border:1px solid var(--gold);font-size:12px;padding:6px 10px}
+.hidden{display:none}
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:6px 0 16px}
+.lv{background:#fffaf0;color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:10px;text-align:left;font-weight:600}
+.lv b{display:block;font-family:"Fraunces",serif;font-size:19px}
+.lv span{font-size:13px;color:var(--muted)}
+.lv.on{background:var(--jungle);color:#fff;border-color:var(--jungle)}
+.lv.on span{color:#e8f3ec}
+.lvtag{display:inline-block;background:rgba(43,33,23,.08);border-radius:20px;padding:3px 10px;font-size:13px;font-weight:700;margin-bottom:8px}
+.roles{background:#fff3cf;border:2px solid var(--gold);border-radius:10px;padding:8px 12px;margin:4px 0 14px;font-size:15px;font-weight:600;line-height:1.45}
+.names label{display:block;font-weight:700;font-size:15px;margin:10px 0 4px}
+@media (max-width:480px){.file{padding:22px 16px}.story{font-size:17.5px}.stamp{float:none;display:inline-block;margin:0 0 12px;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <a href="casos-de-misterio.html" style="font-family:'Space Mono',monospace;font-size:12px;color:var(--gold);text-decoration:none;display:inline-block;margin-bottom:8px">← Casos de Misterio</a>
+      <div class="brand" id="brand">Casos de Misterio · Cuentopolis</div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="prog" id="prog"></div>
+  </header>
+  <main id="app"></main>
+  <div class="foot"><button class="reset" id="resetBtn">Empezar el caso otra vez</button></div>
+</div>
+
+<script>
+/* =========================================================
+   DATOS DEL CASO — para un caso nuevo, cambia solo este bloque.
+   Tipos de reto: "palabra", "mapa", "emparejar".
+   Las respuestas se comparan sin acentos y sin mayúsculas.
+   ========================================================= */
+const CASO = {
+  id: "solo-huellas-1",
+  marca: "Solo Detective · Cuentopolis",
+  serie: "Solo Detective · Tú eres el detective",
+  titulo: "El caso de las huellas gigantes",
+  nivel: "Tres niveles · Elige el tuyo",
+  niveles: [
+    {id:"n1", icono:"🔍", nombre:"Novato", desc:"Frases cortas · A1"},
+    {id:"n2", icono:"🧭", nombre:"Explorador", desc:"Párrafos cortos · A2"},
+    {id:"n3", icono:"🕵️", nombre:"Maestro", desc:"Más pistas y más detalles · B1"}
+  ],
+  intro: {
+    n1: `
+      <p>Es martes. Llegas a la escuela. ¡Hay huellas en el patio!</p>
+      <p>Las huellas son <b>verdes</b>. Son <b>enormes</b>.</p>
+      <p>Todos los estudiantes gritan: <b>«¡Es un dinosaurio!»</b></p>
+      <p>Tú eres detective. Tu misión: descubrir quién hizo las huellas.</p>`,
+    n2: `
+      <p>Es martes por la mañana. Llegas a la escuela y ves algo increíble: en el patio hay <b>huellas verdes y gigantes</b>.</p>
+      <p>Todos los estudiantes están emocionados. —¡Es un dinosaurio! —gritan.</p>
+      <p>Pero tú eres detective, y un detective necesita pruebas. Tu misión: descubrir <b>quién</b> hizo las huellas y <b>por qué</b>.</p>`,
+    n3: `
+      <p>El martes por la mañana, cuando llegaste a la escuela, encontraste a todos los estudiantes alrededor del patio. En el piso había una fila de <b>huellas verdes, enormes</b>, que nadie había visto el día anterior.</p>
+      <p>Algunos decían que era un dinosaurio; otros, que era una broma. La directora te llamó a su oficina:</p>
+      <div class="say">—Necesito a mi mejor detective. Descubre quién hizo estas huellas, cuándo y por qué. Pero recuerda: nadie acusa a nadie sin pruebas.</div>`
+  },
+  pistas: [
+    {
+      tab: "PISTA 1",
+      titulo: "Las huellas",
+      texto: {
+        n1: `
+          <p>Miras las huellas con tu lupa. 🔍</p>
+          <p>Las huellas son verdes. Son muy grandes. Cada huella tiene <b>tres dedos</b>, como la pata de un pájaro gigante.</p>
+          <p>Las huellas empiezan en el jardín y van por todo el patio.</p>`,
+        n2: `
+          <p>Te acercas a las huellas con tu lupa. Son verdes y brillantes. Cada huella tiene tres dedos largos, como las patas de un pájaro gigante.</p>
+          <p>Las huellas empiezan en el <b>jardín</b> de la escuela, cruzan todo el patio y desaparecen detrás de los salones.</p>
+          <div class="say">—¡Es un T. rex! —grita un estudiante—. ¡Los T. rex tienen tres dedos!</div>`,
+        n3: `
+          <p>Sacaste tu cinta de medir y anotaste todo en tu cuaderno de detective:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · TU CUADERNO</span>
+          Color: verde brillante.<br>
+          Dedos: tres, largos.<br>
+          Largo de cada huella: 50 centímetros.<br>
+          Largo de mi zapato: 25 centímetros.<br>
+          Empiezan en: el jardín.</div>
+          <p>Un estudiante gritó que era un T. rex. Tú no dijiste nada. Primero, los números.</p>`
+      },
+      reto: {
+        n1: { tipo:"palabra", pregunta:"¿Cuántos dedos tiene cada huella? Escribe el número.",
+              respuesta:["3","tres","3 dedos","tres dedos"],
+              ayuda:"Lee otra vez: «Cada huella tiene ___ dedos»." },
+        n2: { tipo:"palabra", pregunta:"¿Dónde empiezan las huellas? Escribe el lugar.",
+              respuesta:["jardin","el jardin","en el jardin","jardin de la escuela","el jardin de la escuela","en el jardin de la escuela"],
+              ayuda:"Busca la palabra «empiezan» en la historia. ¿Qué lugar viene después?" },
+        n3: { tipo:"palabra", pregunta:"¿Cuántas veces más grande que tu zapato es cada huella? Escribe un número.",
+              respuesta:["2","dos","2 veces","dos veces","el doble","doble"],
+              ayuda:"La huella mide 50 cm. Tu zapato mide 25 cm. ¿Cuántas veces cabe 25 en 50?" }
+      }
+    },
+    {
+      tab: "PISTA 2",
+      titulo: "Izquierdo, izquierdo, izquierdo",
+      texto: {
+        n1: `
+          <p>Miras otra vez. ¡Qué raro!</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LAS HUELLAS</span>
+          Huella 1: pie izquierdo.<br>
+          Huella 2: pie izquierdo.<br>
+          Huella 3: pie izquierdo.<br>
+          Huella 4: pie izquierdo.</div>
+          <p>Todas las huellas son del pie <b>izquierdo</b>. No hay huellas del pie derecho.</p>`,
+        n2: `
+          <p>Caminas al lado de las huellas y las cuentas. Hay veinte. Pero hay algo muy raro:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LAS HUELLAS</span>
+          Las veinte huellas son del pie <span class="u">izquierdo</span>.<br>
+          No hay ni una huella del pie derecho.</div>
+          <p>Tú caminas así: izquierdo, derecho, izquierdo, derecho... Un perro, un pájaro y un dinosaurio también.</p>`,
+        n3: `
+          <p>Contaste las huellas: veinte en total. Después, notaste dos detalles muy extraños:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · TU CUADERNO</span>
+          1. Las veinte huellas son del pie <span class="u">izquierdo</span>. No hay ninguna del pie derecho.<br>
+          2. Entre una huella y la siguiente hay exactamente <span class="u">un metro</span>. Siempre. Ni un centímetro más, ni uno menos.</div>
+          <p>Cualquier animal que camina, desde un perro hasta un dinosaurio, alterna el pie izquierdo y el derecho, y nunca da pasos perfectamente iguales.</p>`
+      },
+      reto: {
+        n1: { tipo:"emparejar", pregunta:"¿Qué significa esta prueba?",
+              items:[{texto:"Todas las huellas son del pie izquierdo. Entonces...", correcta:"No es un animal de verdad."}],
+              opciones:["Es un dinosaurio con un pie.","Es un pájaro pequeño.","No es un animal de verdad."],
+              error:"Esa no es la mejor respuesta. Piensa: ¿cómo camina un animal?",
+              ayuda:"Un animal de verdad tiene pie izquierdo y pie derecho. ¿Hay huellas del pie derecho?" },
+        n2: { tipo:"emparejar", pregunta:"¿Qué significa esta prueba?",
+              items:[{texto:"Las veinte huellas son del pie izquierdo. Entonces...", correcta:"No es un animal de verdad: alguien hizo las huellas con un solo pie falso."}],
+              opciones:["El dinosaurio salta en un solo pie.","Las huellas son de dos animales diferentes.","No es un animal de verdad: alguien hizo las huellas con un solo pie falso."],
+              error:"Esa no es la mejor explicación. Piensa: ¿cómo caminas tú?",
+              ayuda:"Un animal de verdad camina izquierdo, derecho, izquierdo... Aquí solo hay pie izquierdo. ¿Qué puede hacer eso?" },
+        n3: { tipo:"emparejar", pregunta:"¿Cuál es la conclusión más lógica?",
+              items:[{texto:"Solo hay huellas del pie izquierdo y todos los pasos miden exactamente un metro. Entonces...", correcta:"Una persona hizo las huellas con un pie falso, midiendo cada paso."}],
+              opciones:["Un dinosaurio herido caminó en un solo pie.","Una persona hizo las huellas con un pie falso, midiendo cada paso.","Un animal muy grande saltó veinte veces.","Las huellas aparecieron por la lluvia."],
+              error:"Esa conclusión no explica las dos pruebas. Revisa: ¿por qué solo izquierdo? ¿Por qué pasos perfectos?",
+              ayuda:"Busca la respuesta que explica las DOS pruebas: el pie siempre igual y los pasos perfectos. ¿Quién puede medir con una cinta?" }
+      }
+    },
+    {
+      tab: "PISTA 3",
+      titulo: "¿Adónde van las huellas?",
+      texto: {
+        n1: `
+          <p>Sigues las huellas. Escribes el camino en tu cuaderno:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL CAMINO</span>
+          Empieza en el jardín 🌳.<br>
+          1. Tres casillas al norte ⬆️.<br>
+          2. Cuatro casillas al este ➡️.<br>
+          3. Una casilla al norte ⬆️.</div>
+          <p>Sigue el camino con el dedo.</p>`,
+        n2: `
+          <p>Sigues las huellas por toda la escuela y dibujas el camino en tu cuaderno:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL CAMINO DE LAS HUELLAS</span>
+          Desde el jardín, las huellas van <span class="u">tres</span> casillas al <span class="u">norte</span>. Después, caminan <span class="u">cuatro</span> casillas al <span class="u">este</span>. Al final, suben <span class="u">una</span> casilla más al <span class="u">norte</span> y terminan en una puerta.</div>
+          <p>Empieza en el jardín 🌳 y sigue el camino con el dedo.</p>`,
+        n3: `
+          <p>Muchos estudiantes caminaron sobre las huellas del patio y borraron algunas, así que no puedes seguirlas paso a paso. Pero anotaste estas pistas sobre el lugar donde terminan:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · TU CUADERNO</span>
+          1. Terminan en la fila del norte de la escuela (la fila de arriba).<br>
+          2. El lugar está lejos del gimnasio.<br>
+          3. Está al lado del laboratorio, pero no es el laboratorio.<br>
+          4. Está justo al norte del salón de arte.</div>
+          <p>Usa el mapa de la escuela y descarta los lugares uno por uno.</p>`
+      },
+      reto: {
+        tipo:"mapa",
+        pregunta: {n1:"Toca el lugar donde terminan las huellas.", n2:"Toca el lugar donde terminan las huellas.", n3:"Toca el único lugar que cumple las cuatro pistas."},
+        columnas:5,
+        celdas:[
+          ["🏀","gimnasio"],["⚽","cancha"],["⚽","cancha"],["🔬","laboratorio"],["📚","biblioteca"],
+          ["🚻","baños"],["🌿","patio"],["🌿","patio"],["🌿","patio"],["🎨","salón de arte"],
+          ["🍎","cafetería"],["🌿","patio"],["⛲","fuente"],["🌿","patio"],["🏫","salón 5"],
+          ["🏫","salón 1"],["🌿","patio"],["🌿","patio"],["🌿","patio"],["🏫","salón 4"],
+          ["🌳","jardín"],["🚪","dirección"],["🏫","salón 2"],["🚌","parada"],["🏫","salón 3"]
+        ],
+        inicio:20, correcta:4,
+        error: {n1:"No es ese lugar. Empieza otra vez en el jardín.", n2:"No es ese lugar. Empieza otra vez en el jardín y cuenta las casillas.", n3:"Ese lugar no cumple las cuatro pistas. Revísalas una por una."},
+        ayuda: {
+          n1:"Norte = arriba ⬆️. Este = derecha ➡️. Desde el jardín: 3 arriba, 4 a la derecha, 1 arriba.",
+          n2:"Norte = arriba ⬆️, este = derecha ➡️. Desde el jardín: 3 arriba, 4 a la derecha y 1 arriba otra vez.",
+          n3:"Pista 1: solo la fila de arriba. Pista 2: quita el gimnasio y la cancha. Pista 3: ¿qué está al lado del laboratorio? Pista 4: ¿qué está arriba del salón de arte?" }
+      }
+    },
+    {
+      tab: "PISTA 4",
+      titulo: "Los sospechosos",
+      texto: {
+        n1: `
+          <p>Las huellas terminan en la <b>biblioteca</b>. La puerta está cerrada. Hay papel en las ventanas. ¿Quién hizo las huellas? Hablas con tres maestros y con Don Ramón.</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · TU CUADERNO</span>
+          🏀 Profesor Gómez (educación física): tiene zapatos muy grandes. Pero anoche estaba en un partido en Belmopan.<br>
+          🔬 Maestra Rivas (ciencias): le encantan los dinosaurios. Pero anoche estaba en su casa con su familia.<br>
+          🎨 Maestra Paz (arte): hoy tiene las manos un poco <span class="u">verdes</span>.<br>
+          🧹 Don Ramón (conserje): «Anoche, a las 7, vi una luz en el salón de arte.»</div>`,
+        n2: `
+          <p>Las huellas terminan en la puerta de la <b>biblioteca</b>. Está cerrada con llave y tiene papel en las ventanas. ¿Qué pasa aquí? Hablas con los adultos de la escuela:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · TU CUADERNO</span>
+          🏀 Profesor Gómez (educación física): usa zapatos enormes, pero son azules y tienen cinco dedos... ¡como todos los zapatos! Anoche estaba en un partido de baloncesto en Belmopan.<br>
+          🔬 Maestra Rivas (ciencias): tiene un póster de un T. rex en su salón. Anoche estaba en el cumpleaños de su hermana.<br>
+          🎨 Maestra Paz (arte): hoy tiene una mancha <span class="u">verde</span> en la mano. Dice: «Es de mi clase de arte».<br>
+          🧹 Don Ramón (conserje): «Anoche, a las 7, vi una luz en el salón de arte. Y en la basura de reciclaje encontré esto.»</div>
+          <div class="evidence"><span class="lbl">EVIDENCIA · PAPEL EN EL RECICLAJE</span>
+          Para el viernes: pintura verde, cartón grande, esponjas. ¡No decir nada a los estudiantes! — P.</div>`,
+        n3: `
+          <p>Las huellas terminaban en la puerta de la <b>biblioteca</b>, cerrada con llave y con papel en las ventanas. Para saber cuándo hicieron las huellas, revisaste el reporte del clima y hablaste con los adultos de la escuela.</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LÍNEA DEL TIEMPO</span>
+          5:00–6:00 p. m.: llovió fuerte. (La pintura de las huellas no tenía agua.)<br>
+          9:30 p. m.: Don Ramón, el conserje, cerró la escuela. «Las huellas ya estaban ahí.»</div>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LOS SOSPECHOSOS</span>
+          🏀 Profesor Gómez: zapatos talla 46. Estuvo en un partido en Belmopan de 6:00 a 9:00 p. m.<br>
+          🔬 Maestra Rivas: le fascinan los dinosaurios. Salió a las 4:00 p. m. y cenó con su familia toda la noche.<br>
+          🎨 Maestra Paz: tiene una pequeña mancha verde en la manga de la blusa.<br>
+          🧹 Don Ramón: «A las 7:00 p. m. vi una luz en el salón de arte. En el reciclaje había una lista firmada con una "P": pintura verde, cartón grande, esponjas... y "¡no decir nada a los estudiantes!"».</div>`
+      },
+      reto: { tipo:"palabra",
+        pregunta: {n1:"¿Quién hizo las huellas? Escribe su nombre.", n2:"¿Quién hizo las huellas? Escribe su nombre.", n3:"Según la línea del tiempo y las pruebas, ¿quién hizo las huellas? Escribe su nombre."},
+        respuesta:["maestra paz","la maestra paz","paz","la maestra de arte","maestra de arte","la profesora paz","profesora paz","senora paz","la senora paz"],
+        ayuda: {
+          n1:"¿Quién tiene las manos verdes? ¿Dónde vio Don Ramón una luz?",
+          n2:"Mira el color verde, la luz en el salón de arte y la letra «P» del papel.",
+          n3:"Las huellas se hicieron entre las 6:00 y las 9:30. ¿Quién NO tiene una coartada para esas horas? ¿Quién firmó con «P»?" }
+      }
+    },
+    {
+      tab: "PISTA 5",
+      titulo: "El secreto de la biblioteca",
+      texto: {
+        n1: `
+          <p>Vuelves a la biblioteca. Hay un agujero pequeño en el papel de la ventana. Miras... ¡Hay una <b>cola verde enorme</b>!</p>
+          <p>En la puerta hay un cartel pequeño:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL CARTEL</span>
+          ¡SEMANA DE LA CIENCIA!<br>
+          Un viaje al tiempo de los dinosaurios.<br>
+          El viernes, en la biblioteca.<br>
+          Maestra Rivas y Maestra Paz</div>
+          <p>Ahora escribe tu informe de detective.</p>`,
+        n2: `
+          <p>Vuelves a la biblioteca. En una esquina de la ventana, el papel está un poco roto. Miras por el agujero... ¡y ves una <b>cola verde enorme</b> de cartón!</p>
+          <p>En la puerta hay un cartel pequeño, casi escondido:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL CARTEL</span>
+          ¡SEMANA DE LA CIENCIA!<br>
+          Un viaje al tiempo de los dinosaurios.<br>
+          Abre el viernes en la biblioteca.<br>
+          Organizan: Maestra Rivas (ciencias) y Maestra Paz (arte).</div>
+          <p>Ya tienes todas las pruebas. Ahora escribe tu informe de detective.</p>`,
+        n3: `
+          <p>Regresaste a la biblioteca. En una esquina de la ventana, el papel estaba un poco roto. Por el agujero viste algo que no esperabas: una <b>cola verde gigante</b> de cartón y, al fondo, unos huesos de papel.</p>
+          <p>Debajo de la puerta encontraste un cartel que alguien había escondido:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL CARTEL</span>
+          ¡SEMANA DE LA CIENCIA!<br>
+          Un viaje al tiempo de los dinosaurios.<br>
+          Abre el viernes en la biblioteca. Primera pista: sigue las huellas.<br>
+          Organizan: Maestra Rivas (ciencias) y Maestra Paz (arte).</div>
+          <p>Ya tienes suficientes pruebas para cerrar el caso. Completa tu informe.</p>`
+      },
+      reto: {
+        n1: { tipo:"emparejar", pregunta:"Tu informe de detective. Elige la respuesta correcta.",
+          items:[
+            {texto:"¿Quién hizo las huellas?", correcta:"La maestra Paz"},
+            {texto:"¿Dónde terminan las huellas?", correcta:"En la biblioteca"},
+            {texto:"¿Por qué hizo las huellas?", correcta:"Es una sorpresa para la Semana de la Ciencia"}
+          ],
+          opciones:["El profesor Gómez","En el gimnasio","En la biblioteca","Es una sorpresa para la Semana de la Ciencia","La maestra Paz","Para asustar a los estudiantes"],
+          error:"Respuestas incorrectas: {n}. Lee otra vez el cartel.",
+          ayuda:"Lee el cartel con calma: ¿dónde es? ¿Qué es? ¿Quién lo organiza?" },
+        n2: { tipo:"emparejar", pregunta:"Completa tu informe de detective.",
+          items:[
+            {texto:"¿Quién hizo las huellas?", correcta:"La maestra Paz, de arte"},
+            {texto:"¿Cuándo las hizo?", correcta:"Anoche, en el salón de arte"},
+            {texto:"¿Dónde terminan?", correcta:"En la biblioteca"},
+            {texto:"¿Por qué las hizo?", correcta:"Es una sorpresa para la Semana de la Ciencia"}
+          ],
+          opciones:["Anoche, en el salón de arte","El martes, en el gimnasio","En la biblioteca","En la cafetería","Es una sorpresa para la Semana de la Ciencia","La maestra Paz, de arte","Para asustar a los estudiantes","Un dinosaurio de verdad"],
+          error:"Respuestas incorrectas: {n}. Revisa tu cuaderno y el cartel.",
+          ayuda:"¿Quién: mira la pista 4. ¿Cuándo: Don Ramón vio una luz... ¿Dónde y por qué: lee el cartel." },
+        n3: { tipo:"emparejar", pregunta:"Completa tu informe. Cada respuesta debe tener una prueba.",
+          items:[
+            {texto:"¿Quién hizo las huellas?", correcta:"La maestra Paz, con la ayuda de la maestra Rivas en el plan"},
+            {texto:"¿Cuándo?", correcta:"Entre las 6:00 y las 9:30 p. m., después de la lluvia"},
+            {texto:"¿Cómo?", correcta:"Con un solo pie falso de cartón, midiendo cada paso"},
+            {texto:"¿Por qué?", correcta:"Para empezar la Semana de la Ciencia con un misterio"}
+          ],
+          opciones:["Antes de las 5:00 p. m., antes de la lluvia","Con los zapatos talla 46 del profesor Gómez","Con un solo pie falso de cartón, midiendo cada paso","El profesor Gómez, después del partido","Entre las 6:00 y las 9:30 p. m., después de la lluvia","La maestra Paz, con la ayuda de la maestra Rivas en el plan","Para asustar a los estudiantes nuevos","Para empezar la Semana de la Ciencia con un misterio"],
+          error:"Respuestas incorrectas: {n}. Cada respuesta tiene que estar de acuerdo con TODAS las pruebas.",
+          ayuda:"¿Cuándo?: la pintura no tenía agua de lluvia y Don Ramón vio las huellas a las 9:30. ¿Cómo?: recuerda la pista 2. ¿Por qué?: lee la frase «Primera pista: sigue las huellas»." }
+      }
+    }
+  ],
+  final: {
+    titulo: "¡Caso resuelto!",
+    texto: {
+      n1: `
+        <p>La maestra Paz abre la puerta de la biblioteca. Adentro hay un dinosaurio verde, grande, de cartón. Se llama <b>Rexi</b>.</p>
+        <div class="say">—¡Lo descubriste! —dice la maestra Paz—. Las huellas son una sorpresa para la Semana de la Ciencia.</div>
+        <p>La maestra Rivas sonríe: —Eres un gran detective. ¡Tú eres la primera persona que ve a Rexi!</p>`,
+      n2: `
+        <p>Llevas tu informe a la directora. Ella llama a la maestra Paz y a la maestra Rivas. Las dos se ríen.</p>
+        <div class="say">—¡Nos descubriste! —dice la maestra Paz—. Hice un pie de dinosaurio de cartón y lo usé como sello, con pintura verde. ¡Solo hice un pie!</div>
+        <p>Abren la biblioteca: adentro hay un dinosaurio gigante de cartón, huesos de papel y libros de ciencia. Se llama <b>Rexi</b>. Y tú eres la primera persona que lo ve.</p>`,
+      n3: `
+        <p>Presentaste tu informe a la directora, que llamó a las dos maestras. Ninguna lo negó.</p>
+        <div class="say">—Queríamos que la Semana de la Ciencia empezara con una pregunta —explicó la maestra Rivas—. Los científicos no empiezan con respuestas: empiezan con un misterio.</div>
+        <div class="say">—Y yo hice el pie de cartón —añadió la maestra Paz—. Medí cada paso con una cinta, pero olvidé hacer el pie derecho. Un error de artista.</div>
+        <p>Esa tarde abrieron la biblioteca: un dinosaurio de cartón de tres metros, <b>Rexi</b>, esperaba entre los libros. La directora te dio una tarjeta: <i>«Detective oficial de la Semana de la Ciencia»</i>.</p>`
+    },
+    palabraTitulo: "Palabra del detective",
+    palabra: "Deducir",
+    preguntas: {
+      n1: ["¿De qué color son las huellas?","¿Qué hay en la biblioteca?","¿Cómo es Rexi? Escribe dos oraciones."],
+      n2: ["¿Qué prueba te ayudó más a resolver el caso? ¿Por qué?","¿Por qué todas las huellas eran del pie izquierdo?","Imagina que eres la maestra Paz. ¿Qué sorpresa preparas para la próxima Semana de la Ciencia?"],
+      n3: ["¿Qué pruebas eliminaron al profesor Gómez y a la maestra Rivas como autores de las huellas? Explica.","La maestra Rivas dice que los científicos empiezan con un misterio. ¿Estás de acuerdo? Da un ejemplo.","Diseña tu propio misterio para la escuela: ¿qué aparece, qué pistas dejas y qué error cometes a propósito?"]
+    },
+    preguntasTitulo: "📝 Preguntas del detective",
+    seesaw: "Escribe tus respuestas en tu cuaderno o grábalas en Seesaw. ¡Usa oraciones completas!"
+  }
+};
+
+/* =========================================================
+   MOTOR — no hace falta cambiar nada aquí abajo.
+   ========================================================= */
+const KEY = "detective-"+CASO.id;
+const norm = s => (s||"").toString().normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
+const esc = s => (s||"").toString().replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
+let state = load();
+const LV = (CASO.niveles||[]).map(n=>n.id);
+function R(v){
+  if(Array.isArray(v)) return v.map(R);
+  if(v && typeof v==="object"){
+    if(LV.length && Object.keys(v).length && Object.keys(v).every(k=>LV.includes(k))) return R(v[state.nivel] ?? v[LV[0]]);
+    const o={}; for(const k in v) o[k]=R(v[k]); return o;
+  }
+  return v;
+}
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {step:-1}; }catch(e){ return {step:-1}; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+const app = document.getElementById("app");
+const total = CASO.pistas.length;
+
+function header(){
+  const d=document.getElementById("dots"); d.innerHTML="";
+  for(let i=0;i<total;i++){ const s=document.createElement("span"); s.className="dot"+(i<state.step?" done":"")+(i===state.step?" now":""); d.appendChild(s); }
+  document.getElementById("prog").textContent = state.step<0 ? "Expediente cerrado" : state.step>=total ? "Caso resuelto" : `Pista ${state.step+1} de ${total}`;
+}
+function render(){
+  header(); window.scrollTo({top:0,behavior:"smooth"});
+  if(state.step<0) return renderIntro();
+  if(state.step>=total) return renderFinal();
+  renderPista(R(CASO.pistas[state.step]));
+}
+function renderIntro(){
+  app.innerHTML = `<section class="file" data-tab="EXPEDIENTE">
+    <span class="stamp">CASO ABIERTO</span>
+    <div class="kicker">${CASO.serie}</div>
+    <h1>${CASO.titulo}</h1>
+    <div class="kicker" style="color:var(--muted)">${CASO.nivel}</div>
+    ${CASO.equipo?`<div class="cast">${CASO.equipo.map(e=>`<span class="chip">${e}</span>`).join("")}</div>`:""}
+    ${LV.length?`<div class="q" style="font-weight:700;margin-top:12px">1. Elige tu nivel:</div><div class="levels">${CASO.niveles.map(n=>`<button class="lv${state.nivel===n.id?" on":""}" data-lv="${n.id}">${n.icono} <b>${n.nombre}</b><span>${n.desc}</span></button>`).join("")}</div>`:""}
+    <div class="story" id="introStory">${R(CASO.intro)}</div>
+    <div class="challenge">${CASO.pareja ? `<div class="q">Escriban sus nombres de detective:</div>
+      <div class="names"><label for="nm">🗣 Detective 1 · lee la historia en voz alta y explica</label>
+      <input type="text" id="nm" maxlength="30" placeholder="Detective 1..." value="${esc(state.d1||"")}" style="text-transform:none;letter-spacing:0">
+      <label for="nm2">🔎 Detective 2 · busca la evidencia y decide la respuesta</label>
+      <input type="text" id="nm2" maxlength="30" placeholder="Detective 2..." value="${esc(state.d2||"")}" style="text-transform:none;letter-spacing:0"></div>` : `<div class="q">${LV.length?"2. ":""}Escribe tu nombre de detective:</div>
+      <input type="text" id="nm" maxlength="30" placeholder="Detective..." value="${esc(state.name||"")}" style="text-transform:none;letter-spacing:0">`}
+      <div class="row"><button class="btn" id="go">Abrir el expediente →</button></div>
+      <div class="msg no" id="m"></div></div>
+  </section>`;
+  document.querySelectorAll(".lv").forEach(b=>b.onclick=()=>{
+    state.nivel=b.dataset.lv;
+    document.querySelectorAll(".lv").forEach(x=>x.classList.toggle("on",x===b));
+    document.getElementById("introStory").innerHTML=R(CASO.intro);
+  });
+  document.getElementById("go").onclick=()=>{
+    const n=document.getElementById("nm").value.trim();
+    if(LV.length && !state.nivel){ document.getElementById("m").textContent="Elige tu nivel primero."; return; }
+    if(CASO.pareja){
+      const n2=document.getElementById("nm2").value.trim();
+      if(!n||!n2){ document.getElementById("m").textContent="Escriban los dos nombres primero."; return; }
+      state={step:0,d1:n,d2:n2,name:n+" y "+n2}; save(); render(); return;
+    }
+    if(!n){ document.getElementById("m").textContent="Escribe tu nombre primero."; return; }
+    state={step:0,name:n,nivel:state.nivel}; save(); render();
+  };
+}
+function renderPista(p){
+  app.innerHTML = `<section class="file" data-tab="${p.tab}">
+    <span class="stamp">EN INVESTIGACIÓN</span>
+    <div class="kicker">${p.tab}</div><h2>${p.titulo}</h2>
+    ${LV.length?(()=>{const n=CASO.niveles.find(x=>x.id===state.nivel)||CASO.niveles[0];return `<div class="lvtag">${n.icono} Nivel ${n.nombre}</div>`;})():""}
+    ${p.roles && CASO.pareja ? `<div class="roles">${esc(p.roles).replace(/\{d1\}/g,"<b>"+esc(state.d1)+"</b>").replace(/\{d2\}/g,"<b>"+esc(state.d2)+"</b>")}</div>` : ""}
+    <div class="story">${p.texto}</div>
+    <div class="challenge"><div class="q">🔎 Reto: ${p.reto.pregunta}</div>
+      <div id="ui"></div>
+      <div class="row"><button class="btn" id="check">Revisar</button><button class="ghost" id="hb">💡 Necesito una pista</button></div>
+      <div class="msg" id="m"></div>
+      <div class="hint" id="h">${p.reto.ayuda}</div>
+    </div></section>`;
+  document.getElementById("hb").onclick=()=>document.getElementById("h").classList.toggle("show");
+  const ui=document.getElementById("ui"), m=document.getElementById("m");
+  const ok=()=>{ m.className="msg ok"; m.textContent="¡Correcto, detective! Abriendo la siguiente página..."; state.step++; save(); setTimeout(render,1100); };
+  const no=t=>{ m.className="msg no"; m.textContent=t||"Todavía no. Lee otra vez la pista con calma."; };
+  const r=p.reto;
+  if(r.tipo==="palabra"){
+    ui.innerHTML=`<input type="text" id="ans" autocomplete="off" placeholder="Tu respuesta">`;
+    const inp=document.getElementById("ans");
+    const check=()=>{ const v=norm(inp.value); if(!v) return no("Escribe una respuesta primero."); r.respuesta.map(norm).includes(v)?ok():no(); };
+    document.getElementById("check").onclick=check;
+    inp.addEventListener("keydown",e=>{ if(e.key==="Enter") check(); });
+  }
+  if(r.tipo==="mapa"){
+    let pick=null;
+    ui.innerHTML=`<div class="compass">⬆️ NORTE · ⬇️ SUR · ➡️ ESTE · ⬅️ OESTE</div><div class="map" id="map"></div>`;
+    const map=document.getElementById("map");
+    r.celdas.forEach((c,i)=>{ const b=document.createElement("div"); b.className="cell"+(i===r.inicio?" start":""); b.innerHTML=`${c[0]}<small>${c[1]}</small>`;
+      b.onclick=()=>{ map.querySelectorAll(".cell").forEach(x=>x.classList.remove("pick")); b.classList.add("pick"); pick=i; }; map.appendChild(b); });
+    document.getElementById("check").onclick=()=>{ if(pick===null) return no("Toca una casilla primero."); pick===r.correcta?ok():no(r.error||"Esa no es la casilla correcta. Empieza otra vez y cuenta las casillas."); };
+  }
+  if(r.tipo==="emparejar"){
+    ui.innerHTML=`<div class="match">${r.items.map((it,i)=>`<div class="m"><p>${it.texto}</p><select id="s${i}"><option value="">— Elige —</option>${r.opciones.map(o=>`<option>${o}</option>`).join("")}</select></div>`).join("")}</div>`;
+    document.getElementById("check").onclick=()=>{
+      let bad=0, empty=0; r.items.forEach((it,i)=>{ const v=document.getElementById("s"+i).value; if(!v) empty++; else if(v!==it.correcta) bad++; });
+      if(empty) return no("Elige una respuesta para cada uno.");
+      bad?no(r.error?r.error.replace("{n}",bad):`Tienes ${bad} ${bad===1?"trabajo incorrecto":"trabajos incorrectos"}. Piensa en cómo es cada animal.`):ok();
+    };
+  }
+}
+function renderFinal(){
+  const f=R(CASO.final);
+  app.innerHTML = `<section class="file" data-tab="CASO CERRADO">
+    <span class="stamp solved">CASO RESUELTO</span>
+    <div class="kicker">${CASO.titulo}</div><h1>${f.titulo}</h1>
+    <p style="font-size:18px">${CASO.pareja?`¡Felicidades, detectives <b>${esc(state.d1)}</b> y <b>${esc(state.d2)}</b>!`:`¡Felicidades, detective <b>${esc(state.name)}</b>!`}</p>
+    <div class="story">${f.texto}</div>
+    <p>${f.palabraTitulo||"Palabra del Bosque"}: <span class="word">${f.palabra}</span></p>
+    <div class="challenge"><div class="q">${f.preguntasTitulo||"🐦 Las preguntas de Don Pico"}</div>
+      <ol class="final-q">${f.preguntas.map(q=>`<li>${q}</li>`).join("")}</ol>
+      <p><b>${f.seesaw}</b></p></div>
+  </section>`;
+}
+document.getElementById("resetBtn").onclick=()=>{ if(confirm("¿Empezar el caso desde el principio?")){ state={step:-1}; save(); render(); } };
+if(CASO.marca) document.getElementById("brand").textContent=CASO.marca;
+render();
+</script>
+</body>
+</html>
