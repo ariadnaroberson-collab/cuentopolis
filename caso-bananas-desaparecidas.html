@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guardianes Detectives · El misterio de las bananas desaparecidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Public+Sans:wght@400;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#17130e; --bg2:#221b13; --paper:#f4e8cf; --paper2:#ead9b5; --ink:#2b2117;
+  --gold:#c9a14a; --gold2:#e3c27a; --jungle:#2f6b4f; --jungle2:#4f9a73; --red:#a8402f;
+  --muted:#7a6a55;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:radial-gradient(ellipse at top,#2a2117 0%,var(--bg) 60%);color:var(--paper);font-family:"Public Sans",system-ui,sans-serif;min-height:100%}
+body{padding:18px 14px 60px}
+.wrap{max-width:760px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.brand{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold2)}
+.prog{font-family:"Space Mono",monospace;font-size:12px;color:var(--gold2);white-space:nowrap}
+.dots{display:flex;gap:6px;margin-top:6px}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--gold);background:transparent}
+.dot.done{background:var(--gold)}
+.dot.now{box-shadow:0 0 0 3px rgba(201,161,74,.35)}
+.file{background:linear-gradient(180deg,var(--paper) 0%,var(--paper2) 100%);color:var(--ink);border-radius:6px 14px 14px 14px;padding:26px 24px 24px;position:relative;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.file:before{content:attr(data-tab);position:absolute;top:-30px;left:0;background:var(--paper);color:var(--ink);font-family:"Space Mono",monospace;font-size:12px;font-weight:700;padding:7px 14px;border-radius:10px 10px 0 0;letter-spacing:.06em}
+h1{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(26px,5vw,38px);line-height:1.08;margin:4px 0 6px}
+h2{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(22px,4vw,28px);margin:0 0 4px}
+.kicker{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);font-weight:700}
+.story{font-family:"Source Serif 4",Georgia,serif;font-size:19px;line-height:1.6}
+.story p{margin:0 0 12px}
+.story b{color:#5a2d16}
+.say{background:rgba(47,107,79,.10);border-left:4px solid var(--jungle);padding:8px 12px;border-radius:0 8px 8px 0;margin:0 0 12px}
+.evidence{border:2px dashed var(--muted);border-radius:10px;padding:12px 14px;margin:6px 0 14px;background:rgba(255,255,255,.35);font-family:"Space Mono",monospace;font-size:15px;line-height:1.55}
+.evidence .lbl{font-weight:700;font-size:12px;letter-spacing:.08em;color:var(--red);display:block;margin-bottom:4px}
+.u{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.challenge{margin-top:18px;border-top:2px solid rgba(43,33,23,.18);padding-top:16px}
+.challenge .q{font-weight:700;font-size:18px;margin-bottom:10px}
+input[type=text]{width:100%;font-size:20px;padding:12px 14px;border:2px solid var(--ink);border-radius:10px;background:#fffaf0;font-family:"Space Mono",monospace;text-transform:uppercase;letter-spacing:.12em}
+select{font-size:16px;padding:8px;border:2px solid var(--ink);border-radius:8px;background:#fffaf0;width:100%}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+button{font-family:"Public Sans",sans-serif;font-weight:700;font-size:16px;border:0;border-radius:10px;padding:12px 18px;cursor:pointer}
+.btn{background:var(--jungle);color:#fff}
+.btn:hover{background:var(--jungle2)}
+.ghost{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+.gold{background:var(--gold);color:var(--ink)}
+.msg{margin-top:12px;font-weight:700;min-height:24px}
+.msg.ok{color:var(--jungle)}
+.msg.no{color:var(--red)}
+.hint{display:none;margin-top:10px;background:#fff3cf;border:2px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:16px}
+.hint.show{display:block}
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:420px;margin:8px auto 4px}
+.cell{aspect-ratio:1;border:2px solid var(--ink);border-radius:10px;background:#fffaf0;font-size:clamp(20px,6vw,30px);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:2px;transition:transform .1s}
+.cell small{font-size:9px;font-family:"Space Mono",monospace;line-height:1;margin-top:2px;text-align:center}
+.cell:hover{transform:scale(1.05)}
+.cell.start{background:#dff0e6}
+.cell.pick{outline:4px solid var(--red)}
+.compass{text-align:center;font-family:"Space Mono",monospace;font-size:13px;margin-bottom:4px}
+.match{display:grid;grid-template-columns:1fr;gap:10px}
+.match .m{background:rgba(255,255,255,.45);border-radius:10px;padding:10px 12px}
+.match .m p{margin:0 0 6px;font-size:16px}
+.stamp{float:right;margin:0 0 10px 12px;transform:rotate(6deg);border:3px solid var(--red);color:var(--red);font-family:"Space Mono",monospace;font-weight:700;padding:4px 10px;border-radius:6px;font-size:13px;letter-spacing:.1em;opacity:.85}
+.stamp.solved{border-color:var(--jungle);color:var(--jungle)}
+.cast{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px}
+.chip{background:rgba(43,33,23,.08);border-radius:20px;padding:5px 10px;font-size:14px}
+.final-q li{margin-bottom:10px;font-size:17px}
+.word{display:inline-block;font-family:"Fraunces",serif;font-size:30px;font-weight:800;color:var(--jungle);letter-spacing:.06em}
+.foot{margin-top:18px;text-align:center;font-size:12px;color:var(--gold2);font-family:"Space Mono",monospace}
+.reset{background:transparent;color:var(--gold2);border:1px solid var(--gold);font-size:12px;padding:6px 10px}
+.hidden{display:none}
+.roles{background:#fff3cf;border:2px solid var(--gold);border-radius:10px;padding:8px 12px;margin:4px 0 14px;font-size:15px;font-weight:600;line-height:1.45}
+.names label{display:block;font-weight:700;font-size:15px;margin:10px 0 4px}
+@media (max-width:480px){.file{padding:22px 16px}.story{font-size:17.5px}.stamp{float:none;display:inline-block;margin:0 0 12px;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <a href="casos-de-misterio.html" style="font-family:'Space Mono',monospace;font-size:12px;color:var(--gold);text-decoration:none;display:inline-block;margin-bottom:8px">← Casos de Misterio</a>
+      <div class="brand">Guardianes Detectives · Cuentopolis</div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="prog" id="prog"></div>
+  </header>
+  <main id="app"></main>
+  <div class="foot"><button class="reset" id="resetBtn">Empezar el caso otra vez</button></div>
+</div>
+
+<script>
+/* =========================================================
+   DATOS DEL CASO — para un caso nuevo, cambia solo este bloque.
+   Tipos de reto: "palabra", "mapa", "emparejar".
+   Las respuestas se comparan sin acentos y sin mayúsculas.
+   ========================================================= */
+const CASO = {
+  id: "chica-bananas-3",
+  serie: "Chica y sus Amigos · Guardianes Detectives",
+  titulo: "El misterio de las bananas desaparecidas",
+  nivel: "Nivel A2–B1 · Detectives en pareja",
+  pareja: true,
+  intro: `
+    <p>Al lado del río de Chiquibul hay un bananero muy alto. Sus bananas son amarillas, dulces y deliciosas. ¡A todos los Guardianes les encantan!</p>
+    <p>Pero algo raro está pasando: <b>cada mañana hay menos bananas</b>. Nadie ve quién se las lleva.</p>
+    <p>Ustedes son dos detectives. Trabajen juntos, lean con atención y descubran quién se come las bananas.</p>`,
+  equipo: ["🐒 Chica","🐗 Bruno","🐾 Teo","🦎 Iggy","🦋 Mora","🦝 Arlo","🧺 Nico","🐦 Don Pico"],
+  pistas: [
+    {
+      tab: "PISTA 1",
+      titulo: "El bananero",
+      roles: "🗣 {d1} lee la historia en voz alta. 🔎 {d2} lee la evidencia y escribe la respuesta.",
+      texto: `
+        <p>Arlo, el mapache, siempre cuenta todo. Ayer en la tarde contó las bananas del bananero. Esta mañana las contó otra vez. Escribió esto en su cuaderno:</p>
+        <div class="evidence"><span class="lbl">EVIDENCIA · EL CUADERNO DE ARLO</span>
+        Ayer, a las 6 de la tarde: 12 bananas.<br>
+        Hoy, a las 6 de la mañana: 7 bananas.</div>
+        <div class="say">—¡Qué raro! —dijo Arlo—. En el piso no hay cáscaras. Solo hay pedacitos de banana.</div>
+        <p>Teo, el tepezcuintle, miró el bananero y tocó su barriga.</p>
+        <div class="say">—Yo tengo hambre... ¡pero no fui yo!</div>`,
+      reto: { tipo:"palabra",
+        pregunta:"¿Cuántas bananas desaparecieron en la noche? Escribe el número.",
+        respuesta:["5","cinco","5 bananas","cinco bananas"],
+        ayuda:"Ayer había 12 bananas. Hoy hay 7. ¿Cuántas faltan? 12 − 7 = ?" }
+    },
+    {
+      tab: "PISTA 2",
+      titulo: "Los sospechosos",
+      roles: "🗣 {d1} lee lo que dice cada sospechoso. 🔎 {d2} elige la prueba de cada uno. {d1} explica por qué.",
+      texto: `
+        <p>Bruno, el jabalí, señaló la canasta de Nico. ¡Estaba llena de bananas!</p>
+        <div class="say">—¡Nico, tú tienes muchas bananas! —dijo Bruno.</div>
+        <div class="say">—Mis bananas son del mercado de San Ignacio —dijo Nico—. Mira, aquí está el recibo: seis bananas, tres dólares.</div>
+        <div class="say">—A mí me encantan las bananas —dijo Chica—, pero anoche dormí en la Gran Ceiba con mi familia. Mi mamá dice que ronco mucho.</div>
+        <div class="say">—Anoche yo estaba en la fiesta de cumpleaños de mi primo, al otro lado del río —dijo Teo.</div>
+        <div class="say">—¿Y yo? —se rió Bruno—. ¡Los jabalíes no podemos trepar árboles! Y el bananero es muy alto.</div>`,
+      reto: { tipo:"emparejar",
+        pregunta:"Cada sospechoso tiene una prueba. ¿Cuál es la prueba de cada uno?",
+        items:[
+          {texto:"1. Nico", correcta:"Tiene un recibo del mercado."},
+          {texto:"2. Chica", correcta:"Dormía en la Gran Ceiba con su familia."},
+          {texto:"3. Teo", correcta:"Estaba en una fiesta al otro lado del río."},
+          {texto:"4. Bruno", correcta:"No puede trepar árboles."}
+        ],
+        opciones:["Dormía en la Gran Ceiba con su familia.","Estaba en el museo de la escuela.","Estaba en una fiesta al otro lado del río.","No puede trepar árboles.","Tiene un recibo del mercado."],
+        error:"Respuestas incorrectas: {n}. Lean otra vez lo que dice cada sospechoso.",
+        ayuda:"Busquen el nombre de cada animal en la historia y lean su oración. ¡Ojo! Una prueba no es de nadie." }
+    },
+    {
+      tab: "PISTA 3",
+      titulo: "El lodo no miente",
+      roles: "🗣 {d2} lee la historia. 🔎 {d1} lee el cuaderno de Arlo y explica. Juntos escriben la respuesta.",
+      texto: `
+        <p>Esa noche llovió mucho. Al otro día, debajo del bananero había mucho lodo. Arlo sonrió.</p>
+        <div class="say">—¡Perfecto! En el lodo vamos a ver las huellas del animal.</div>
+        <p>Pero cuando miraron el lodo, todos se quedaron callados. Arlo escribió:</p>
+        <div class="evidence"><span class="lbl">EVIDENCIA · EL CUADERNO DE ARLO</span>
+        Bananas a las 6 de la tarde: 7. A las 6 de la mañana: 4.<br>
+        Huellas en el lodo: ¡ninguna! 0.<br>
+        Las bananas que faltan estaban arriba, muy arriba.<br>
+        Las mordidas son muy pequeñas.</div>
+        <div class="say">—Faltan más bananas, pero no hay huellas —dijo Iggy, la iguana—. Entonces el animal no caminó por el lodo...</div>`,
+      reto: { tipo:"palabra",
+        pregunta:"No hay huellas en el lodo y las bananas estaban muy arriba. ¿Cómo llegó el animal a las bananas? Escribe una palabra.",
+        respuesta:["volando","vuela","volo","volar","vuelan","volaron","por el aire","vola","volando por el aire"],
+        ayuda:"El animal no caminó. Llegó muy arriba sin tocar el piso. ¿Qué hacen los pájaros y las mariposas?" }
+    },
+    {
+      tab: "PISTA 4",
+      titulo: "¿Quién vuela de noche?",
+      roles: "🗣 {d1} lee el libro de Mora en voz alta. 🔎 {d2} busca el animal que cumple las dos reglas y escribe la respuesta.",
+      texto: `
+        <p>Mora, la mariposa, trajo su libro favorito: <i>Animales que vuelan en Chiquibul</i>.</p>
+        <div class="say">—Ya sabemos dos cosas —dijo Mora—. El animal <b>vuela</b>, y come las bananas <b>de noche</b>, entre las 6 de la tarde y las 6 de la mañana.</div>
+        <div class="evidence"><span class="lbl">EVIDENCIA · EL LIBRO DE MORA</span>
+        🦋 Mariposa morfo: vuela de día. Toma néctar de las flores.<br>
+        🐦 Tucán: vuela de día. Come frutas. De noche duerme.<br>
+        🐤 Colibrí: vuela de día. Toma néctar de las flores.<br>
+        🦉 Búho: vuela de noche. Come ratones e insectos, no frutas.<br>
+        🦇 Murciélago de nariz de hoja: vuela de noche. Come frutas: bananas, higos y mangos.</div>`,
+      reto: { tipo:"palabra",
+        pregunta:"¿Qué animal vuela de noche y come frutas? Escribe su nombre.",
+        respuesta:["murcielago","murcielagos","el murcielago","los murcielagos","murcielago de nariz de hoja","el murcielago de nariz de hoja","murcielagos de nariz de hoja"],
+        ayuda:"Busquen los animales que vuelan de noche: son dos. ¿Cuál de los dos come frutas?" }
+    },
+    {
+      tab: "PISTA 5",
+      titulo: "Una noche de detectives",
+      roles: "🗣 {d2} lee la historia. 🔎 {d1} lee la nota de Don Pico. Juntos buscan la palabra secreta.",
+      texto: `
+        <p>Esa noche, los Guardianes se escondieron detrás de unas hojas grandes, muy calladitos. A las 9, Chica encendió su linterna... ¡y los vio! Una familia de murciélagos pequeños comía bananas en las ramas de arriba.</p>
+        <p>Al día siguiente, Don Pico les dejó una nota:</p>
+        <div class="evidence"><span class="lbl">EVIDENCIA · LA NOTA DE DON PICO</span>
+        <span class="u">Sí</span>, los murciélagos comen bananas. <span class="u">Esta</span> familia vive en la cueva del río. <span class="u">Mucha</span> fruta del bosque crece gracias a ellos. <span class="u">Increíble</span>, ¿verdad? <span class="u">Llevan</span> la fruta lejos. <span class="u">Luego</span> tiran las semillas al piso. <span class="u">Allí</span> crecen árboles nuevos. <span class="u">Sin</span> murciélagos, el bosque tiene menos árboles.</div>
+        <p>La nota tiene un secreto: miren las palabras subrayadas.</p>`,
+      reto: { tipo:"palabra",
+        pregunta:"Escriban la primera letra de cada palabra subrayada, en orden. ¿Qué palabra secreta forman?",
+        respuesta:["semillas"],
+        ayuda:"La primera palabra subrayada es \"Sí\": empieza con S. La segunda es \"Esta\": empieza con E. Sigan así hasta el final. Son 8 letras." }
+    }
+  ],
+  final: {
+    titulo: "¡Caso resuelto!",
+    texto: `
+      <p>Las bananas no las tomó ningún amigo. ¡Fueron <b>los murciélagos de nariz de hoja</b>! Y no son malos: comen fruta de noche y llevan las <b>semillas</b> por todo el bosque. Así nacen árboles nuevos.</p>
+      <p>Los Guardianes hicieron un plan justo: las bananas de <b>arriba</b> son para los murciélagos, y las bananas de <b>abajo</b> son para los amigos.</p>
+      <div class="say">—En el bosque todos necesitamos comer —dijo Don Pico—. Si compartimos el bananero, hay bananas para todos... ¡y más árboles para mañana!</div>
+      <p>Esa noche, Chica miró el bananero con su linterna. Un murciélago pequeño la miró también. Chica lo saludó con la mano.</p>`,
+    palabra: "Convivir",
+    preguntas: [
+      "¿Por qué los murciélagos son importantes para el bosque? Explica con tus palabras.",
+      "Al principio, Bruno pensó que fue Nico. ¿Qué prueba tenía Nico? ¿Por qué es importante tener pruebas?",
+      "¿Qué animal de Chiquibul te gustaría investigar? ¿Qué come? ¿Cuándo duerme?"
+    ],
+    seesaw: "Graben sus respuestas en Seesaw o escríbanlas en el cuaderno. ¡Usen oraciones completas!"
+  }
+};
+
+/* =========================================================
+   MOTOR — no hace falta cambiar nada aquí abajo.
+   ========================================================= */
+const KEY = "detective-"+CASO.id;
+const norm = s => (s||"").toString().normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
+const esc = s => (s||"").toString().replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
+let state = load();
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {step:-1}; }catch(e){ return {step:-1}; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+const app = document.getElementById("app");
+const total = CASO.pistas.length;
+
+function header(){
+  const d=document.getElementById("dots"); d.innerHTML="";
+  for(let i=0;i<total;i++){ const s=document.createElement("span"); s.className="dot"+(i<state.step?" done":"")+(i===state.step?" now":""); d.appendChild(s); }
+  document.getElementById("prog").textContent = state.step<0 ? "Expediente cerrado" : state.step>=total ? "Caso resuelto" : `Pista ${state.step+1} de ${total}`;
+}
+function render(){
+  header(); window.scrollTo({top:0,behavior:"smooth"});
+  if(state.step<0) return renderIntro();
+  if(state.step>=total) return renderFinal();
+  renderPista(CASO.pistas[state.step]);
+}
+function renderIntro(){
+  app.innerHTML = `<section class="file" data-tab="EXPEDIENTE">
+    <span class="stamp">CASO ABIERTO</span>
+    <div class="kicker">${CASO.serie}</div>
+    <h1>${CASO.titulo}</h1>
+    <div class="kicker" style="color:var(--muted)">${CASO.nivel}</div>
+    <div class="cast">${CASO.equipo.map(e=>`<span class="chip">${e}</span>`).join("")}</div>
+    <div class="story">${CASO.intro}</div>
+    <div class="challenge">${CASO.pareja ? `<div class="q">Escriban sus nombres de detective:</div>
+      <div class="names"><label for="nm">🗣 Detective 1 · lee la historia en voz alta y explica</label>
+      <input type="text" id="nm" maxlength="30" placeholder="Detective 1..." value="${esc(state.d1||"")}" style="text-transform:none;letter-spacing:0">
+      <label for="nm2">🔎 Detective 2 · busca la evidencia y decide la respuesta</label>
+      <input type="text" id="nm2" maxlength="30" placeholder="Detective 2..." value="${esc(state.d2||"")}" style="text-transform:none;letter-spacing:0"></div>` : `<div class="q">Escribe tu nombre de detective:</div>
+      <input type="text" id="nm" maxlength="30" placeholder="Detective..." value="${esc(state.name||"")}" style="text-transform:none;letter-spacing:0">`}
+      <div class="row"><button class="btn" id="go">Abrir el expediente →</button></div>
+      <div class="msg no" id="m"></div></div>
+  </section>`;
+  document.getElementById("go").onclick=()=>{
+    const n=document.getElementById("nm").value.trim();
+    if(CASO.pareja){
+      const n2=document.getElementById("nm2").value.trim();
+      if(!n||!n2){ document.getElementById("m").textContent="Escriban los dos nombres primero."; return; }
+      state={step:0,d1:n,d2:n2,name:n+" y "+n2}; save(); render(); return;
+    }
+    if(!n){ document.getElementById("m").textContent="Escribe tu nombre primero."; return; }
+    state={step:0,name:n}; save(); render();
+  };
+}
+function renderPista(p){
+  app.innerHTML = `<section class="file" data-tab="${p.tab}">
+    <span class="stamp">EN INVESTIGACIÓN</span>
+    <div class="kicker">${p.tab}</div><h2>${p.titulo}</h2>
+    ${p.roles && CASO.pareja ? `<div class="roles">${esc(p.roles).replace(/\{d1\}/g,"<b>"+esc(state.d1)+"</b>").replace(/\{d2\}/g,"<b>"+esc(state.d2)+"</b>")}</div>` : ""}
+    <div class="story">${p.texto}</div>
+    <div class="challenge"><div class="q">🔎 Reto: ${p.reto.pregunta}</div>
+      <div id="ui"></div>
+      <div class="row"><button class="btn" id="check">Revisar</button><button class="ghost" id="hb">💡 Necesito una pista</button></div>
+      <div class="msg" id="m"></div>
+      <div class="hint" id="h">${p.reto.ayuda}</div>
+    </div></section>`;
+  document.getElementById("hb").onclick=()=>document.getElementById("h").classList.toggle("show");
+  const ui=document.getElementById("ui"), m=document.getElementById("m");
+  const ok=()=>{ m.className="msg ok"; m.textContent="¡Correcto, detective! Abriendo la siguiente página..."; state.step++; save(); setTimeout(render,1100); };
+  const no=t=>{ m.className="msg no"; m.textContent=t||"Todavía no. Lee otra vez la pista con calma."; };
+  const r=p.reto;
+  if(r.tipo==="palabra"){
+    ui.innerHTML=`<input type="text" id="ans" autocomplete="off" placeholder="Tu respuesta">`;
+    const inp=document.getElementById("ans");
+    const check=()=>{ const v=norm(inp.value); if(!v) return no("Escribe una respuesta primero."); r.respuesta.map(norm).includes(v)?ok():no(); };
+    document.getElementById("check").onclick=check;
+    inp.addEventListener("keydown",e=>{ if(e.key==="Enter") check(); });
+  }
+  if(r.tipo==="mapa"){
+    let pick=null;
+    ui.innerHTML=`<div class="compass">⬆️ NORTE · ⬇️ SUR · ➡️ ESTE · ⬅️ OESTE</div><div class="map" id="map"></div>`;
+    const map=document.getElementById("map");
+    r.celdas.forEach((c,i)=>{ const b=document.createElement("div"); b.className="cell"+(i===r.inicio?" start":""); b.innerHTML=`${c[0]}<small>${c[1]}</small>`;
+      b.onclick=()=>{ map.querySelectorAll(".cell").forEach(x=>x.classList.remove("pick")); b.classList.add("pick"); pick=i; }; map.appendChild(b); });
+    document.getElementById("check").onclick=()=>{ if(pick===null) return no("Toca una casilla primero."); pick===r.correcta?ok():no(r.error||"Esa no es la casilla correcta. Empieza otra vez y cuenta las casillas."); };
+  }
+  if(r.tipo==="emparejar"){
+    ui.innerHTML=`<div class="match">${r.items.map((it,i)=>`<div class="m"><p>${it.texto}</p><select id="s${i}"><option value="">— Elige —</option>${r.opciones.map(o=>`<option>${o}</option>`).join("")}</select></div>`).join("")}</div>`;
+    document.getElementById("check").onclick=()=>{
+      let bad=0, empty=0; r.items.forEach((it,i)=>{ const v=document.getElementById("s"+i).value; if(!v) empty++; else if(v!==it.correcta) bad++; });
+      if(empty) return no("Elige una respuesta para cada uno.");
+      bad?no(r.error?r.error.replace("{n}",bad):`Tienes ${bad} ${bad===1?"trabajo incorrecto":"trabajos incorrectos"}. Piensa en cómo es cada animal.`):ok();
+    };
+  }
+}
+function renderFinal(){
+  const f=CASO.final;
+  app.innerHTML = `<section class="file" data-tab="CASO CERRADO">
+    <span class="stamp solved">CASO RESUELTO</span>
+    <div class="kicker">${CASO.titulo}</div><h1>${f.titulo}</h1>
+    <p style="font-size:18px">${CASO.pareja?`¡Felicidades, detectives <b>${esc(state.d1)}</b> y <b>${esc(state.d2)}</b>!`:`¡Felicidades, detective <b>${esc(state.name)}</b>!`}</p>
+    <div class="story">${f.texto}</div>
+    <p>Palabra del Bosque: <span class="word">${f.palabra}</span></p>
+    <div class="challenge"><div class="q">🐦 Las preguntas de Don Pico</div>
+      <ol class="final-q">${f.preguntas.map(q=>`<li>${q}</li>`).join("")}</ol>
+      <p><b>${f.seesaw}</b></p></div>
+  </section>`;
+}
+document.getElementById("resetBtn").onclick=()=>{ if(confirm("¿Empezar el caso desde el principio?")){ state={step:-1}; save(); render(); } };
+render();
+</script>
+</body>
+</html>
