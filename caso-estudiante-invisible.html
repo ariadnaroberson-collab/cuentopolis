@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solo Detective · El misterio del estudiante invisible</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Public+Sans:wght@400;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#17130e; --bg2:#221b13; --paper:#f4e8cf; --paper2:#ead9b5; --ink:#2b2117;
+  --gold:#c9a14a; --gold2:#e3c27a; --jungle:#2f6b4f; --jungle2:#4f9a73; --red:#a8402f;
+  --muted:#7a6a55;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:radial-gradient(ellipse at top,#2a2117 0%,var(--bg) 60%);color:var(--paper);font-family:"Public Sans",system-ui,sans-serif;min-height:100%}
+body{padding:18px 14px 60px}
+.wrap{max-width:760px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.brand{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold2)}
+.prog{font-family:"Space Mono",monospace;font-size:12px;color:var(--gold2);white-space:nowrap}
+.dots{display:flex;gap:6px;margin-top:6px}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--gold);background:transparent}
+.dot.done{background:var(--gold)}
+.dot.now{box-shadow:0 0 0 3px rgba(201,161,74,.35)}
+.file{background:linear-gradient(180deg,var(--paper) 0%,var(--paper2) 100%);color:var(--ink);border-radius:6px 14px 14px 14px;padding:26px 24px 24px;position:relative;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.file:before{content:attr(data-tab);position:absolute;top:-30px;left:0;background:var(--paper);color:var(--ink);font-family:"Space Mono",monospace;font-size:12px;font-weight:700;padding:7px 14px;border-radius:10px 10px 0 0;letter-spacing:.06em}
+h1{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(26px,5vw,38px);line-height:1.08;margin:4px 0 6px}
+h2{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(22px,4vw,28px);margin:0 0 4px}
+.kicker{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);font-weight:700}
+.story{font-family:"Source Serif 4",Georgia,serif;font-size:19px;line-height:1.6}
+.story p{margin:0 0 12px}
+.story b{color:#5a2d16}
+.say{background:rgba(47,107,79,.10);border-left:4px solid var(--jungle);padding:8px 12px;border-radius:0 8px 8px 0;margin:0 0 12px}
+.evidence{border:2px dashed var(--muted);border-radius:10px;padding:12px 14px;margin:6px 0 14px;background:rgba(255,255,255,.35);font-family:"Space Mono",monospace;font-size:15px;line-height:1.55}
+.evidence .lbl{font-weight:700;font-size:12px;letter-spacing:.08em;color:var(--red);display:block;margin-bottom:4px}
+.u{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.challenge{margin-top:18px;border-top:2px solid rgba(43,33,23,.18);padding-top:16px}
+.challenge .q{font-weight:700;font-size:18px;margin-bottom:10px}
+input[type=text]{width:100%;font-size:20px;padding:12px 14px;border:2px solid var(--ink);border-radius:10px;background:#fffaf0;font-family:"Space Mono",monospace;text-transform:uppercase;letter-spacing:.12em}
+select{font-size:16px;padding:8px;border:2px solid var(--ink);border-radius:8px;background:#fffaf0;width:100%}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+button{font-family:"Public Sans",sans-serif;font-weight:700;font-size:16px;border:0;border-radius:10px;padding:12px 18px;cursor:pointer}
+.btn{background:var(--jungle);color:#fff}
+.btn:hover{background:var(--jungle2)}
+.ghost{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+.gold{background:var(--gold);color:var(--ink)}
+.msg{margin-top:12px;font-weight:700;min-height:24px}
+.msg.ok{color:var(--jungle)}
+.msg.no{color:var(--red)}
+.hint{display:none;margin-top:10px;background:#fff3cf;border:2px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:16px}
+.hint.show{display:block}
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:420px;margin:8px auto 4px}
+.cell{aspect-ratio:1;border:2px solid var(--ink);border-radius:10px;background:#fffaf0;font-size:clamp(20px,6vw,30px);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:2px;transition:transform .1s}
+.cell small{font-size:9px;font-family:"Space Mono",monospace;line-height:1;margin-top:2px;text-align:center}
+.cell:hover{transform:scale(1.05)}
+.cell.start{background:#dff0e6}
+.cell.pick{outline:4px solid var(--red)}
+.compass{text-align:center;font-family:"Space Mono",monospace;font-size:13px;margin-bottom:4px}
+.match{display:grid;grid-template-columns:1fr;gap:10px}
+.match .m{background:rgba(255,255,255,.45);border-radius:10px;padding:10px 12px}
+.match .m p{margin:0 0 6px;font-size:16px}
+.stamp{float:right;margin:0 0 10px 12px;transform:rotate(6deg);border:3px solid var(--red);color:var(--red);font-family:"Space Mono",monospace;font-weight:700;padding:4px 10px;border-radius:6px;font-size:13px;letter-spacing:.1em;opacity:.85}
+.stamp.solved{border-color:var(--jungle);color:var(--jungle)}
+.cast{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px}
+.chip{background:rgba(43,33,23,.08);border-radius:20px;padding:5px 10px;font-size:14px}
+.final-q li{margin-bottom:10px;font-size:17px}
+.word{display:inline-block;font-family:"Fraunces",serif;font-size:30px;font-weight:800;color:var(--jungle);letter-spacing:.06em}
+.foot{margin-top:18px;text-align:center;font-size:12px;color:var(--gold2);font-family:"Space Mono",monospace}
+.reset{background:transparent;color:var(--gold2);border:1px solid var(--gold);font-size:12px;padding:6px 10px}
+.hidden{display:none}
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:6px 0 16px}
+.lv{background:#fffaf0;color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:10px;text-align:left;font-weight:600}
+.lv b{display:block;font-family:"Fraunces",serif;font-size:19px}
+.lv span{font-size:13px;color:var(--muted)}
+.lv.on{background:var(--jungle);color:#fff;border-color:var(--jungle)}
+.lv.on span{color:#e8f3ec}
+.lvtag{display:inline-block;background:rgba(43,33,23,.08);border-radius:20px;padding:3px 10px;font-size:13px;font-weight:700;margin-bottom:8px}
+.roles{background:#fff3cf;border:2px solid var(--gold);border-radius:10px;padding:8px 12px;margin:4px 0 14px;font-size:15px;font-weight:600;line-height:1.45}
+.names label{display:block;font-weight:700;font-size:15px;margin:10px 0 4px}
+@media (max-width:480px){.file{padding:22px 16px}.story{font-size:17.5px}.stamp{float:none;display:inline-block;margin:0 0 12px;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <a href="casos-de-misterio.html" style="font-family:'Space Mono',monospace;font-size:12px;color:var(--gold);text-decoration:none;display:inline-block;margin-bottom:8px">← Casos de Misterio</a>
+      <div class="brand" id="brand">Casos de Misterio · Cuentopolis</div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="prog" id="prog"></div>
+  </header>
+  <main id="app"></main>
+  <div class="foot"><button class="reset" id="resetBtn">Empezar el caso otra vez</button></div>
+</div>
+
+<script>
+/* =========================================================
+   DATOS DEL CASO — para un caso nuevo, cambia solo este bloque.
+   Tipos de reto: "palabra", "mapa", "emparejar".
+   Las respuestas se comparan sin acentos y sin mayúsculas.
+   ========================================================= */
+const CASO = {
+  id: "solo-invisible-2",
+  marca: "Solo Detective · Cuentopolis",
+  serie: "Solo Detective · Tú eres el detective",
+  titulo: "El misterio del estudiante invisible",
+  nivel: "Tres niveles · Elige el tuyo",
+  niveles: [
+    {id:"n1", icono:"🔍", nombre:"Novato", desc:"Frases cortas · A1"},
+    {id:"n2", icono:"🧭", nombre:"Explorador", desc:"Párrafos cortos · A2"},
+    {id:"n3", icono:"🕵️", nombre:"Maestro", desc:"Más pistas y más detalles · B1"}
+  ],
+  intro: {
+    n1: `
+      <p>En tu clase de español hay una tradición: cada tarde, la maestra escribe una <b>adivinanza</b> en la pizarra. Al día siguiente, la clase busca la respuesta.</p>
+      <p>Pero hoy, en la mañana, la respuesta ya está en la pizarra. Y abajo dice: <b>«— El estudiante invisible»</b>.</p>
+      <p>¿Quién es? Tú eres detective. Tu misión: descubrir quién es el estudiante invisible.</p>`,
+    n2: `
+      <p>En tu clase de español hay una tradición: cada tarde, antes de salir, la maestra escribe una <b>adivinanza</b> en la pizarra. Al día siguiente, todos tratan de adivinar.</p>
+      <p>Pero esta semana pasa algo muy raro. Cuando llegas por la mañana, la respuesta ya está escrita en la pizarra, con letras grandes. Y siempre tiene la misma firma: <b>«— El estudiante invisible»</b>.</p>
+      <p>Nadie de la clase fue. Tu misión: descubrir quién es el estudiante invisible.</p>`,
+    n3: `
+      <p>Desde el principio del año, tu maestra de español tiene una tradición: cada tarde, antes de salir, escribe una <b>adivinanza</b> en la pizarra para el día siguiente.</p>
+      <p>Pero desde el lunes, alguien está resolviendo las adivinanzas durante la noche. Cada mañana, la respuesta aparece escrita en la pizarra, con la misma firma misteriosa: <b>«— El estudiante invisible»</b>.</p>
+      <p>Toda la clase tiene una teoría, pero nadie tiene pruebas. La maestra te dio la llave del salón y una sola instrucción: «Descubre quién es. Y cuando lo descubras, piensa bien qué vas a hacer con el secreto».</p>`
+  },
+  pistas: [
+    {
+      tab: "PISTA 1",
+      titulo: "La adivinanza del lunes",
+      texto: {
+        n1: `
+          <p>Miras la pizarra. Esta es la adivinanza del lunes:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA PIZARRA</span>
+          Soy un animal muy alto.<br>
+          Tengo el cuello muy largo.<br>
+          Como hojas de los árboles.<br>
+          ¿Quién soy?</div>
+          <p>Abajo, el estudiante invisible escribió la respuesta... pero tú no la ves bien. La maestra borró una parte. ¡Resuelve la adivinanza tú!</p>`,
+        n2: `
+          <p>Le tomas una foto a la pizarra. Esta es la adivinanza que la maestra escribió el lunes:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA PIZARRA DEL LUNES</span>
+          Soy alta, muy alta, y tengo manchas.<br>
+          Mi cuello es tan largo que como las hojas de los árboles más altos.<br>
+          ¿Quién soy?</div>
+          <p>Debajo hay una respuesta, pero la maestra ya la borró un poco. Antes de investigar, resuelve la adivinanza.</p>`,
+        n3: `
+          <p>Abriste tu cuaderno de detective y copiaste las adivinanzas de la semana. Esta es la del lunes:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA PIZARRA DEL LUNES</span>
+          Vivo en la sabana africana y llevo un abrigo de manchas.<br>
+          Nadie me alcanza la cabeza, aunque se suba a una escalera.<br>
+          Desayuno, almuerzo y ceno en la parte más alta de los árboles.<br>
+          ¿Quién soy?</div>
+          <p>La respuesta del estudiante invisible está medio borrada. Para entender el resto del caso, primero necesitas resolverla tú.</p>`
+      },
+      reto: { tipo:"palabra",
+        pregunta:"¿Cuál es la respuesta de la adivinanza? Escribe el nombre del animal.",
+        respuesta:["jirafa","la jirafa","una jirafa"],
+        ayuda: {
+          n1:"Es un animal de África. Es amarillo con manchas. Empieza con J.",
+          n2:"Es un animal de África con manchas y un cuello larguísimo. Empieza con J.",
+          n3:"Sabana africana + manchas + la cabeza más alta de todos. Empieza con J." } }
+    },
+    {
+      tab: "PISTA 2",
+      titulo: "Un error muy interesante",
+      texto: {
+        n1: `
+          <p>La maestra te muestra una foto de la pizarra. Ahí está la respuesta del estudiante invisible:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA FOTO</span>
+          ¡Es una GIRAFA!<br>
+          — El estudiante invisible</div>
+          <p>¡Un error! En español es <b>jirafa</b>, con J. Pero en inglés es <b>giraffe</b>, con G.</p>`,
+        n2: `
+          <p>La maestra tiene fotos de la pizarra de dos mañanas. Las miras con tu lupa:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LAS FOTOS</span>
+          Martes: «¡Es una GIRAFA! — El estudiante invisible»<br>
+          Miércoles: «¡Es una ZEBRA! — El estudiante invisible»</div>
+          <p>¡Dos errores! En español se escribe <b>jirafa</b> y <b>cebra</b>. Pero en inglés se escribe <b>giraffe</b> y <b>zebra</b>.</p>`,
+        n3: `
+          <p>La maestra guardó fotos de la pizarra de tres mañanas. Las pusiste una al lado de la otra:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LAS FOTOS</span>
+          Martes: «¡Es una GIRAFA! — El estudiante invisible»<br>
+          Miércoles: «¡Es una ZEBRA! — El estudiante invisible»<br>
+          Jueves: «¡Es el CHOCOLATE! — El estudiante invisible»</div>
+          <p>Las tres respuestas son correctas, pero dos están mal escritas. En español: <b>jirafa</b> y <b>cebra</b>. En inglés: <b>giraffe</b> y <b>zebra</b>. La palabra «chocolate», en cambio, se escribe igual en los dos idiomas.</p>`
+      },
+      reto: {
+        n1: { tipo:"emparejar", pregunta:"¿Qué nos dice este error?",
+          items:[{texto:"Escribe GIRAFA con G, como en inglés. Entonces...", correcta:"Habla inglés y está aprendiendo español."}],
+          opciones:["Es una jirafa de verdad.","Habla inglés y está aprendiendo español.","No sabe nada de animales."],
+          error:"Esa no es la mejor respuesta. Piensa: ¿en qué idioma se escribe con G?",
+          ayuda:"La respuesta es correcta: sabe mucho de animales. Pero escribe la palabra como en inglés." },
+        n2: { tipo:"emparejar", pregunta:"¿Qué nos dicen estos dos errores?",
+          items:[{texto:"Escribe GIRAFA y ZEBRA, como en inglés. Entonces, el estudiante invisible...", correcta:"habla inglés y está aprendiendo español."}],
+          opciones:["es un estudiante de kínder.","habla inglés y está aprendiendo español.","no sabe resolver adivinanzas.","escribe mal a propósito para hacer bromas."],
+          error:"Esa no es la mejor explicación. Las respuestas son correctas... solo cambia la forma de escribirlas.",
+          ayuda:"Las dos palabras están escritas como en inglés. ¿Qué idioma conoce muy bien esta persona?" },
+        n3: { tipo:"emparejar", pregunta:"¿Cuál es la conclusión más lógica?",
+          items:[{texto:"Resuelve bien todas las adivinanzas, pero escribe GIRAFA y ZEBRA como en inglés. Entonces, el estudiante invisible...", correcta:"es alguien que habla inglés muy bien y está aprendiendo a escribir en español."}],
+          opciones:["es alguien que habla inglés muy bien y está aprendiendo a escribir en español.","es un niño pequeño que todavía no sabe escribir.","es la maestra, que se equivoca para probar a la clase.","copia las respuestas de un libro en inglés sin entenderlas."],
+          error:"Esa conclusión no explica todas las pruebas. Recuerda: las respuestas son correctas.",
+          ayuda:"Un niño pequeño no resolvería adivinanzas difíciles. La maestra no escribiría con errores. Y alguien que no entiende no tendría todas las respuestas bien." }
+      }
+    },
+    {
+      tab: "PISTA 3",
+      titulo: "¿Quién está de noche?",
+      texto: {
+        n1: `
+          <p>La maestra escribe la adivinanza a las 3:00 de la tarde. Los estudiantes llegan a las 7:30 de la mañana. ¿Quién está en la escuela entre esas horas?</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL LIBRO DE LA ENTRADA</span>
+          🧑‍🏫 La maestra de español: sale a las 3:30 de la tarde.<br>
+          🏀 El profesor Gómez: llega a las 6:00 de la mañana. Está en el gimnasio. Habla español, no inglés.<br>
+          🧹 Don Ramón, el conserje: limpia la escuela de 3:30 a 9:00 de la noche. Tiene las llaves de todos los salones. Habla inglés y kriol.<br>
+          🐹 Copito, el hámster de la clase: vive en el salón, en su jaula.</div>`,
+        n2: `
+          <p>La maestra escribe la adivinanza a las 3:00 de la tarde y cierra el salón con llave a las 3:30. Los estudiantes llegan a las 7:30 de la mañana. Entonces, el estudiante invisible escribe entre las 3:30 de la tarde y las 7:30 de la mañana. Revisas el libro de la entrada:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL LIBRO DE LA ENTRADA</span>
+          🏀 Profesor Gómez: llega a las 6:00 de la mañana para entrenar. No tiene llave de tu salón. Es de Guatemala: el español es su primer idioma.<br>
+          🧹 Don Ramón, el conserje: trabaja de 3:30 a 9:00 de la noche. Tiene las llaves de todos los salones. Habla inglés y kriol.<br>
+          🐹 Copito, el hámster de la clase: vive en el salón. Su jaula está cerrada con un clip.</div>`,
+        n3: `
+          <p>Reconstruiste la línea del tiempo. La maestra escribió cada adivinanza a las 3:00 p. m. y cerró el salón con llave a las 3:30. Los estudiantes llegaron a las 7:30 a. m. y la respuesta ya estaba en la pizarra.</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL LIBRO DE LA ENTRADA</span>
+          🏀 Profesor Gómez: entra a las 6:00 a. m. para entrenar al equipo. Solo tiene la llave del gimnasio. Nació en Guatemala; el español es su lengua materna.<br>
+          📚 Señora Young, la bibliotecaria: se queda hasta las 5:00 p. m. Habla inglés, pero la biblioteca está en otro edificio y no tiene llave de tu salón.<br>
+          🧹 Don Ramón, el conserje: trabaja de 3:30 a 9:00 p. m. Tiene las llaves de todos los salones. Habla inglés y kriol.<br>
+          🐹 Copito, el hámster: vive en el salón, pero su jaula está cerrada con un clip.</div>`
+      },
+      reto: { tipo:"palabra",
+        pregunta: {
+          n1:"¿Qué persona está en la escuela en la noche, tiene la llave y habla inglés? Escribe su nombre.",
+          n2:"¿Quién tiene la llave del salón, está en la escuela después de las 3:30 y habla inglés? Escribe su nombre.",
+          n3:"¿Quién es la única persona con oportunidad (horario y llave) y con el perfil de la pista 2? Escribe su nombre." },
+        respuesta:["don ramon","ramon","el conserje","don ramon el conserje","senor ramon","el senor ramon"],
+        ayuda: {
+          n1:"Copito no es una persona. El profesor Gómez no habla inglés. ¿Quién queda?",
+          n2:"Copito no puede salir de su jaula. El profesor Gómez no tiene llave y su primer idioma es el español. ¿Quién queda?",
+          n3:"Elimina uno por uno: ¿quién no tiene llave? ¿Quién no habla inglés? ¿Quién no es una persona?" } }
+    },
+    {
+      tab: "PISTA 4",
+      titulo: "El cuaderno del armario",
+      texto: {
+        n1: `
+          <p>Vas al armario de limpieza. La puerta está abierta. Al lado de las escobas hay un cuaderno. En la portada dice: <b>«Mi cuaderno de español — Ramón»</b>.</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL CUADERNO</span>
+          Palabras nuevas: jirafa (¡con J!), cebra (¡con C!), chocolate.<br>
+          Mi meta: leer cuentos en español con mi nieta Lucy.</div>
+          <p>Al lado del cuaderno hay una foto de Don Ramón con una niña pequeña. Están leyendo un libro.</p>`,
+        n2: `
+          <p>Vas al armario de limpieza para hablar con Don Ramón, pero él no está. Al lado de las escobas, ves un cuaderno: <b>«Mi cuaderno de español — Ramón»</b>. No lo lees todo, pero la primera página está abierta:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA PRIMERA PÁGINA</span>
+          Palabras nuevas de esta semana: jirafa (¡con J, no con G!), cebra (¡con C!).<br>
+          Mi meta: leer cuentos en español con mi nieta Lucy. Ella aprende español en la escuela y quiere leer conmigo.</div>
+          <p>Pegada en la página hay una foto de Don Ramón con una niña pequeña. Los dos se ríen con un libro en las manos.</p>`,
+        n3: `
+          <p>Fuiste al armario de limpieza para hablar con Don Ramón, pero no estaba. Sobre un estante, entre las escobas y los productos de limpieza, había un cuaderno: <b>«Mi cuaderno de español — Ramón»</b>. Por respeto, solo leíste la página que estaba abierta:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA PÁGINA ABIERTA</span>
+          Correcciones de esta semana: jirafa (¡J, no G!), cebra (¡C, no Z!).<br>
+          ¿Por qué estudio? Mi nieta Lucy va a cumplir siete años. Está aprendiendo español en la escuela y me pidió un regalo: que le lea cuentos en español antes de dormir. Las adivinanzas de la maestra son mi mejor práctica.</div>
+          <p>En la esquina había una foto: Don Ramón y una niña pequeña, riéndose con un libro.</p>`
+      },
+      reto: {
+        n1: { tipo:"emparejar", pregunta:"¿Por qué estudia español Don Ramón?",
+          items:[{texto:"Don Ramón estudia español porque...", correcta:"quiere leer cuentos con su nieta Lucy."}],
+          opciones:["quiere ser maestro de español.","quiere leer cuentos con su nieta Lucy.","quiere ganar un premio."],
+          error:"No. Lee otra vez «Mi meta» en el cuaderno.",
+          ayuda:"Busca la frase «Mi meta» en el cuaderno." },
+        n2: { tipo:"emparejar", pregunta:"¿Por qué resuelve las adivinanzas Don Ramón?",
+          items:[{texto:"Don Ramón resuelve las adivinanzas porque...", correcta:"practica español para leer cuentos con su nieta Lucy."}],
+          opciones:["quiere ganarle a la clase.","practica español para leer cuentos con su nieta Lucy.","la maestra le paga por las respuestas.","se aburre en la noche."],
+          error:"No. Lee otra vez «Mi meta» en el cuaderno.",
+          ayuda:"Lee «Mi meta». ¿Quién es Lucy? ¿Qué quiere hacer con ella?" },
+        n3: { tipo:"emparejar", pregunta:"¿Cuál es el motivo del estudiante invisible?",
+          items:[{texto:"Don Ramón resuelve las adivinanzas porque...", correcta:"son su práctica para cumplir el regalo que le pidió su nieta: leerle cuentos en español."}],
+          opciones:["quiere demostrar que es más inteligente que los estudiantes.","son su práctica para cumplir el regalo que le pidió su nieta: leerle cuentos en español.","la maestra le pidió en secreto que ayudara a la clase.","necesita aprobar un examen de español para su trabajo."],
+          error:"Ese motivo no aparece en el cuaderno. Busca la respuesta en «¿Por qué estudio?».",
+          ayuda:"Lee la parte «¿Por qué estudio?» del cuaderno. ¿Qué le pidió Lucy?" }
+      }
+    },
+    {
+      tab: "PISTA 5",
+      titulo: "La última nota",
+      texto: {
+        n1: `
+          <p>A la mañana siguiente, en la pizarra hay una nota nueva. ¡Es para ti!</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA NOTA</span>
+          <span class="u">Ahora</span> sabes mi secreto.<br>
+          <span class="u">Por</span> la noche, estudio español.<br>
+          <span class="u">Resuelvo</span> las adivinanzas.<br>
+          <span class="u">Escribo</span> mal algunas palabras.<br>
+          <span class="u">Nunca</span> es tarde.<br>
+          <span class="u">Dime</span>: ¿me dejas otra adivinanza?<br>
+          <span class="u">Estoy</span> muy contento.<br>
+          <span class="u">Recuerda</span>: ¡gracias, detective!<br>
+          — Ramón</div>
+          <p>Mira las palabras subrayadas.</p>`,
+        n2: `
+          <p>Esa tarde hablas con Don Ramón. Al día siguiente, en la pizarra hay una nota nueva... ¡para ti!</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA NOTA</span>
+          <span class="u">Ahora</span> ya sabes mi secreto, detective.<br>
+          <span class="u">Por</span> las noches, después de limpiar, practico español.<br>
+          <span class="u">Resuelvo</span> las adivinanzas porque son divertidas.<br>
+          <span class="u">Escribo</span> mal algunas palabras, pero cada día mejor.<br>
+          <span class="u">Nunca</span> es tarde para estudiar.<br>
+          <span class="u">Dime</span>, ¿me dejas otra adivinanza mañana?<br>
+          <span class="u">Estoy</span> muy contento.<br>
+          <span class="u">Recuerda</span>: tú también eres un gran maestro.<br>
+          — Ramón</div>
+          <p>La nota tiene un secreto: mira las palabras subrayadas.</p>`,
+        n3: `
+          <p>Esa tarde buscaste a Don Ramón y le contaste lo que habías descubierto. Él se puso rojo, pero después sonrió. A la mañana siguiente, en la pizarra había una nota con tu nombre:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA NOTA</span>
+          <span class="u">Ahora</span> ya conoces mi secreto, detective.<br>
+          <span class="u">Por</span> las noches, cuando termino de limpiar, practico español con las adivinanzas de tu maestra.<br>
+          <span class="u">Resolverlas</span> es lo mejor de mi día.<br>
+          <span class="u">Escribo</span> con errores, pero cada semana me equivoco menos.<br>
+          <span class="u">Nunca</span> pensé que un estudiante me iba a descubrir.<br>
+          <span class="u">Dime</span> la verdad: ¿me dejas seguir participando?<br>
+          <span class="u">En</span> serio, gracias por guardar mi secreto con respeto.<br>
+          <span class="u">Recuerda</span>: todos somos estudiantes de algo.<br>
+          — Ramón</div>
+          <p>La nota esconde una palabra: mira las palabras subrayadas.</p>`
+      },
+      reto: { tipo:"palabra",
+        pregunta:"Escribe la primera letra de cada palabra subrayada, en orden. ¿Qué palabra secreta forman?",
+        respuesta:["aprender"],
+        ayuda:"La primera palabra subrayada es «Ahora»: empieza con A. La segunda es «Por»: empieza con P. Sigue así. Son 8 letras." }
+    }
+  ],
+  final: {
+    titulo: "¡Caso resuelto!",
+    texto: {
+      n1: `
+        <p>El estudiante invisible es <b>Don Ramón</b>, el conserje. Estudia español para leer cuentos con su nieta Lucy.</p>
+        <p>Esa tarde, tú escribes una adivinanza nueva en la pizarra. Es solo para él.</p>
+        <p>A la mañana siguiente, la respuesta está ahí: <b>«¡Es una CEBRA!»</b> ¡Con C! Y abajo: <i>«— Ramón, el estudiante visible»</i>.</p>`,
+      n2: `
+        <p>El estudiante invisible es <b>Don Ramón</b>, el conserje. Cada noche, después de limpiar, practica español con las adivinanzas de la clase. Su meta: leer cuentos con su nieta Lucy.</p>
+        <p>La maestra tiene una idea: ahora Don Ramón es parte oficial de la clase. Cada viernes, él escribe una adivinanza para los estudiantes.</p>
+        <p>La primera dice: <i>«Soy blanca y negra, y no soy un caballo. ¿Quién soy?»</i>. Abajo, con letras grandes: <b>CEBRA</b>. ¡Con C!</p>`,
+      n3: `
+        <p>El estudiante invisible era <b>Don Ramón</b>, el conserje. Ningún error de la pizarra era una broma: eran las huellas de alguien aprendiendo, una noche a la vez.</p>
+        <p>Con su permiso, la maestra le contó la historia a la clase. Desde entonces, los viernes Don Ramón escribe la adivinanza para los estudiantes, y los estudiantes le corrigen la ortografía con mucho cuidado.</p>
+        <p>Un mes después, llegó una foto: Lucy, dormida, y Don Ramón con un libro de cuentos en español en las manos.</p>`
+    },
+    palabraTitulo: "Palabra del detective",
+    palabra: "Constancia",
+    preguntas: {
+      n1: ["¿Quién es el estudiante invisible?","¿Por qué estudia español?","Escribe una adivinanza fácil para Don Ramón. Usa un animal."],
+      n2: ["¿Qué prueba fue la más importante para resolver el caso? ¿Por qué?","¿Por qué es importante tratar con respeto a una persona que está aprendiendo?","Escribe una adivinanza para Don Ramón. Tiene que tener tres pistas."],
+      n3: ["Explica cómo eliminaste a cada sospechoso en la pista 3.","La maestra le dijo al detective: «Piensa bien qué vas a hacer con el secreto». ¿Qué habrías hecho tú? ¿Por qué?","Escribe una adivinanza con una palabra que se escribe diferente en inglés y en español (por ejemplo: cebra / zebra)."]
+    },
+    preguntasTitulo: "📝 Preguntas del detective",
+    seesaw: "Escribe tus respuestas en tu cuaderno o grábalas en Seesaw. ¡Usa oraciones completas!"
+  }
+};
+
+/* =========================================================
+   MOTOR — no hace falta cambiar nada aquí abajo.
+   ========================================================= */
+const KEY = "detective-"+CASO.id;
+const norm = s => (s||"").toString().normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
+const esc = s => (s||"").toString().replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
+let state = load();
+const LV = (CASO.niveles||[]).map(n=>n.id);
+function R(v){
+  if(Array.isArray(v)) return v.map(R);
+  if(v && typeof v==="object"){
+    if(LV.length && Object.keys(v).length && Object.keys(v).every(k=>LV.includes(k))) return R(v[state.nivel] ?? v[LV[0]]);
+    const o={}; for(const k in v) o[k]=R(v[k]); return o;
+  }
+  return v;
+}
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {step:-1}; }catch(e){ return {step:-1}; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+const app = document.getElementById("app");
+const total = CASO.pistas.length;
+
+function header(){
+  const d=document.getElementById("dots"); d.innerHTML="";
+  for(let i=0;i<total;i++){ const s=document.createElement("span"); s.className="dot"+(i<state.step?" done":"")+(i===state.step?" now":""); d.appendChild(s); }
+  document.getElementById("prog").textContent = state.step<0 ? "Expediente cerrado" : state.step>=total ? "Caso resuelto" : `Pista ${state.step+1} de ${total}`;
+}
+function render(){
+  header(); window.scrollTo({top:0,behavior:"smooth"});
+  if(state.step<0) return renderIntro();
+  if(state.step>=total) return renderFinal();
+  renderPista(R(CASO.pistas[state.step]));
+}
+function renderIntro(){
+  app.innerHTML = `<section class="file" data-tab="EXPEDIENTE">
+    <span class="stamp">CASO ABIERTO</span>
+    <div class="kicker">${CASO.serie}</div>
+    <h1>${CASO.titulo}</h1>
+    <div class="kicker" style="color:var(--muted)">${CASO.nivel}</div>
+    ${CASO.equipo?`<div class="cast">${CASO.equipo.map(e=>`<span class="chip">${e}</span>`).join("")}</div>`:""}
+    ${LV.length?`<div class="q" style="font-weight:700;margin-top:12px">1. Elige tu nivel:</div><div class="levels">${CASO.niveles.map(n=>`<button class="lv${state.nivel===n.id?" on":""}" data-lv="${n.id}">${n.icono} <b>${n.nombre}</b><span>${n.desc}</span></button>`).join("")}</div>`:""}
+    <div class="story" id="introStory">${R(CASO.intro)}</div>
+    <div class="challenge">${CASO.pareja ? `<div class="q">Escriban sus nombres de detective:</div>
+      <div class="names"><label for="nm">🗣 Detective 1 · lee la historia en voz alta y explica</label>
+      <input type="text" id="nm" maxlength="30" placeholder="Detective 1..." value="${esc(state.d1||"")}" style="text-transform:none;letter-spacing:0">
+      <label for="nm2">🔎 Detective 2 · busca la evidencia y decide la respuesta</label>
+      <input type="text" id="nm2" maxlength="30" placeholder="Detective 2..." value="${esc(state.d2||"")}" style="text-transform:none;letter-spacing:0"></div>` : `<div class="q">${LV.length?"2. ":""}Escribe tu nombre de detective:</div>
+      <input type="text" id="nm" maxlength="30" placeholder="Detective..." value="${esc(state.name||"")}" style="text-transform:none;letter-spacing:0">`}
+      <div class="row"><button class="btn" id="go">Abrir el expediente →</button></div>
+      <div class="msg no" id="m"></div></div>
+  </section>`;
+  document.querySelectorAll(".lv").forEach(b=>b.onclick=()=>{
+    state.nivel=b.dataset.lv;
+    document.querySelectorAll(".lv").forEach(x=>x.classList.toggle("on",x===b));
+    document.getElementById("introStory").innerHTML=R(CASO.intro);
+  });
+  document.getElementById("go").onclick=()=>{
+    const n=document.getElementById("nm").value.trim();
+    if(LV.length && !state.nivel){ document.getElementById("m").textContent="Elige tu nivel primero."; return; }
+    if(CASO.pareja){
+      const n2=document.getElementById("nm2").value.trim();
+      if(!n||!n2){ document.getElementById("m").textContent="Escriban los dos nombres primero."; return; }
+      state={step:0,d1:n,d2:n2,name:n+" y "+n2}; save(); render(); return;
+    }
+    if(!n){ document.getElementById("m").textContent="Escribe tu nombre primero."; return; }
+    state={step:0,name:n,nivel:state.nivel}; save(); render();
+  };
+}
+function renderPista(p){
+  app.innerHTML = `<section class="file" data-tab="${p.tab}">
+    <span class="stamp">EN INVESTIGACIÓN</span>
+    <div class="kicker">${p.tab}</div><h2>${p.titulo}</h2>
+    ${LV.length?(()=>{const n=CASO.niveles.find(x=>x.id===state.nivel)||CASO.niveles[0];return `<div class="lvtag">${n.icono} Nivel ${n.nombre}</div>`;})():""}
+    ${p.roles && CASO.pareja ? `<div class="roles">${esc(p.roles).replace(/\{d1\}/g,"<b>"+esc(state.d1)+"</b>").replace(/\{d2\}/g,"<b>"+esc(state.d2)+"</b>")}</div>` : ""}
+    <div class="story">${p.texto}</div>
+    <div class="challenge"><div class="q">🔎 Reto: ${p.reto.pregunta}</div>
+      <div id="ui"></div>
+      <div class="row"><button class="btn" id="check">Revisar</button><button class="ghost" id="hb">💡 Necesito una pista</button></div>
+      <div class="msg" id="m"></div>
+      <div class="hint" id="h">${p.reto.ayuda}</div>
+    </div></section>`;
+  document.getElementById("hb").onclick=()=>document.getElementById("h").classList.toggle("show");
+  const ui=document.getElementById("ui"), m=document.getElementById("m");
+  const ok=()=>{ m.className="msg ok"; m.textContent="¡Correcto, detective! Abriendo la siguiente página..."; state.step++; save(); setTimeout(render,1100); };
+  const no=t=>{ m.className="msg no"; m.textContent=t||"Todavía no. Lee otra vez la pista con calma."; };
+  const r=p.reto;
+  if(r.tipo==="palabra"){
+    ui.innerHTML=`<input type="text" id="ans" autocomplete="off" placeholder="Tu respuesta">`;
+    const inp=document.getElementById("ans");
+    const check=()=>{ const v=norm(inp.value); if(!v) return no("Escribe una respuesta primero."); r.respuesta.map(norm).includes(v)?ok():no(); };
+    document.getElementById("check").onclick=check;
+    inp.addEventListener("keydown",e=>{ if(e.key==="Enter") check(); });
+  }
+  if(r.tipo==="mapa"){
+    let pick=null;
+    ui.innerHTML=`<div class="compass">⬆️ NORTE · ⬇️ SUR · ➡️ ESTE · ⬅️ OESTE</div><div class="map" id="map"></div>`;
+    const map=document.getElementById("map");
+    r.celdas.forEach((c,i)=>{ const b=document.createElement("div"); b.className="cell"+(i===r.inicio?" start":""); b.innerHTML=`${c[0]}<small>${c[1]}</small>`;
+      b.onclick=()=>{ map.querySelectorAll(".cell").forEach(x=>x.classList.remove("pick")); b.classList.add("pick"); pick=i; }; map.appendChild(b); });
+    document.getElementById("check").onclick=()=>{ if(pick===null) return no("Toca una casilla primero."); pick===r.correcta?ok():no(r.error||"Esa no es la casilla correcta. Empieza otra vez y cuenta las casillas."); };
+  }
+  if(r.tipo==="emparejar"){
+    ui.innerHTML=`<div class="match">${r.items.map((it,i)=>`<div class="m"><p>${it.texto}</p><select id="s${i}"><option value="">— Elige —</option>${r.opciones.map(o=>`<option>${o}</option>`).join("")}</select></div>`).join("")}</div>`;
+    document.getElementById("check").onclick=()=>{
+      let bad=0, empty=0; r.items.forEach((it,i)=>{ const v=document.getElementById("s"+i).value; if(!v) empty++; else if(v!==it.correcta) bad++; });
+      if(empty) return no("Elige una respuesta para cada uno.");
+      bad?no(r.error?r.error.replace("{n}",bad):`Tienes ${bad} ${bad===1?"trabajo incorrecto":"trabajos incorrectos"}. Piensa en cómo es cada animal.`):ok();
+    };
+  }
+}
+function renderFinal(){
+  const f=R(CASO.final);
+  app.innerHTML = `<section class="file" data-tab="CASO CERRADO">
+    <span class="stamp solved">CASO RESUELTO</span>
+    <div class="kicker">${CASO.titulo}</div><h1>${f.titulo}</h1>
+    <p style="font-size:18px">${CASO.pareja?`¡Felicidades, detectives <b>${esc(state.d1)}</b> y <b>${esc(state.d2)}</b>!`:`¡Felicidades, detective <b>${esc(state.name)}</b>!`}</p>
+    <div class="story">${f.texto}</div>
+    <p>${f.palabraTitulo||"Palabra del Bosque"}: <span class="word">${f.palabra}</span></p>
+    <div class="challenge"><div class="q">${f.preguntasTitulo||"🐦 Las preguntas de Don Pico"}</div>
+      <ol class="final-q">${f.preguntas.map(q=>`<li>${q}</li>`).join("")}</ol>
+      <p><b>${f.seesaw}</b></p></div>
+  </section>`;
+}
+document.getElementById("resetBtn").onclick=()=>{ if(confirm("¿Empezar el caso desde el principio?")){ state={step:-1}; save(); render(); } };
+if(CASO.marca) document.getElementById("brand").textContent=CASO.marca;
+render();
+</script>
+</body>
+</html>
