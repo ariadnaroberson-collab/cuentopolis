@@ -72,6 +72,7 @@ button{font-family:"Public Sans",sans-serif;font-weight:700;font-size:16px;borde
 .roles{background:#fff3cf;border:2px solid var(--gold);border-radius:10px;padding:8px 12px;margin:4px 0 14px;font-size:15px;font-weight:600;line-height:1.45}
 .names label{display:block;font-weight:700;font-size:15px;margin:10px 0 4px}
 @media (max-width:480px){.file{padding:22px 16px}.story{font-size:17.5px}.stamp{float:none;display:inline-block;margin:0 0 12px;font-size:12px}}
+.notebook .nb-head{font-family:"Space Mono",monospace;font-weight:700;border-bottom:1px dashed #9a8f78;padding-bottom:8px}
 </style>
 </head>
 <body>
@@ -226,6 +227,15 @@ const CASO = {
   }
 };
 
+/* Preguntas para la entrada del cuaderno de detective (seguimiento escrito a mano). */
+const CUADERNO = [
+ "¿Qué encontró Bruno debajo de la cuerda?",
+ "¿Cuándo se fue Teo a su casa?",
+ "¿De dónde viene el viento?",
+ "Entonces, ¿hacia dónde voló la ropa?",
+ "¿Dónde estaban las gafas de sol?"
+];
+
 /* =========================================================
    MOTOR — no hace falta cambiar nada aquí abajo.
    ========================================================= */
@@ -329,7 +339,25 @@ function renderFinal(){
     <div class="challenge"><div class="q">🐦 Las preguntas de Don Pico</div>
       <ol class="final-q">${f.preguntas.map(q=>`<li>${q}</li>`).join("")}</ol>
       <p><b>${f.seesaw}</b></p></div>
+    <div class="challenge notebook"><div class="q">📓 Para tu cuaderno de detective</div>
+      <p>Escribe a mano en tu cuaderno:</p>
+      <p class="nb-head">CASOS MISTERIOSOS DE CUENTÓPOLIS<br>Fecha: ______ · Caso: ${CASO.titulo}</p>
+      <p>Para cada pregunta escribe:<br>✏️ la <b>respuesta</b> con una oración completa,<br>🔍 la <b>prueba</b>: copia la frase del expediente «entre comillas»,<br>📌 la <b>pista</b> donde la encontraste.</p>
+      <ol class="final-q">${(typeof R==="function"?R(CUADERNO):CUADERNO).map(q=>`<li>${q}</li>`).join("")}</ol>
+      <p>Usa el botón <b>📖 Releer el expediente</b> para buscar las frases.</p></div>
+    <div class="row"><button class="ghost" id="rereadBtn">📖 Releer el expediente</button></div>
+    <div id="reread"></div>
   </section>`;
+  document.getElementById("rereadBtn").onclick=renderReread;
+}
+function renderReread(){
+  const RR = typeof R==="function" ? R : (v=>v);
+  const box=document.getElementById("reread"), btn=document.getElementById("rereadBtn");
+  if(box.innerHTML){ box.innerHTML=""; btn.textContent="📖 Releer el expediente"; return; }
+  btn.textContent="📕 Cerrar el expediente";
+  const sep='style="border-top:1px dashed #9a8f78;margin-top:20px;padding-top:14px"';
+  box.innerHTML = `<div class="story" ${sep}><div class="kicker">INICIO</div>${RR(CASO.intro)}</div>`
+    + CASO.pistas.map(p=>`<div class="story" ${sep}><div class="kicker">${RR(p.tab)}</div><h2>${RR(p.titulo)}</h2>${RR(p.texto)}</div>`).join("");
 }
 document.getElementById("resetBtn").onclick=()=>{ if(confirm("¿Empezar el caso desde el principio?")){ state={step:-1}; save(); render(); } };
 render();
