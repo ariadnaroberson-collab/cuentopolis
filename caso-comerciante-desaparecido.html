@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expedientes secretos · El misterio del comerciante desaparecido</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Public+Sans:wght@400;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#17130e; --bg2:#221b13; --paper:#f4e8cf; --paper2:#ead9b5; --ink:#2b2117;
+  --gold:#c9a14a; --gold2:#e3c27a; --jungle:#2f6b4f; --jungle2:#4f9a73; --red:#a8402f;
+  --muted:#7a6a55;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:radial-gradient(ellipse at top,#2a2117 0%,var(--bg) 60%);color:var(--paper);font-family:"Public Sans",system-ui,sans-serif;min-height:100%}
+body{padding:18px 14px 60px}
+.wrap{max-width:760px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.brand{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold2)}
+.prog{font-family:"Space Mono",monospace;font-size:12px;color:var(--gold2);white-space:nowrap}
+.dots{display:flex;gap:6px;margin-top:6px}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--gold);background:transparent}
+.dot.done{background:var(--gold)}
+.dot.now{box-shadow:0 0 0 3px rgba(201,161,74,.35)}
+.file{background:linear-gradient(180deg,var(--paper) 0%,var(--paper2) 100%);color:var(--ink);border-radius:6px 14px 14px 14px;padding:26px 24px 24px;position:relative;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.file:before{content:attr(data-tab);position:absolute;top:-30px;left:0;background:var(--paper);color:var(--ink);font-family:"Space Mono",monospace;font-size:12px;font-weight:700;padding:7px 14px;border-radius:10px 10px 0 0;letter-spacing:.06em}
+h1{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(26px,5vw,38px);line-height:1.08;margin:4px 0 6px}
+h2{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(22px,4vw,28px);margin:0 0 4px}
+.kicker{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);font-weight:700}
+.story{font-family:"Source Serif 4",Georgia,serif;font-size:19px;line-height:1.6}
+.story p{margin:0 0 12px}
+.story b{color:#5a2d16}
+.say{background:rgba(47,107,79,.10);border-left:4px solid var(--jungle);padding:8px 12px;border-radius:0 8px 8px 0;margin:0 0 12px}
+.evidence{border:2px dashed var(--muted);border-radius:10px;padding:12px 14px;margin:6px 0 14px;background:rgba(255,255,255,.35);font-family:"Space Mono",monospace;font-size:15px;line-height:1.55}
+.evidence .lbl{font-weight:700;font-size:12px;letter-spacing:.08em;color:var(--red);display:block;margin-bottom:4px}
+.u{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.challenge{margin-top:18px;border-top:2px solid rgba(43,33,23,.18);padding-top:16px}
+.challenge .q{font-weight:700;font-size:18px;margin-bottom:10px}
+input[type=text]{width:100%;font-size:20px;padding:12px 14px;border:2px solid var(--ink);border-radius:10px;background:#fffaf0;font-family:"Space Mono",monospace;text-transform:uppercase;letter-spacing:.12em}
+select{font-size:16px;padding:8px;border:2px solid var(--ink);border-radius:8px;background:#fffaf0;width:100%}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+button{font-family:"Public Sans",sans-serif;font-weight:700;font-size:16px;border:0;border-radius:10px;padding:12px 18px;cursor:pointer}
+.btn{background:var(--jungle);color:#fff}
+.btn:hover{background:var(--jungle2)}
+.ghost{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+.gold{background:var(--gold);color:var(--ink)}
+.msg{margin-top:12px;font-weight:700;min-height:24px}
+.msg.ok{color:var(--jungle)}
+.msg.no{color:var(--red)}
+.hint{display:none;margin-top:10px;background:#fff3cf;border:2px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:16px}
+.hint.show{display:block}
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:420px;margin:8px auto 4px}
+.cell{aspect-ratio:1;border:2px solid var(--ink);border-radius:10px;background:#fffaf0;font-size:clamp(20px,6vw,30px);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:2px;transition:transform .1s}
+.cell small{font-size:9px;font-family:"Space Mono",monospace;line-height:1;margin-top:2px;text-align:center}
+.cell:hover{transform:scale(1.05)}
+.cell.start{background:#dff0e6}
+.cell.pick{outline:4px solid var(--red)}
+.compass{text-align:center;font-family:"Space Mono",monospace;font-size:13px;margin-bottom:4px}
+.match{display:grid;grid-template-columns:1fr;gap:10px}
+.match .m{background:rgba(255,255,255,.45);border-radius:10px;padding:10px 12px}
+.match .m p{margin:0 0 6px;font-size:16px}
+.stamp{float:right;margin:0 0 10px 12px;transform:rotate(6deg);border:3px solid var(--red);color:var(--red);font-family:"Space Mono",monospace;font-weight:700;padding:4px 10px;border-radius:6px;font-size:13px;letter-spacing:.1em;opacity:.85}
+.stamp.solved{border-color:var(--jungle);color:var(--jungle)}
+.cast{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px}
+.chip{background:rgba(43,33,23,.08);border-radius:20px;padding:5px 10px;font-size:14px}
+.final-q li{margin-bottom:10px;font-size:17px}
+.word{display:inline-block;font-family:"Fraunces",serif;font-size:30px;font-weight:800;color:var(--jungle);letter-spacing:.06em}
+.foot{margin-top:18px;text-align:center;font-size:12px;color:var(--gold2);font-family:"Space Mono",monospace}
+.reset{background:transparent;color:var(--gold2);border:1px solid var(--gold);font-size:12px;padding:6px 10px}
+.hidden{display:none}
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:6px 0 16px}
+.lv{background:#fffaf0;color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:10px;text-align:left;font-weight:600}
+.lv b{display:block;font-family:"Fraunces",serif;font-size:19px}
+.lv span{font-size:13px;color:var(--muted)}
+.lv.on{background:var(--jungle);color:#fff;border-color:var(--jungle)}
+.lv.on span{color:#e8f3ec}
+.lvtag{display:inline-block;background:rgba(43,33,23,.08);border-radius:20px;padding:3px 10px;font-size:13px;font-weight:700;margin-bottom:8px}
+.roles{background:#fff3cf;border:2px solid var(--gold);border-radius:10px;padding:8px 12px;margin:4px 0 14px;font-size:15px;font-weight:600;line-height:1.45}
+.names label{display:block;font-weight:700;font-size:15px;margin:10px 0 4px}
+@media (max-width:480px){.file{padding:22px 16px}.story{font-size:17.5px}.stamp{float:none;display:inline-block;margin:0 0 12px;font-size:12px}}
+.notebook .nb-head{font-family:"Space Mono",monospace;font-weight:700;border-bottom:1px dashed #9a8f78;padding-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <a href="casos-de-misterio.html" style="font-family:'Space Mono',monospace;font-size:12px;color:var(--gold);text-decoration:none;display:inline-block;margin-bottom:8px">← Casos de Misterio</a>
+      <div class="brand" id="brand">Casos de Misterio · Cuentopolis</div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="prog" id="prog"></div>
+  </header>
+  <main id="app"></main>
+  <div class="foot"><button class="reset" id="resetBtn">Empezar el caso otra vez</button></div>
+</div>
+
+<script>
+/* =========================================================
+   DATOS DEL CASO — para un caso nuevo, cambia solo este bloque.
+   Tipos de reto: "palabra", "mapa", "emparejar".
+   Las respuestas se comparan sin acentos y sin mayúsculas.
+   ========================================================= */
+const CASO = {
+  id: "exp-bloquemundo-1",
+  marca: "Expedientes secretos · Cuentopolis",
+  serie: "Expedientes secretos · Tú eres el detective",
+  titulo: "El misterio del comerciante desaparecido",
+  nivel: "Tres niveles · Elige el tuyo",
+  niveles: [
+    {id:"n1", icono:"🔍", nombre:"Novato", desc:"Frases cortas · A1"},
+    {id:"n2", icono:"🧭", nombre:"Explorador", desc:"Párrafos cortos · A2"},
+    {id:"n3", icono:"🕵️", nombre:"Maestro", desc:"Más pistas y más detalles · B1"}
+  ],
+  intro: {
+    n1: `
+      <p>En la clase de tecnología, todos juegan <b>Bloquemundo</b>: un videojuego de bloques. Puedes excavar, construir casas y explorar cuevas.</p>
+      <p>La clase tiene un mundo especial. En el mundo hay una tienda. El dueño de la tienda es <b>Tito, el comerciante</b>. Tito vende picos, antorchas y pociones.</p>
+      <p>Hoy entras al mundo y vas a la tienda... ¡Tito no está! La tienda está vacía.</p>
+      <p>Tú eres detective. Tu misión: descubrir qué pasó con Tito.</p>`,
+    n2: `
+      <p>En la clase de tecnología, todos juegan <b>Bloquemundo</b>, un videojuego de bloques: excavas, construyes, exploras cuevas y luchas contra los slimes.</p>
+      <p>La clase tiene un mundo compartido. Todos los jugadores compran en la tienda de <b>Tito, el comerciante</b>: picos, antorchas, pociones... Tito es un personaje del juego y vive en una casa de madera en el bosque.</p>
+      <p>Esta mañana, cuando entras al mundo, ves un mensaje en la pantalla: <b>«Tito, el comerciante, se fue.»</b> Su casa está vacía.</p>
+      <p>Todos en la clase preguntan: «¿Quién fue?». Tu misión: descubrir qué pasó con Tito y cómo traerlo de vuelta.</p>`,
+    n3: `
+      <p>Desde agosto, la clase de tecnología juega <b>Bloquemundo</b>, un videojuego de bloques en el que excavas, construyes y bajas por las capas del mundo: la superficie, la tierra, las cuevas y la caverna profunda.</p>
+      <p>Lo mejor del mundo de la clase es la tienda de <b>Tito, el comerciante</b>, un personaje del juego que vive en una casa de madera en el bosque. Sin él, nadie puede comprar picos, antorchas ni pociones.</p>
+      <p>Esta mañana, el chat de la clase explotó. En el mundo apareció un mensaje: <b>«Tito, el comerciante, se fue: su casa ya no es válida.»</b> Algunos jugadores dicen que alguien lo hizo a propósito.</p>
+      <p>El profesor del Club de Tecnología te dio acceso al registro del servidor y una advertencia: «Un buen detective no acusa a nadie sin pruebas».</p>`
+  },
+  pistas: [
+    {
+      tab: "PISTA 1",
+      titulo: "La casa vacía",
+      texto: {
+        n1: `
+          <p>Vas a la casa de Tito. Miras con atención.</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA CASA DE TITO</span>
+          Hay paredes de madera. ✔️<br>
+          Hay una puerta. ✔️<br>
+          Hay una antorcha. ✔️<br>
+          Hay una mesa y una silla. ✔️<br>
+          ¡Pero en el piso hay un <span class="u">agujero</span> grande!</div>
+          <p>Abres la guía del juego:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA GUÍA DE BLOQUEMUNDO</span>
+          Una casa para un personaje necesita: paredes, una puerta, luz, una mesa, una silla y un piso completo. Si falta algo, el personaje se va.</div>`,
+        n2: `
+          <p>Caminas hasta la casa de Tito, en el bosque. Por fuera, todo parece normal. Entras y revisas todo:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA CASA DE TITO</span>
+          Las paredes de madera están bien. ✔️<br>
+          La puerta funciona. ✔️<br>
+          La antorcha está encendida. ✔️<br>
+          La mesa y la silla están en su lugar. ✔️<br>
+          En el centro del piso hay un <span class="u">agujero</span> redondo. Faltan tres bloques.</div>
+          <p>Abres la guía oficial del juego para entender el mensaje:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA GUÍA DE BLOQUEMUNDO</span>
+          Para vivir en una casa, un personaje necesita: paredes, una puerta, luz, una mesa, una silla y un piso completo. Si falta una sola parte, la casa no es válida y el personaje se va.</div>`,
+        n3: `
+          <p>Llegaste a la casa de Tito con tu cuaderno. Desde afuera, la casa se veía perfecta. Adentro, revisaste cada parte:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · TU CUADERNO</span>
+          Paredes: madera, sin daño. ✔️<br>
+          Puerta: funciona, se abre y se cierra. ✔️<br>
+          Luz: dos antorchas encendidas. ✔️<br>
+          Muebles: una mesa y una silla. ✔️<br>
+          Detalle extraño: en el centro hay un <span class="u">agujero</span> redondo de tres bloques. Los bordes de la madera no están cortados con un pico: tienen marcas pequeñas, como mordidas.</div>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA GUÍA DE BLOQUEMUNDO</span>
+          Para que un personaje viva en una casa, la casa necesita seis partes: paredes, una puerta, luz, una mesa, una silla y un piso completo. Si una parte se rompe, la casa deja de ser válida y el personaje se muda.</div>`
+      },
+      reto: { tipo:"palabra",
+        pregunta: {n1:"¿Qué parte de la casa está rota? Escribe una palabra.", n2:"¿Qué parte de la casa está rota? Escribe una palabra.", n3:"¿Cuál de las seis partes de la casa ya no está completa? Escribe una palabra."},
+        respuesta:["piso","el piso","suelo","el suelo"],
+        ayuda:"Compara la casa con la guía. ¿Dónde está el agujero?" }
+    },
+    {
+      tab: "PISTA 2",
+      titulo: "El registro del servidor",
+      texto: {
+        n1: `
+          <p>¿Un jugador rompió el piso? Lees el registro del servidor:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL REGISTRO</span>
+          11:40 p. m. — El piso de la casa de Tito se rompe.<br><br>
+          🧱 <b>Leo_Constructor</b>: sale del juego a las 9:00 p. m.<br>
+          ⛏️ <b>Sofi_Minera</b>: a las 11:40 p. m., está en una cueva, muy lejos, en el oeste.<br>
+          🌉 <b>Max99</b>: a las 11:40 p. m., construye un puente en el desierto, en el este.</div>`,
+        n2: `
+          <p>En el chat, algunos dicen que un jugador rompió el piso. Antes de creerlo, lees el registro del servidor de anoche:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL REGISTRO DEL SERVIDOR</span>
+          11:40 p. m. — Un bloque del piso de la casa de Tito se rompe.<br>
+          11:41 p. m. — «Tito, el comerciante, se fue.»<br><br>
+          🧱 <b>Leo_Constructor</b>: entra a las 7:00 p. m. y sale del juego a las 9:00 p. m.<br>
+          ⛏️ <b>Sofi_Minera</b>: de 10:00 p. m. a medianoche, excava en una cueva, a 500 bloques al oeste de la casa de Tito.<br>
+          🌉 <b>Max99</b>: de 11:00 p. m. a medianoche, construye un puente en el desierto, al este.</div>
+          <p>Para romper un bloque, un jugador necesita estar al lado del bloque.</p>`,
+        n3: `
+          <p>En el chat de la clase ya había tres acusaciones. Antes de opinar, abriste el registro del servidor de anoche:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL REGISTRO DEL SERVIDOR</span>
+          11:40 p. m. — Tres bloques del piso de la casa de Tito se rompieron, uno después del otro.<br>
+          11:41 p. m. — «Tito, el comerciante, se fue: su casa ya no es válida.»<br><br>
+          🧱 <b>Leo_Constructor</b>: jugó de 7:00 a 9:00 p. m. Ayer construyó la casa de Tito, por eso todos lo acusan.<br>
+          🌲 <b>Mía_Pixel</b>: cortó árboles en el bosque, cerca de la casa de Tito, de 11:00 a 11:30 p. m. Después salió del juego.<br>
+          ⛏️ <b>Sofi_Minera</b>: de 10:00 p. m. a medianoche, excavó en una cueva a 500 bloques al oeste.<br>
+          🌉 <b>Max99</b>: de 11:00 p. m. a medianoche, construyó un puente en el desierto, al este.</div>
+          <p>Regla del juego: para romper un bloque, un jugador necesita estar justo al lado del bloque.</p>`
+      },
+      reto: {
+        n1: { tipo:"emparejar", pregunta:"¿Dónde está cada jugador a las 11:40 p. m.?",
+          items:[
+            {texto:"🧱 Leo_Constructor...", correcta:"No está en el juego."},
+            {texto:"⛏️ Sofi_Minera...", correcta:"Está lejos, en una cueva."},
+            {texto:"🌉 Max99...", correcta:"Está lejos, en el desierto."},
+            {texto:"Entonces, el piso lo rompió...", correcta:"algo del juego, no un jugador."}
+          ],
+          opciones:["No está en el juego.","Está lejos, en una cueva.","Está lejos, en el desierto.","Está en la casa de Tito.","algo del juego, no un jugador.","un jugador de la clase."],
+          error:"Respuestas incorrectas: {n}. Lee la hora de cada jugador otra vez.",
+          ayuda:"El piso se rompe a las 11:40. ¿Dónde está cada jugador a esa hora? Si nadie está en la casa..." },
+        n2: { tipo:"emparejar", pregunta:"¿Dónde estaba cada jugador a las 11:40 p. m.?",
+          items:[
+            {texto:"🧱 Leo_Constructor...", correcta:"Ya no estaba en el juego."},
+            {texto:"⛏️ Sofi_Minera...", correcta:"Estaba muy lejos, en el oeste."},
+            {texto:"🌉 Max99...", correcta:"Estaba muy lejos, en el este."},
+            {texto:"Entonces, el piso lo rompió...", correcta:"algo del juego, no un jugador."}
+          ],
+          opciones:["Ya no estaba en el juego.","Estaba muy lejos, en el oeste.","Estaba muy lejos, en el este.","Estaba al lado de la casa de Tito.","algo del juego, no un jugador.","un jugador de la clase."],
+          error:"Respuestas incorrectas: {n}. Lee las horas del registro otra vez.",
+          ayuda:"A las 11:40, ¿alguien estaba al lado de la casa? Recuerda: para romper un bloque hay que estar al lado." },
+        n3: { tipo:"emparejar", pregunta:"¿Por qué ningún jugador pudo romper el piso a las 11:40 p. m.?",
+          items:[
+            {texto:"🧱 Leo_Constructor...", correcta:"salió del juego más de dos horas antes."},
+            {texto:"🌲 Mía_Pixel...", correcta:"estuvo cerca, pero salió diez minutos antes."},
+            {texto:"⛏️ Sofi_Minera...", correcta:"estaba a 500 bloques, en el oeste."},
+            {texto:"🌉 Max99...", correcta:"estaba en el desierto, en el este."},
+            {texto:"Conclusión:", correcta:"el piso lo rompió algo del juego, no un jugador."}
+          ],
+          opciones:["salió del juego más de dos horas antes.","estuvo cerca, pero salió diez minutos antes.","estaba a 500 bloques, en el oeste.","estaba en el desierto, en el este.","construyó la casa, entonces es culpable.","el piso lo rompió algo del juego, no un jugador."],
+          error:"Respuestas incorrectas: {n}. Compara cada horario con las 11:40 p. m.",
+          ayuda:"Mía estuvo cerca... pero ¿a qué hora salió? Construir la casa no prueba nada: hay que mirar la hora." }
+      }
+    },
+    {
+      tab: "PISTA 3",
+      titulo: "¿Quién excava de noche?",
+      texto: {
+        n1: `
+          <p>Miras el agujero otra vez. Abajo hay un <span class="u">túnel</span>.</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL TÚNEL</span>
+          El túnel es pequeño y redondo.<br>
+          La madera del piso tiene mordidas.<br>
+          Hay huellas de garras pequeñas.<br>
+          La casa está en el bosque, no en el desierto.</div>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LOS ANIMALES DE BLOQUEMUNDO</span>
+          🟢 <b>Slime</b>: salta. No excava.<br>
+          🦇 <b>Murciélago</b>: vuela en las cuevas. No excava.<br>
+          🪱 <b>Gusano de arena</b>: excava túneles enormes. Solo vive en el desierto.<br>
+          🐾 <b>Topo minero</b>: excava túneles pequeños y redondos. Sale de noche. Come madera. No puede excavar piedra.</div>`,
+        n2: `
+          <p>Te acercas al agujero con una antorcha. ¡Abajo hay un <span class="u">túnel</span>! Escribes todo en tu cuaderno:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL TÚNEL</span>
+          El túnel es pequeño y redondo. Un jugador no puede pasar por ahí.<br>
+          Los bloques de madera del piso tienen mordidas pequeñas.<br>
+          En la tierra hay huellas de garras pequeñas.<br>
+          La casa de Tito está en el bosque, lejos del desierto.</div>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LOS ANIMALES DE BLOQUEMUNDO</span>
+          🟢 <b>Slime</b>: salta de día y de noche. No puede excavar.<br>
+          🦇 <b>Murciélago</b>: vuela en las cuevas. No excava.<br>
+          🪱 <b>Gusano de arena</b>: excava túneles enormes, pero solo vive en el desierto.<br>
+          🐾 <b>Topo minero</b>: excava túneles pequeños y redondos. Sale de noche. Le encanta comer madera. No puede excavar piedra.</div>`,
+        n3: `
+          <p>Bajaste una antorcha por el agujero y descubriste un <span class="u">túnel</span> que bajaba hacia la tierra. Anotaste cada detalle:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · TU CUADERNO</span>
+          1. El túnel es redondo y tan estrecho que un jugador no cabe.<br>
+          2. Los bloques que faltan eran de madera; los de piedra de la entrada están intactos.<br>
+          3. Hay huellas de garras pequeñas en la tierra.<br>
+          4. El daño ocurrió a las 11:40 p. m., es decir, de noche.<br>
+          5. La casa está en el bosque; el desierto empieza a 300 bloques.</div>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA WIKI DE BLOQUEMUNDO</span>
+          🟢 <b>Slime</b>: salta de día y de noche. No puede romper bloques.<br>
+          🦇 <b>Murciélago</b>: vuela en las cuevas. Nunca sale a la superficie.<br>
+          🪱 <b>Gusano de arena</b>: excava túneles enormes. Solo aparece en el desierto.<br>
+          🐾 <b>Topo minero</b>: excava túneles redondos y pequeños. Solo sale de noche. Come madera, pero no puede excavar piedra.<br>
+          🐀 <b>Rata de mina</b>: roba objetos de los cofres. Sale de día. No excava.</div>`
+      },
+      reto: { tipo:"palabra",
+        pregunta:"¿Qué animal hizo el agujero? Escribe su nombre.",
+        respuesta:["topo","topo minero","el topo","el topo minero","un topo","un topo minero"],
+        ayuda:"Busca el animal que excava túneles pequeños y redondos, sale de noche y come madera. El gusano de arena solo vive en el desierto." }
+    },
+    {
+      tab: "PISTA 4",
+      titulo: "¿Adónde se fue Tito?",
+      texto: {
+        n1: `
+          <p>Ya sabes por qué Tito se fue. Pero ¿adónde fue? La guía del juego dice:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA GUÍA DE BLOQUEMUNDO</span>
+          Cuando un personaje se va, busca una casa <span class="u">completa</span>. Va a la casa completa más <span class="u">cerca</span>.</div>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LAS CASAS DEL MUNDO</span>
+          Casa A: no tiene puerta.<br>
+          Casa B: no tiene luz.<br>
+          Casa C: completa.<br>
+          Casa D: completa.<br>
+          Casa E: completa.</div>
+          <p>Mira el mapa. ¿Cuál casa completa está más cerca de la casa de Tito?</p>`,
+        n2: `
+          <p>Ahora sabes por qué Tito se fue. Pero ¿adónde fue? En la guía del juego encuentras la respuesta:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA GUÍA DE BLOQUEMUNDO</span>
+          Cuando un personaje deja su casa, se muda a otra casa <span class="u">completa</span>. Si hay muchas, elige la que está más <span class="u">cerca</span>.</div>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LAS CASAS DEL MUNDO</span>
+          Casa A: en la superficie. No tiene puerta.<br>
+          Casa B: en la superficie. Las antorchas están apagadas: no tiene luz.<br>
+          Casa C: en la tierra. Tiene las seis partes.<br>
+          Casa D: en las cuevas. Tiene las seis partes.<br>
+          Casa E: en la caverna profunda. Tiene las seis partes.</div>
+          <p>Busca la casa de Tito en el mapa y piensa: ¿cuál casa completa está más cerca?</p>`,
+        n3: `
+          <p>Faltaba la última pregunta: ¿adónde se mudó Tito? La guía del juego explica cómo deciden los personajes:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA GUÍA DE BLOQUEMUNDO</span>
+          Un personaje sin casa se muda a otra casa <span class="u">válida</span>. Si hay varias, elige la más <span class="u">cercana</span> a su casa anterior. Las casas sin puerta, sin luz o con muebles incompletos no cuentan.</div>
+          <div class="evidence"><span class="lbl">EVIDENCIA · INSPECCIÓN DE LAS CASAS</span>
+          Casa A (superficie): paredes, luz y muebles, pero alguien quitó la puerta para hacer una ventana.<br>
+          Casa B (superficie): todo completo, pero las antorchas se apagaron con la lluvia.<br>
+          Casa C (tierra): seis partes completas.<br>
+          Casa D (cuevas): seis partes completas, pero la silla está en otro cuarto. Cuenta como completa.<br>
+          Casa E (caverna profunda): seis partes completas.</div>
+          <p>Usa el mapa: ¿cuál casa válida está más cerca de la antigua casa de Tito?</p>`
+      },
+      reto: { tipo:"mapa",
+        pregunta:"Toca la casa donde vive Tito ahora.",
+        columnas:5,
+        celdas:[
+          ["🌲","bosque"],["🏠","casa A"],["🏚️","casa de Tito"],["🏠","casa B"],["🌵","desierto"],
+          ["🟫","tierra"],["🟫","tierra"],["🕳️","túnel"],["🏠","casa C"],["🟫","tierra"],
+          ["🏠","casa D"],["🪨","piedra"],["🕳️","túnel"],["🦇","cueva"],["💎","minerales"],
+          ["🍄","hongos"],["🪨","piedra"],["🏠","casa E"],["🪨","piedra"],["🪨","piedra"]
+        ],
+        inicio:2, correcta:8,
+        error:"Esa casa no es la respuesta. ¿Es una casa completa? ¿Es la más cerca?",
+        ayuda:"Las casas A y B no están completas. De las casas C, D y E, ¿cuál está más cerca de la casa de Tito? Cuenta las casillas." }
+    },
+    {
+      tab: "PISTA 5",
+      titulo: "El mensaje de Tito",
+      texto: {
+        n1: `
+          <p>Bajas a la casa C. ¡Ahí está Tito! Hablas con él. Tito dice:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LO QUE DICE TITO</span>
+          <span class="u">Perdón</span>, me fui sin avisar.<br>
+          <span class="u">Investigas</span> muy bien.<br>
+          <span class="u">El</span> topo comió mi piso.<br>
+          <span class="u">Dentro</span> de mi casa hay un agujero.<br>
+          <span class="u">Repara</span> el piso, por favor.<br>
+          <span class="u">Así</span> regreso a mi tienda.</div>
+          <p>Tito te da un secreto: mira las palabras subrayadas.</p>`,
+        n2: `
+          <p>Bajas por el túnel hasta la casa C. ¡Ahí está Tito, con su sombrero y su mochila! Hablas con él y escribe un mensaje en la pantalla:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL MENSAJE DE TITO</span>
+          <span class="u">Perdón</span> por irme sin avisar a la clase.<br>
+          <span class="u">Investigaste</span> muy bien, detective.<br>
+          <span class="u">El</span> topo minero comió los bloques de mi piso.<br>
+          <span class="u">Dentro</span> de mi casa quedó un agujero.<br>
+          <span class="u">Repara</span> el piso con un material que el topo no puede excavar.<br>
+          <span class="u">Así</span> regreso a mi tienda mañana.</div>
+          <p>El mensaje tiene un secreto: mira las palabras subrayadas.</p>`,
+        n3: `
+          <p>Bajaste por el túnel del topo y llegaste a la casa C. Tito estaba ahí, ordenando sus pociones. Cuando hablaste con él, apareció este mensaje:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL MENSAJE DE TITO</span>
+          <span class="u">Perdón</span> por desaparecer sin despedirme de la clase.<br>
+          <span class="u">Investigaste</span> como un verdadero detective: sin acusar a nadie.<br>
+          <span class="u">El</span> topo minero no es malo: solo tenía hambre y mi piso era de madera.<br>
+          <span class="u">Dentro</span> de mi casa quedó un agujero, y una casa con agujero no es válida.<br>
+          <span class="u">Repara</span> el piso con el único material que el topo no puede excavar.<br>
+          <span class="u">Así</span> podré volver a mi tienda y abrir mañana temprano.</div>
+          <p>Fíjate: el mensaje esconde el material que necesitas. Mira las palabras subrayadas.</p>`
+      },
+      reto: { tipo:"palabra",
+        pregunta:"Escribe la primera letra de cada palabra subrayada, en orden. ¿Qué palabra secreta forman?",
+        respuesta:["piedra"],
+        ayuda:"La primera palabra subrayada es «Perdón»: empieza con P. La segunda empieza con I. Sigue así. Son 6 letras." }
+    }
+  ],
+  final: {
+    titulo: "¡Caso resuelto!",
+    texto: {
+      n1: `
+        <p>Nadie de la clase rompió el piso. ¡Fue un <b>topo minero</b>! Tenía hambre y comió la madera.</p>
+        <p>Tú reparas el piso con bloques de <b>piedra</b>. El topo no puede excavar piedra.</p>
+        <p>Al día siguiente, Tito regresa a su tienda. En la pantalla dice: <b>«Tito, el comerciante, llegó.»</b> ¡Toda la clase aplaude!</p>`,
+      n2: `
+        <p>Nadie de la clase rompió el piso. El culpable fue un <b>topo minero</b> con mucha hambre: excavó un túnel de noche y se comió la madera del piso. La casa ya no era válida, y Tito se mudó a la casa C.</p>
+        <p>Tú reparas el piso con bloques de <b>piedra</b>, el único material que el topo no puede excavar. A la mañana siguiente aparece el mensaje: <b>«Tito, el comerciante, llegó.»</b></p>
+        <p>Y para el topo, construyes una pequeña casa de tierra en el túnel... con un bloque de madera para su cena.</p>`,
+      n3: `
+        <p>No hubo ningún saboteador. Leo, Mía, Sofi y Max tenían coartadas claras: el piso lo rompió un <b>topo minero</b> hambriento, a las 11:40 p. m., cuando ningún jugador estaba cerca. Sin piso, la casa dejó de ser válida, y Tito se mudó a la casa válida más cercana: la casa C.</p>
+        <p>Reparaste el piso con <b>piedra</b> y publicaste tu informe en el chat de la clase. Las acusaciones terminaron, y Leo, que había construido la casa, te dio las gracias.</p>
+        <p>Desde ese día, la clase tiene una regla nueva para Bloquemundo: «Antes de acusar, revisa el registro».</p>`
+    },
+    palabraTitulo: "Palabra del detective",
+    palabra: "Lógica",
+    preguntas: {
+      n1: ["¿Qué animal rompió el piso?","¿Por qué reparas el piso con piedra?","¿Te gustan los videojuegos? ¿Qué construyes tú?"],
+      n2: ["¿Qué prueba fue la más importante para saber que no fue un jugador? ¿Por qué?","¿Por qué Tito se fue a la casa C y no a la casa A?","Inventa un personaje nuevo para Bloquemundo. ¿Qué vende o qué hace? ¿Qué necesita su casa?"],
+      n3: ["Explica cómo eliminaste a cada jugador sospechoso con el registro del servidor.","Muchos acusaron a Leo porque construyó la casa. ¿Por qué esa no era una buena prueba?","¿Qué regla de detective pondrías tú en el chat de tu clase? Explica por qué es importante."]
+    },
+    preguntasTitulo: "📝 Preguntas del detective",
+    seesaw: "Escribe tus respuestas en tu cuaderno de detective. ¡Usa oraciones completas!"
+  }
+};
+
+/* Preguntas para la entrada del cuaderno de detective (seguimiento escrito a mano). */
+const CUADERNO = {
+ "n1": [
+  "¿Qué parte de la casa de Tito está rota?",
+  "¿Qué necesita una casa para un personaje?",
+  "¿Dónde está Max99 a las 11:40 p. m.?",
+  "¿Cómo es el túnel?",
+  "¿Por qué el gusano de arena no hizo el agujero?"
+ ],
+ "n2": [
+  "¿Qué pasa si falta una parte de la casa?",
+  "¿Por qué Sofi_Minera no pudo romper el piso?",
+  "¿Por qué un jugador no hizo el túnel?",
+  "¿Por qué Tito no se mudó a la casa B?",
+  "¿Por qué hay que reparar el piso con piedra?"
+ ],
+ "n3": [
+  "¿Qué detalle del agujero muestra que nadie usó un pico?",
+  "¿Por qué Mía_Pixel no pudo romper el piso, aunque estuvo cerca?",
+  "¿Por qué la rata de mina no es la culpable?",
+  "¿Por qué la casa B no cuenta, aunque tiene todas las partes?",
+  "Según Tito, ¿por qué el topo comió su piso?"
+ ]
+};
+
+/* =========================================================
+   MOTOR — no hace falta cambiar nada aquí abajo.
+   ========================================================= */
+const KEY = "detective-"+CASO.id;
+const norm = s => (s||"").toString().normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
+const esc = s => (s||"").toString().replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
+let state = load();
+const LV = (CASO.niveles||[]).map(n=>n.id);
+function R(v){
+  if(Array.isArray(v)) return v.map(R);
+  if(v && typeof v==="object"){
+    if(LV.length && Object.keys(v).length && Object.keys(v).every(k=>LV.includes(k))) return R(v[state.nivel] ?? v[LV[0]]);
+    const o={}; for(const k in v) o[k]=R(v[k]); return o;
+  }
+  return v;
+}
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {step:-1}; }catch(e){ return {step:-1}; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+const app = document.getElementById("app");
+const total = CASO.pistas.length;
+
+function header(){
+  const d=document.getElementById("dots"); d.innerHTML="";
+  for(let i=0;i<total;i++){ const s=document.createElement("span"); s.className="dot"+(i<state.step?" done":"")+(i===state.step?" now":""); d.appendChild(s); }
+  document.getElementById("prog").textContent = state.step<0 ? "Expediente cerrado" : state.step>=total ? "Caso resuelto" : `Pista ${state.step+1} de ${total}`;
+}
+function render(){
+  header(); window.scrollTo({top:0,behavior:"smooth"});
+  if(state.step<0) return renderIntro();
+  if(state.step>=total) return renderFinal();
+  renderPista(R(CASO.pistas[state.step]));
+}
+function renderIntro(){
+  app.innerHTML = `<section class="file" data-tab="EXPEDIENTE">
+    <span class="stamp">CASO ABIERTO</span>
+    <div class="kicker">${CASO.serie}</div>
+    <h1>${CASO.titulo}</h1>
+    <div class="kicker" style="color:var(--muted)">${CASO.nivel}</div>
+    ${CASO.equipo?`<div class="cast">${CASO.equipo.map(e=>`<span class="chip">${e}</span>`).join("")}</div>`:""}
+    ${LV.length?`<div class="q" style="font-weight:700;margin-top:12px">1. Elige tu nivel:</div><div class="levels">${CASO.niveles.map(n=>`<button class="lv${state.nivel===n.id?" on":""}" data-lv="${n.id}">${n.icono} <b>${n.nombre}</b><span>${n.desc}</span></button>`).join("")}</div>`:""}
+    <div class="story" id="introStory">${R(CASO.intro)}</div>
+    <div class="challenge">${CASO.pareja ? `<div class="q">Escriban sus nombres de detective:</div>
+      <div class="names"><label for="nm">🗣 Detective 1 · lee la historia en voz alta y explica</label>
+      <input type="text" id="nm" maxlength="30" placeholder="Detective 1..." value="${esc(state.d1||"")}" style="text-transform:none;letter-spacing:0">
+      <label for="nm2">🔎 Detective 2 · busca la evidencia y decide la respuesta</label>
+      <input type="text" id="nm2" maxlength="30" placeholder="Detective 2..." value="${esc(state.d2||"")}" style="text-transform:none;letter-spacing:0"></div>` : `<div class="q">${LV.length?"2. ":""}Escribe tu nombre de detective:</div>
+      <input type="text" id="nm" maxlength="30" placeholder="Detective..." value="${esc(state.name||"")}" style="text-transform:none;letter-spacing:0">`}
+      <div class="row"><button class="btn" id="go">Abrir el expediente →</button></div>
+      <div class="msg no" id="m"></div></div>
+  </section>`;
+  document.querySelectorAll(".lv").forEach(b=>b.onclick=()=>{
+    state.nivel=b.dataset.lv;
+    document.querySelectorAll(".lv").forEach(x=>x.classList.toggle("on",x===b));
+    document.getElementById("introStory").innerHTML=R(CASO.intro);
+  });
+  document.getElementById("go").onclick=()=>{
+    const n=document.getElementById("nm").value.trim();
+    if(LV.length && !state.nivel){ document.getElementById("m").textContent="Elige tu nivel primero."; return; }
+    if(CASO.pareja){
+      const n2=document.getElementById("nm2").value.trim();
+      if(!n||!n2){ document.getElementById("m").textContent="Escriban los dos nombres primero."; return; }
+      state={step:0,d1:n,d2:n2,name:n+" y "+n2}; save(); render(); return;
+    }
+    if(!n){ document.getElementById("m").textContent="Escribe tu nombre primero."; return; }
+    state={step:0,name:n,nivel:state.nivel}; save(); render();
+  };
+}
+function renderPista(p){
+  app.innerHTML = `<section class="file" data-tab="${p.tab}">
+    <span class="stamp">EN INVESTIGACIÓN</span>
+    <div class="kicker">${p.tab}</div><h2>${p.titulo}</h2>
+    ${LV.length?(()=>{const n=CASO.niveles.find(x=>x.id===state.nivel)||CASO.niveles[0];return `<div class="lvtag">${n.icono} Nivel ${n.nombre}</div>`;})():""}
+    ${p.roles && CASO.pareja ? `<div class="roles">${esc(p.roles).replace(/\{d1\}/g,"<b>"+esc(state.d1)+"</b>").replace(/\{d2\}/g,"<b>"+esc(state.d2)+"</b>")}</div>` : ""}
+    <div class="story">${p.texto}</div>
+    <div class="challenge"><div class="q">🔎 Reto: ${p.reto.pregunta}</div>
+      <div id="ui"></div>
+      <div class="row"><button class="btn" id="check">Revisar</button><button class="ghost" id="hb">💡 Necesito una pista</button></div>
+      <div class="msg" id="m"></div>
+      <div class="hint" id="h">${p.reto.ayuda}</div>
+    </div></section>`;
+  document.getElementById("hb").onclick=()=>document.getElementById("h").classList.toggle("show");
+  const ui=document.getElementById("ui"), m=document.getElementById("m");
+  const ok=()=>{ m.className="msg ok"; m.textContent="¡Correcto, detective! Abriendo la siguiente página..."; state.step++; save(); setTimeout(render,1100); };
+  const no=t=>{ m.className="msg no"; m.textContent=t||"Todavía no. Lee otra vez la pista con calma."; };
+  const r=p.reto;
+  if(r.tipo==="palabra"){
+    ui.innerHTML=`<input type="text" id="ans" autocomplete="off" placeholder="Tu respuesta">`;
+    const inp=document.getElementById("ans");
+    const check=()=>{ const v=norm(inp.value); if(!v) return no("Escribe una respuesta primero."); r.respuesta.map(norm).includes(v)?ok():no(); };
+    document.getElementById("check").onclick=check;
+    inp.addEventListener("keydown",e=>{ if(e.key==="Enter") check(); });
+  }
+  if(r.tipo==="mapa"){
+    let pick=null;
+    ui.innerHTML=`<div class="compass">⬆️ NORTE · ⬇️ SUR · ➡️ ESTE · ⬅️ OESTE</div><div class="map" id="map"></div>`;
+    const map=document.getElementById("map");
+    r.celdas.forEach((c,i)=>{ const b=document.createElement("div"); b.className="cell"+(i===r.inicio?" start":""); b.innerHTML=`${c[0]}<small>${c[1]}</small>`;
+      b.onclick=()=>{ map.querySelectorAll(".cell").forEach(x=>x.classList.remove("pick")); b.classList.add("pick"); pick=i; }; map.appendChild(b); });
+    document.getElementById("check").onclick=()=>{ if(pick===null) return no("Toca una casilla primero."); pick===r.correcta?ok():no(r.error||"Esa no es la casilla correcta. Empieza otra vez y cuenta las casillas."); };
+  }
+  if(r.tipo==="emparejar"){
+    ui.innerHTML=`<div class="match">${r.items.map((it,i)=>`<div class="m"><p>${it.texto}</p><select id="s${i}"><option value="">— Elige —</option>${r.opciones.map(o=>`<option>${o}</option>`).join("")}</select></div>`).join("")}</div>`;
+    document.getElementById("check").onclick=()=>{
+      let bad=0, empty=0; r.items.forEach((it,i)=>{ const v=document.getElementById("s"+i).value; if(!v) empty++; else if(v!==it.correcta) bad++; });
+      if(empty) return no("Elige una respuesta para cada uno.");
+      bad?no(r.error?r.error.replace("{n}",bad):`Tienes ${bad} ${bad===1?"trabajo incorrecto":"trabajos incorrectos"}. Piensa en cómo es cada animal.`):ok();
+    };
+  }
+}
+function renderFinal(){
+  const f=R(CASO.final);
+  app.innerHTML = `<section class="file" data-tab="CASO CERRADO">
+    <span class="stamp solved">CASO RESUELTO</span>
+    <div class="kicker">${CASO.titulo}</div><h1>${f.titulo}</h1>
+    <p style="font-size:18px">${CASO.pareja?`¡Felicidades, detectives <b>${esc(state.d1)}</b> y <b>${esc(state.d2)}</b>!`:`¡Felicidades, detective <b>${esc(state.name)}</b>!`}</p>
+    <div class="story">${f.texto}</div>
+    <p>${f.palabraTitulo||"Palabra del Bosque"}: <span class="word">${f.palabra}</span></p>
+    <div class="challenge"><div class="q">${f.preguntasTitulo||"🐦 Las preguntas de Don Pico"}</div>
+      <ol class="final-q">${f.preguntas.map(q=>`<li>${q}</li>`).join("")}</ol>
+      <p><b>${f.seesaw}</b></p></div>
+    <div class="challenge notebook"><div class="q">📓 Para tu cuaderno de detective</div>
+      <p>Escribe a mano en tu cuaderno:</p>
+      <p class="nb-head">CASOS MISTERIOSOS DE CUENTÓPOLIS<br>Fecha: ______ · Caso: ${CASO.titulo}</p>
+      <p>Para cada pregunta escribe:<br>✏️ la <b>respuesta</b> con una oración completa,<br>🔍 la <b>prueba</b>: copia la frase del expediente «entre comillas»,<br>📌 la <b>pista</b> donde la encontraste.</p>
+      <ol class="final-q">${(typeof R==="function"?R(CUADERNO):CUADERNO).map(q=>`<li>${q}</li>`).join("")}</ol>
+      <p>Usa el botón <b>📖 Releer el expediente</b> para buscar las frases.</p></div>
+    <div class="row"><button class="ghost" id="rereadBtn">📖 Releer el expediente</button></div>
+    <div id="reread"></div>
+  </section>`;
+  document.getElementById("rereadBtn").onclick=renderReread;
+}
+function renderReread(){
+  const RR = typeof R==="function" ? R : (v=>v);
+  const box=document.getElementById("reread"), btn=document.getElementById("rereadBtn");
+  if(box.innerHTML){ box.innerHTML=""; btn.textContent="📖 Releer el expediente"; return; }
+  btn.textContent="📕 Cerrar el expediente";
+  const sep='style="border-top:1px dashed #9a8f78;margin-top:20px;padding-top:14px"';
+  box.innerHTML = `<div class="story" ${sep}><div class="kicker">INICIO</div>${RR(CASO.intro)}</div>`
+    + CASO.pistas.map(p=>`<div class="story" ${sep}><div class="kicker">${RR(p.tab)}</div><h2>${RR(p.titulo)}</h2>${RR(p.texto)}</div>`).join("");
+}
+document.getElementById("resetBtn").onclick=()=>{ if(confirm("¿Empezar el caso desde el principio?")){ state={step:-1}; save(); render(); } };
+if(CASO.marca) document.getElementById("brand").textContent=CASO.marca;
+render();
+</script>
+</body>
+</html>
