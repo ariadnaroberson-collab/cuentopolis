@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expedientes secretos · El misterio del mensajero alado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Public+Sans:wght@400;600;700&family=Space+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#17130e; --bg2:#221b13; --paper:#f4e8cf; --paper2:#ead9b5; --ink:#2b2117;
+  --gold:#c9a14a; --gold2:#e3c27a; --jungle:#2f6b4f; --jungle2:#4f9a73; --red:#a8402f;
+  --muted:#7a6a55;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:radial-gradient(ellipse at top,#2a2117 0%,var(--bg) 60%);color:var(--paper);font-family:"Public Sans",system-ui,sans-serif;min-height:100%}
+body{padding:18px 14px 60px}
+.wrap{max-width:760px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.brand{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold2)}
+.prog{font-family:"Space Mono",monospace;font-size:12px;color:var(--gold2);white-space:nowrap}
+.dots{display:flex;gap:6px;margin-top:6px}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--gold);background:transparent}
+.dot.done{background:var(--gold)}
+.dot.now{box-shadow:0 0 0 3px rgba(201,161,74,.35)}
+.file{background:linear-gradient(180deg,var(--paper) 0%,var(--paper2) 100%);color:var(--ink);border-radius:6px 14px 14px 14px;padding:26px 24px 24px;position:relative;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.file:before{content:attr(data-tab);position:absolute;top:-30px;left:0;background:var(--paper);color:var(--ink);font-family:"Space Mono",monospace;font-size:12px;font-weight:700;padding:7px 14px;border-radius:10px 10px 0 0;letter-spacing:.06em}
+h1{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(26px,5vw,38px);line-height:1.08;margin:4px 0 6px}
+h2{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(22px,4vw,28px);margin:0 0 4px}
+.kicker{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);font-weight:700}
+.story{font-family:"Source Serif 4",Georgia,serif;font-size:19px;line-height:1.6}
+.story p{margin:0 0 12px}
+.story b{color:#5a2d16}
+.say{background:rgba(47,107,79,.10);border-left:4px solid var(--jungle);padding:8px 12px;border-radius:0 8px 8px 0;margin:0 0 12px}
+.evidence{border:2px dashed var(--muted);border-radius:10px;padding:12px 14px;margin:6px 0 14px;background:rgba(255,255,255,.35);font-family:"Space Mono",monospace;font-size:15px;line-height:1.55}
+.evidence .lbl{font-weight:700;font-size:12px;letter-spacing:.08em;color:var(--red);display:block;margin-bottom:4px}
+.u{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.challenge{margin-top:18px;border-top:2px solid rgba(43,33,23,.18);padding-top:16px}
+.challenge .q{font-weight:700;font-size:18px;margin-bottom:10px}
+input[type=text]{width:100%;font-size:20px;padding:12px 14px;border:2px solid var(--ink);border-radius:10px;background:#fffaf0;font-family:"Space Mono",monospace;text-transform:uppercase;letter-spacing:.12em}
+select{font-size:16px;padding:8px;border:2px solid var(--ink);border-radius:8px;background:#fffaf0;width:100%}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+button{font-family:"Public Sans",sans-serif;font-weight:700;font-size:16px;border:0;border-radius:10px;padding:12px 18px;cursor:pointer}
+.btn{background:var(--jungle);color:#fff}
+.btn:hover{background:var(--jungle2)}
+.ghost{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+.gold{background:var(--gold);color:var(--ink)}
+.msg{margin-top:12px;font-weight:700;min-height:24px}
+.msg.ok{color:var(--jungle)}
+.msg.no{color:var(--red)}
+.hint{display:none;margin-top:10px;background:#fff3cf;border:2px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:16px}
+.hint.show{display:block}
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:420px;margin:8px auto 4px}
+.cell{aspect-ratio:1;border:2px solid var(--ink);border-radius:10px;background:#fffaf0;font-size:clamp(20px,6vw,30px);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:2px;transition:transform .1s}
+.cell small{font-size:9px;font-family:"Space Mono",monospace;line-height:1;margin-top:2px;text-align:center}
+.cell:hover{transform:scale(1.05)}
+.cell.start{background:#dff0e6}
+.cell.pick{outline:4px solid var(--red)}
+.compass{text-align:center;font-family:"Space Mono",monospace;font-size:13px;margin-bottom:4px}
+.match{display:grid;grid-template-columns:1fr;gap:10px}
+.match .m{background:rgba(255,255,255,.45);border-radius:10px;padding:10px 12px}
+.match .m p{margin:0 0 6px;font-size:16px}
+.stamp{float:right;margin:0 0 10px 12px;transform:rotate(6deg);border:3px solid var(--red);color:var(--red);font-family:"Space Mono",monospace;font-weight:700;padding:4px 10px;border-radius:6px;font-size:13px;letter-spacing:.1em;opacity:.85}
+.stamp.solved{border-color:var(--jungle);color:var(--jungle)}
+.cast{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px}
+.chip{background:rgba(43,33,23,.08);border-radius:20px;padding:5px 10px;font-size:14px}
+.final-q li{margin-bottom:10px;font-size:17px}
+.word{display:inline-block;font-family:"Fraunces",serif;font-size:30px;font-weight:800;color:var(--jungle);letter-spacing:.06em}
+.foot{margin-top:18px;text-align:center;font-size:12px;color:var(--gold2);font-family:"Space Mono",monospace}
+.reset{background:transparent;color:var(--gold2);border:1px solid var(--gold);font-size:12px;padding:6px 10px}
+.hidden{display:none}
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:6px 0 16px}
+.lv{background:#fffaf0;color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:10px;text-align:left;font-weight:600}
+.lv b{display:block;font-family:"Fraunces",serif;font-size:19px}
+.lv span{font-size:13px;color:var(--muted)}
+.lv.on{background:var(--jungle);color:#fff;border-color:var(--jungle)}
+.lv.on span{color:#e8f3ec}
+.lvtag{display:inline-block;background:rgba(43,33,23,.08);border-radius:20px;padding:3px 10px;font-size:13px;font-weight:700;margin-bottom:8px}
+.roles{background:#fff3cf;border:2px solid var(--gold);border-radius:10px;padding:8px 12px;margin:4px 0 14px;font-size:15px;font-weight:600;line-height:1.45}
+.names label{display:block;font-weight:700;font-size:15px;margin:10px 0 4px}
+@media (max-width:480px){.file{padding:22px 16px}.story{font-size:17.5px}.stamp{float:none;display:inline-block;margin:0 0 12px;font-size:12px}}
+.notebook .nb-head{font-family:"Space Mono",monospace;font-weight:700;border-bottom:1px dashed #9a8f78;padding-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <a href="casos-de-misterio.html" style="font-family:'Space Mono',monospace;font-size:12px;color:var(--gold);text-decoration:none;display:inline-block;margin-bottom:8px">← Casos de Misterio</a>
+      <div class="brand" id="brand">Casos de Misterio · Cuentopolis</div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="prog" id="prog"></div>
+  </header>
+  <main id="app"></main>
+  <div class="foot"><button class="reset" id="resetBtn">Empezar el caso otra vez</button></div>
+</div>
+
+<script>
+/* =========================================================
+   DATOS DEL CASO — para un caso nuevo, cambia solo este bloque.
+   Tipos de reto: "palabra", "mapa", "emparejar".
+   Las respuestas se comparan sin acentos y sin mayúsculas.
+   ========================================================= */
+const CASO = {
+  id: "exp-mensajero-2",
+  marca: "Expedientes secretos · Cuentopolis",
+  serie: "Expedientes secretos · Tú eres el detective",
+  titulo: "El misterio del mensajero alado",
+  nivel: "Tres niveles · Elige el tuyo",
+  niveles: [
+    {id:"n1", icono:"🔍", nombre:"Novato", desc:"Frases cortas · A1"},
+    {id:"n2", icono:"🧭", nombre:"Explorador", desc:"Párrafos cortos · A2"},
+    {id:"n3", icono:"🕵️", nombre:"Maestro", desc:"Más pistas y más detalles · B1"}
+  ],
+  intro: {
+    n1: `
+      <p>Hay una exposición nueva en el Museo de Belice: <b>«Dioses del mundo antiguo»</b>. Tiene tres salas: Grecia, Roma y Egipto.</p>
+      <p>Mañana es el primer día. Pero hoy, la curadora del museo está muy preocupada. En la sala de Grecia, una vitrina está vacía. ¡El <b>caduceo</b> no está!</p>
+      <p>En la vitrina hay una nota. Dice: <i>«Sigue mis mensajes. — M.»</i></p>
+      <p>Tú eres detective. Tu misión: encontrar el caduceo y descubrir quién es M.</p>`,
+    n2: `
+      <p>El Museo de Belice tiene una exposición nueva: <b>«Dioses del mundo antiguo»</b>, con tres salas: Grecia, Roma y Egipto. Mañana vienen cientos de estudiantes.</p>
+      <p>Pero esta mañana, la curadora, la doctora Ruiz, encontró una vitrina vacía en la sala de Grecia. El objeto más famoso de la exposición, el <b>caduceo</b>, ya no estaba. En su lugar había una nota:</p>
+      <p><i>«No te preocupes. Lo tengo yo. Si quieres encontrarlo, sigue mis mensajes. — M.»</i></p>
+      <p>La doctora Ruiz te llama. Tu misión: seguir los mensajes, encontrar el caduceo y descubrir quién es M.</p>`,
+    n3: `
+      <p>Después de dos años de viaje por el mundo, la exposición <b>«Dioses del mundo antiguo»</b> llegó al Museo de Belice, con tres salas: Grecia, Roma y Egipto. Faltaba un día para la inauguración.</p>
+      <p>Esa mañana, la curadora, la doctora Ruiz, descubrió que el objeto estrella de la exposición, el <b>caduceo</b>, había desaparecido de su vitrina. No había ventanas rotas ni alarmas activadas. Solo una nota escrita a mano:</p>
+      <p><i>«No llames a la policía. El caduceo está a salvo. Si eres tan listo como creo, sigue mis mensajes. — M.»</i></p>
+      <p>La doctora Ruiz no quiere un escándalo antes de la inauguración. Por eso te llamó a ti.</p>`
+  },
+  pistas: [
+    {
+      tab: "PISTA 1",
+      titulo: "¿Quién es M?",
+      texto: {
+        n1: `
+          <p>Miras la nota. Debajo de la letra M hay un dibujo: unas <span class="u">sandalias con alas</span>.</p>
+          <p>Al lado de la vitrina hay un cartel del museo:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL CARTEL DEL MUSEO</span>
+          En Grecia y en Roma, los dioses son los mismos, pero tienen nombres diferentes.<br><br>
+          ⚡ Zeus (Grecia) = Júpiter (Roma). Su símbolo: el rayo.<br>
+          🌊 Poseidón (Grecia) = Neptuno (Roma). Su símbolo: el tridente.<br>
+          📨 Hermes (Grecia) = Mercurio (Roma). Es el mensajero de los dioses. Sus símbolos: las sandalias con alas y el caduceo.<br>
+          🛡️ Ares (Grecia) = Marte (Roma). Su símbolo: la lanza.</div>`,
+        n2: `
+          <p>Miras la nota con tu lupa. Debajo de la firma, alguien dibujó unas pequeñas <span class="u">sandalias con alas</span>.</p>
+          <p>Al lado de la vitrina vacía hay un cartel del museo:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL CARTEL DEL MUSEO</span>
+          Los romanos adoptaron muchos dioses de los griegos, pero les dieron nombres nuevos.<br><br>
+          ⚡ Zeus (Grecia) = Júpiter (Roma): rey de los dioses. Su símbolo es el rayo.<br>
+          🌊 Poseidón (Grecia) = Neptuno (Roma): dios del mar. Su símbolo es el tridente.<br>
+          📨 Hermes (Grecia) = Mercurio (Roma): el mensajero de los dioses, muy rápido. Sus símbolos son las sandalias con alas y el caduceo, un bastón con dos serpientes.<br>
+          🛡️ Ares (Grecia) = Marte (Roma): dios de la guerra. Su símbolo es la lanza.</div>
+          <p>M firma como un dios. ¿Cuál?</p>`,
+        n3: `
+          <p>Examinaste la nota con la lupa. La tinta era negra y la letra, elegante. Junto a la M había un dibujo diminuto: unas <span class="u">sandalias con alas</span>. Quien la escribió quería que entendieras algo.</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL CARTEL DEL MUSEO</span>
+          Cuando Roma conquistó Grecia, los romanos adoptaron a muchos dioses griegos, pero los rebautizaron con nombres latinos. Por eso, hoy cada dios tiene dos nombres.<br><br>
+          ⚡ Zeus = Júpiter: rey del Olimpo; lanza rayos.<br>
+          🌊 Poseidón = Neptuno: señor de los mares; lleva un tridente.<br>
+          📨 Hermes = Mercurio: mensajero de los dioses y protector de los viajeros; usa sandalias aladas y lleva el caduceo, un bastón con dos serpientes.<br>
+          🛡️ Ares = Marte: dios de la guerra; lleva lanza y casco.<br>
+          🦉 Atenea = Minerva: diosa de la sabiduría; su animal es la lechuza.</div>
+          <p>Ojo: dos dioses romanos empiezan con M. Solo uno tiene relación con el dibujo de la nota.</p>`
+      },
+      reto: { tipo:"palabra",
+        pregunta: {n1:"¿Cómo se llama en Roma el dios de las sandalias con alas?", n2:"¿Cómo se llama en Roma el dios de la nota?", n3:"M firma con el nombre romano de un dios. ¿Cuál es?"},
+        respuesta:["mercurio"],
+        ayuda: {n1:"Busca 📨 en el cartel. El nombre de Roma empieza con M.", n2:"Busca las sandalias con alas en el cartel. Escribe el nombre romano: empieza con M.", n3:"Marte y Minerva empiezan con M, pero no usan sandalias aladas. ¿Quién es el mensajero?"} }
+    },
+    {
+      tab: "PISTA 2",
+      titulo: "Números romanos",
+      texto: {
+        n1: `
+          <p>Detrás de la nota hay otro mensaje:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL SEGUNDO MENSAJE</span>
+          Ve a la sala de Roma. Busca la vitrina <span class="u">XII</span>. — M.</div>
+          <p>En la sala de Roma hay un cartel:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LOS NÚMEROS ROMANOS</span>
+          I = 1 · V = 5 · X = 10 · L = 50<br>
+          XII = 10 + 1 + 1</div>`,
+        n2: `
+          <p>Le das la vuelta a la nota. Atrás hay un segundo mensaje:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL SEGUNDO MENSAJE</span>
+          Mi próximo mensaje está en la sala de Roma, en la vitrina <span class="u">XIX</span>. ¡Vuela! — M.</div>
+          <p>Las vitrinas de la sala de Roma tienen números romanos. En la pared hay una ayuda para los visitantes:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · CÓMO LEER NÚMEROS ROMANOS</span>
+          I = 1 · V = 5 · X = 10 · L = 50<br>
+          Si un número pequeño está <span class="u">antes</span> de uno grande, se resta: IV = 5 − 1 = 4.<br>
+          Si está <span class="u">después</span>, se suma: VI = 5 + 1 = 6.</div>`,
+        n3: `
+          <p>En el reverso de la nota encontraste un segundo mensaje, escrito con la misma letra elegante:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL SEGUNDO MENSAJE</span>
+          Los romanos contaban de otra manera. Mi siguiente mensaje te espera en la sala de Roma, en la vitrina <span class="u">XLIV</span>. — M.</div>
+          <div class="evidence"><span class="lbl">EVIDENCIA · CÓMO LEER NÚMEROS ROMANOS</span>
+          I = 1 · V = 5 · X = 10 · L = 50 · C = 100<br>
+          Si un símbolo menor aparece antes de uno mayor, se resta (IX = 9; XL = 40).<br>
+          Si aparece después, se suma (XI = 11; LX = 60).<br>
+          Lee el número por partes, de izquierda a derecha.</div>
+          <p>La sala de Roma tiene vitrinas de la I a la L. Solo una es la correcta.</p>`
+      },
+      reto: { tipo:"palabra",
+        pregunta: {n1:"¿Qué número es la vitrina XII? Escribe el número.", n2:"¿Qué número es la vitrina XIX? Escribe el número.", n3:"¿Qué número es la vitrina XLIV? Escribe el número."},
+        respuesta: {n1:["12","doce"], n2:["19","diecinueve"], n3:["44","cuarenta y cuatro"]},
+        ayuda: {n1:"X = 10. I = 1. Suma: 10 + 1 + 1.", n2:"Lee por partes: X = 10. Después IX: la I está antes de la X, entonces 10 − 1 = 9. Ahora suma 10 + 9.", n3:"Por partes: XL = 50 − 10 = 40. IV = 5 − 1 = 4. Ahora suma."} }
+    },
+    {
+      tab: "PISTA 3",
+      titulo: "El papiro de Egipto",
+      texto: {
+        n1: `
+          <p>En la vitrina de Roma hay un papiro de Egipto. ¡Tiene un mensaje secreto en jeroglíficos!</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL PAPIRO</span>
+          El caduceo está en el:<br>
+          <span style="font-size:24px;white-space:nowrap;letter-spacing:-2px">🪲🦅🌊🌊🌾☀️</span></div>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA CLAVE</span>
+          <span style="white-space:nowrap">🦅 = A</span> · <span style="white-space:nowrap">🪶 = I</span> · <span style="white-space:nowrap">🐍 = N</span> · <span style="white-space:nowrap">🌊 = L</span> · <span style="white-space:nowrap">🦉 = M</span><br>
+          <span style="white-space:nowrap">👁️ = O</span> · <span style="white-space:nowrap">☀️ = R</span> · <span style="white-space:nowrap">🦁 = S</span> · <span style="white-space:nowrap">🪲 = T</span> · <span style="white-space:nowrap">🌾 = E</span></div>
+          <p>Los egipcios escriben con dibujos. Se llaman <b>jeroglíficos</b>.</p>`,
+        n2: `
+          <p>En la vitrina XIX no hay un objeto romano, sino un papiro de la sala de Egipto. M escribió el mensaje en jeroglíficos, como los antiguos egipcios.</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL PAPIRO</span>
+          El caduceo descansa en el<br>
+          <span style="font-size:24px;white-space:nowrap;letter-spacing:-2px">🪲🦅🌊🌊🌾☀️</span><br>
+          de este museo.</div>
+          <p>Junto al papiro hay una clave. Es una versión fácil de los jeroglíficos para los visitantes:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA CLAVE DE LOS JEROGLÍFICOS</span>
+          <span style="white-space:nowrap">🦅 = A</span> · <span style="white-space:nowrap">🪶 = I</span> · <span style="white-space:nowrap">🐍 = N</span> · <span style="white-space:nowrap">🌊 = L</span> · <span style="white-space:nowrap">🦉 = M</span><br>
+          <span style="white-space:nowrap">👁️ = O</span> · <span style="white-space:nowrap">☀️ = R</span> · <span style="white-space:nowrap">🦁 = S</span> · <span style="white-space:nowrap">🪲 = T</span> · <span style="white-space:nowrap">🌾 = E</span></div>`,
+        n3: `
+          <p>En la vitrina XLIV no había un objeto romano: alguien había puesto ahí un papiro de la sala de Egipto. Los antiguos egipcios escribían con jeroglíficos, signos que podían representar sonidos, palabras o ideas. M usó una versión simplificada:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · EL PAPIRO</span>
+          Busca el caduceo en el<br>
+          <span style="font-size:24px;white-space:nowrap;letter-spacing:-2px">🪲🦅🌊🌊🌾☀️</span><br>
+          de restauración. Allí se curan las cosas antiguas.</div>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA CLAVE DE LOS JEROGLÍFICOS</span>
+          <span style="white-space:nowrap">🦅 = A</span> · <span style="white-space:nowrap">🪶 = I</span> · <span style="white-space:nowrap">🐍 = N</span> · <span style="white-space:nowrap">🌊 = L</span> · <span style="white-space:nowrap">🦉 = M</span><br>
+          <span style="white-space:nowrap">👁️ = O</span> · <span style="white-space:nowrap">☀️ = R</span> · <span style="white-space:nowrap">🦁 = S</span> · <span style="white-space:nowrap">🪲 = T</span> · <span style="white-space:nowrap">🌾 = E</span></div>
+          <p>Nota: en la clave hay más signos de los que necesitas.</p>`
+      },
+      reto: { tipo:"palabra",
+        pregunta:"¿Qué palabra está escrita en jeroglíficos?",
+        respuesta:["taller","el taller"],
+        ayuda:"🪲 = T. 🦅 = A. Busca cada signo en la clave y escribe la letra. Son 6 letras." }
+    },
+    {
+      tab: "PISTA 4",
+      titulo: "¿Quién tiene la llave?",
+      texto: {
+        n1: `
+          <p>El caduceo está en el <b>taller</b> del museo. Pero el taller está cerrado con llave. ¿Quién tiene la llave? La doctora Ruiz te da una lista:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA LISTA DEL MUSEO</span>
+          👩‍🔬 <b>Doctora Ruiz</b> (curadora): tiene la llave. Su nombre no empieza con M.<br>
+          💂 <b>Señor Castillo</b> (guardia): no tiene la llave del taller.<br>
+          🎨 <b>Melina</b> (restauradora): tiene la llave, pero está de vacaciones en Grecia.<br>
+          🧑‍🎓 <b>Marco</b> (practicante): tiene la llave. Sus tenis tienen alas dibujadas.</div>`,
+        n2: `
+          <p>El caduceo está en el <b>taller de restauración</b>, donde reparan los objetos antiguos. Solo algunas personas tienen la llave del taller. La doctora Ruiz te da la lista del personal:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA LISTA DEL PERSONAL</span>
+          👩‍🔬 <b>Doctora Ruiz</b> (curadora): tiene la llave del taller. Pero ella misma te llamó, y su nombre no empieza con M.<br>
+          💂 <b>Señor Castillo</b> (guardia de noche): tiene las llaves de las salas, pero no del taller.<br>
+          🎨 <b>Melina Pérez</b> (restauradora): tiene la llave del taller. Esta semana está de vacaciones en Grecia: ayer mandó una postal desde Atenas.<br>
+          🧑‍🎓 <b>Marco Mercado</b> (practicante): tiene la llave del taller desde el lunes. Siempre usa tenis con alas dibujadas.</div>`,
+        n3: `
+          <p>El caduceo estaba en el <b>taller de restauración</b>. Pero el taller tiene cerradura especial, y solo cuatro personas tienen acceso. Además, el señor Castillo te contó que anoche escuchó pasos en el pasillo a las 10:00 p. m.</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA LISTA DEL PERSONAL</span>
+          👩‍🔬 <b>Doctora Ruiz</b> (curadora): tiene llave. Anoche dio una conferencia en Belmopan hasta las 11:00 p. m.<br>
+          💂 <b>Señor Castillo</b> (guardia de noche): abre todas las salas, pero no tiene llave del taller.<br>
+          🎨 <b>Melina Pérez</b> (restauradora): tiene llave y firma sus trabajos con una M. Pero esta semana está en Atenas: su postal llegó ayer, con sello de Grecia.<br>
+          🧑‍🎓 <b>Marco Mercado</b> (practicante): recibió una llave del taller el lunes. Anoche trabajó hasta tarde. Le encanta la mitología y siempre usa tenis con alas dibujadas.</div>`
+      },
+      reto: {
+        n1: { tipo:"emparejar", pregunta:"¿Quién es M?",
+          items:[
+            {texto:"👩‍🔬 La doctora Ruiz...", correcta:"no es M: su nombre no empieza con M."},
+            {texto:"💂 El señor Castillo...", correcta:"no es M: no tiene la llave del taller."},
+            {texto:"🎨 Melina...", correcta:"no es M: está en Grecia."},
+            {texto:"🧑‍🎓 Marco...", correcta:"es M."}
+          ],
+          opciones:["no es M: su nombre no empieza con M.","no es M: no tiene la llave del taller.","no es M: está en Grecia.","es M."],
+          error:"Respuestas incorrectas: {n}. Lee la lista otra vez.",
+          ayuda:"M tiene la llave, está en Belice y su nombre empieza con M. ¿Quién tiene alas en los tenis?" },
+        n2: { tipo:"emparejar", pregunta:"¿Por qué cada persona es M o no es M?",
+          items:[
+            {texto:"👩‍🔬 La doctora Ruiz...", correcta:"te llamó para investigar y su nombre no empieza con M."},
+            {texto:"💂 El señor Castillo...", correcta:"no tiene la llave del taller."},
+            {texto:"🎨 Melina Pérez...", correcta:"está de vacaciones en Grecia."},
+            {texto:"🧑‍🎓 Marco Mercado...", correcta:"es M: tiene la llave y alas en los tenis."}
+          ],
+          opciones:["te llamó para investigar y su nombre no empieza con M.","no tiene la llave del taller.","está de vacaciones en Grecia.","es M: tiene la llave y alas en los tenis.","es M: su nombre empieza con M."],
+          error:"Respuestas incorrectas: {n}. Para ser M, la persona necesita la llave, estar en Belice y tener relación con Mercurio.",
+          ayuda:"Melina también empieza con M... pero ¿dónde está esta semana?" },
+        n3: { tipo:"emparejar", pregunta:"Elimina a los sospechosos uno por uno.",
+          items:[
+            {texto:"👩‍🔬 La doctora Ruiz...", correcta:"estaba en Belmopan cuando se escucharon los pasos."},
+            {texto:"💂 El señor Castillo...", correcta:"no puede abrir el taller."},
+            {texto:"🎨 Melina Pérez...", correcta:"firma con M, pero está en Atenas."},
+            {texto:"🧑‍🎓 Marco Mercado...", correcta:"tiene llave, estaba en el museo y su firma tiene alas."}
+          ],
+          opciones:["estaba en Belmopan cuando se escucharon los pasos.","no puede abrir el taller.","firma con M, pero está en Atenas.","tiene llave, estaba en el museo y su firma tiene alas.","firma con M, entonces es la culpable."],
+          error:"Respuestas incorrectas: {n}. Compara cada persona con tres preguntas: ¿tiene llave?, ¿estaba en el museo anoche?, ¿tiene relación con las alas de Mercurio?",
+          ayuda:"Que alguien firme con M no prueba nada si no estaba en Belice. Revisa dónde estaba cada persona a las 10:00 p. m." }
+      }
+    },
+    {
+      tab: "PISTA 5",
+      titulo: "El taller de restauración",
+      texto: {
+        n1: `
+          <p>Vas al taller con la doctora Ruiz. ¡Ahí está el caduceo! Tiene un ala nueva. Y al lado hay una carta de Marco:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA CARTA DE MARCO</span>
+          <span class="u">Ofrezco</span> mis disculpas, doctora.<br>
+          <span class="u">Lunes</span>: veo que un ala del caduceo está rota.<br>
+          <span class="u">Imposible</span> abrir la exposición así.<br>
+          <span class="u">Mi</span> plan: repararla en la noche.<br>
+          <span class="u">Pegamento</span> especial: necesita 24 horas.<br>
+          <span class="u">Organizo</span> los mensajes como un juego para los estudiantes. ¿Le gusta?<br>
+          — Marco, «el mensajero»</div>
+          <p>La carta tiene un secreto: mira las palabras subrayadas.</p>`,
+        n2: `
+          <p>Abren el taller. Sobre la mesa, con mucho cuidado, está el caduceo... ¡con un ala nueva y brillante! Al lado hay una carta:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA CARTA DE MARCO</span>
+          <span class="u">Ofrezco</span> mis disculpas, doctora Ruiz.<br>
+          <span class="u">Lunes</span> en la tarde vi que un ala del caduceo estaba rota.<br>
+          <span class="u">Imposible</span> abrir la exposición con un objeto roto.<br>
+          <span class="u">Mi</span> plan: repararlo de noche, antes de la inauguración.<br>
+          <span class="u">Pegamento</span> especial: necesita un día entero para secar.<br>
+          <span class="u">Organicé</span> los mensajes como un juego para los estudiantes que vienen mañana. ¿Lo usamos?<br>
+          — Marco, «el mensajero»</div>
+          <p>La carta tiene un secreto: mira las palabras subrayadas.</p>`,
+        n3: `
+          <p>La doctora Ruiz abrió el taller. Sobre la mesa de trabajo, protegido con un paño blanco, estaba el caduceo: una de sus alas era nueva, todavía con olor a pegamento. Al lado, una carta:</p>
+          <div class="evidence"><span class="lbl">EVIDENCIA · LA CARTA DE MARCO</span>
+          <span class="u">Ofrezco</span> mis más sinceras disculpas, doctora Ruiz.<br>
+          <span class="u">Lunes</span> por la tarde, mientras limpiaba la vitrina, descubrí que un ala del caduceo estaba rota.<br>
+          <span class="u">Imposible</span> inaugurar con un objeto dañado, y Melina estaba en Grecia.<br>
+          <span class="u">Mi</span> decisión fue repararlo yo mismo, con las técnicas que ella me enseñó.<br>
+          <span class="u">Pegamento</span> especial: necesitaba 24 horas, por eso no podía devolverlo a tiempo.<br>
+          <span class="u">Organicé</span> los mensajes como un juego para los estudiantes de mañana. Si usted lo aprueba, lo llamamos «La ruta del mensajero».<br>
+          — Marco</div>
+          <p>Las palabras subrayadas esconden el lugar donde viven los dioses griegos.</p>`
+      },
+      reto: { tipo:"palabra",
+        pregunta:"Escribe la primera letra de cada palabra subrayada, en orden. ¿Qué palabra secreta forman?",
+        respuesta:["olimpo","el olimpo"],
+        ayuda:"La primera palabra subrayada es «Ofrezco»: empieza con O. La segunda es «Lunes»: L. Sigue así. Son 6 letras." }
+    }
+  ],
+  final: {
+    titulo: "¡Caso resuelto!",
+    texto: {
+      n1: `
+        <p>M es <b>Marco</b>, el practicante. Vio el ala rota del caduceo y la reparó en el taller. ¡No es un ladrón!</p>
+        <p>A la doctora Ruiz le encanta su juego. Mañana, los estudiantes van a seguir los mensajes: Grecia, Roma y Egipto.</p>
+        <p>Y tú eres el primer detective que completa <b>«La ruta del mensajero»</b>.</p>`,
+      n2: `
+        <p>M es <b>Marco Mercado</b>, el practicante. No es un ladrón: vio que un ala del caduceo estaba rota y la reparó antes de la inauguración. Su único error fue no avisar.</p>
+        <p>A la doctora Ruiz le encanta su idea. Al día siguiente, cientos de estudiantes siguen <b>«La ruta del mensajero»</b> por las salas de Grecia, Roma y Egipto.</p>
+        <p>Al final del día, un repartidor deja un paquete para ti. Tiene tenis con alas... y desaparece muy rápido. Adentro hay una tarjeta: <i>«Buen trabajo, detective. — H.»</i></p>`,
+      n3: `
+        <p>M era <b>Marco Mercado</b>. No robó nada: actuó para proteger el caduceo, aunque cometió un error importante al no avisar a nadie. La doctora Ruiz se lo explicó con calma, y él le pidió disculpas al equipo.</p>
+        <p>Pero su idea era tan buena que el museo la adoptó: «La ruta del mensajero» une las tres salas, porque los griegos, los romanos y los egipcios no vivían aislados. Comerciaban, se conquistaban y se copiaban unos a otros... también a sus dioses.</p>
+        <p>Esa tarde, en la entrada del museo, un mensajero en bicicleta te entregó un sobre sin remitente. Adentro, una pluma blanca y una tarjeta: <i>«Un buen mensajero reconoce a otro. — H.»</i> Cuando levantaste la vista, ya no estaba.</p>`
+    },
+    palabraTitulo: "Palabra del detective",
+    palabra: "Conexión",
+    preguntas: {
+      n1: ["¿Quién es M?","¿Qué hace Marco con el caduceo?","¿Cuál es tu dios favorito: de Grecia, de Roma o de Egipto? ¿Por qué?"],
+      n2: ["¿Qué pista conecta a Marco con Mercurio?","¿Qué aprendiste en tu clase de historia sobre Grecia, Roma o Egipto que te ayudó en el caso?","Escribe un mensaje secreto con números romanos para un compañero."],
+      n3: ["Marco hizo algo bueno de una manera equivocada. ¿Qué debió hacer?","¿Por qué los dioses griegos y romanos tienen nombres diferentes? Explica con lo que estudias en historia.","¿Quién crees que es «H.»? Explica tu teoría con pistas del caso."]
+    },
+    preguntasTitulo: "📝 Preguntas del detective",
+    seesaw: "Escribe tus respuestas en tu cuaderno de detective. ¡Usa oraciones completas!"
+  }
+};
+
+/* Preguntas para la entrada del cuaderno de detective (seguimiento escrito a mano). */
+const CUADERNO = {
+ "n1": [
+  "¿Qué dibujo hay debajo de la letra M?",
+  "¿Cómo se llama Zeus en Roma? ¿Cuál es su símbolo?",
+  "¿Cómo escriben los egipcios?",
+  "¿Por qué Melina no es M?",
+  "¿Qué ve Marco el lunes?"
+ ],
+ "n2": [
+  "¿Qué es el caduceo?",
+  "¿Por qué los dioses de Roma tienen otros nombres?",
+  "¿Cómo sabes que IV es 4?",
+  "¿Por qué el señor Castillo no puede ser M?",
+  "¿Por qué Marco no devolvió el caduceo?"
+ ],
+ "n3": [
+  "Según el cartel, ¿por qué cada dios tiene dos nombres?",
+  "¿Por qué Minerva no puede ser la diosa de la firma?",
+  "¿Qué podían representar los jeroglíficos?",
+  "¿Por qué la doctora Ruiz no pudo caminar por el pasillo a las 10:00 p. m.?",
+  "¿Por qué Marco reparó el caduceo él mismo?"
+ ]
+};
+
+/* =========================================================
+   MOTOR — no hace falta cambiar nada aquí abajo.
+   ========================================================= */
+const KEY = "detective-"+CASO.id;
+const norm = s => (s||"").toString().normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();
+const esc = s => (s||"").toString().replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
+let state = load();
+const LV = (CASO.niveles||[]).map(n=>n.id);
+function R(v){
+  if(Array.isArray(v)) return v.map(R);
+  if(v && typeof v==="object"){
+    if(LV.length && Object.keys(v).length && Object.keys(v).every(k=>LV.includes(k))) return R(v[state.nivel] ?? v[LV[0]]);
+    const o={}; for(const k in v) o[k]=R(v[k]); return o;
+  }
+  return v;
+}
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {step:-1}; }catch(e){ return {step:-1}; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+const app = document.getElementById("app");
+const total = CASO.pistas.length;
+
+function header(){
+  const d=document.getElementById("dots"); d.innerHTML="";
+  for(let i=0;i<total;i++){ const s=document.createElement("span"); s.className="dot"+(i<state.step?" done":"")+(i===state.step?" now":""); d.appendChild(s); }
+  document.getElementById("prog").textContent = state.step<0 ? "Expediente cerrado" : state.step>=total ? "Caso resuelto" : `Pista ${state.step+1} de ${total}`;
+}
+function render(){
+  header(); window.scrollTo({top:0,behavior:"smooth"});
+  if(state.step<0) return renderIntro();
+  if(state.step>=total) return renderFinal();
+  renderPista(R(CASO.pistas[state.step]));
+}
+function renderIntro(){
+  app.innerHTML = `<section class="file" data-tab="EXPEDIENTE">
+    <span class="stamp">CASO ABIERTO</span>
+    <div class="kicker">${CASO.serie}</div>
+    <h1>${CASO.titulo}</h1>
+    <div class="kicker" style="color:var(--muted)">${CASO.nivel}</div>
+    ${CASO.equipo?`<div class="cast">${CASO.equipo.map(e=>`<span class="chip">${e}</span>`).join("")}</div>`:""}
+    ${LV.length?`<div class="q" style="font-weight:700;margin-top:12px">1. Elige tu nivel:</div><div class="levels">${CASO.niveles.map(n=>`<button class="lv${state.nivel===n.id?" on":""}" data-lv="${n.id}">${n.icono} <b>${n.nombre}</b><span>${n.desc}</span></button>`).join("")}</div>`:""}
+    <div class="story" id="introStory">${R(CASO.intro)}</div>
+    <div class="challenge">${CASO.pareja ? `<div class="q">Escriban sus nombres de detective:</div>
+      <div class="names"><label for="nm">🗣 Detective 1 · lee la historia en voz alta y explica</label>
+      <input type="text" id="nm" maxlength="30" placeholder="Detective 1..." value="${esc(state.d1||"")}" style="text-transform:none;letter-spacing:0">
+      <label for="nm2">🔎 Detective 2 · busca la evidencia y decide la respuesta</label>
+      <input type="text" id="nm2" maxlength="30" placeholder="Detective 2..." value="${esc(state.d2||"")}" style="text-transform:none;letter-spacing:0"></div>` : `<div class="q">${LV.length?"2. ":""}Escribe tu nombre de detective:</div>
+      <input type="text" id="nm" maxlength="30" placeholder="Detective..." value="${esc(state.name||"")}" style="text-transform:none;letter-spacing:0">`}
+      <div class="row"><button class="btn" id="go">Abrir el expediente →</button></div>
+      <div class="msg no" id="m"></div></div>
+  </section>`;
+  document.querySelectorAll(".lv").forEach(b=>b.onclick=()=>{
+    state.nivel=b.dataset.lv;
+    document.querySelectorAll(".lv").forEach(x=>x.classList.toggle("on",x===b));
+    document.getElementById("introStory").innerHTML=R(CASO.intro);
+  });
+  document.getElementById("go").onclick=()=>{
+    const n=document.getElementById("nm").value.trim();
+    if(LV.length && !state.nivel){ document.getElementById("m").textContent="Elige tu nivel primero."; return; }
+    if(CASO.pareja){
+      const n2=document.getElementById("nm2").value.trim();
+      if(!n||!n2){ document.getElementById("m").textContent="Escriban los dos nombres primero."; return; }
+      state={step:0,d1:n,d2:n2,name:n+" y "+n2}; save(); render(); return;
+    }
+    if(!n){ document.getElementById("m").textContent="Escribe tu nombre primero."; return; }
+    state={step:0,name:n,nivel:state.nivel}; save(); render();
+  };
+}
+function renderPista(p){
+  app.innerHTML = `<section class="file" data-tab="${p.tab}">
+    <span class="stamp">EN INVESTIGACIÓN</span>
+    <div class="kicker">${p.tab}</div><h2>${p.titulo}</h2>
+    ${LV.length?(()=>{const n=CASO.niveles.find(x=>x.id===state.nivel)||CASO.niveles[0];return `<div class="lvtag">${n.icono} Nivel ${n.nombre}</div>`;})():""}
+    ${p.roles && CASO.pareja ? `<div class="roles">${esc(p.roles).replace(/\{d1\}/g,"<b>"+esc(state.d1)+"</b>").replace(/\{d2\}/g,"<b>"+esc(state.d2)+"</b>")}</div>` : ""}
+    <div class="story">${p.texto}</div>
+    <div class="challenge"><div class="q">🔎 Reto: ${p.reto.pregunta}</div>
+      <div id="ui"></div>
+      <div class="row"><button class="btn" id="check">Revisar</button><button class="ghost" id="hb">💡 Necesito una pista</button></div>
+      <div class="msg" id="m"></div>
+      <div class="hint" id="h">${p.reto.ayuda}</div>
+    </div></section>`;
+  document.getElementById("hb").onclick=()=>document.getElementById("h").classList.toggle("show");
+  const ui=document.getElementById("ui"), m=document.getElementById("m");
+  const ok=()=>{ m.className="msg ok"; m.textContent="¡Correcto, detective! Abriendo la siguiente página..."; state.step++; save(); setTimeout(render,1100); };
+  const no=t=>{ m.className="msg no"; m.textContent=t||"Todavía no. Lee otra vez la pista con calma."; };
+  const r=p.reto;
+  if(r.tipo==="palabra"){
+    ui.innerHTML=`<input type="text" id="ans" autocomplete="off" placeholder="Tu respuesta">`;
+    const inp=document.getElementById("ans");
+    const check=()=>{ const v=norm(inp.value); if(!v) return no("Escribe una respuesta primero."); r.respuesta.map(norm).includes(v)?ok():no(); };
+    document.getElementById("check").onclick=check;
+    inp.addEventListener("keydown",e=>{ if(e.key==="Enter") check(); });
+  }
+  if(r.tipo==="mapa"){
+    let pick=null;
+    ui.innerHTML=`<div class="compass">⬆️ NORTE · ⬇️ SUR · ➡️ ESTE · ⬅️ OESTE</div><div class="map" id="map"></div>`;
+    const map=document.getElementById("map");
+    r.celdas.forEach((c,i)=>{ const b=document.createElement("div"); b.className="cell"+(i===r.inicio?" start":""); b.innerHTML=`${c[0]}<small>${c[1]}</small>`;
+      b.onclick=()=>{ map.querySelectorAll(".cell").forEach(x=>x.classList.remove("pick")); b.classList.add("pick"); pick=i; }; map.appendChild(b); });
+    document.getElementById("check").onclick=()=>{ if(pick===null) return no("Toca una casilla primero."); pick===r.correcta?ok():no(r.error||"Esa no es la casilla correcta. Empieza otra vez y cuenta las casillas."); };
+  }
+  if(r.tipo==="emparejar"){
+    ui.innerHTML=`<div class="match">${r.items.map((it,i)=>`<div class="m"><p>${it.texto}</p><select id="s${i}"><option value="">— Elige —</option>${r.opciones.map(o=>`<option>${o}</option>`).join("")}</select></div>`).join("")}</div>`;
+    document.getElementById("check").onclick=()=>{
+      let bad=0, empty=0; r.items.forEach((it,i)=>{ const v=document.getElementById("s"+i).value; if(!v) empty++; else if(v!==it.correcta) bad++; });
+      if(empty) return no("Elige una respuesta para cada uno.");
+      bad?no(r.error?r.error.replace("{n}",bad):`Tienes ${bad} ${bad===1?"trabajo incorrecto":"trabajos incorrectos"}. Piensa en cómo es cada animal.`):ok();
+    };
+  }
+}
+function renderFinal(){
+  const f=R(CASO.final);
+  app.innerHTML = `<section class="file" data-tab="CASO CERRADO">
+    <span class="stamp solved">CASO RESUELTO</span>
+    <div class="kicker">${CASO.titulo}</div><h1>${f.titulo}</h1>
+    <p style="font-size:18px">${CASO.pareja?`¡Felicidades, detectives <b>${esc(state.d1)}</b> y <b>${esc(state.d2)}</b>!`:`¡Felicidades, detective <b>${esc(state.name)}</b>!`}</p>
+    <div class="story">${f.texto}</div>
+    <p>${f.palabraTitulo||"Palabra del Bosque"}: <span class="word">${f.palabra}</span></p>
+    <div class="challenge"><div class="q">${f.preguntasTitulo||"🐦 Las preguntas de Don Pico"}</div>
+      <ol class="final-q">${f.preguntas.map(q=>`<li>${q}</li>`).join("")}</ol>
+      <p><b>${f.seesaw}</b></p></div>
+    <div class="challenge notebook"><div class="q">📓 Para tu cuaderno de detective</div>
+      <p>Escribe a mano en tu cuaderno:</p>
+      <p class="nb-head">CASOS MISTERIOSOS DE CUENTÓPOLIS<br>Fecha: ______ · Caso: ${CASO.titulo}</p>
+      <p>Para cada pregunta escribe:<br>✏️ la <b>respuesta</b> con una oración completa,<br>🔍 la <b>prueba</b>: copia la frase del expediente «entre comillas»,<br>📌 la <b>pista</b> donde la encontraste.</p>
+      <ol class="final-q">${(typeof R==="function"?R(CUADERNO):CUADERNO).map(q=>`<li>${q}</li>`).join("")}</ol>
+      <p>Usa el botón <b>📖 Releer el expediente</b> para buscar las frases.</p></div>
+    <div class="row"><button class="ghost" id="rereadBtn">📖 Releer el expediente</button></div>
+    <div id="reread"></div>
+  </section>`;
+  document.getElementById("rereadBtn").onclick=renderReread;
+}
+function renderReread(){
+  const RR = typeof R==="function" ? R : (v=>v);
+  const box=document.getElementById("reread"), btn=document.getElementById("rereadBtn");
+  if(box.innerHTML){ box.innerHTML=""; btn.textContent="📖 Releer el expediente"; return; }
+  btn.textContent="📕 Cerrar el expediente";
+  const sep='style="border-top:1px dashed #9a8f78;margin-top:20px;padding-top:14px"';
+  box.innerHTML = `<div class="story" ${sep}><div class="kicker">INICIO</div>${RR(CASO.intro)}</div>`
+    + CASO.pistas.map(p=>`<div class="story" ${sep}><div class="kicker">${RR(p.tab)}</div><h2>${RR(p.titulo)}</h2>${RR(p.texto)}</div>`).join("");
+}
+document.getElementById("resetBtn").onclick=()=>{ if(confirm("¿Empezar el caso desde el principio?")){ state={step:-1}; save(); render(); } };
+if(CASO.marca) document.getElementById("brand").textContent=CASO.marca;
+render();
+</script>
+</body>
+</html>
